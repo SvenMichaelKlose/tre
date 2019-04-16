@@ -6,7 +6,3 @@
   (| (not x)
      (& (string? x)
         (string== "" x))))
-
-(define-test "EMPTY-STRING? works"
-  ((empty-string? "  " ""))
-  t)

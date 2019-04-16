@@ -20,7 +20,6 @@
 (env-load "stage3/line.lisp")
 (env-load "stage3/def-head-predicate.lisp")
 (env-load "stage3/argument-expand.lisp")
-(env-load "stage3/argument-expand-tests.lisp")
 (env-load "stage3/stream-predicates.lisp")
 ;(env-load "stage3/print-tracer.lisp")
 (env-load "stage3/print-c.lisp" :cl)

@@ -3,10 +3,6 @@
      (funcall pred x.)
      (. x. (copy-while pred .x))))
 
-(define-test "COPY-WHILE"
-  ((copy-while #'number? '(1 2 3 a)))
-  '(1 2 3))
-
 (fn separate (pred x)
   (values (copy-while pred x)
           (remove-if pred x)))

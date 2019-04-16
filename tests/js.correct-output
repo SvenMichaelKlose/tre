@@ -1,146 +1,156 @@
-Test 1, APPLY one argument<br>
-Test 2, APPLY many arguments<br>
-Test 3, APPLY many arguments<br>
-Test 4, EQ with symbols<br>
-Test 5, EQL with symbols<br>
-Test 6, EQL with numbers<br>
-Test 7, BACKQUOTE<br>
-Test 8, QUASIQUOTE<br>
-Test 9, QUASIQUOTE-SPLICE<br>
-Test 10, COPY-WHILE<br>
-Test 11, DIGIT-CHAR? #0<br>
-Test 12, DIGIT-CHAR? #a<br>
-Test 13, argument expansion works with simple list<br>
-Test 14, argument expansion works without :apply-values?<br>
+Test 1, argument expansion can handle &OPTIONAL and &KEY with init forms with :apply-values?<br>
+Test 2, argument expansion can handle &OPTIONAL and &KEY with init forms without :apply-values?<br>
+Test 3, argument expansion can handle &KEY without :apply-values?<br>
+Test 4, argument expansion can handle &KEY with overloaded init forms<br>
+Test 5, argument expansion can handle &KEY<br>
+Test 6, argument expansion can handle &OPTIONAL with init forms without :apply-values?<br>
+Test 7, argument expansion can handle &OPTIONAL with init forms<br>
+Test 8, argument expansion can handle &OPTIONAL without :apply-values?<br>
+Test 9, argument expansion can handle &OPTIONAL<br>
+Test 10, argument expansion can handle missing &REST without :apply-values?<br>
+Test 11, argument expansion can handle missing &REST<br>
+Test 12, argument expansion can handle &REST without :apply-values?<br>
+Test 13, argument expansion can handle &REST<br>
+Test 14, argument expansion can handle nested lists without :apply-values?<br>
 Test 15, argument expansion can handle nested lists<br>
-Test 16, argument expansion can handle nested lists without :apply-values?<br>
-Test 17, argument expansion can handle &REST<br>
-Test 18, argument expansion can handle &REST without :apply-values?<br>
-Test 19, argument expansion can handle missing &REST<br>
-Test 20, argument expansion can handle missing &REST without :apply-values?<br>
-Test 21, argument expansion can handle &OPTIONAL<br>
-Test 22, argument expansion can handle &OPTIONAL without :apply-values?<br>
-Test 23, argument expansion can handle &OPTIONAL with init forms<br>
-Test 24, argument expansion can handle &OPTIONAL with init forms without :apply-values?<br>
-Test 25, argument expansion can handle &KEY<br>
-Test 26, argument expansion can handle &KEY with overloaded init forms<br>
-Test 27, argument expansion can handle &KEY without :apply-values?<br>
-Test 28, argument expansion can handle &OPTIONAL and &KEY with init forms without :apply-values?<br>
-Test 29, argument expansion can handle &OPTIONAL and &KEY with init forms with :apply-values?<br>
-Test 30, EMPTY-STRING? works<br>
-Test 31, NOT works with NIL<br>
-Test 32, NOT works with T<br>
-Test 33, KEYWORD? recognizes keyword-packaged symbols<br>
-Test 34, KEYWORD? works with standard symbols<br>
-Test 35, ++<br>
-Test 36, --<br>
-Test 37, COUNT-IF<br>
-Test 38, COUNT<br>
-Test 39, NOT returns NIL for empty string<br>
-Test 40, Empty string is not NIL<br>
-Test 41, KEYWORD? recognizes keywords<br>
-Test 42, KEYWORD? returns NIL for non-keywords<br>
-Test 43, CAR accepts NIL<br>
-Test 44, CDR accepts NIL<br>
-Test 45, RPLACA returns cons<br>
-Test 46, RPLACD returns cons<br>
-Test 47, ATOM recognizes atoms<br>
-Test 48, ATOM fails on conses<br>
-Test 49, CONS?<br>
-Test 50, CONS? fails on atoms<br>
-Test 51, CONS? fails on numbers<br>
-Test 52, CONS? fails on characters<br>
-Test 53, CONS? fails on strings<br>
-Test 54, CONS? fails on arrays<br>
-Test 55, SYMBOL?<br>
-Test 56, SYMBOL? fails on cells<br>
-Test 57, SYMBOL? fails on numbers<br>
-Test 58, SYMBOL? fails on characters<br>
-Test 59, SYMBOL? fails on strings<br>
-Test 60, SYMBOL? fails on arrays<br>
-Test 61, NUMBER? recognizes numbers<br>
-Test 62, NUMBER? fails on characters<br>
-Test 63, NUMBER? fails on arrays<br>
-Test 64, NUMBER? fails on symbols<br>
-Test 65, CHARACTER? recognizes characters<br>
-Test 66, CHARACTER? fails on symbols<br>
-Test 67, CHARACTER? fails on cells<br>
-Test 68, CHARACTER? fails on numbers<br>
-Test 69, CHARACTER? fails on arrays<br>
-Test 70, CHARACTER? fails on strings<br>
-Test 71, EQL wants same type of numbers<br>
-Test 72, FUNCTION? recognizes functions<br>
-Test 73, FUNCTION? recognizes built-in functions<br>
-Test 74, STRING? recognizes strings<br>
-Test 75, STRING? fails on numbers<br>
-Test 76, STRING? fails on symbols<br>
-Test 77, CODE-CHAR converts number to char<br>
-Test 78, CHAR-CODE converts char to number<br>
-Test 79, SETQ returns the last value set<br>
-Test 80, IDENTITY<br>
-Test 81, LAST works<br>
-Test 82, LAST returns NIL for empty list<br>
-Test 83, == works with floats<br>
-Test 84, 0 is a boolean T<br>
-Test 85, NTHCDR works at the start<br>
-Test 86, NTHCDR works in the middle<br>
-Test 87, NTHCDR works at the end<br>
-Test 88, NTHCDR works beyond the end<br>
-Test 89, NOT 0 is NIL<br>
-Test 90, LENGHT with conses<br>
-Test 91, LENGHT with strings<br>
-Test 92, EQUAL with CONS<br>
-Test 93, EQUAL fails on different lists<br>
-Test 94, NTHCDR basically works<br>
-Test 95, ENQUEUE and QUEUE-LIST work<br>
-Test 96, MEMBER finds elements<br>
-Test 97, MEMBER finds elements with user predicate<br>
-Test 98, MEMBER falsely detects foureign elements<br>
-Test 99, can handle nested functions with double argument names<br>
-Test 100, can handle nested functions with double argument names<br>
-Test 101, can handle closures<br>
-Test 102, LAMBDA? works<br>
-Test 103, LAMBDA? works with LAMBDA<br>
-Test 104, LAMBDA-CALL? works<br>
-Test 105, $<br>
-Test 106, REVERSE works<br>
-Test 107, NCONC works<br>
-Test 108, NCONC works with empty lists<br>
-Test 109, NCONC with NIL first<br>
-Test 110, NCONC with NIL second<br>
-Test 111, ADJOIN doesn't add known member<br>
-Test 112, ADJOIN adds new member<br>
-Test 113, BUTLAST basically works<br>
-Test 114, BUTLAST returns NIL for single cons<br>
-Test 115, LIST-SUBSEQ work at the beginning<br>
-Test 116, LIST-SUBSEQ works in the middle<br>
-Test 117, LIST-SUBSEQ works at the end<br>
-Test 118, SUBSEQ returns head<br>
-Test 119, SUBSEQ returns NIL when totally out of range<br>
-Test 120, SUBSEQ returns NIL when start and end are the same<br>
-Test 121, ELT on string returns char<br>
-Test 122, ELT on string returns right char<br>
-Test 123, STRING== works<br>
-Test 124, LIST-STRING works<br>
-Test 125, STRING-LIST works<br>
-Test 126, UPCASE works<br>
-Test 127, DOWNCASE works<br>
-Test 128, HREF symbol key<br>
-Test 129, HREF symbol key missing<br>
-Test 130, HREF number key<br>
-Test 131, HREF number key missing<br>
-Test 132, HREF string key<br>
-Test 133, HREF string key missing<br>
-Test 134, HREF empty string key<br>
-Test 135, HREF character key<br>
-Test 136, HREF character key missing<br>
-Test 137, HREF hashtable key<br>
-Test 138, HREF hashtable key missing<br>
-Test 139, HREF array key<br>
-Test 140, HREF array key missing<br>
-Test 141, SPLIT works on string<br>
-Test 142, SPLIT works on string with gaps<br>
-Test 143, TRIM-HEAD works<br>
-Test 144, TRIM-TAIL works<br>
-Test 145, TRIM works<br>
+Test 16, argument expansion works without :apply-values?<br>
+Test 17, argument expansion works with simple list<br>
+Test 18, TRIM works<br>
+Test 19, TRIM-TAIL works<br>
+Test 20, TRIM-HEAD works<br>
+Test 21, SPLIT works on string with gaps<br>
+Test 22, SPLIT works on string<br>
+Test 23, HREF array key missing<br>
+Test 24, HREF array key<br>
+Test 25, HREF hashtable key missing<br>
+Test 26, HREF hashtable key<br>
+Test 27, HREF character key missing<br>
+Test 28, HREF character key<br>
+Test 29, HREF empty string key<br>
+Test 30, HREF string key missing<br>
+Test 31, HREF string key<br>
+Test 32, HREF number key missing<br>
+Test 33, HREF number key<br>
+Test 34, HREF symbol key missing<br>
+Test 35, HREF symbol key<br>
+Test 36, DIGIT-CHAR? #a<br>
+Test 37, DIGIT-CHAR? #0<br>
+Test 38, EMPTY-STRING? works<br>
+Test 39, DOWNCASE works<br>
+Test 40, UPCASE works<br>
+Test 41, STRING-LIST works<br>
+Test 42, LIST-STRING works<br>
+Test 43, STRING== works<br>
+Test 44, ELT on string returns right char<br>
+Test 45, ELT on string returns char<br>
+Test 46, EVERY works<br>
+Test 47, SOME works<br>
+Test 48, POSITION works with strings<br>
+Test 49, POSITION works with character list<br>
+Test 50, FIND-IF finds elements<br>
+Test 51, FIND accepts :START, :END, :FROM-END<br>
+Test 52, FIND accepts :START<br>
+Test 53, FIND accepts :END<br>
+Test 54, FIND accepts :FROM-END<br>
+Test 55, FIND finds elements<br>
+Test 56, SUBSEQ returns NIL when start and end are the same<br>
+Test 57, SUBSEQ returns NIL when totally out of range<br>
+Test 58, SUBSEQ returns head<br>
+Test 59, LIST-SUBSEQ works at the end<br>
+Test 60, LIST-SUBSEQ works in the middle<br>
+Test 61, LIST-SUBSEQ work at the beginning<br>
+Test 62, COPY-WHILE<br>
+Test 63, BUTLAST returns NIL for single cons<br>
+Test 64, BUTLAST basically works<br>
+Test 65, ADJOIN adds new member<br>
+Test 66, ADJOIN doesn't add known member<br>
+Test 67, NCONC with NIL second<br>
+Test 68, NCONC with NIL first<br>
+Test 69, NCONC works with empty lists<br>
+Test 70, NCONC works<br>
+Test 71, REVERSE works<br>
+Test 72, $<br>
+Test 73, LAMBDA-CALL? works<br>
+Test 74, LAMBDA? works with LAMBDA<br>
+Test 75, LAMBDA? works<br>
+Test 76, can handle closures<br>
+Test 77, can handle nested functions with double argument names<br>
+Test 78, can handle nested functions with double argument names<br>
+Test 79, MEMBER falsely detects foureign elements<br>
+Test 80, MEMBER finds elements with user predicate<br>
+Test 81, MEMBER finds elements<br>
+Test 82, ENQUEUE and QUEUE-LIST work<br>
+Test 83, NTHCDR basically works<br>
+Test 84, EQUAL fails on different lists<br>
+Test 85, EQUAL with CONS<br>
+Test 86, LENGHT with strings<br>
+Test 87, LENGHT with conses<br>
+Test 88, NOT 0 is NIL<br>
+Test 89, NTHCDR works beyond the end<br>
+Test 90, NTHCDR works at the end<br>
+Test 91, NTHCDR works in the middle<br>
+Test 92, NTHCDR works at the start<br>
+Test 93, 0 is a boolean T<br>
+Test 94, == works with floats<br>
+Test 95, LAST returns NIL for empty list<br>
+Test 96, LAST works<br>
+Test 97, IDENTITY<br>
+Test 98, SETQ returns the last value set<br>
+Test 99, CHAR-CODE converts char to number<br>
+Test 100, CODE-CHAR converts number to char<br>
+Test 101, STRING? fails on symbols<br>
+Test 102, STRING? fails on numbers<br>
+Test 103, STRING? recognizes strings<br>
+Test 104, FUNCTION? recognizes built-in functions<br>
+Test 105, FUNCTION? recognizes functions<br>
+Test 106, EQL wants same type of numbers<br>
+Test 107, CHARACTER? fails on strings<br>
+Test 108, CHARACTER? fails on arrays<br>
+Test 109, CHARACTER? fails on numbers<br>
+Test 110, CHARACTER? fails on cells<br>
+Test 111, CHARACTER? fails on symbols<br>
+Test 112, CHARACTER? recognizes characters<br>
+Test 113, NUMBER? fails on symbols<br>
+Test 114, NUMBER? fails on arrays<br>
+Test 115, NUMBER? fails on characters<br>
+Test 116, NUMBER? recognizes numbers<br>
+Test 117, SYMBOL? fails on arrays<br>
+Test 118, SYMBOL? fails on strings<br>
+Test 119, SYMBOL? fails on characters<br>
+Test 120, SYMBOL? fails on numbers<br>
+Test 121, SYMBOL? fails on cells<br>
+Test 122, SYMBOL?<br>
+Test 123, CONS? fails on arrays<br>
+Test 124, CONS? fails on strings<br>
+Test 125, CONS? fails on characters<br>
+Test 126, CONS? fails on numbers<br>
+Test 127, CONS? fails on atoms<br>
+Test 128, CONS?<br>
+Test 129, ATOM fails on conses<br>
+Test 130, ATOM recognizes atoms<br>
+Test 131, RPLACD returns cons<br>
+Test 132, RPLACA returns cons<br>
+Test 133, CDR accepts NIL<br>
+Test 134, CAR accepts NIL<br>
+Test 135, KEYWORD? returns NIL for non-keywords<br>
+Test 136, KEYWORD? recognizes keywords<br>
+Test 137, Empty string is not NIL<br>
+Test 138, NOT returns NIL for empty string<br>
+Test 139, COUNT<br>
+Test 140, COUNT-IF<br>
+Test 141, --<br>
+Test 142, ++<br>
+Test 143, KEYWORD? works with standard symbols<br>
+Test 144, KEYWORD? recognizes keyword-packaged symbols<br>
+Test 145, NOT works with T<br>
+Test 146, NOT works with NIL<br>
+Test 147, QUASIQUOTE-SPLICE<br>
+Test 148, QUASIQUOTE<br>
+Test 149, BACKQUOTE<br>
+Test 150, EQL with numbers<br>
+Test 151, EQL with symbols<br>
+Test 152, EQ with symbols<br>
+Test 153, APPLY many arguments<br>
+Test 154, APPLY many arguments<br>
+Test 155, APPLY one argument<br>
 Tests done.NIL

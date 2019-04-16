@@ -61,11 +61,3 @@
 (functional control-char?)
 (fn control-char? (x)
   (character< x (code-char 32)))
-
-(define-test "DIGIT-CHAR? #\0"  ; TODO move to tests/.
-  ((digit-char? #\0))
-  t)
-
-(define-test "DIGIT-CHAR? #\a"
-  ((digit-char? #\a))
-  nil)
