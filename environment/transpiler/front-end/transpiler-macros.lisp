@@ -15,7 +15,7 @@
 
 (defmacro define-transpiler-macro (tr name args &body body)
   (print-definition `(define-transpiler-macro ,tr ,name ,args))
-  `(define-expander-macro (transpiler-transpiler-macro-expander ,tr) ,name ,args ,@body))
+  `(def-expander-macro (transpiler-transpiler-macro-expander ,tr) ,name ,args ,@body))
 
 (fn make-transpiler-macro (name args body)
   (eval (macroexpand `(define-transpiler-macro *transpiler* ,name ,args ,@body)))

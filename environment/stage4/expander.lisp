@@ -52,8 +52,8 @@
 (fn set-expander-macros (expander x)
   (mapcar [set-expander-macro expander _. ._. .._] x))
 
-(defmacro define-expander-macro (expander name args &body body)
-  (let expanded-argdef (argument-expand-names 'define-expander-macro args)
+(defmacro def-expander-macro (expander name args &body body)
+  (let expanded-argdef (argument-expand-names 'def-expander-macro args)
     `(set-expander-macro ,expander ',name ',args #'(,expanded-argdef ,@body))))
 
 (fn expander-expand-0 (expander expr)

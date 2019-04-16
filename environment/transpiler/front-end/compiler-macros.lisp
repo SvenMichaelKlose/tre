@@ -7,7 +7,7 @@
 
 (defmacro define-compiler-macro (name args &body x)
   (print-definition `(define-compiler-macro ,name ,args))
-  `(define-expander-macro *compiler-macro-expander* ,name ,args ,@x))
+  `(def-expander-macro *compiler-macro-expander* ,name ,args ,@x))
 
 (fn compiler-macroexpand (x)
   (expander-expand *compiler-macro-expander* x))
@@ -68,12 +68,12 @@
             (expander-expand *tagbody-expander* body))
        (identity nil))))
 
-(define-expander-macro *tagbody-expander* go (tag)
+(def-expander-macro *tagbody-expander* go (tag)
   (!? (tag-replacement tag)
       `(%%go ,!)
       (error "Can't find tag ~A in TAGBODY." tag)))
 
-(define-expander-macro *tagbody-expander* tagbody (&body body)
+(def-expander-macro *tagbody-expander* tagbody (&body body)
   (tagbodyexpand body))
 
 (define-compiler-macro tagbody (&body body)
@@ -101,7 +101,7 @@
               (identity ~%ret)))))
     `(identity nil)))
 
-(define-expander-macro *block-expander* return-from (block-name expr)
+(def-expander-macro *block-expander* return-from (block-name expr)
   (| *blocks*
      (error "RETURN-FROM outside BLOCK."))
   (!? (assoc block-name *blocks* :test #'eq)
@@ -110,7 +110,7 @@
         (%%go ,.!))
      (error "RETURN-FROM unknown BLOCK ~A." block-name)))
 
-(define-expander-macro *block-expander* block (name &body body)
+(def-expander-macro *block-expander* block (name &body body)
   (blockexpand name body))
 
 (define-compiler-macro block (name &body body)
