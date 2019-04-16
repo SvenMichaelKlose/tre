@@ -87,10 +87,10 @@
 
 ;;;; TYPE PREDICATES
 
-(defmacro define-js-infix (name)
+(defmacro def-js-infix (name)
   `(def-codegen-infix *js-transpiler* ,name))
 
-(define-js-infix instanceof)
+(def-js-infix instanceof)
 
 
 ;;;; SYMBOL REPLACEMENTS
@@ -101,10 +101,10 @@
 
 ;;;; NUMBERS, ARITHMETIC AND COMPARISON
 
-(defmacro define-js-binary (op repl-op)
+(defmacro def-js-binary (op repl-op)
   `(def-codegen-binary *js-transpiler* ,op ,repl-op))
 
-{,@(@ [`(define-js-binary ,@_)]
+{,@(@ [`(def-js-binary ,@_)]
       '((%%%+        "+")
         (%%%string+  "+")
         (%%%-        "-")

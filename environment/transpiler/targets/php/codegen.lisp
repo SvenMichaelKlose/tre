@@ -16,7 +16,7 @@
 (defmacro def-php-codegen (name &body body)
   `(define-codegen-macro *php-transpiler* ,name ,@body))
 
-(defmacro define-php-infix (name)
+(defmacro def-php-infix (name)
   `(def-codegen-infix *php-transpiler* ,name))
 
 
@@ -133,13 +133,13 @@
 
 ;;;; NUMBERS
 
-(defmacro define-php-binary (op replacement-op)
-  (print-definition `(define-php-binary ,op ,replacement-op))
+(defmacro def-php-binary (op replacement-op)
+  (print-definition `(def-php-binary ,op ,replacement-op))
   `(def-expander-macro (transpiler-codegen-expander *php-transpiler*) ,op (&rest args)
      `(%%native ,,@(pad (@ #'php-dollarize args)
                 ,(+ " " replacement-op " ")))))
 
-{,@(@ [`(define-php-binary ,@_)]
+{,@(@ [`(def-php-binary ,@_)]
       '((%%%+        "+")
         (%%%string+  ".")
         (%%%-        "-")
