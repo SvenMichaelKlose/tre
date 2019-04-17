@@ -18,9 +18,9 @@
 
 (def-php-transpiler-macro slot-value (place slot)
   (?
-    (quote? slot)  `(%slot-value ,place ,.slot.)
-    (string? slot) `(%slot-value ,place ,slot)
-    (symbol? slot) `(prop-value ,place ,slot)
+    (quote? slot)   `(%slot-value ,place ,.slot.)
+    (string? slot)  `(%slot-value ,place ,slot)
+    (symbol? slot)  `(prop-value ,place ,slot)
     (with-gensym g
       `(%%block
          (%var ,g)
@@ -32,6 +32,3 @@
 
 (def-php-transpiler-macro defined? (x)
   `(isset ,x))
-
-(def-php-transpiler-macro %%%nanotime ()
-  '(microtime t))
