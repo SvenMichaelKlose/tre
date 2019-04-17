@@ -12,32 +12,30 @@
             (funinfo-scoped-var? ! x)))))
 
 (fn will-be-used-again? (x v)
-   (with (traversed-tags nil
-          traversed-tag? [member _ traversed-tags :test #'==]
-          traverse-tag   [unless (traversed-tag? _)
-                           (push _ traversed-tags)
-                           (traverse-statements (tag-code _))]
+   (with (traversed-tags  nil
+          traversed-tag?  [member _ traversed-tags :test #'==]
+          traverse-tag    [unless (traversed-tag? _)
+                            (push _ traversed-tags)
+                            (traverse-statements (tag-code _))]
           traverse-statements
             [? (not _)
                (& (funinfo-parent *funinfo*)
                   (~%ret? v))
                (with-cons a d _
                  (?
-                   (%=? a)        (with-%= place value a
-                                    (| (tree-find v value :test #'eq)
-                                       (& (| (%slot-value? place)
-                                             (prop-value? place))
-                                          (tree-find v place :test #'eq))
-                                       (unless (eq v place)
-                                         (traverse-statements d))))
-                   (%%go? a)      (traverse-tag .a.)
-                   (%%go-cond? a) (| (eq v ..a.)
-                                     (traverse-tag .a.)
-                                     (traverse-statements d))
+                   (%=? a)         (with-%= place value a
+                                     (| (tree-find v value :test #'eq)
+                                        (unless (eq v place)
+                                          (| (tree-find v place :test #'eq)
+                                             (traverse-statements d)))))
+                   (%%go? a)       (traverse-tag .a.)
+                   (%%go-cond? a)  (| (eq v ..a.)
+                                      (traverse-tag .a.)
+                                      (traverse-statements d))
                    (| (number? a)
                       (%%comment? a)
                       (named-lambda? a))
-                                  (traverse-statements d)
+                                   (traverse-statements d)
                    {(print _)
                     (funinfo-error "Illegal metacode statement ~A." _)}))])
     (| (not (removable-place? v))
