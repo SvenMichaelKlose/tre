@@ -31,7 +31,7 @@
   (cl:setf (cl:symbol-function x) v))
 
 (defbuiltin find-symbol (x &optional (pkg *package*))
-  (cl:find-symbol x (find-package (symbol-name *package*))))
+  (cl:find-symbol x *package*))
 
 (fn tre-symbol (x)
   (cl:intern (symbol-name x) "TRE"))
