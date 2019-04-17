@@ -6,6 +6,7 @@ Changes relative to tre-0.18:
     with precision of seconds only.
   * JS/PHP: MILLISECONDS-SINCE-1970 moved here from modules
     "js" and "php".
+  * CL: FIND-SYMBOL takes string instead of symbol.
 
 Changes of tre-0.18 relative to tre-0.17:
   * Slightly improved optimizer.
