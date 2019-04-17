@@ -1,11 +1,9 @@
 (var *keyword-package* (find-package "KEYWORD"))
-(var *package* nil)
+(var *package* "TRE")
 
 (defbuiltin make-symbol (x &optional (package nil))
   (cl:intern x (?
-                 (cl:not package)       (| (!? *package*
-                                               (symbol-name !))
-                                           "TRE")
+                 (cl:not package)       *package*
                  (cl:packagep package)  (cl:package-name package)
                  (cl:symbolp package)   (cl:symbol-name package)
                  package)))
