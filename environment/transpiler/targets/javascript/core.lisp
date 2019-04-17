@@ -50,7 +50,7 @@
                                 "function-source.lisp"
                                 "dot-expand.lisp"
                                 "math.lisp"
-                                "nanotime.lisp"
+                                "milliseconds-since-1970.lisp"
                                 "property-names.lisp"
                                 "../../../environment/property.lisp"
                                 "../../../environment/make-object.lisp"

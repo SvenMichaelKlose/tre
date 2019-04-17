@@ -8,8 +8,7 @@
 (unix-sh-mkdir "compiled" :parents t)
 (make-project "tré web console"
               `(,@(list+ "tre_modules/js/"
-                         '("milliseconds-since-1970.lisp"
-                           "wait.lisp"))
+                         '("wait.lisp"))
 
                 ,@(list+ "tre_modules/js/dom/"
                          '("def-aos.lisp"

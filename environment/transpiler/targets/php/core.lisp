@@ -65,7 +65,8 @@
                        "../../../environment/make-object.lisp"
                        "base64.lisp"
                        "quit.lisp"
-                       "math.lisp")
+                       "math.lisp"
+                       "milliseconds-since-1970.lisp")
         (php-load-core "../../../environment/"
                        "string.lisp"
                        "files-unsupported.lisp")))
