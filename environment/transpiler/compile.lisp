@@ -109,10 +109,10 @@
   (warn-unused-functions)
   (tell-number-of-warnings)
   (print-status "~A seconds passed.~%"
-                (integer (/ (- (nanotime) start-time) 1000000000))))
+                (integer (/ (- (milliseconds-since-1970) start-time) 1000))))
 
 (fn compile-sections (sections &key (transpiler nil))
-  (let start-time (nanotime)
+  (let start-time (milliseconds-since-1970)
     (= *warnings* nil)
     (with-temporaries (*transpiler*  (| transpiler
                                         (copy-transpiler *default-transpiler*))

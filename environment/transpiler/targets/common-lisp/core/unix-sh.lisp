@@ -16,5 +16,7 @@
                           ,@(? force?       '("-f"))
                           ,x)))
 
-; TODO Implement NANOTIME.
-(defbuiltin nanotime () 0)
+(const +unix-epoch-difference+ (cl:encode-universal-time 0 0 0 1 1 1970 0))
+
+(defbuiltin milliseconds-since-1970 ()
+  (* 1000 (- (cl:get-universal-time) +unix-epoch-difference+)))
