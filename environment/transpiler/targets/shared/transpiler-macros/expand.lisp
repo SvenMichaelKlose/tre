@@ -45,15 +45,6 @@
 (def-shared-transpiler-macro (bc c js php) %defvar (name &optional (val '%%no-value-in-%defvar))
   `(var ,name ,val))
 
-(def-shared-transpiler-macro (bc c js php) in-package (name &optional (val '%%no-value-in-in-package))
-  (cl:eval `(cl:in-package ,(symbol-name name)))
-  (= *package* name)
-  nil)
-
-(def-shared-transpiler-macro (bc c js php) defpackage (&rest x)
-  (cl:eval `(cl:defpackage ,@x))
-  nil)
-
 (def-shared-transpiler-macro (js php) new (&rest x)
   (? (| (not x)
         (keyword? x.)
@@ -75,3 +66,13 @@
      `(& (eq ,x. ,.x.)
          (eq ,x. ,@..x))
      `(eq ,@x)))
+
+(def-shared-transpiler-macro (js php) defpackage (name &rest options)
+  (print-definition `(defpackage ,name ,@options))
+  (cl:eval `(cl:defpackage ,name ,@options))
+  nil)
+
+(def-shared-transpiler-macro (js php) in-package (name)
+  (print-definition `(in-package ,name))
+  (= *package* (symbol-name name))
+  nil)

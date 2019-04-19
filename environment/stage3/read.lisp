@@ -46,7 +46,7 @@
     (? (eql (peek-char str) #\:)
        {(read-char str)
         (values (| (& ! (list-string !))
-                   *keyword-package*)
+                   "KEYWORD")
                 (read-symbol str))}
        (values nil !))))
 
@@ -111,18 +111,24 @@
               pkg
               (list-string sym)))))
 
+(fn read-make-symbol (sym &optional (pkg nil))
+  (!? pkg
+      (make-symbol sym !)
+       (| (find-symbol sym *package*)
+          (make-symbol sym *package*))))
+
 (fn read-slot-value (x)
   (?
     (not x)       nil
-    .x            `(slot-value ,(read-slot-value (butlast x)) ',(make-symbol (car (last x)) "TRE"))
-    (string? x.)  (make-symbol x.)
+    .x            `(slot-value ,(read-slot-value (butlast x)) ',(read-make-symbol (car (last x)) "TRE"))
+    (string? x.)  (read-make-symbol x. "TRE")
     x.))
 
 (fn read-symbol-or-slot-value (pkg sym)
   (!= (split #\. sym)
     (? (& .! !. (car (last !)))
        (read-slot-value !)
-       (make-symbol sym pkg))))
+       (read-make-symbol sym pkg))))
 
 (fn read-atom (str token pkg sym)
   (case token :test #'eq

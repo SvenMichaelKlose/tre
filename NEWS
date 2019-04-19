@@ -7,6 +7,7 @@ Changes relative to tre-0.18:
   * JS/PHP: MILLISECONDS-SINCE-1970 moved here from modules
     "js" and "php".
   * CL: FIND-SYMBOL takes strings instead of symbols.
+  * JS/PHP: DEFPACKAGE and IN-PACKAGE added.
 
 Changes of tre-0.18 relative to tre-0.17:
   * Slightly improved optimizer.

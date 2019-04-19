@@ -48,6 +48,3 @@
 
 (def-cl-transpiler-macro %%comment (&rest x)
   (concat-stringtree (convert-identifiers x)))
-
-(def-cl-transpiler-macro defpackage (name &rest options)
-  (cl:eval `(cl:defpackage ,name ,@options)))

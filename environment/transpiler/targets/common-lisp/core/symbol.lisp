@@ -33,3 +33,13 @@
 
 (fn tre-symbol (x)
   (cl:intern (symbol-name x) "TRE"))
+
+(defbuiltin defpackage (name &rest options)
+  (print-definition `(defpackage ,name ,@options))
+  (cl:eval `(cl:defpackage ,name ,@options))
+  nil)
+
+(defbuiltin in-package (name)
+  (print-definition `(in-package ,name ,@options))
+  (= *package* (symbol-name name))
+  nil)

@@ -68,7 +68,7 @@
                                 (list (funcall (epilogue-gen)))))))
 
 (fn frontend-section-load (path)
-  (print-definition `(load ,path))
+  (format t "; Loading \"~A\"…~%" path)
   (load-file path))
 
 (fn section-comment (section)
@@ -88,16 +88,18 @@
                      (error "Don't know what to do with section ~A." section))))))
 
 (fn frontend-sections (sections)
-  (!= (map-sections #'frontend-section sections (cached-frontend-sections))
-    (= (cached-frontend-sections) !)))
+  (with-temporary *package* "TRE"
+    (!= (map-sections #'frontend-section sections (cached-frontend-sections))
+      (= (cached-frontend-sections) !))))
 
 (fn generic-frontend (sections)
   (funcall (frontend-init))
   (generic-codegen (frontend-sections (funcall (sections-before-import)))
-                   (frontend-sections (+ (funcall (sections-after-import))
-                                         sections))
+                   (+ (frontend-sections (funcall (sections-after-import)))
+                      (frontend-sections sections))
                    (+ (list "Section imports")
-                      (import-from-host))))
+                      (with-temporary *package* "TRE"
+                        (import-from-host)))))
 
 (fn tell-number-of-warnings ()
   (!= (length *warnings*)
