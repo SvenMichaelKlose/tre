@@ -1,6 +1,6 @@
 (const *log-events?* nil)
-(const *fallback-language* 'en)
-(const *available-languages* '(en))
+(const *fallback-language* :en)
+(const *available-languages* '(:en))
 (const *have-lml-components?* t)
 
 (load "tre_modules/js/event/names.lisp")

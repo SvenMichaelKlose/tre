@@ -1,5 +1,5 @@
-(const *fallback-language* 'en)
-(const *available-languages* '(en))
+(const *fallback-language* :en)
+(const *available-languages* '(:en))
 
 (load "tre_modules/l10n/compile-time.lisp")
 
