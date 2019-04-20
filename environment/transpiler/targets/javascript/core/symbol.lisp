@@ -28,3 +28,5 @@
 
 (defnative =-symbol-function (v x)
   (setq x.f v))
+
+(defnative find-symbol (name package))
