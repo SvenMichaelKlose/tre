@@ -188,9 +188,10 @@
   (js-compiled-symbol x))
 
 (def-js-codegen %slot-value (x y)
-  `(%%native ,x "." ,(? (%%string? y)
-                        .y.
-                        y)))
+  `(%%native ,x "." ,(?
+                       (%%string? y)  .y.
+                       (symbol? y)    (convert-identifier (make-symbol (symbol-name y) "TRE"))
+                       y)))
 
 (def-js-codegen prop-value (x y)
   `(%aref ,x ,y))
