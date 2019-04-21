@@ -6,4 +6,4 @@
      (make-symbol (? (symbol? x)
                      (symbol-name x)
                      x)
-                  *keyword-package*)))
+                  "KEYWORD")))
