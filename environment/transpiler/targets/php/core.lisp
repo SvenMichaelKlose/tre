@@ -19,7 +19,8 @@
   (with-temporary *have-compiler?* nil
     (apply #'+ (@ [!= (+ *php-core-path* dir-path _)
                     (print-definition  `(php-load-core ,!))
-                    (load-file !)
+                    (with-temporary *package* "TRE-CORE"
+                      (load-file !))
                     (fetch-file !)]
                   files))))
 

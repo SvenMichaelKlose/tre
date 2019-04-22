@@ -3,7 +3,7 @@
 (fn cl-load-base (dir-path &rest files)
   (apply #'+ (@ [!= (+ dir-path _)
                   (print-definition `(cl-load-base ,!))
-                  (with-temporary *package* (make-symbol "TRE-CORE")
+                  (with-temporary *package* "TRE-CORE"
                     (load-file !))
                   (fetch-file !)]
                 files)))

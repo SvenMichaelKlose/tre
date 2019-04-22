@@ -3,7 +3,8 @@
 (fn js-load-core (dir-path &rest files)
   (apply #'+ (@ [!= (+ *js-core-path* dir-path _)
                   (print-definition `(js-load-core ,!))
-                  (load-file !)
+                  (with-temporary *package* "TRE-CORE"
+                    (load-file !))
                   (fetch-file !)]
                 files)))
 
