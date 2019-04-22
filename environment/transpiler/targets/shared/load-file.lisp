@@ -2,7 +2,13 @@
   (with-queue q
     (while (seek-char s)
            (queue-list q)
-      (enqueue q (read s)))))
+      (!= (read s)
+        (? (cons? !)
+           (?
+             (eq 'defpackage !.)  (eval `(cl:defpackage ,@.!))
+             (eq 'in-package !.)  (= *package* (make-symbol (symbol-name .!.)))
+             (enqueue q !))
+           (enqueue q !))))))
 
 (fn load-file (name)
   (with-open-file s (open name :direction 'input)
