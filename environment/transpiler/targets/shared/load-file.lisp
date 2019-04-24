@@ -5,10 +5,9 @@
       (!= (read s)
         (? (cons? !)
            (?
-             (eq 'defpackage !.)  (eval `(cl:defpackage ,@.!))
-             (eq 'in-package !.)  (= *package* (make-symbol (symbol-name .!.)))
-             (enqueue q !))
-           (enqueue q !))))))
+             (eq 'defpackage !.)  (eval (transpiler-macroexpand `(defpackage ,@.!)))
+             (eq 'in-package !.)  (eval (transpiler-macroexpand `(in-package ,@.!)))))
+        (enqueue q !)))))
 
 (fn load-file (name)
   (with-open-file s (open name :direction 'input)
