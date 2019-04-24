@@ -29,17 +29,17 @@
   (cl:setf (cl:symbol-function x) v))
 
 (defbuiltin find-symbol (x &optional (pkg *package*))
-  (cl:find-symbol x *package*))
+  (cl:find-symbol x pkg))
 
 (fn tre-symbol (x)
   (cl:intern (symbol-name x) "TRE"))
 
-(defbuiltin defpackage (name &rest options)
+(defspecial defpackage (name &rest options)
   (print-definition `(defpackage ,name ,@options))
   (cl:eval `(cl:defpackage ,name ,@options))
   nil)
 
-(defbuiltin in-package (name)
-  (print-definition `(in-package ,name ,@options))
+(defspecial in-package (name)
+  (print-definition `(in-package ,name))
   (= *package* (symbol-name name))
   nil)
