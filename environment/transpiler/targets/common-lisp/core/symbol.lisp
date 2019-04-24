@@ -45,5 +45,5 @@
   (= *package* (symbol-name name))
   nil)
 
-(defbuiltin export (x)
-  (cl:export x))
+(defbuiltin export (x &optional (pkg *package*))
+  (cl:export x *package*))
