@@ -114,8 +114,8 @@
 (fn read-make-symbol (sym &optional (pkg nil))
   (!? pkg
       (make-symbol sym !)
-       (| (find-symbol sym *package*)
-          (make-symbol sym *package*))))
+      (| (find-symbol sym *package*)
+         (make-symbol sym *package*))))
 
 (fn read-slot-value (x)
   (?
