@@ -3,7 +3,7 @@
       ,real))
 
 (defmacro define-set-alias (alias real &key (class nil))
-  `(defmethod ,class ,($ 'set- alias) ()
+  `(defmethod ,class ,($ 'set- alias) (x)
       (= ,real x)))
 
 (defmacro define-getset-alias (alias real &key (class nil))
