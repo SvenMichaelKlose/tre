@@ -43,6 +43,6 @@
         (late-print '(cl:in-package :tre-core) o :print-info print-info)
         (@ [late-print _ o :print-info print-info] c)
         (format o (+ "(cl:in-package :tre)~%"
-                     "(cl:format t \"Loading environment...\\~%\")~%"
+                     "(cl:format t \"; Loading environment...\\~%\")~%"
                      "(env-load \"main.lisp\")~%"))))))
 (quit)
