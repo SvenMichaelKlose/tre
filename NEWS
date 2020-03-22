@@ -10,6 +10,8 @@ Changes relative to tre-0.18:
   * JS/PHP: DEFPACKAGE, IN-PACKAGE and EXPORT added.
   * PHP: Does not deal with magic quotes anymore.
   * JS/PHP: OREF added for object access.
+  * JS: STRING? also checks if object is an instance of
+    class "String".
 
 Changes of tre-0.18 relative to tre-0.17:
   * Slightly improved optimizer.

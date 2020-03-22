@@ -1,7 +1,8 @@
 (js-type-predicate %string? "string")
 
 (fn string? (x)
-  (%string? x))
+  (| (%string? x)
+     (instanceof x (%%native "String"))))
 
 (fn string-concat (&rest x)
   (!= (make-array)
