@@ -161,6 +161,12 @@
 
 ;;;; OBJECTS
 
+(def-js-codegen oref (arr &rest idx)
+  `(%aref ,arr ,@idx))
+
+(def-js-codegen =-oref (val &rest x)
+  `(=-%aref ,val ,@x))
+
 (def-js-codegen %%%make-object (&rest args)
   (c-list (@ [`( ,_. ": " ,._.)] (group args 2)) :parens-type :braces))
 

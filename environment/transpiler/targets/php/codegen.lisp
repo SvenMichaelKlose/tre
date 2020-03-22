@@ -216,6 +216,12 @@
 
 ;;;; OBJECTS
 
+(def-php-codegen oref (arr &rest indexes)
+  `(href ,arr ,@indexes))
+
+(def-php-codegen =-oref (val arr &rest indexes)
+  `(=-href ,val ,arr ,@indexes))
+
 (fn php-literal-object-element (x)
   `(,x. " => " ,(php-dollarize .x.)))
 
