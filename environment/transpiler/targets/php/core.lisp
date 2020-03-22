@@ -2,8 +2,7 @@
 
 (var *php-core-native*
      ,(apply #'+ (@ [fetch-file (+ "environment/transpiler/targets/php/core/native/" _ ".php")]
-                    '("remove-magic-quotes"
-                      "settings"
+                    '("settings"
                       "error"
                       "character"
                       "cons"

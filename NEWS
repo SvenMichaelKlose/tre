@@ -8,6 +8,7 @@ Changes relative to tre-0.18:
     "js" and "php".
   * CL: FIND-SYMBOL takes strings instead of symbols.
   * JS/PHP: DEFPACKAGE, IN-PACKAGE and EXPORT added.
+  * PHP: Does not deal with magic quotes anymore.
 
 Changes of tre-0.18 relative to tre-0.17:
   * Slightly improved optimizer.
