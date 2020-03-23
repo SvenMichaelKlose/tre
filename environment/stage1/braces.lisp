@@ -3,4 +3,4 @@
         (string? x.)
         (keyword? x.))
      `(%%make-object ,@x)
-     `(progn ,@x)))
+     (error "Braces cannot be used as PROGN anymore.")))

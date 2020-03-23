@@ -9,8 +9,9 @@
     (eq t x)  "T"
     x         (? (symbol? x)
                  x.n
-                 {(print x)
-                  (error "Symbol expected.")})
+                 (progn
+                   (print x)
+                   (error "Symbol expected.")))
     "NIL"))
 
 (fn symbol-value (x)

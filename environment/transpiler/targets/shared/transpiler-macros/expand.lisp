@@ -1,6 +1,7 @@
 (defmacro def-shared-transpiler-macro (targets &rest x)
-  `{,@(@ [`(,($ 'def- _ '-transpiler-macro) ,@x)]
-         (intersect *targets* (make-keywords targets)))})
+  `(progn
+     ,@(@ [`(,($ 'def- _ '-transpiler-macro) ,@x)]
+     (intersect *targets* (make-keywords targets)))))
 
 (def-shared-transpiler-macro (js php) assert (x &optional (txt nil) &rest args)
   (& (assert?)
@@ -38,9 +39,10 @@
   (add-defined-variable name)
   (& *have-compiler?*
      (add-delayed-expr `((= *variables* (. (. ',name ',val) *variables*)))))
-  `{,@(& (needs-var-declarations?)
-         `((%var ,name)))
-    (%= ,name ,val)})
+  `(progn
+     ,@(& (needs-var-declarations?)
+          `((%var ,name)))
+     (%= ,name ,val)))
 
 (def-shared-transpiler-macro (bc c js php) %defvar (name &optional (val '%%no-value-in-%defvar))
   `(var ,name ,val))

@@ -44,10 +44,11 @@
 (fn read-symbol-and-package (str)
   (!= (read-symbol str)
     (? (eql (peek-char str) #\:)
-       {(read-char str)
-        (values (| (& ! (list-string !))
-                   "KEYWORD")
-                (read-symbol str))}
+       (progn
+         (read-char str)
+         (values (| (& ! (list-string !))
+                    "KEYWORD")
+                 (read-symbol str)))
        (values nil !))))
 
 (fn read-string (str)

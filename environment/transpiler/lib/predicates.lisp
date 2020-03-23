@@ -1,5 +1,6 @@
-{,@(@ [`(def-head-predicate ,_)]
-      '(identity quote backquote quasiquote quasiquote-splice))}
+(progn
+  ,@(@ [`(def-head-predicate ,_)]
+       '(identity quote backquote quasiquote quasiquote-splice)))
 
 (fn literal-function? (x)
   (& (cons? x)

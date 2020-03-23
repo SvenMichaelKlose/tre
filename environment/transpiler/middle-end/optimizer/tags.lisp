@@ -41,12 +41,14 @@
            #'((x)
                 (optimizer reduce-tags
                   (two-subsequent-tags? a d)
-                    {(add-removed-tag a d.)
-                     (reduce-tags d)}
+                    (progn
+                      (add-removed-tag a d.)
+                      (reduce-tags d))
                   (& (number? a)
                      (%%go? d.))
-                    {(add-removed-tag a (%%go-tag d.))
-                     (reduce-tags d)}))
+                    (progn
+                      (add-removed-tag a (%%go-tag d.))
+                      (reduce-tags d))))
 
          translate-tags
                     ; XXX [| (assoc-value _ removed-tags) _]

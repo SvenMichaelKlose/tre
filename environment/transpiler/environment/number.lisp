@@ -7,7 +7,8 @@
        (@ (i .x n)
          (= n (,($ '%%% op) n i))))))
 
-{,@(@ [`(def-simple-op ,_)] '(* / mod))}
+(progn
+  ,@(@ [`(def-simple-op ,_)] '(* / mod)))
 
 (fn number+ (&rest x)
   (let n x.
@@ -20,26 +21,28 @@
                       (@ (i .x n)
                         (= n (%%%- n i))))
                     (%%%- x.))
-    `{(fn - (&rest x)
-        ,gen-body)
-      (fn number- (&rest x)
-        ,gen-body)}))
+    `(progn
+       (fn - (&rest x)
+         ,gen-body)
+       (fn number- (&rest x)
+         ,gen-body))))
 
 (define-generic-transpiler-minus)
 
 (defmacro def-generic-transpiler-comparison (name)
   (let op ($ '%%% name)
-    `{(fn ,name (n &rest x)
-        (@ (i x t)
-          (| (,op n i)
-             (return))
-          (= n i)))
-      (fn ,($ 'character name) (n &rest x)
-        (let n (char-code n)
-          (@ (i x t)
-            (| (,op n (char-code i))
-               (return))
-            (= n i))))}))
+    `(progn
+       (fn ,name (n &rest x)
+         (@ (i x t)
+           (| (,op n i)
+              (return))
+           (= n i)))
+       (fn ,($ 'character name) (n &rest x)
+         (let n (char-code n)
+           (@ (i x t)
+             (| (,op n (char-code i))
+                (return))
+             (= n i)))))))
 
 (def-generic-transpiler-comparison ==)
 (def-generic-transpiler-comparison <)

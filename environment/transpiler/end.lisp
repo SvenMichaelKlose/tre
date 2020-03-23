@@ -29,9 +29,10 @@
         (dump-pass? end x))
      (? (equal x (last-pass-result))
         (format t ";      …no difference to previous dump.~%" pass)
-        {(format t "; >>>> Dump of pass ~A:~%" (symbol-name pass))
-         (print x)
-         (format t "~L; <<<< End of pass ~A.~%" (symbol-name pass))}))
+        (progn
+          (format t "; >>>> Dump of pass ~A:~%" (symbol-name pass))
+          (print x)
+          (format t "~L; <<<< End of pass ~A.~%" (symbol-name pass)))))
   x)
 
 (fn transpiler-pass (p list-of-exprs)
@@ -47,12 +48,13 @@
             out      nil)
        (@ (p passes (? outpass out list-of-exprs))
          (? (enabled-pass? p.)
-            {(& (dump-passes?)
-                (format t "; ++++ Running pass ~A in ~A~%" (symbol-name p.) (symbol-name name)))
-             (= list-of-exprs (dump-pass name p. (transpiler-pass .p list-of-exprs)))
-             (= (last-pass-result) list-of-exprs)
-             (& (eq p. outpass)
-                (= out list-of-exprs))}
+            (progn
+              (& (dump-passes?)
+                 (format t "; ++++ Running pass ~A in ~A~%" (symbol-name p.) (symbol-name name)))
+              (= list-of-exprs (dump-pass name p. (transpiler-pass .p list-of-exprs)))
+              (= (last-pass-result) list-of-exprs)
+              (& (eq p. outpass)
+                 (= out list-of-exprs)))
             (& (dump-passes?)
                (format t "; ---- Skipping pass ~A in ~A~%" (symbol-name p.) (symbol-name name))))))))
 

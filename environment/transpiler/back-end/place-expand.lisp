@@ -12,11 +12,12 @@
 (fn make-scope-place (fi x)
   (? (funinfo-scope-arg? fi x)
      x
-     {(funinfo-setup-scope fi x)
-      (!= (make-scope-place-1 fi x)
-        `(%vec ,(place-expand-atom fi (make-scope-place fi .!.))
-               ,..!.
-               ,...!.))}))
+     (progn
+       (funinfo-setup-scope fi x)
+       (!= (make-scope-place-1 fi x)
+         `(%vec ,(place-expand-atom fi (make-scope-place fi .!.))
+                ,..!.
+                ,...!.)))))
 
 (fn place-expand-emit-stackplace (fi x)
   `(%stack ,(funinfo-name fi) ,x))

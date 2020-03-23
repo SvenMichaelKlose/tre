@@ -1,17 +1,18 @@
 Changes relative to tre-0.18:
+  * Braces '{}' cannot be used as an alias for PROGN anymore.
   * PERMUTATE: Takes &REST argument instead of list of lists.
   * DEFINE-SLOT-SETTER*: Weird idea removed.
   * DEFINE-GENSYM-GENERATOR -> DEF-GENSYM.
   * CL: NANOTIME replaced by MILLISECONDS-SINCE-1970, albeit
     with precision of seconds only.
-  * JS/PHP: MILLISECONDS-SINCE-1970 moved here from modules
     "js" and "php".
   * CL: FIND-SYMBOL takes strings instead of symbols.
-  * JS/PHP: DEFPACKAGE, IN-PACKAGE and EXPORT added.
   * PHP: Does not deal with magic quotes anymore.
-  * JS/PHP: OREF added for object access.
   * JS: STRING? also checks if object is an instance of
     class "String".
+  * JS/PHP: MILLISECONDS-SINCE-1970 moved here from modules
+  * JS/PHP: DEFPACKAGE, IN-PACKAGE and EXPORT added.
+  * JS/PHP: OREF added for object access.
 
 Changes of tre-0.18 relative to tre-0.17:
   * Slightly improved optimizer.

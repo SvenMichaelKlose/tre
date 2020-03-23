@@ -2,8 +2,9 @@
   (@ (i x)
     (? (cons? i)
        (gather-imports-list i)
-       {(add-wanted-function i)
-        (add-wanted-variable i)})))
+       (progn
+         (add-wanted-function i)
+         (add-wanted-variable i)))))
 
 (metacode-walker gather-imports (x)
   :if-setq (with-%= place value x.

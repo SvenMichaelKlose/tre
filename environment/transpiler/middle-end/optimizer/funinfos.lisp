@@ -8,20 +8,22 @@
 (fn remove-unused-scope-arg (fi)
   (& (not (funinfo-fast-scope? fi))
      (funinfo-closure-without-free-vars? fi)
-     {(= (funinfo-scope-arg fi) nil)
-      (pop (funinfo-args fi))
-      (pop (funinfo-argdef fi))
-      (optimizer-message "Made ~A a regular function.~%" (human-readable-funinfo-names fi))}))
+     (progn
+       (= (funinfo-scope-arg fi) nil)
+       (pop (funinfo-args fi))
+       (pop (funinfo-argdef fi))
+       (optimizer-message "Made ~A a regular function.~%" (human-readable-funinfo-names fi)))))
 
 (fn remove-scoped-vars (fi)
   (& (sole? (funinfo-scoped-vars fi))
      (not (funinfo-place? fi (car (funinfo-scoped-vars fi))))
-     {(optimizer-message "Unscoping ~A in ~A.~%"
-                         (!= (funinfo-scoped-vars fi)
-                           (? .! ! !.))
-                         (human-readable-funinfo-names fi))
-      (= (funinfo-scoped-vars fi) nil
-         (funinfo-scope fi) nil)}))
+     (progn
+       (optimizer-message "Unscoping ~A in ~A.~%"
+                          (!= (funinfo-scoped-vars fi)
+                            (? .! ! !.))
+                          (human-readable-funinfo-names fi))
+       (= (funinfo-scoped-vars fi) nil
+          (funinfo-scope fi) nil))))
 
 (fn replace-scope-arg (fi)
   (& (funinfo-scope-arg fi)

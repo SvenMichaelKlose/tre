@@ -1,3 +1,5 @@
+; TODO: Get rid of this.
+
 (defmacro define-get-alias (alias real &key (class nil))
   `(defmethod ,class ,($ 'get- alias) ()
       ,real))
@@ -7,5 +9,6 @@
       (= ,real x)))
 
 (defmacro define-getset-alias (alias real &key (class nil))
-  `{(define-get-alias ,alias ,real :class ,class)
-    (define-set-alias ,alias ,real :class ,class)})
+  `(progn
+     (define-get-alias ,alias ,real :class ,class)
+     (define-set-alias ,alias ,real :class ,class)))

@@ -11,8 +11,9 @@
 (fn %nconc-0 (lsts)
   (& lsts
      (!? lsts.
-         {(rplacd (last !) (%nconc-0 .lsts))
-          !}
+         (progn
+           (rplacd (last !) (%nconc-0 .lsts))
+           !)
          (%nconc-0 .lsts))))
 
 (fn nconc (&rest lsts)

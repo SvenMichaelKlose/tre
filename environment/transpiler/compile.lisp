@@ -55,8 +55,9 @@
   (print-status "Let me think. Hmm…~F")
   (funcall (middleend-init))
   (with (before-imports    (codegen-sections before-import)
-         imports-and-rest  (+ {(developer-note "Generating imports…~%")
-                               (codegen imports)}
+         imports-and-rest  (+ (progn
+                                (developer-note "Generating imports…~%")
+                                (codegen imports))
                               (compile-delayed-exprs)
                               (codegen-sections after-import)
                               (codegen-accumulated-toplevels)))

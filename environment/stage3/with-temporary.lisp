@@ -3,7 +3,8 @@
     `(with (,old-val ,place)
        (= ,place ,val)
        (prog1
-         {,@body}
+         (progn
+           ,@body)
          (= ,place ,old-val)))))
 
 (defmacro with-temporaries (lst &body body)
