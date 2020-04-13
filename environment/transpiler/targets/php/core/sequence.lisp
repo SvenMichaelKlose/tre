@@ -7,7 +7,8 @@
     (is_array x) (sizeof x)))
 
 (fn split (obj seq &key (test #'eql))
-  (? (& (eq #'eql test) (string? seq))
+  (? (& (eq #'eql test)
+        (string? seq))
      (array-list (explode (? (character? obj)
                              (char-string obj)
                              obj)
