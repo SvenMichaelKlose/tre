@@ -17,16 +17,6 @@
      (& (is_array x)
         (%%native "array_keys (" x ") === range (0, count (" x ") - 1)"))))
 
-(fn %array-push (arr x)
-  (%= (%%native "$" arr "[]") x)
-  x)
-
-(fn array-push (arr x)  ; TODO: Remove. Never used.
-  (? (is_a x "__array")
-     (arr.p x)
-     (%array-push arr x))
-  x)
-
 (fn list-phparray (x)
   (!= (%%%make-array)
     (@ (i x !)
