@@ -1,4 +1,5 @@
 Changes relative to tre-0.18:
+  * Bug-fix: jump tag optimizer translated any number.
   * Braces '{}' cannot be used as an alias for PROGN anymore.
     Now property names may be variables.
   * READ: Reads literal arrays. '#(…)'.
