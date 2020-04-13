@@ -19,11 +19,6 @@
      (%array-push arr x))
   x)
 
-(fn list-array (x)
-  (!= #()
-    (@ (i x !)
-      (!.p i))))
-
 (fn list-phparray (x)
   (!= (%%%make-array)
     (@ (i x !)
