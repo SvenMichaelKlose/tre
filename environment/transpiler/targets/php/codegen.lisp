@@ -199,7 +199,7 @@
 
 (def-php-codegen href (h k)
   `(%%native "(is_array (" ,(php-dollarize h) ")) ? "
-                 "(isset (" ,(php-dollarize h) "[" ,(php-dollarize k) "]) ?? NULL) : "
+                 ,(php-dollarize h) "[" ,(php-dollarize k) "] ?? NULL : "
                  ,(php-dollarize h) "->g(" ,(compiled-function-name '%%key) "(" ,(php-dollarize k) "))"))
 
 (def-php-codegen =-href (v h k)
