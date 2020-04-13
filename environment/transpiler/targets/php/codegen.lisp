@@ -175,10 +175,6 @@
 (def-php-codegen %%%make-array (&rest elements)
   `(%%native "[" ,@(php-literal-array-elements (group elements 2)) "]"))
 
-; TODO: Replace by CL type MAKE-ARRAY.
-(def-php-codegen make-array (&rest elements)
-  `(%%native "new __array ()" ""))
-
 (def-php-codegen %aref (arr &rest indexes)
   `(%%native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
 

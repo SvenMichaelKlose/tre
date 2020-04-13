@@ -43,6 +43,7 @@
                                 "../../../environment/equality.lisp"
                                 "late-cons.lisp"
                                 "late-symbol.lisp"
+                                "../../../environment/make-array.lisp"
                                 "sequence.lisp"
                                 "../../../environment/list-string.lisp"
                                 "string.lisp"

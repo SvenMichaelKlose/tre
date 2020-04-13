@@ -1,3 +1,9 @@
+(fn make-array (&rest dimensions)
+  (aprog1 (%%native "" "new __array ()")
+    (dotimes (i dimensions.)
+      (= (aref ! i) (!? .dimensions
+                        (apply #'make-array !))))))
+
 (fn array? (x)
   (| (is_a x "__array")
      (& (is_array x)

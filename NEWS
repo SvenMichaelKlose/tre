@@ -10,21 +10,23 @@ Changes relative to tre-0.18:
     "js" and "php".
   * CL: FIND-SYMBOL takes strings instead of symbols.
   * PHP: versions older than 7.0 are not supported anymore.
-    In return, code size has been reduced by ~10% and overall
-    performance has been greatly improved as well.
+         In return, code size has been reduced by ~10% and
+         overall performance has been greatly improved as
+         well.
   * PHP: Does not deal with magic quotes anymore.
   * PHP: Faster array access.
   * PHP: Native arrays are recognized as hash tables if they
-    are not sequential.
+         are not sequential.
   * PHP: MAKE-HASH-TABLE is a regular function, not a macro.
   * JS: STRING? also checks if object is an instance of
-    class "String".
+        class "String".
   * JS/PHP: Code size reduction by ~30%.
   * JS/PHP: MILLISECONDS-SINCE-1970 moved here from modules
   * JS/PHP: DEFPACKAGE, IN-PACKAGE and EXPORT added.
   * JS/PHP: OREF added for object access.
   * JS/PHP: Slightly shorter generated identifiers for alien
-    characters..
+            characters.
+  * JS/PHP: MAKE-ARRAY is a regular function.
 
 Changes of tre-0.18 relative to tre-0.17:
   * Slightly improved optimizer.
