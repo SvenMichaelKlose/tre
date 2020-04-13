@@ -14,9 +14,9 @@
   x)
 
 (fn list-array (x)
-  (let a (make-array)
-    (@ (i x a)
-      (a.p i))))
+  (!= #()
+    (@ (i x !)
+      (!.p i))))
 
 (fn list-phparray (x)
   (!= (%%%make-array)

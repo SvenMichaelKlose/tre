@@ -7,6 +7,6 @@
 
 (functional list-array)
 (fn list-array (x)
-  (!= (make-array)
+  (!= #()
     (@ (i x !)
       (!.push i))))

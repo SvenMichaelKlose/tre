@@ -129,8 +129,12 @@
 
 ;;;; ARRAYS
 
-(def-js-codegen make-array (&rest elements)
+(def-js-codegen %%%make-array (&rest elements)
   `(%%native ,@(c-list elements :parens-type :brackets)))
+
+; TODO: Replace by CL type MAKE-ARRAY.
+(def-js-codegen make-array (&rest elements)
+  `(%%%make-array ,@elements))
 
 (def-js-codegen %aref (arr &rest idx)
   `(%%native ,arr ,@(@ [`("[" ,_ "]")] idx)))

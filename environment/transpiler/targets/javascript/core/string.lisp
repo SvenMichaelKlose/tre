@@ -5,7 +5,7 @@
      (instanceof x (%%native "String"))))
 
 (fn string-concat (&rest x)
-  (!= (make-array)
+  (!= #()
     (@ (i x (!.join ""))
       (& i (!.push i)))))
 

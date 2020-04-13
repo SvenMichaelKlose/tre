@@ -173,8 +173,9 @@
   (pad (@ #'php-literal-array-element x) ", "))
 
 (def-php-codegen %%%make-array (&rest elements)
-  `(%%native "array (" ,@(php-literal-array-elements (group elements 2)) ")"))
+  `(%%native "[" ,@(php-literal-array-elements (group elements 2)) "]"))
 
+; TODO: Replace by CL type MAKE-ARRAY.
 (def-php-codegen make-array (&rest elements)
   `(%%native "new __array ()" ""))
 
@@ -212,7 +213,7 @@
   `(%%native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))
 
 (def-php-codegen make-hash-table (&rest ignored-args)
-  `(make-array))
+  `(%%native "new __array ()" ""))
 
 
 ;;;; OBJECTS
