@@ -1,8 +1,16 @@
 (fn make-array (&rest dimensions)
-  (aprog1 (%%native "" "new __array ()")
-    (dotimes (i dimensions.)
+  (!= (%%native "" "new __array ()")
+    (dotimes (i dimensions. !)
       (= (aref ! i) (!? .dimensions
                         (apply #'make-array !))))))
+
+(fn list-array (x)
+  (aprog1 (%%native "" "new __array ()")
+    (dolist (i x !)
+      (!.p i))))
+
+(fn array (&rest elms)
+  (list-array elms))
 
 (fn array? (x)
   (| (is_a x "__array")
@@ -13,7 +21,7 @@
   (%= (%%native "$" arr "[]") x)
   x)
 
-(fn array-push (arr x)
+(fn array-push (arr x)  ; TODO: Remove. Never used.
   (? (is_a x "__array")
      (arr.p x)
      (%array-push arr x))

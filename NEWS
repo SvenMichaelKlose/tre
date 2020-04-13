@@ -26,7 +26,9 @@ Changes relative to tre-0.18:
   * JS/PHP: OREF added for object access.
   * JS/PHP: Slightly shorter generated identifiers for alien
             characters.
-  * JS/PHP: MAKE-ARRAY is a regular function.
+  * JS/PHP: MAKE-ARRAY is a regular function which does not
+            take a list of initial elements but a list of
+            dimensions.
 
 Changes of tre-0.18 relative to tre-0.17:
   * Slightly improved optimizer.

@@ -139,7 +139,7 @@
     :number    (with-stream-string s sym
                  (read-number s))
     :hexnum    (read-hex str)
-    :array     (. '%%%make-array (read-cons-slot str))
+    :array     (. 'array (read-cons-slot str))
     :function  `(function ,(read-expr str))
     :symbol    (read-symbol-or-slot-value pkg sym)
     (? (%read-closing-parens? token)
