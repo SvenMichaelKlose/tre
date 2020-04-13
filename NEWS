@@ -16,6 +16,7 @@ Changes relative to tre-0.18:
   * PHP: Faster array access.
   * JS: STRING? also checks if object is an instance of
     class "String".
+  * JS/PHP: Code size reduction by ~30%.
   * JS/PHP: MILLISECONDS-SINCE-1970 moved here from modules
   * JS/PHP: DEFPACKAGE, IN-PACKAGE and EXPORT added.
   * JS/PHP: OREF added for object access.
