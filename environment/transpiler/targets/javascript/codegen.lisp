@@ -142,20 +142,8 @@
 (def-js-codegen =-%aref (val &rest x)
   `(%%native (%aref ,@x) " = " ,val))
 
-(def-js-codegen aref (arr &rest idx)
-  `(%aref ,arr ,@idx))
-
-(def-js-codegen =-aref (val &rest x)
-  `(=-%aref ,val ,@x))
-
 
 ;;;; HASH TABLES
-
-(def-js-codegen href (arr &rest idx)
-  `(%aref ,arr ,@idx))
-
-(def-js-codegen =-href (val &rest x)
-  `(=-%aref ,val ,@x))
 
 (def-js-codegen property-remove (h key)
   `(%%native "delete " ,h "[" ,key "]"))
@@ -207,13 +195,13 @@
 (def-js-codegen prop-value (x y)
   `(%aref ,x ,y))
 
-(def-js-codegen %try ()
+(def-js-codegen %try () ; TODO: Check if stale.
   '(%%native "try {"))
 
-(def-js-codegen %closing-bracket ()
+(def-js-codegen %closing-bracket () ; TODO: Check if stale.
   '(%%native "}"))
 
-(def-js-codegen %catch (x)
+(def-js-codegen %catch (x)  ; TODO: Check if stale.
   `(%%native "catch (" ,x ") {"))
 
 
@@ -223,7 +211,7 @@
   `(%%native ,v "[" ,i "]"))
 
 (def-js-codegen %set-vec (v i x)
-  `(%%native (aref ,v ,i) "=" ,x ,*js-separator*))
+  `(%%native (%aref ,v ,i) "=" ,x ,*js-separator*))
 
 (def-js-codegen %js-typeof (x)
   `(%%native "typeof " ,x))
