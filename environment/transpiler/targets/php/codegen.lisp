@@ -45,11 +45,11 @@
 
 (def-php-codegen %%go-nil (tag val)
   (let v (php-dollarize val)
-    (php-line "if (" v " === false || " v " === null) " (php-jump tag))))
+    (php-line "if (" v " === null || " v " === false) " (php-jump tag))))
 
 (def-php-codegen %%go-not-nil (tag val)
   (let v (php-dollarize val)
-    (php-line "if (!(" v " === false || " v " === null)) " (php-jump tag))))
+    (php-line "if (!(" v " === null || " v " === false)) " (php-jump tag))))
 
 
 ;;;; FUNCTIONS
