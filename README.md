@@ -1,7 +1,7 @@
 The tré programming language
 ============================
 
-tré transpiles Lisp to JavaScript and PHP (5+).  It has been under
+tré transpiles Lisp to JavaScript and PHP7+.  It has been under
 development since 2005 and runs on top of Steel Bank Common Lisp
 (sbcl).
 
