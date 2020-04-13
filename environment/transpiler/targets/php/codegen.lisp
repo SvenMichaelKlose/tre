@@ -198,14 +198,14 @@
 ;;;; HASH TABLES
 
 (def-php-codegen href (h k)
-  `(%%native "(is_a (" ,(php-dollarize h) ", '__array')) ? "
-                 ,(php-dollarize h) "->g(" ,(compiled-function-name '%%key) "(" ,(php-dollarize k) ")) : "
-                 "(isset (" ,(php-dollarize h) "[" ,(php-dollarize k) "]) ?? NULL)"))
+  `(%%native "(is_array (" ,(php-dollarize h) ")) ? "
+                 "(isset (" ,(php-dollarize h) "[" ,(php-dollarize k) "]) ?? NULL) : "
+                 ,(php-dollarize h) "->g(" ,(compiled-function-name '%%key) "(" ,(php-dollarize k) "))"))
 
 (def-php-codegen =-href (v h k)
-  `(%%native "(is_a (" ,(php-dollarize h) ", '__array')) ? "
-                 ,(php-dollarize h) "->s(" ,(compiled-function-name '%%key) "(" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
-                 ,(php-dollarize h) "[" ,(php-dollarize k) "] = " ,(php-dollarize v)))
+  `(%%native "(is_array (" ,(php-dollarize h) ")) ? "
+                 ,(php-dollarize h) "[" ,(php-dollarize k) "] = " ,(php-dollarize v) " : "
+                 ,(php-dollarize h) "->s(" ,(compiled-function-name '%%key) "(" ,(php-dollarize k) ")," ,(php-dollarize v) ")"))
 
 (def-php-codegen hremove (h key)
   `(%%native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))
