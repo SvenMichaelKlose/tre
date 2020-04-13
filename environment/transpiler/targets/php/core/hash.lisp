@@ -1,3 +1,6 @@
+(fn make-hash-table (&key (test #'eql) (size nil))
+  (%%native "" "new __array ()"))
+
 (fn hash-table? (x)
   (| (is_a x "__array")
      (%%native "array_keys (" x ") === range (0, count (" x ") - 1)")))

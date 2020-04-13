@@ -16,6 +16,7 @@ Changes relative to tre-0.18:
   * PHP: Faster array access.
   * PHP: Native arrays are recognized as hash tables if they
     are not sequential.
+  * PHP: MAKE-HASH-TABLE is a regular function, not a macro.
   * JS: STRING? also checks if object is an instance of
     class "String".
   * JS/PHP: Code size reduction by ~30%.

@@ -194,9 +194,6 @@
 (def-php-codegen hremove (h key)
   `(%%native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))
 
-(def-php-codegen make-hash-table (&rest ignored-args)
-  `(%%native "new __array ()" ""))
-
 
 ;;;; OBJECTS
 
