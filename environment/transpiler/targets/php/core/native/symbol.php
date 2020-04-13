@@ -5,7 +5,7 @@ class __symbol {
     var $n;
     var $p;
 
-	public function __construct ($name, $pkg)
+	function __construct ($name, $pkg)
 	{
 		$this->n = $name;
 		$this->p = $pkg;
@@ -17,32 +17,32 @@ class __symbol {
         return $this;
 	}
 
-    public function pn ()
+    function pn ()
     {
         return $this->p ? $this->p->n : "NIL";
     }
 
-    public function v ()
+    function v ()
     {
         return $GLOBALS['SYMBOLVALUES'][$this->pn ()][$this->n];
     }
 
-    public function f ()
+    function f ()
     {
         return $GLOBALS['SYMBOLFUNCTIONS'][$this->pn ()][$this->n];
     }
 
-    public function sv ($v)
+    function sv ($v)
     {
         return $GLOBALS['SYMBOLVALUES'][$this->pn ()][$this->n] = $v;
     }
 
-    public function sf ($v)
+    function sf ($v)
     {
         return $GLOBALS['SYMBOLFUNCTIONS'][$this->pn ()][$this->n] = $v;
     }
 
-    public function __toString ()
+    function __toString ()
     {
         $pn = $this->pn ();
         return ($pn != "NIL" ? "$pn:" : "") . $this->n;

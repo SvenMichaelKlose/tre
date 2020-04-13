@@ -4,7 +4,7 @@ $ARRAYID = 0;
 class __array {
     var $id;
 
-	public function __construct ($phparray = Array ())
+	function __construct ($phparray = Array ())
 	{
 		$this->id = ++$GLOBALS['ARRAYID'];
 		$GLOBALS['ARRAYS'][$this->id] = $phparray;
@@ -19,7 +19,7 @@ class __array {
         debug_print_backtrace ();
     }
 
-    public function g ($i)
+    function g ($i)
     {
 //        $this->_chk ($i);
 		if (isset ($GLOBALS['ARRAYS'][$this->id][$i]))
@@ -27,30 +27,30 @@ class __array {
         return NULL;
     }
 
-    public function a ()
+    function a ()
     {
 		return $GLOBALS['ARRAYS'][$this->id];
     }
 
-    public function s ($i, $v)
+    function s ($i, $v)
     {
 //        $this->_chk ($i);
 		$GLOBALS['ARRAYS'][$this->id][$i] = $v;
         return $v;
     }
 
-    public function p ($v)
+    function p ($v)
     {
 		$GLOBALS['ARRAYS'][$this->id][] = $v;
     }
 
-    public function r ($i)
+    function r ($i)
     {
 //        $this->_chk ($i);
 		unset ($GLOBALS['ARRAYS'][$this->id][$i]);
     }
 
-    public function keys ()
+    function keys ()
     {
         $h = NULL;
         foreach ($GLOBALS['ARRAYS'][$this->id] as $k => $v)
@@ -58,14 +58,14 @@ class __array {
         return $h;
     }
 
-    public function length ()
+    function length ()
     {
         return count ($GLOBALS['ARRAYS'][$this->id]);
     }
 
-    public function __toString ()
+    function __toString ()
     {
-        return "array";
+        return "tré array object";
     }
 }
 

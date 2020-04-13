@@ -6,7 +6,7 @@ class __cons {
     var $d;
     var $p;
 
-	public function __construct ($car, $cdr)
+	function __construct ($car, $cdr)
 	{
         $this->id = ++$GLOBALS['CONSID'];
 		$this->a = $car;
@@ -15,7 +15,7 @@ class __cons {
         return $this;
 	}
 
-    public function __toString ()
+    function __toString ()
     {
         print_r ($this);
         trigger_error ("Cannot convert to string.");
