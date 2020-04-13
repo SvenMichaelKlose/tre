@@ -1,6 +1,2 @@
 (defmacro braces (&rest x)
-  (? (| (not x)
-        (string? x.)
-        (keyword? x.))
-     `(%%make-object ,@x)
-     (error "Braces cannot be used as PROGN anymore.")))
+  `(%%make-object ,@x))
