@@ -200,9 +200,7 @@
 (def-php-codegen href (h k)
   `(%%native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
                  ,(php-dollarize h) "->g(tre_T37T37key (" ,(php-dollarize k) ")) : "
-                 "(isset (" ,(php-dollarize h) "[tre_T37T37key (" ,(php-dollarize k) ")]) ? "
-                     ,(php-dollarize h) "[tre_T37T37key (" ,(php-dollarize k) ")] : "
-                     "NULL)"))
+                 "(isset (" ,(php-dollarize h) "[tre_T37T37key (" ,(php-dollarize k) ")]) ?? NULL)"))
 
 (def-php-codegen =-href (v h k)
   `(%%native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
