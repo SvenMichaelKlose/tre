@@ -42,7 +42,7 @@
                        "hash.lisp"
                        "array.lisp"
                        "function.lisp"
-                       "objectp.lisp")
+                       "object.lisp")
         (php-load-core "../../../environment/"
                        "not.lisp")
         (php-load-core ""

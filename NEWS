@@ -6,6 +6,7 @@ Changes relative to tre-0.18:
   * PERMUTATE: Takes &REST argument instead of list of lists.
   * DEFINE-SLOT-SETTER*: Weird idea removed.
   * DEFINE-GENSYM-GENERATOR -> DEF-GENSYM.
+  * SIMPLE-OBJECT? -> JSON-OBJECT?.
   * CL: NANOTIME replaced by MILLISECONDS-SINCE-1970, albeit
     with precision of seconds only.
     "js" and "php".

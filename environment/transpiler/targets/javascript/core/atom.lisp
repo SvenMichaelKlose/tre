@@ -5,6 +5,6 @@
 
 (const +simple-object-constructor+ (%%%make-object).constructor)
 
-(fn simple-object? (x)
+(fn json-object? (x)
   (& (object? x)
      (eq x.constructor +simple-object-constructor+)))
