@@ -166,10 +166,10 @@
              (make-%= s l)))
        x)))
 
-(fn expex-body (x &optional (s '~%ret))
+(fn expex-body (x &optional (s *return-id*))
   (with (ensure-%=  [| (& (metacode-statement? _)
                           (list _))
-                       (make-%= '~%ret _)])
+                       (make-%= *return-id* _)])
     (expex-make-return-value s 
         (mapcan [with ((moved new-expr) (expex-expr _))
                   (+ moved (mapcan #'ensure-%= new-expr))]

@@ -92,7 +92,7 @@
                                 :parent        parent
                                 :transpiler    transpiler))
     (= (href (transpiler-funinfos transpiler) name) fi)
-    (funinfo-var-add fi '~%ret)
+    (funinfo-var-add fi *return-id*)
     (& (transpiler-copy-arguments-to-stack? transpiler)
        (@ [funinfo-var-add fi _] argnames))
     fi))

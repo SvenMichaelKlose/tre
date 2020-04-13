@@ -54,8 +54,8 @@
               ,*js-indent* "switch (_I_) { case 0:" ,*js-separator*))))
 
 (def-js-codegen %function-return (name)
-  (& (funinfo-var? (get-funinfo name) '~%ret)   ; TODO: Required?
-     `(,*js-indent* "return " ~%ret ,*js-separator*)))
+  (& (funinfo-var? (get-funinfo name) *return-id*)
+     `(,*js-indent* "return " ,*return-id* ,*js-separator*)))
 
 (def-js-codegen %function-epilogue (name)
   (| `((%function-return ,name)

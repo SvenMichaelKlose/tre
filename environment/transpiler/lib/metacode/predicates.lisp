@@ -20,7 +20,7 @@
         (transpiler-functional? *transpiler* x.))))
 
 (fn ~%ret? (x)
-  (eq '~%ret x))
+  (eq *return-id* x))
 
 (fn vm-jump? (e)
   (& (cons? e)

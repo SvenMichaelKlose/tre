@@ -37,7 +37,7 @@
        (optimize-jumps d))
   (& (setting-ret-to-bool? a)
      (!? (target-tag d ..a.)
-         (not (will-be-used-again? (member ! *body*) '~%ret))))
+         (not (will-be-used-again? (member ! *body*) *return-id*))))
     (. `(%%go ,(target-tag d ..a.))
        (optimize-jumps d))
   (& (setting-ret-to-bool? a)

@@ -1,1 +1,1 @@
-(var ~%ret nil) ; Keeps return values of expressions.
+(var ,*return-id* nil) ; Keeps return values of expressions.

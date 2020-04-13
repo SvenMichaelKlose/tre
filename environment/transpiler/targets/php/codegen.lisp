@@ -67,7 +67,7 @@
          ,@(!? (funinfo-globals fi)
                (php-line "global " (pad (@ #'php-dollarize !) ", ")))
          ,@(lambda-body x)
-         ,(php-line "return $" '~%ret)
+         ,(php-line "return $" *return-id*)
       "}" ,*terpri*)))
 
 (def-php-codegen function (&rest x)
