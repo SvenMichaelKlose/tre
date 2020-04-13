@@ -3,7 +3,7 @@
 
 (fn hash-table? (x)
   (| (is_a x "__array")
-     (%%native "array_keys (" x ") === range (0, count (" x ") - 1)")))
+     (%%native "is_array ($" x ") && array_keys ($" x ") !== range (0, count ($" x ") - 1)")))
 
 (fn %%key (x)
   (?
