@@ -179,12 +179,6 @@
 (def-php-codegen make-array (&rest elements)
   `(%%native "new __array ()" ""))
 
-(def-php-codegen aref (arr &rest indexes)
-  `(href ,arr ,@indexes))
-
-(def-php-codegen =-aref (val arr &rest indexes)
-  `(=-href ,val ,arr ,@indexes))
-
 (def-php-codegen %aref (arr &rest indexes)
   `(%%native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
 
@@ -196,16 +190,6 @@
 
 
 ;;;; HASH TABLES
-
-(def-php-codegen href (h k)
-  `(%%native "(is_array (" ,(php-dollarize h) ")) ? "
-                 ,(php-dollarize h) "[" ,(php-dollarize k) "] ?? NULL : "
-                 ,(php-dollarize h) "->g(" ,(compiled-function-name '%%key) "(" ,(php-dollarize k) "))"))
-
-(def-php-codegen =-href (v h k)
-  `(%%native "(is_array (" ,(php-dollarize h) ")) ? "
-                 ,(php-dollarize h) "[" ,(php-dollarize k) "] = " ,(php-dollarize v) " : "
-                 ,(php-dollarize h) "->s(" ,(compiled-function-name '%%key) "(" ,(php-dollarize k) ")," ,(php-dollarize v) ")"))
 
 (def-php-codegen hremove (h key)
   `(%%native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))

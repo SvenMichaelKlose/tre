@@ -31,7 +31,7 @@
 
 (fn (= aref) (v a k)
   (? (is_array a)
-     (=-%aref v a k)
+     (error "Native arrays cannot be modified with AREF. Please try macro =-%AREF instead.")
      (=-href v a k)))
 
 (fn phparray-object (x)
