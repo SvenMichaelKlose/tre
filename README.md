@@ -178,7 +178,7 @@ It does not work around parentheses yet.
 (. a b)
 ```
 
-## Brackets for anonymous functions
+## Brackets '[]' for anonymous functions
 
 Inspired by Arc
 
@@ -214,7 +214,7 @@ your own basically end them with a closing parenthesis:
 [x &rest y) body]   #'((x rest y) body)
 ```
 
-## Braces to make JSON objects or instead of PROGN
+## Braces '{}' to make JSON objects
 
 If you open an expression with a curly brace it'll become a
 literal (JSON) object if the first element is a keyword or a
