@@ -199,13 +199,13 @@
 
 (def-php-codegen href (h k)
   `(%%native "(is_a (" ,(php-dollarize h) ", '__array')) ? "
-                 ,(php-dollarize h) "->g(tre_T37T37key (" ,(php-dollarize k) ")) : "
-                 "(isset (" ,(php-dollarize h) "[tre_T37T37key (" ,(php-dollarize k) ")]) ?? NULL)"))
+                 ,(php-dollarize h) "->g(" ,(compiled-function-name '%%key) "(" ,(php-dollarize k) ")) : "
+                 "(isset (" ,(php-dollarize h) "[" ,(php-dollarize k) "]) ?? NULL)"))
 
 (def-php-codegen =-href (v h k)
   `(%%native "(is_a (" ,(php-dollarize h) ", '__array')) ? "
-                 ,(php-dollarize h) "->s(tre_T37T37key (" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
-                 ,(php-dollarize h) "[tre_T37T37key (" ,(php-dollarize k) ")] = " ,(php-dollarize v)))
+                 ,(php-dollarize h) "->s(" ,(compiled-function-name '%%key) "(" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
+                 ,(php-dollarize h) "[" ,(php-dollarize k) "] = " ,(php-dollarize v)))
 
 (def-php-codegen hremove (h key)
   `(%%native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))

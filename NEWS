@@ -13,6 +13,7 @@ Changes relative to tre-0.18:
     In return, code size has been reduced by ~10% and overall
     performance has been greatly improved as well.
   * PHP: Does not deal with magic quotes anymore.
+  * PHP: Faster array access.
   * JS: STRING? also checks if object is an instance of
     class "String".
   * JS/PHP: MILLISECONDS-SINCE-1970 moved here from modules
