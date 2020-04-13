@@ -28,7 +28,7 @@
            #'((x pos)
                (with (char-synonym  [? (& ._ (eql #\- _.))
                                        (list #\_)
-                                       (string-list (format nil "~A_" (print-hexbyte (char-code _.) nil)))])
+                                       (string-list (format nil "_~A" (print-hexbyte (char-code _.) nil)))])
                  (& x
                     (? (| (& (zero? pos)
                              (digit-char? x.))
