@@ -45,11 +45,11 @@
 
 (def-php-codegen %%go-nil (tag val)
   (let v (php-dollarize val)
-    (php-line "if (!" v " && !is_string (" v ") && !is_numeric (" v ") && !is_array (" v ")) " (php-jump tag))))
+    (php-line "if (" v " === false || " v " === null) " (php-jump tag))))
 
 (def-php-codegen %%go-not-nil (tag val)
   (let v (php-dollarize val)
-    (php-line "if (!(!" v " && !is_string (" v ") && !is_numeric (" v ") && !is_array (" v "))) " (php-jump tag))))
+    (php-line "if (!(" v " === false || " v " === null)) " (php-jump tag))))
 
 
 ;;;; FUNCTIONS

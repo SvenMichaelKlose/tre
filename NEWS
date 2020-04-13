@@ -7,6 +7,9 @@ Changes relative to tre-0.18:
     with precision of seconds only.
     "js" and "php".
   * CL: FIND-SYMBOL takes strings instead of symbols.
+  * PHP: versions older than 7.0 are not supported anymore.
+    In return, code size has been reduced by ~10% and overall
+    performance has been greatly improved as well.
   * PHP: Does not deal with magic quotes anymore.
   * JS: STRING? also checks if object is an instance of
     class "String".
