@@ -14,6 +14,8 @@ Changes relative to tre-0.18:
     performance has been greatly improved as well.
   * PHP: Does not deal with magic quotes anymore.
   * PHP: Faster array access.
+  * PHP: Native arrays are recognized as hash tables if they
+    are not sequential.
   * JS: STRING? also checks if object is an instance of
     class "String".
   * JS/PHP: Code size reduction by ~30%.
