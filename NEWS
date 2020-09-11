@@ -7,6 +7,8 @@ Changes relative to tre-0.18:
   * DEFINE-SLOT-SETTER*: Weird idea removed.
   * DEFINE-GENSYM-GENERATOR -> DEF-GENSYM.
   * SIMPLE-OBJECT? -> JSON-OBJECT?.
+  * LML2XML allows to print standalone attributes (with NIL
+    values).  Assigned an empty string before.
   * CL: NANOTIME replaced by MILLISECONDS-SINCE-1970, albeit
     with precision of seconds only.
     "js" and "php".
