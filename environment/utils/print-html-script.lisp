@@ -34,14 +34,13 @@
 
 (fn make-html-script (pathname script &key (title nil)
                                            (no-cache? nil)
-                                           (strict? t)
                                            (copyright-title nil) (copyright-href nil)
                                            (external-script nil)
                                            (external-stylesheets nil)
                                            (internal-stylesheet nil)
                                            (body nil))
   (with-output-file o pathname
-    (print-html-script o script ,@(keyword-copiers :title :no-cache? :strict?
+    (print-html-script o script ,@(keyword-copiers :title :no-cache?
                                                    :copyright-title :copyright-href
                                                    :external-script
                                                    :external-stylesheets

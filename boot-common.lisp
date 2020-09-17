@@ -437,5 +437,5 @@ NIL
 "Section DUMMY"
 NIL
 (cl:in-package :tre)
-(cl:format t "Loading environment...\~%")
+(cl:format t "; Loading environment...\~%")
 (env-load "main.lisp")
