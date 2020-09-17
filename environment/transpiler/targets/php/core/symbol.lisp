@@ -5,3 +5,5 @@
 
 (defnative =-symbol-function (v x)
   (x.sf v))
+
+(defnative package-name (x))
