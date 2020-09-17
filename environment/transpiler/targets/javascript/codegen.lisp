@@ -54,8 +54,8 @@
               ,*js-indent* "switch (_I_) { case 0:" ,*js-separator*))))
 
 (def-js-codegen %function-return (name)
-  (& (funinfo-var? (get-funinfo name) '~%ret)   ; TODO: Required?
-     `(,*js-indent* "return " ~%ret ,*js-separator*)))
+  (& (funinfo-var? (get-funinfo name) *return-id*)
+     `(,*js-indent* "return " ,*return-id* ,*js-separator*)))
 
 (def-js-codegen %function-epilogue (name)
   (| `((%function-return ,name)
@@ -104,31 +104,32 @@
 (defmacro def-js-binary (op repl-op)
   `(def-codegen-binary *js-transpiler* ,op ,repl-op))
 
-{,@(@ [`(def-js-binary ,@_)]
-      '((%%%+        "+")
-        (%%%string+  "+")
-        (%%%-        "-")
-        (%%%/        "/")
-        (%%%*        "*")
-        (%%%mod      "%")
+(progn
+  ,@(@ [`(def-js-binary ,@_)]
+       '((%%%+        "+")
+         (%%%string+  "+")
+         (%%%-        "-")
+         (%%%/        "/")
+         (%%%*        "*")
+         (%%%mod      "%")
 
-        (%%%==       "==")
-        (%%%!=       "!=")
-        (%%%<        "<")
-        (%%%>        ">")
-        (%%%<=       "<=")
-        (%%%>=       ">=")
-        (%%%eq       "===")
+         (%%%==       "==")
+         (%%%!=       "!=")
+         (%%%<        "<")
+         (%%%>        ">")
+         (%%%<=       "<=")
+         (%%%>=       ">=")
+         (%%%eq       "===")
 
-        (%%%<<       "<<")
-        (%%%>>       ">>")
-        (%%%bit-or   "|")
-        (%%%bit-and  "&")))}
+         (%%%<<       "<<")
+         (%%%>>       ">>")
+         (%%%bit-or   "|")
+         (%%%bit-and  "&"))))
 
 
 ;;;; ARRAYS
 
-(def-js-codegen make-array (&rest elements)
+(def-js-codegen %%%make-array (&rest elements)
   `(%%native ,@(c-list elements :parens-type :brackets)))
 
 (def-js-codegen %aref (arr &rest idx)
@@ -137,20 +138,8 @@
 (def-js-codegen =-%aref (val &rest x)
   `(%%native (%aref ,@x) " = " ,val))
 
-(def-js-codegen aref (arr &rest idx)
-  `(%aref ,arr ,@idx))
-
-(def-js-codegen =-aref (val &rest x)
-  `(=-%aref ,val ,@x))
-
 
 ;;;; HASH TABLES
-
-(def-js-codegen href (arr &rest idx)
-  `(%aref ,arr ,@idx))
-
-(def-js-codegen =-href (val &rest x)
-  `(=-%aref ,val ,@x))
 
 (def-js-codegen property-remove (h key)
   `(%%native "delete " ,h "[" ,key "]"))
@@ -160,6 +149,12 @@
 
 
 ;;;; OBJECTS
+
+(def-js-codegen oref (arr &rest idx)
+  `(%aref ,arr ,@idx))
+
+(def-js-codegen =-oref (val &rest x)
+  `(=-%aref ,val ,@x))
 
 (def-js-codegen %%%make-object (&rest args)
   (c-list (@ [`( ,_. ": " ,._.)] (group args 2)) :parens-type :braces))
@@ -196,13 +191,13 @@
 (def-js-codegen prop-value (x y)
   `(%aref ,x ,y))
 
-(def-js-codegen %try ()
+(def-js-codegen %try () ; TODO: Check if stale.
   '(%%native "try {"))
 
-(def-js-codegen %closing-bracket ()
+(def-js-codegen %closing-bracket () ; TODO: Check if stale.
   '(%%native "}"))
 
-(def-js-codegen %catch (x)
+(def-js-codegen %catch (x)  ; TODO: Check if stale.
   `(%%native "catch (" ,x ") {"))
 
 
@@ -212,7 +207,7 @@
   `(%%native ,v "[" ,i "]"))
 
 (def-js-codegen %set-vec (v i x)
-  `(%%native (aref ,v ,i) "=" ,x ,*js-separator*))
+  `(%%native (%aref ,v ,i) "=" ,x ,*js-separator*))
 
 (def-js-codegen %js-typeof (x)
   `(%%native "typeof " ,x))

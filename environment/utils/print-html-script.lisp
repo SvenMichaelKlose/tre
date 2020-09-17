@@ -1,6 +1,5 @@
 (fn print-html-script (out script &key (title nil)
                                        (no-cache? nil)
-                                       (strict? t)
                                        (copyright-title nil) (copyright-href nil)
                                        (external-script nil)
                                        (external-stylesheets nil)
@@ -30,12 +29,7 @@
                         (mapcan [`((script :src ,_ ""))] (ensure-list !))))
                 (body
                   ,@body
-                  (script :type "text/javascript"
-                    "<!--"
-                    ,@(& strict?
-                         `("\"use strict\";"))
-                    ,script
-                    "//-->")))
+                  (script ,script)))
              o)))
 
 (fn make-html-script (pathname script &key (title nil)

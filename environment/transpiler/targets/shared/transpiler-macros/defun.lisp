@@ -24,7 +24,8 @@
   (? (& (backtrace?)
         (not (in? name '%cons '__cons)))
      `((setq nil (%backtrace-push ',name))
-       (prog1 {,@body}
+       (prog1 (progn
+                ,@body)
          (%backtrace-pop)))
      body))
 
@@ -52,13 +53,14 @@
 
 (fn shared-defun (name args body &key (make-expander? t) (allow-source-memorizer? t))
   (let fun-name (%fn-name name)
-    `{,@(shared-defun-without-expander fun-name args body
-                                       :allow-source-memorizer? allow-source-memorizer?
-                                       :allow-backtrace? t)
-      ,@(& make-expander?
-           (| (always-expand-arguments?)
-              (not (simple-argument-list? args)))
-           (with-gensym expander-arg
-             (shared-defun-without-expander (c-expander-name fun-name)
-                                            (list expander-arg)
-                                            (compile-argument-expansion-function-body fun-name args expander-arg))))}))
+    `(progn
+       ,@(shared-defun-without-expander fun-name args body
+                                        :allow-source-memorizer? allow-source-memorizer?
+                                        :allow-backtrace? t)
+       ,@(& make-expander?
+            (| (always-expand-arguments?)
+               (not (simple-argument-list? args)))
+            (with-gensym expander-arg
+              (shared-defun-without-expander (c-expander-name fun-name)
+                                             (list expander-arg)
+                                             (compile-argument-expansion-function-body fun-name args expander-arg)))))))

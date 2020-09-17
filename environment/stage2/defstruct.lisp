@@ -52,17 +52,18 @@
 (fn %struct-slot-accessors (name field index options)
   (with (fname  (%struct-field-name field)
          aname  (%struct-accessor-name name fname))
-    `{(functional ,aname)
-      (fn ,aname (arr)
-        (aref arr ,index))
-      (fn (= ,aname) (val arr)
-        (= (aref arr ,index) val))
-      ,@(!? (& (not (member :not-global (%struct-field-options field)))
-               (assoc :global options))
-            `((fn ,fname ()
-                (aref ,.!. ,index))
-              (fn (= ,fname) (val)
-                (= (aref ,.!. ,index) val))))}))
+    `(progn
+       (functional ,aname)
+       (fn ,aname (arr)
+         (aref arr ,index))
+       (fn (= ,aname) (val arr)
+         (= (aref arr ,index) val))
+       ,@(!? (& (not (member :not-global (%struct-field-options field)))
+                (assoc :global options))
+             `((fn ,fname ()
+                 (aref ,.!. ,index))
+               (fn (= ,fname) (val)
+                 (= (aref ,.!. ,index) val)))))))
 
 (fn %struct-accessors (name fields options)
   (let index 1
@@ -103,16 +104,17 @@
 (fn %defstruct-expander (name &rest fields-and-options)
   (with ((fields options) (%struct-sort-fields fields-and-options))
     (%struct-add-def name fields)
-    `{,(%struct-constructor name fields options)
-      ,(%struct-predicate name)
-      ,@(%struct-accessors name fields options)
-      (defmacro ,($ "WITH-" name) (s &body body)
-        `(with-struct ,name ,,s
-           ,,@body))
-      (defmacro ,($ "DEF-" name) (name args &body body)
-        `(fn ,,name ,,args
-           (with-struct ,name ,name
-             ,,@body)))}))
+    `(progn
+       ,(%struct-constructor name fields options)
+       ,(%struct-predicate name)
+       ,@(%struct-accessors name fields options)
+       (defmacro ,($ "WITH-" name) (s &body body)
+         `(with-struct ,name ,,s
+            ,,@body))
+       (defmacro ,($ "DEF-" name) (name args &body body)
+         `(fn ,,name ,,args
+            (with-struct ,name ,name
+              ,,@body))))))
 
 (defmacro defstruct (name &body fields-and-options)
   (print-definition `(defstruct ,name))

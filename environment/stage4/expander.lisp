@@ -61,10 +61,11 @@
                      *macrocall*  (expander-call expander))
     (!= (expander-name expander)
       (? (eq ! *expander-dump?*)
-         {(format t "~%; Expander ~A input:~%" !)
-          (print expr)
-          (format t "~%; Expander ~A output:~%" !)
-          (print (%macroexpand expr))}
+         (progn
+           (format t "~%; Expander ~A input:~%" !)
+           (print expr)
+           (format t "~%; Expander ~A output:~%" !)
+           (print (%macroexpand expr)))
          (%macroexpand expr)))))
 
 (fn expander-expand (expander expr)

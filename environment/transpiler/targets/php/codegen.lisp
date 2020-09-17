@@ -45,11 +45,11 @@
 
 (def-php-codegen %%go-nil (tag val)
   (let v (php-dollarize val)
-    (php-line "if (!" v " && !is_string (" v ") && !is_numeric (" v ") && !is_array (" v ")) " (php-jump tag))))
+    (php-line "if (" v " === null || " v " === false) " (php-jump tag))))
 
 (def-php-codegen %%go-not-nil (tag val)
   (let v (php-dollarize val)
-    (php-line "if (!(!" v " && !is_string (" v ") && !is_numeric (" v ") && !is_array (" v "))) " (php-jump tag))))
+    (php-line "if (!(" v " === null || " v " === false)) " (php-jump tag))))
 
 
 ;;;; FUNCTIONS
@@ -67,7 +67,7 @@
          ,@(!? (funinfo-globals fi)
                (php-line "global " (pad (@ #'php-dollarize !) ", ")))
          ,@(lambda-body x)
-         ,(php-line "return $" '~%ret)
+         ,(php-line "return $" *return-id*)
       "}" ,*terpri*)))
 
 (def-php-codegen function (&rest x)
@@ -139,25 +139,26 @@
      `(%%native ,,@(pad (@ #'php-dollarize args)
                 ,(+ " " replacement-op " ")))))
 
-{,@(@ [`(def-php-binary ,@_)]
-      '((%%%+        "+")
-        (%%%string+  ".")
-        (%%%-        "-")
-        (%%%*        "*")
-        (%%%/        "/")
-        (%%%mod      "%")
+(progn
+  ,@(@ [`(def-php-binary ,@_)]
+       '((%%%+        "+")
+         (%%%string+  ".")
+         (%%%-        "-")
+         (%%%*        "*")
+         (%%%/        "/")
+         (%%%mod      "%")
 
-        (%%%==       "==")
-        (%%%<        "<")
-        (%%%>        ">")
-        (%%%<=       "<=")
-        (%%%>=       ">=")
-        (%%%eq       "===")
+         (%%%==       "==")
+         (%%%<        "<")
+         (%%%>        ">")
+         (%%%<=       "<=")
+         (%%%>=       ">=")
+         (%%%eq       "===")
 
-        (%%%<<       "<<")
-        (%%%>>       ">>")
-        (%%%bit-or   "|")
-        (%%%bit-and  "&")))}
+         (%%%<<       "<<")
+         (%%%>>       ">>")
+         (%%%bit-or   "|")
+         (%%%bit-and  "&"))))
 
 
 ;;;; ARRAYS
@@ -172,16 +173,7 @@
   (pad (@ #'php-literal-array-element x) ", "))
 
 (def-php-codegen %%%make-array (&rest elements)
-  `(%%native "array (" ,@(php-literal-array-elements (group elements 2)) ")"))
-
-(def-php-codegen make-array (&rest elements)
-  `(%%native "new __array ()" ""))
-
-(def-php-codegen aref (arr &rest indexes)
-  `(href ,arr ,@indexes))
-
-(def-php-codegen =-aref (val arr &rest indexes)
-  `(=-href ,val ,arr ,@indexes))
+  `(%%native "[" ,@(php-literal-array-elements (group elements 2)) "]"))
 
 (def-php-codegen %aref (arr &rest indexes)
   `(%%native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
@@ -195,26 +187,17 @@
 
 ;;;; HASH TABLES
 
-(def-php-codegen href (h k)
-  `(%%native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
-                 ,(php-dollarize h) "->g(tre_T37T37key (" ,(php-dollarize k) ")) : "
-                 "(isset (" ,(php-dollarize h) "[tre_T37T37key (" ,(php-dollarize k) ")]) ? "
-                     ,(php-dollarize h) "[tre_T37T37key (" ,(php-dollarize k) ")] : "
-                     "NULL)"))
-
-(def-php-codegen =-href (v h k)
-  `(%%native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
-                 ,(php-dollarize h) "->s(tre_T37T37key (" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
-                 ,(php-dollarize h) "[tre_T37T37key (" ,(php-dollarize k) ")] = " ,(php-dollarize v)))
-
 (def-php-codegen hremove (h key)
   `(%%native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))
 
-(def-php-codegen make-hash-table (&rest ignored-args)
-  `(make-array))
-
 
 ;;;; OBJECTS
+
+(def-php-codegen oref (arr &rest indexes)
+  `(href ,arr ,@indexes))
+
+(def-php-codegen =-oref (val arr &rest indexes)
+  `(=-href ,val ,arr ,@indexes))
 
 (fn php-literal-object-element (x)
   `(,x. " => " ,(php-dollarize .x.)))

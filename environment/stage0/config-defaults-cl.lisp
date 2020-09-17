@@ -1,4 +1,4 @@
-(%defvar *development?*       nil)
+(%defvar *development?*       t)
 (%defvar *assert?*            t)
 (%defvar *print-definitions?* t)
 

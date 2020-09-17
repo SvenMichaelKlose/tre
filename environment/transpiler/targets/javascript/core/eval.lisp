@@ -23,7 +23,7 @@
       (+ (js-eval-transpile ! x)
          (convert-identifier '*native-eval-return-value*)
          " = "
-         (convert-identifier '~%ret)
+         (convert-identifier ,(list 'quote *return-id*))
          ";"))))
 
 (fn eval (x)

@@ -18,16 +18,16 @@
        ,@(mapcan [with-compiler-tag next
                    (when _.
                      `(,@(unless (eq t _.)
-                           `((%= ~%ret ,_.)
-                             (%%go-nil ,next ~%ret)))
+                           `((%= ,*return-id* ,_.)
+                             (%%go-nil ,next ,*return-id*)))
                        ,@(!? (wrap-atoms ._)
-                             `((%= ~%ret (%%block ,@!))))
+                             `((%= ,*return-id* (%%block ,@!))))
                        (%%go ,end-tag)
                        ,@(unless (eq t _.)
                            (list next))))]
                  args)
        ,end-tag
-       (identity ~%ret))))
+       (identity ,*return-id*))))
 
 (def-compiler-macro progn (&body body)
   (!? body
@@ -96,9 +96,9 @@
               ,@head
               ,@(? (vm-jump? tail.)
                    tail
-                   `((%= ~%ret ,@tail)))
+                   `((%= ,*return-id* ,@tail)))
               ,end-tag
-              (identity ~%ret)))))
+              (identity ,*return-id*)))))
     `(identity nil)))
 
 (def-expander-macro *block-expander* return-from (block-name expr)
@@ -106,7 +106,7 @@
      (error "RETURN-FROM outside BLOCK."))
   (!? (assoc block-name *blocks* :test #'eq)
      `(%%block
-        (%= ~%ret ,expr)
+        (%= ,*return-id* ,expr)
         (%%go ,.!))
      (error "RETURN-FROM unknown BLOCK ~A." block-name)))
 

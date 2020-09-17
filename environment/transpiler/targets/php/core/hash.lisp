@@ -1,5 +1,9 @@
+(fn make-hash-table (&key (test #'eql) (size nil))
+  (%%native "" "new __array ()"))
+
 (fn hash-table? (x)
-  (is_a x "__array"))
+  (| (is_a x "__array")
+     (%%native "is_array ($" x ") && array_keys ($" x ") !== range (0, count ($" x ") - 1)")))
 
 (fn %%key (x)
   (?
@@ -34,14 +38,14 @@
 
 (fn href (h k)
   (!= (%%key k)
-    (? (is_a h "__array")
-       (h.g !)
+    (? (is_array h)
        (& (%aref-defined? h !)
-          (%aref h !)))))
+          (%aref h !))
+       (h.g !))))
 
 (fn (= href) (v h k)
   (!= (%%key k)
-    (?  (is_a h "__array")
-        (h.s (%%key !) v)
-        (=-%aref v h !) v))
+    (? (is_array h)
+       (=-%aref v h !) v)
+       (h.s (%%key !) v))
   v)

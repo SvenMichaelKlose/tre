@@ -59,20 +59,21 @@
 (def-php-transpiler-macro finalize-class (class-name)
   (let classes (defined-classes)
     (!? (href classes class-name)
-        `{(fn ,($ class-name '?) (x)
-            (& (object? x)
-               (is_a x ,(convert-identifier class-name))
-               x))
-          ,(assoc-value class-name *delayed-constructors*)
-          ,@(php-method-functions class-name !)
-          (%= nil (%%native
-                    (%php-class-head ,class-name)
-                    ,(!= (argument-expand-names 'php-constructor (transpiler-function-arguments *transpiler* class-name))
-                       `("public function __construct " ,(php-argument-list !) ,*terpri*
-                         "{" ,*terpri*
-                             ,*php-indent* "return " ,(php-compiled-constructor-name class-name) ,(php-argument-list (. 'this !)) ,*php-separator*
-                         "}")) ,*terpri*
-                    ,@(php-members class-name !)
-                    ,@(php-methods class-name !)
-                    (%php-class-tail)))}
+        `(progn
+           (fn ,($ class-name '?) (x)
+             (& (object? x)
+                (is_a x ,(convert-identifier class-name))
+                x))
+           ,(assoc-value class-name *delayed-constructors*)
+           ,@(php-method-functions class-name !)
+           (%= nil (%%native
+                     (%php-class-head ,class-name)
+                     ,(!= (argument-expand-names 'php-constructor (transpiler-function-arguments *transpiler* class-name))
+                        `("public function __construct " ,(php-argument-list !) ,*terpri*
+                          "{" ,*terpri*
+                              ,*php-indent* "return " ,(php-compiled-constructor-name class-name) ,(php-argument-list (. 'this !)) ,*php-separator*
+                          "}")) ,*terpri*
+                     ,@(php-members class-name !)
+                     ,@(php-methods class-name !)
+                     (%php-class-tail))))
         (error "Cannot finalize undefined class ~A." class-name))))

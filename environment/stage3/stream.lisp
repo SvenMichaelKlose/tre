@@ -32,8 +32,9 @@
          (%track-location stream-location !))
        (when x
          (? (== 10 (char-code x))
-            {(= (stream-location-column stream-location) 1)
-             (++! (stream-location-line stream-location))}
+            (progn
+              (= (stream-location-column stream-location) 1)
+              (++! (stream-location-line stream-location)))
             (?
               (== 9 (char-code x)) (= (stream-location-column stream-location) (next-tabulator-column column tabsize))
               (< 31 (char-code x)) (++! (stream-location-column stream-location)))))))

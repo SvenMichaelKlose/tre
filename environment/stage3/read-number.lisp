@@ -34,8 +34,9 @@
 
 (fn read-number (&optional (str *standard-input*))
   (* (? (eql #\- (peek-char str))
-        {(read-char str)
-         -1}
+        (progn
+          (read-char str)
+          -1)
         1)
      (+ (read-integer str)
         (| (& (peek-dot str)

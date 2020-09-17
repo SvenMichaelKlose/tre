@@ -1,22 +1,21 @@
+(fn make-array (&rest dimensions)
+  (!= (%%native "" "new __array ()")
+    (dotimes (i dimensions. !)
+      (= (aref ! i) (!? .dimensions
+                        (apply #'make-array !))))))
+
+(fn list-array (x)
+  (aprog1 (%%native "" "new __array ()")
+    (dolist (i x !)
+      (!.p i))))
+
+(fn array (&rest elms)
+  (list-array elms))
+
 (fn array? (x)
   (| (is_a x "__array")
      (& (is_array x)
-        (is_int (key x)))))
-
-(fn %array-push (arr x)
-  (%= (%%native "$" arr "[]") x)
-  x)
-
-(fn array-push (arr x)
-  (? (is_a x "__array")
-     (arr.p x)
-     (%array-push arr x))
-  x)
-
-(fn list-array (x)
-  (let a (make-array)
-    (@ (i x a)
-      (a.p i))))
+        (%%native "array_keys (" x ") === range (0, count (" x ") - 1)"))))
 
 (fn list-phparray (x)
   (!= (%%%make-array)
@@ -31,7 +30,7 @@
 
 (fn (= aref) (v a k)
   (? (is_array a)
-     (=-%aref v a k)
+     (error "Native arrays cannot be modified with AREF. Please try macro =-%AREF instead.")
      (=-href v a k)))
 
 (fn phparray-object (x)

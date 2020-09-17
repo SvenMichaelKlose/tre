@@ -45,8 +45,9 @@
        (princ " " str))))
 
 (defmacro %with-indentation (str info &body body)
-  `{(%print-indentation ,str ,info)
-    ,@body})
+  `(progn
+     (%print-indentation ,str ,info)
+     ,@body))
 
 (defmacro %with-parens (str info &body body)
   `(%with-indentation ,str ,info
@@ -82,10 +83,12 @@
 (fn pretty-print-lambdas (x str info)
   (?
     ..x          (pretty-print-named-lambda x str info)
-    (cons? .x.)  {(princ "#'" str)
-                  (pretty-print-lambda x str info)}
-    {(princ "#'" str)
-     (%print-symbol .x. str info)})
+    (cons? .x.)  (progn
+                   (princ "#'" str)
+                   (pretty-print-lambda x str info))
+    (progn
+      (princ "#'" str)
+      (%print-symbol .x. str info)))
   t)
 
 (add-printer-argument-definition 'function #'pretty-print-lambdas)
@@ -93,11 +96,13 @@
 (fn %print-rest (x str info)
   (when x
     (? (cons? x)
-       {(%print-gap str)
-        (%late-print x. str info)
-        (%print-rest .x str info)}
-       {(princ " . " str)
-        (%late-print x str info)})))
+       (progn
+         (%print-gap str)
+         (%late-print x. str info)
+         (%print-rest .x str info))
+       (progn
+         (princ " . " str)
+         (%late-print x str info)))))
 
 (fn %body-indentation (info)
   (| (car (print-info-columns info)) 1))
@@ -121,13 +126,15 @@
          (@ (i expanded)
            (%print-gap str)
            (?
-             (& (%body? .i) ..i)  {(& *print-automatic-newline?*
-                                      (fresh-line str))
-                                   (%print-body ..i str info)}
+             (& (%body? .i) ..i)  (progn
+                                    (& *print-automatic-newline?*
+                                       (fresh-line str))
+                                    (%print-body ..i str info))
              (%rest? .i)          (%print-rest ..i str info)
-             (%key? .i)           {(%print-symbol (make-keyword i.) str info)
-                                   (princ " " str)
-                                   (%late-print ..i str info)}
+             (%key? .i)           (progn
+                                    (%print-symbol (make-keyword i.) str info)
+                                    (princ " " str)
+                                    (%late-print ..i str info))
              (with-temporary *print-automatic-newline?* nil
                (%late-print .i str info))))))))
 

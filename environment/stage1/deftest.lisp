@@ -8,8 +8,6 @@
                 (test-equal .x .y)))
 
 (%fn do-test (test)
-  (? *print-definitions?*
-     (print test.))
   (? (not (test-equal (eval (macroexpand .test.))
                       (eval (macroexpand ..test.))))
      (progn

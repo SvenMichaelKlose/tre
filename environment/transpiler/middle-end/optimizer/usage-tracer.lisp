@@ -36,7 +36,8 @@
                       (%%comment? a)
                       (named-lambda? a))
                                    (traverse-statements d)
-                   {(print _)
-                    (funinfo-error "Illegal metacode statement ~A." _)}))])
+                   (progn
+                     (print _)
+                     (funinfo-error "Illegal metacode statement ~A." _))))])
     (| (not (removable-place? v))
        (traverse-statements x))))

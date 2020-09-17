@@ -32,8 +32,9 @@
 
 (def-js-transpiler-macro defnative (name args &body body)
   (js-make-late-symbol-function-assignment name)
-  `{(%var ,(%fn-name name))
-    ,(shared-defun name args (body-with-noargs-tag body) :allow-source-memorizer? nil)})
+  `(progn
+     (%var ,(%fn-name name))
+     ,(shared-defun name args (body-with-noargs-tag body) :allow-source-memorizer? nil)))
 
 (fn js-early-symbol-maker (g sym)
   `(,@(unless (eq g '~%tfun)

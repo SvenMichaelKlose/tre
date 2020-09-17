@@ -1,6 +1,7 @@
 (var *transpiler* nil)
 (var *transpiler-log* nil)
 (var *default-transpiler* nil)
+(var *return-id* '_r)
 
 (const *optional-passes* '(:accumulate-toplevel))
 
@@ -265,10 +266,11 @@
        ,@body))
 
 (defmacro transpiler-getter (name &body body)
-  `{(transpiler-getter-not-global ,name ,@body)
-    (fn ,($ name) (x)
-      (let tr *transpiler*
-        ,@body))})
+  `(progn
+     (transpiler-getter-not-global ,name ,@body)
+     (fn ,($ name) (x)
+       (let tr *transpiler*
+         ,@body))))
 
 (transpiler-getter defined-function        (href (transpiler-defined-functions tr) x))
 (transpiler-getter defined-variable        (href (transpiler-defined-variables tr) x))

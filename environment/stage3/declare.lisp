@@ -31,7 +31,8 @@
 (fn %declare-statement-type (x)
   (| (<= 2 (length x))
      (error "Expected type and one or more variables, but got only ~A." x))
-  `{,@(@ [%declare-statement-type-1 x. _] .x)})
+  `(progn
+     ,@(@ [%declare-statement-type-1 x. _] .x)))
 
 (var *declare-statement-classes*
   '((type . %declare-statement-type)))
@@ -46,4 +47,5 @@
   (| x (error "Arguments expected."))
   (!= (@ #'%declare-statement (ensure-tree x))
     (when *assert?*
-      `{,@!})))
+      `(progn
+         ,@!))))

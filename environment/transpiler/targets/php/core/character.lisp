@@ -1,5 +1,3 @@
-(var *characters* (make-array))
-
 (fn character? (x)
   (is_a x "__character"))
 

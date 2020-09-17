@@ -8,7 +8,8 @@
   (with-gensym (g body-result)
     `(with (,g            ,str
             ,nstr         (default-stream ,g)
-            ,body-result  {,@body})
+            ,body-result  (progn
+                            ,@body))
        (? ,g
           ,body-result
           (get-stream-string ,nstr)))))

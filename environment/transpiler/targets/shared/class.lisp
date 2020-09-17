@@ -32,8 +32,9 @@
   (!? (href (defined-classes) class-name)
       (let code (list args body)
         (? (assoc name (class-methods !))
-           {(= (assoc-value name (class-methods !)) code)
-            (warn "In class '~A': member '~A' already defined." class-name name)}
+           (progn
+             (= (assoc-value name (class-methods !)) code)
+             (warn "In class '~A': member '~A' already defined." class-name name))
            (acons! name code (class-methods !))))
       (error "Cannot define method ~A for undefined class ~A." name class-name))
   nil)
