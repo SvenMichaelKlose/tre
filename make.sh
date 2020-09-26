@@ -84,7 +84,7 @@ jstests)
     echo "JavaScript target tests…"
     $TRE tests/js.lisp
     node compiled/test.js | tee log-nodetests.lisp
-    chromium-browser compiled/test.html &
+    #chromium-browser compiled/test.html &
     cmp tests/js.correct-output log-nodetests.lisp || (diff tests/js.correct-output log-nodetests.lisp; exit 1)
     echo "JavaScript target tests passed in node.js."
 	;;
