@@ -140,7 +140,7 @@
 (fn dynamic-map (func &rest lists)
   (?
     (string? lists.)  (list-string (apply #'mapcar func (mapcar #'string-list lists)))
-    (array? lists.)   (list-array (apply #'mapcar func (mapcar #'array-list lists)))
+    (array? lists.)   (apply #'mapcar func (mapcar #'array-list lists))
     (apply #'mapcar func lists)))
 
 (fn mapcan (func &rest lists)
