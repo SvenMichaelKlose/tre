@@ -19,6 +19,10 @@
       (f x (%macroexpand x)))))
 
 (fn make-%fn-quiet (name args body)
+  (? args
+     (= args (? (cons? args)
+                args
+                (list args))))
   `(cl:progn
      (cl:push (. ',name ',(. args body)) *functions*)
      (cl:defun ,name ,args ,@body)))

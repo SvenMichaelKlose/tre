@@ -35,8 +35,6 @@
   (let body-with-block `((block ,name
                            (block nil
                              ,@(remove 'no-args body))))
-    (| (list? args)
-       (error "Argument list expected instead of ~A." args))
     (& (defined-function name)
        (warn "Redefining #'~A." name))
 
@@ -52,6 +50,10 @@
            (shared-defun-source-memorizer name args (remove 'no-args body))))))
 
 (fn shared-defun (name args body &key (make-expander? t) (allow-source-memorizer? t))
+(? args
+   (= args (? (cons? args)
+              args
+              (list args))))
   (let fun-name (%fn-name name)
     `(progn
        ,@(shared-defun-without-expander fun-name args body

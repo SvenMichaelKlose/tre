@@ -1,6 +1,8 @@
 Changes relative to tre-0.19:
   * @, DYNAMIC-MAP return lists of arguments are arrays.
   * PAD accepts arrays.
+  * Function definitions: single argument does not have to
+    be put in a list.
 
 Changes of tre-0.19 relative to tre-0.18:
   * Bug-fix: jump tag optimizer translated any number.
