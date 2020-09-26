@@ -21,7 +21,7 @@
   (& x (princ x s)))
 
 (fn lml2xml-attr (s x)
-  (princ (string-concat " " (lml-attr-string x.)))
+  (princ (string-concat " " (lml-attr-string x.)) s)
   (when .x.
     (princ (string-concat "=\"" (escape-string (string .x.)) "\"") s))
   (lml2xml-attr-or-body s ..x))
