@@ -3,6 +3,8 @@ Changes relative to tre-0.19:
   * PAD accepts arrays.
   * Function definitions: single argument does not have to
     be put in a list.
+  * REF: New functions to look up from alists, arrays, hash
+    tables and objects.  Not settable (yet).
 
 Changes of tre-0.19 relative to tre-0.18:
   * Bug-fix: jump tag optimizer translated any number.
