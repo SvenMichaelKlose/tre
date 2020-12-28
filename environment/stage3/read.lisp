@@ -1,5 +1,5 @@
 (fn token-is-quote? (x)
-  (in? x :quote :backquote :quasiquote :quasiquote-splice :accent-circonflex))
+  (in? x :quote :backquote :quasiquote :quasiquote-splice))
 
 (fn %read-closing-parens? (x)
   (in? x :parenthesis-close :bracket-close :brace-close))
@@ -10,7 +10,7 @@
          #\{ #\}
          #\" #\' #\`
          #\, #\: #\;
-         #\# #\^))
+         #\#))
 
 (fn symbol-char? (x)
   (& x
@@ -96,7 +96,6 @@
                       #\}  :brace-close
                       #\'  :quote
                       #\`  :backquote
-                      #\^  :accent-circonflex
                       #\"  :dblquote
                       #\,  (? (eql #\@ (peek-char str))
                               (& (read-char str)
