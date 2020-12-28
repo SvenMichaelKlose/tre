@@ -94,9 +94,10 @@
 
 (functional ensure-list)
 (fn ensure-list (x)
-  (? (list? x)
-     x
-     (list x)))
+  (& x
+     (? (list? x)
+        x
+        (list x))))
 
 (defmacro push (elm expr)
   `(= ,expr (. ,elm ,expr)))
