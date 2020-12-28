@@ -8,5 +8,5 @@
            (hash-table? o)  (href o i)
            (object? o)      (oref o i)))))
 
-;(defmacro ^ (o &rest indexes)
-;  `(ref ,o ,@indexes))
+(defmacro ^ (o &rest indexes)
+  `(ref ,o ,@indexes))

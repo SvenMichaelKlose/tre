@@ -5,6 +5,8 @@ Changes relative to tre-0.19:
     be put in a list.
   * REF: New functions to look up from alists, arrays, hash
     tables and objects.  Not settable (yet).
+  * ^ is now synonymous for REF.  (It was for FN.)
+  * ACCCENT-CIRCONFLEX has been removed.
   * ENSURE-LIST: Do not put NIL into a list.
   * ENSURE-ARRAY: New function to convert lists into arrays.
 
