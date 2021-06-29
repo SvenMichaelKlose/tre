@@ -76,7 +76,6 @@
 (fn cadadar (x) (cadr (cadr (car x))))
 (fn cddadar (x) (cddr (cadr (car x))))
 
-(fn (= elt) (val seq idx) (%set-elt val seq idx))
 (fn (= car) (val lst) (rplaca lst val) val)
 (fn (= cdr) (val lst) (rplacd lst val) val)
 (fn (= caar) (val lst) (rplaca (car lst) val) val)

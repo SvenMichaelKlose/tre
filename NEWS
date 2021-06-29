@@ -9,6 +9,7 @@ Changes relative to tre-0.19:
   * ACCCENT-CIRCONFLEX has been removed.
   * ENSURE-LIST: Do not put NIL into a list.
   * ENSURE-ARRAY: New function to convert lists into arrays.
+  * =-ELT has been fixed.
 
 Changes of tre-0.19 relative to tre-0.18:
   * Bug-fix: jump tag optimizer translated any number.
