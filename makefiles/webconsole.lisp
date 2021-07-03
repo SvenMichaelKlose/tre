@@ -27,13 +27,8 @@
                            "viewport.lisp"))
 
                 ,@(list+ "tre_modules/js/event/"
-                         '("log.lisp"
-                           "native.lisp"
-                           "event.lisp"
-                           "handler.lisp"
-                           "module.lisp"
+                         '("native.lisp"
                            "names.lisp"
-                           "manager.lisp"
                            "utils.lisp"
                            "bind-event-methods.lisp"
                            "keycodes.lisp"))
