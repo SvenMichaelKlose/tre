@@ -28,7 +28,7 @@
                          '("native.lisp"
                            "names.lisp"
                            "utils.lisp"
-                           "bind-event-methods.lisp"
+                           "listener-methods.lisp"
                            "keycodes.lisp"))
                 ,@(list+ "tre_modules/js/"
                          '("dump.lisp"))
