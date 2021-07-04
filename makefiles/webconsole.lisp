@@ -33,7 +33,7 @@
                            "bind-event-methods.lisp"
                            "keycodes.lisp"))
                 ,@(list+ "tre_modules/js/"
-                         '("log-message.lisp"))
+                         '("dump.lisp"))
 
                 (toplevel . ((document-extend)
                              (*event-manager*.init-document document)
