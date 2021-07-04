@@ -1,7 +1,5 @@
 (load "tre_modules/js/event/names.lisp")
 
-(var *log-events?* nil)
-
 (= *allow-redefinitions?* t)
 (= *have-compiler?* t)
 
