@@ -7,7 +7,7 @@
               `(
                 ,@(list+ "tre_modules/php/"
                          `("json.lisp"
-                           "log-message.lisp"))
+                           "dump.lisp"))
                 "tre_modules/php-db-mysql/main.lisp"
                 "tre_modules/php-http-request/main.lisp"
                 ,@(list+ "tre_modules/l10n/"

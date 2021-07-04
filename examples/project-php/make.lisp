@@ -6,7 +6,7 @@
 (make-project "tré PHP only project"
               `(,@(list+ "tre_modules/php/"
                          `("json.lisp"
-                           "log-message.lisp"
+                           "dump.lisp"
                            "server-name.lisp"))
                 "tre_modules/php-db-mysql/main.lisp"
                 "tre_modules/php-http-request/main.lisp"
