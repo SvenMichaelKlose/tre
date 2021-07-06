@@ -4,4 +4,4 @@
      (& (is_a a "__symbol") (is_a b "__symbol")
         (%%%== a.n b.n)
         (%%%== (keyword? a) (keyword? b)))
-     (%%%eq a b)))
+     (%%%=== a b)))

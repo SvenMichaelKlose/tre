@@ -404,5 +404,5 @@
     (@ [transpiler-add-functional ! _]
        '(%%%+ %%%string+ %%%- %%%/ %%%* %%%mod
          %%%== %%%!= %%%< %%%> %%%<= %%%>=
-         %%%eq %%%<< %%%>> %%%bit-or %%%bit-and
+         %%%=== %%%!== %%%<< %%%>> %%%bit-or %%%bit-and
          %aref %aref-defined))))
