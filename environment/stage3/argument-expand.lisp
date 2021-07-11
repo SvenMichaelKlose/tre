@@ -9,15 +9,15 @@
 (fn argument-rest-keyword? (x)  (in? x '&rest '&body))
 (fn argument-name? (x)          (atom x))
 
-(fn error-arguments-missing (fun args)
-  (error "Arguments ~A missing for ~A." args fun))
+(fn error-argument-missing (fun-name arg-name)
+  (error "Argument ~A missing for ~A." arg-name fun-name))
 
-(fn error-too-many-arguments (fun argdef args)
+(fn error-too-many-arguments (fun-name argdef args)
   (without-automatic-newline
-    (error "Too many arguments ~A to ~A with argument definition ~A." args fun argdef)))
+    (error "Too many arguments ~A to ~A with argument definition ~A." args fun-name argdef)))
 
-(fn error-&rest-has-value (fun)
-  (error "In arguments to ~A: &REST cannot have a value." fun))
+(fn error-&rest-has-value (fun-name)
+  (error "In arguments to ~A: &REST cannot have a value." fun-name))
 
 (fn make-&key-alist (def)
   (with (keys                 nil

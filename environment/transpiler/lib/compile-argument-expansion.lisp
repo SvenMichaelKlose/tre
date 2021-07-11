@@ -11,7 +11,7 @@
          static
            [`(,@(? (assert?)
                    `((| ,p
-                        (error-arguments-missing ,(symbol-name _.) ',fun-name))))
+                        (error-argument-missing ',fun-name ,(symbol-name _.)))))
               (= ,_. (car ,p))
               (= ,p (cdr ,p))
               ,@(main ._))]
