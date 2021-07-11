@@ -4,7 +4,7 @@ Changes relative to tre-0.19:
   * Function definitions: single argument does not have to
     be put in a list.
   * REF: New functions to look up from alists, arrays, hash
-    tables and objects.  Not settable (yet).
+    tables and objects.
   * ^ is now synonymous for REF.  (It was for FN.)
   * ACCCENT-CIRCONFLEX has been removed.
   * ENSURE-LIST: Do not put NIL into a list.

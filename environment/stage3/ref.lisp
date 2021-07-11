@@ -1,5 +1,3 @@
-; TODO: Argument expander does not support keyword
-; arguments after &REST.
 (fn ref (o &rest indexes)
   (dolist (i indexes o)
     (= o (?
@@ -8,5 +6,17 @@
            (hash-table? o)  (href o i)
            (object? o)      (oref o i)))))
 
-(defmacro ^ (o &rest indexes)
-  `(ref ,o ,@indexes))
+(fn (= ref) (v o &rest indexes)
+  (= o (apply #'ref o (butlast indexes)))
+  (!= indexes.
+    (?
+      (cons? o)        (= (assoc-value o !) v)
+      (array? o)       (= (aref o !) v)
+      (hash-table? o)  (= (href o !) v)
+      (object? o)      (=-oref v o !))))
+
+(fn ^ (o &rest indexes)
+  (apply #'ref o indexes))
+
+(fn =-^ (v o &rest indexes)
+  (apply #'=-ref v o indexes))
