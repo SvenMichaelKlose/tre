@@ -14,7 +14,9 @@
   (with (bump? [& ._
                   (| (& (eql #\- _.)
                         (alpha-char? ._.))
-                     (& (eql #\* _.)
+                     (& ._
+                        (eql #\* _.)
+                        (alpha-char? ._.)
                         (zero? pos)))])
     (& x
        (? (bump? x)
