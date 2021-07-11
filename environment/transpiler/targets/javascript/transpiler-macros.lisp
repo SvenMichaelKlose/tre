@@ -83,10 +83,10 @@
   `(aref ,hash ,key))
 
 (def-js-transpiler-macro undefined? (x)
-  `(%%%=== "undefined" (%js-typeof ,x)))
+  `(%%%== "undefined" (%js-typeof ,x)))
 
 (def-js-transpiler-macro defined? (x)
-  `(%%%!== "undefined" (%js-typeof ,x)))
+  `(%%%!= "undefined" (%js-typeof ,x)))
 
 (def-js-transpiler-macro invoke-debugger ()
  `(%= nil (%invoke-debugger)))
