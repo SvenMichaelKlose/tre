@@ -1,4 +1,6 @@
 Changes relative to tre-0.19:
+  * SUBSEQ (JS/PHP): Allow strings of any length.  (Ugly
+    hack from the old days.)
   * @, DYNAMIC-MAP return lists of arguments are arrays.
   * PAD accepts arrays.
   * Function definitions: single argument does not have to
