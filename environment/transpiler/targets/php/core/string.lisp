@@ -13,7 +13,9 @@
 
 (fn string-subseq (seq start &optional (end nil))
   (unless (== start end)
-    (substr seq start (? end (- end start)))))
+    (!= (substr seq start (? end (- end start)))
+      (unless (& (string? !) (== 0 (length !)))
+        !))))
 
 (fn number-string (x)
     (%%native "(string)$" x))
