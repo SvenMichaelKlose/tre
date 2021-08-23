@@ -1,9 +1,8 @@
 The tré programming language
 ============================
 
-tré transpiles Lisp to JavaScript and PHP7+.  It has been under
-development since 2005 and runs on top of Steel Bank Common Lisp
-(sbcl).
+tré transpiles its dialect of Lisp to JavaScript, PHP7+ and
+Common Lisp (mainly to compile itself).
 
 
 # Build and install
@@ -29,19 +28,19 @@ Then run:
 This will install an executable called "tre" in /usr/local/bin.
 It takes an optional pathname of a source file to compile and
 execute.  If none is specified, it'll prompt you for
-expressions to execute.  We won't to that too often, though.
+expressions to execute.
 
 
 # Starting a project
 
 Let's get ready to hack.  There're three initial projects
-prepared for you in directory example/ which you should copy to
+prepared for you in directory examples/ which you should copy to
 take off as they are subject to getting cleaned thoroughly.  All
 contain configurations for docker-compose to run your project in
 a virtual LAMP server.  "project-js" for making a plain JavaScript
 app,  "project-php" to create a PHP-only challenge and
-"project-js-php" to make an app that'll communicate with it's PHP
-server – by function calls wrapped in HTTP requests.
+"project-js-php" to make a JS app that'll communicate with it's PHP
+server.
 
 ## Creating a JavaScript-only project
 
