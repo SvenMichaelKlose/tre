@@ -1,4 +1,7 @@
-Changes relative to tre-0.19:
+Changes relative to tre-0.20:
+  * Fixed =-REF.
+
+Changes of tre-0.20 relative to tre-0.19:
   * Works with PHP-8.
   * SUBSEQ (JS/PHP): Allow strings of any length.  (Ugly
     hack from the old days.)

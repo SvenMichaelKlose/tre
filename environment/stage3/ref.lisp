@@ -8,7 +8,7 @@
 
 (fn (= ref) (v o &rest indexes)
   (= o (apply #'ref o (butlast indexes)))
-  (!= indexes.
+  (!= (car (last indexes))
     (?
       (cons? o)        (= (assoc-value o !) v)
       (array? o)       (= (aref o !) v)
