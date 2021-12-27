@@ -1,5 +1,6 @@
 Changes relative to tre-0.20:
   * Fixed =-REF.
+  * Set *ASSERT?* to T by default.
 
 Changes of tre-0.20 relative to tre-0.19:
   * Works with PHP-8.
