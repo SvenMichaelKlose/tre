@@ -46,7 +46,7 @@ install_it ()
     echo "Installing SBCL image to '/usr/local/lib/tre/image'…"
     sudo cp image /usr/local/lib/tre
     echo "Installing environment to '/usr/local/lib/tre/environment/'…"
-    sudo cp -r environment /usr/local/lib/tre
+    sudo cp -r environment modules /usr/local/lib/tre
     echo "Done."
 }
 
