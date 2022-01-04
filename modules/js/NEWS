@@ -1,0 +1,21 @@
+Changes relative to js-0.2:
+  * Removed virtual events.
+  * LOG-MESSAGE has been renamed to DUMP.
+  * New macro SELF-AND-ANCESTORS.
+  * Incompatible changes of NODELIST.
+  * Removed almost all DO-* macros for DOM traversal.
+  * TRE-ELEMENT:GET -> TRE-ELEMENT:$?
+  * TRE-ELEMENT:GET-NODES -> TRE-ELEMENT:$*
+  ' New global functions $? and $* for querying elements
+    by CSS selector.
+
+Changes of js-0.2 relative to js-0.1:
+  * DETECT-LANGUAGE returns country code in keyword package.
+  * Obfuscation exceptions have been removed.  tré does not
+    identifier obfuscation anymore.
+  * MILLISECONDS-SINCE-1970 moved to tré.
+  * TRE-ELEMENT.REMOVE-CLASSES added.
+  * Elements are unhooked from their EVENT-MODULE correctly.
+  * CAROSHI-ELEMENRT:
+  ** merged methods ADD-ARRAY and ADD-LIST into ADD.
+  ** Removed unused READ-ATTRIBUTES.

@@ -1,0 +1,58 @@
+<h1>tré LML module</h1>
+
+<p>On its long way to version 1.0.</p>
+
+<h1>Overview</h1>
+
+<p>LML is XML stored as expressions.  If an expression is not a
+text string, the first element of an expression must be the
+tag name as a symbol, followed by optional attributes as
+keyword arguments and then its children.</p>
+
+<p>The tag and attribute names are converted to lower camel case.</p>
+
+<p>Function $$ is used to convert LML into a DOM tree.  This:</p>
+
+<p><code>
+(princ ($$ `(html :lang "en"
+              (head
+                (title "Hello world!")
+                (script :src "/main.js"
+                        :defer nil  ; Attribute without value.
+                        ""))        ; Ensure closing tag.
+              (body
+                "Hi there!"))))
+</code></p>
+
+<p>will print</p>
+
+<p><code>
+&lt;html lang="en"
+  &lt;head&gt;
+    &lt;title&gt;Hello world!&lt;/title&gt;
+    &lt;script src="/main" defer&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    Hi there!
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></p>
+
+<h2>lml2dom.lisp, dom2lml.lisp</h2>
+
+<p>Functions to convert between LML expressions and a DOM tree.</p>
+
+<h2>component.lisp</h2>
+
+<p>A simple React-like component that doesn't come with
+reconciliation.</p>
+
+<h2>expand.lisp</h2>
+
+<p>LML macro expansion (including some to add event listeners) +
+LML component expansion.</p>
+
+<h2>autoform.lisp, autoform-widgets.lisp</h2>
+
+<p>Automatic form generation based on data descriptions and widget
+set.</p>
