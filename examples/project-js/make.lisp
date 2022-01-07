@@ -3,14 +3,16 @@
 (const *available-languages* '(:en))
 (const *have-lml-components?* t)
 
-(load "tre_modules/js/event/names.lisp")
-(load "tre_modules/l10n/compile-time.lisp")
+(var *modules-path* "../../modules/")
+
+(load (+ *modules-path* "js/event/names.lisp"))
+(load (+ *modules-path* "l10n/compile-time.lisp"))
 
 (make-project "tré JavaScript only project"
-    `(,@(list+ "tre_modules/l10n/"
+    `(,@(list+ (+ *modules-path* "l10n/")
                `("lang.lisp"
                  "l10n.lisp"))
-      ,@(list+ "tre_modules/js/dom/"
+      ,@(list+ (+ *modules-path* "js/dom/")
                `("add-onload.lisp"
                  "browser.lisp"
                  "def-aos.lisp"
@@ -39,13 +41,13 @@
                             "make-with-url.lisp"
                             "copy.lisp"))
                  "window-url.lisp"))
-      ,@(list+ "tre_modules/js/event/"
+      ,@(list+ (+ *modules-path* "js/event/")
                '("names.lisp"
                  "native.lisp"
                  "utils.lisp"
                  "listener-methods.lisp"
                  "keycodes.lisp"))
-      ,@(list+ "tre_modules/lml/"
+      ,@(list+ (+ *modules-path* "lml/")
                `("dom2lml.lisp"
                  "component.lisp"
                  "lml2dom.lisp"
@@ -56,7 +58,7 @@
                  "container.lisp"
                  "autoform.lisp"
                  "autoform-widgets.lisp"))
-      "tre_modules/js-http-request/main.lisp"
+      (+ *modules-path* "js-http-request/main.lisp")
       "toplevel.lisp")
     :transpiler  *js-transpiler*
     :emitter     [make-html-script "compiled/index.html" _

@@ -3,49 +3,51 @@
 (const *available-languages* '(:en))
 (const *have-lml-components?* t)
 
-(load "tre_modules/l10n/compile-time.lisp")
-(load "tre_modules/js/event/names.lisp")
+(var *modules-path* "../../modules/")
+
+(load (+ *modules-path* "l10n/compile-time.lisp"))
+(load (+ *modules-path* "js/event/names.lisp"))
 
 (make-project "tré JavaScript/PHP project"
-    `(,@(list+ "tre_modules/l10n/"                                                                  
-                         `("lang.lisp"
-                           "l10n.lisp"))
-      ,@(list+ "tre_modules/js/dom/"
-                         `("add-onload.lisp"
-                           "browser.lisp"
-                           "def-aos.lisp"
-                           "detect-language.lisp"
-                           "do.lisp"
-                           ,@(list+ "objects/"
-                                    '("node-predicates.lisp"
-                                      "nodelist.lisp"
-                                      "document.lisp"
-                                      "visible-node.lisp"
-                                      "element.lisp"
-                                      "text-node.lisp"
-                                      "extend.lisp"))
-                           "get.lisp"
-                           "document-location.lisp"
-                           "table.lisp"
-                           "viewport.lisp"
-                           ,@(list+ "form/"
-                                    '("predicates.lisp"
-                                      "get.lisp"
-                                      "select.lisp"
-                                      "element-value.lisp"))
-                           ,@(list+ "iframe/"
-                                    '("iframe.lisp"
-                                      "make.lisp"
-                                      "make-with-url.lisp"
-                                      "copy.lisp"))
-                           "window-url.lisp"))
-      ,@(list+ "tre_modules/js/event/"
+    `(,@(list+ (+ *modules-path* "l10n/")
+               `("lang.lisp"
+                 "l10n.lisp"))
+      ,@(list+ (+ *modules-path* "js/dom/")
+               `("add-onload.lisp"
+                 "browser.lisp"
+                 "def-aos.lisp"
+                 "detect-language.lisp"
+                 "do.lisp"
+                 ,@(list+ "objects/"
+                          '("node-predicates.lisp"
+                            "nodelist.lisp"
+                            "document.lisp"
+                            "visible-node.lisp"
+                            "element.lisp"
+                            "text-node.lisp"
+                            "extend.lisp"))
+                 "get.lisp"
+                 "document-location.lisp"
+                 "table.lisp"
+                 "viewport.lisp"
+                 ,@(list+ "form/"
+                          '("predicates.lisp"
+                            "get.lisp"
+                            "select.lisp"
+                            "element-value.lisp"))
+                 ,@(list+ "iframe/"
+                          '("iframe.lisp"
+                            "make.lisp"
+                            "make-with-url.lisp"
+                            "copy.lisp"))
+                 "window-url.lisp"))
+      ,@(list+ (+ *modules-path* "js/event/")
                '("names.lisp"
                  "native.lisp"
                  "utils.lisp"
                  "listener-methods.lisp"
                  "keycodes.lisp"))
-      ,@(list+ "tre_modules/lml/"
+      ,@(list+ (+ *modules-path* "lml/")
                `("dom2lml.lisp"
                  "component.lisp"
                  "lml2dom.lisp"
@@ -56,15 +58,16 @@
                  "container.lisp"
                  "autoform.lisp"
                  "autoform-widgets.lisp"))
-      "tre_modules/js-http-request/main.lisp"
-      ,@(list+ "tre_modules/http-funcall/"
+      (+ *modules-path* "js-http-request/main.lisp")
+      ,@(list+ (+ *modules-path* "http-funcall/")
                '("shared/expr2dom.lisp"
                  "js/toplevel.lisp"))
-      "tre_modules/session/api.lisp"
+      (+ *modules-path* "session/api.lisp")
       "server-api.lisp"
       "client/toplevel.lisp")
     :transpiler  *js-transpiler*
-    :emitter     [make-html-script "compiled/index.html" _
-                                   :title            "tré JavaScript/PHP project"
-                                   :copyright-title  "Copyright message missing"])
+    :emitter     [make-html-script
+                     "compiled/index.html" _
+                     :title            "tré JavaScript/PHP project"
+                     :copyright-title  "Copyright message missing"])
 (quit)
