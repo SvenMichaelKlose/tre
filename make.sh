@@ -44,9 +44,9 @@ install_it ()
 	sudo cp tre $BINDIR
     sudo mkdir -p /usr/local/lib/tre
     echo "Installing SBCL image to '/usr/local/lib/tre/image'…"
-    sudo cp image /usr/local/lib/tre
+    sudo cp -v image /usr/local/lib/tre
     echo "Installing environment to '/usr/local/lib/tre/environment/'…"
-    sudo cp -r environment modules /usr/local/lib/tre
+    sudo cp -rv environment modules /usr/local/lib/tre
     echo "Done."
 }
 
