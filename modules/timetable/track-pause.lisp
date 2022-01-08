@@ -1,6 +1,3 @@
-;;;;; Caroshi
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
-
 (defclass track-pause ()
   this)
 

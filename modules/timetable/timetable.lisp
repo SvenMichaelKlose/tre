@@ -1,5 +1,3 @@
-;;;;; Caroshi – Copyright (c) 2010,2012 Sven Michael Klose <pixel@copei.de>
-
 (defclass timetable ()
   (= _list (make-queue))
   (clr _done?)

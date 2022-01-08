@@ -1,5 +1,3 @@
-; Caroshi - Copyright (c) 2012,2016 Sven Michael Klose <pixel@copei.de>
-
 (defclass (perspective-canvas perspective) (width height)
   this)
 

@@ -1,5 +1,3 @@
-;;;;; Caroshi – Copyright (c) 2012 Sven Michael Klose <pixel@copei.de>
-
 (defclass videobuffer (&key (width nil) (height nil) (high nil) (low nil) (webm nil) (loop? nil))
   (_init width height high low webm loop?)
   (buffer-update)
