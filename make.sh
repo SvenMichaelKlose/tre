@@ -129,9 +129,9 @@ examples)
 
 projects)
     clean_example_projects
-    cd examples/project-php && ./install-modules.sh && ./make.sh && cd -
-    cd examples/project-js && ./install-modules.sh && ./make.sh && cd -
-    cd examples/project-js-php && ./install-modules.sh && ./make.sh && cd -
+    cd examples/project-php && ./make.sh && cd -
+    cd examples/project-js && ./make.sh && cd -
+    cd examples/project-js-php && ./make.sh && cd -
     ;;
 
 all)
