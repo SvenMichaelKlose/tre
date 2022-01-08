@@ -1,7 +1,8 @@
 Changes relative to tre-0.20:
   * Fixed =-REF.
   * Set *ASSERT?* to T by default.
-  * Moved external modules back in.
+  * Moved external modules back in.  Their separate
+    repositories on Github will be removed.
 
 Changes of tre-0.20 relative to tre-0.19:
   * Works with PHP-8.
