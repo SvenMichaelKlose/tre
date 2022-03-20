@@ -142,13 +142,6 @@ all)
     echo "All done."
     ;;
 
-extra)
-    echo "Making 'extra'…"
-#    ./make.sh nodeconsole
-    echo "Making complete compiler dump of examples/hello-world.lisp…"
-    $TRE examples/make-compiler-dumps.lisp > compiled/compiler-dumps.lisp
-    ;;
-
 releasetests)
     echo "Making release tests…" | tee log-make.lisp
     ./make.sh clean
@@ -157,7 +150,6 @@ releasetests)
     ./make.sh core
     ./make.sh tests
     ./make.sh examples
-    ./make.sh extra
     ./make.sh install
     ./make.sh projects
     echo "Release tests done." >>log-make.lisp
@@ -189,13 +181,12 @@ clean)
     echo ""
     echo "  examples      Compile everything in directory 'examples'."
     echo "  all           Compile everything listed until here."
-    echo "  extra         Also compiles what's listed below."
     echo "  projects      Make examples/project*."
     echo ""
     echo "  nodeconsole   Make node.js REPL. (defunct)"
     echo "  webconsole    Make web browser REPL. (defunct)"
     echo ""
-    echo "  releasetests  Make 'all', 'extra' and 'nodeconsole'."
+    echo "  releasetests  Make 'all' and 'nodeconsole'."
     echo "  updatetests   Generate new reference files from current test."
 
     ;;
