@@ -1,14 +1,13 @@
 (fn multipart-rand ()
   (string (+ 1000 (*math.floor (*math.random 8999)))))
 
-(var *multipart-boundary* (base64-encode (apply #'+ (maptimes #'multipart-rand 4))))
+(var *multipart-boundary* (base64-encode (apply #'+ (maptimes #'(() (multipart-rand)) 4))))
 
-(fn multipart-formdata (name data)
+(fn multipart-formdata (key value)
   (+ "--" *multipart-boundary* *terpri*
-     "Content-disposition: form-data; name=\"" name "\"" *terpri*
+     "Content-disposition: form-data; name=\"" key "\"" *terpri*
      *terpri*
-     data
-     *terpri*))
+     value *terpri*))
 
 (fn multipart-tail ()
   (+ "--" *multipart-boundary* "--" *terpri*))
