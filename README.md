@@ -300,22 +300,6 @@ Use %%NATIVE to inject native source strings:
 (some_php_function (%%native "LITERAL_CONSTANT_NAME_WITHOUT_DOLLAR"))
 ```
 
-## External resources
-
-### Applications
-
-### [phitamine demo shop](https://github.com/SvenMichaelKlose/phitamine-shop)
-
-### Examples
-
-### [phitamine](https://github.com/SvenMichaelKlose/phitamine)
-
-A framework to create PHP-only web sites with tré.
-[centralservices](https://github.com/SvenMichaelKlose/centralservices)
-provides a couple of widgets.
-
-### [bender](https://github.com/SvenMichaelKlose/bender)
-
 A UNIX command line 6502-CPU assembler.
 
 ### Modules
