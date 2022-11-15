@@ -64,7 +64,7 @@
      ,(autoform-value schema v)))
 
 
-; Non-ditables
+; Non-editables
 
 (def-autoform-widget (store name schema v) [eql _.type "text"]
   `(pre ,(autoform-value schema v)))
