@@ -2,8 +2,11 @@
 
 set -e
 
+echo "Welcome to tré!"
+
 # Get revision number and date.
 git log | grep ^commit | wc -l >environment/_current-version
+echo "Git version is" `cat environment/_current-version`
 date >environment/_release-date
 mkdir -p compiled
 
