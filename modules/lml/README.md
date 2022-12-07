@@ -1,15 +1,51 @@
-tré LML module
-==============
+tré LML package
+===============
 
 On its long way to version 1.0.
 
 
 # Converting LML to DOM
 
-LML is XML stored as expressions.  If an expression is not a
-text string, the first element of an expression must be the
-tag name as a symbol, followed by optional attributes as
-keyword arguments and then its children.
+LML is XML stored as Lisp expressions.  Text is stored as
+strings and elements are lists:
+
+~~~
+<p>Hello world!</p>
+~~~
+becomes
+~~~
+(p "Hello world!")
+~~~
+
+Empty elements come in two flavours:
+
+~~~
+<hr/> is (hr)
+<hr></hr> is (hr "")
+~~~
+
+Attributes are keyword arguments:
+
+~~~
+<section class="highlighted">
+    Some text.
+</section>
+~~~
+becomes
+~~~
+(section :class "highlighted"
+  "Some text.")
+~~~
+
+Attributes may come without value:
+
+~~~
+<script defer></script>
+~~~
+becomes
+~~~
+(script :defer nil "")
+~~~
 
 The tag and attribute names are converted to lower camel case.
 
@@ -28,12 +64,11 @@ Function $$ is used to convert LML into a DOM tree.  This:
 
 will print
 
-
 ```
 <html lang="en"
   <head>
     <title>Hello world!</title>
-    <script src="/main" defer></script>
+    <script src="/main.js" defer></script>
   </head>
   <body>
     Hi there!
@@ -83,12 +118,15 @@ conversion with the $$ function.
          (img :src ,props.src)
          (figcaption ,props.alt))))
 
-(declare-lml-component my-image)
+(declare-lml-component my-image) ; Now $$ knows MY-IMAGE.
 ```
+
+PROPS is a JSON object containing the attributes.  Children
+are in attribute "children".
 
 Components can also be classes derived from LML-COMPONENT) to
 set up elements with state.  Changing the state will cause
-the component to create its DOM tree again with its RENDER
+the component to create its DOM tree again via its RENDER
 method.
 
 ```
@@ -113,6 +151,7 @@ method.
 
 At this moment LML-COMPONENT does not check if an element
 has to be re-rendered at all.  (Optimizations will come last.)
+
 
 # Stores
 
