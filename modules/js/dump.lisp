@@ -5,8 +5,6 @@
                :fun-eof  [identity t]))
 
 (var *standard-log* (make-log-stream))
-(= *standard-output* (make-log-stream))
-(= *standard-error* (make-log-stream))
 
 (fn dump (x &optional (title nil))
   (& title
