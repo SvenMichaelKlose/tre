@@ -57,7 +57,7 @@
             :on-click  ,[store.write (make-object name _.target.checked)]
             ,@(& av '(:checked "1")))))
 
-(def-editable-autoform-widget (store name schema v) [eql _.type "text"]
+(def-editable-autoform-widget (store name schema v) [eql _.type "string"]
   `(textarea :name  ,name
              ,@(autoform-pattern-required schema)
              :on-change  ,[store.write (make-object name _.target.value)]
@@ -66,15 +66,11 @@
 
 ; Non-editables
 
-(def-autoform-widget (store name schema v) [eql _.type "text"]
+(def-autoform-widget (store name schema v) [eql _.type "string"]
   `(pre ,(autoform-value schema v)))
-
-(def-autoform-widget (store name schema v) [eql _.type "selection"]
-  (aref schema.options v))
 
 (def-autoform-widget (store name schema v) [identity t]
   (autoform-value schema v))
-
 
 (fn set-schema-items (value what schema &rest fields)
   (@ (i (| fields (keys schema)) schema)
