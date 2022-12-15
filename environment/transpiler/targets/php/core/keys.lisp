@@ -1,4 +1,4 @@
-(fn property-names (x)
+(fn keys (x)
   (& x
      (array-list (array_keys (? (array? x)
                                 x

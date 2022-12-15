@@ -93,10 +93,10 @@
 
   (function-frames?         t)
 
-  ; Generate %VAR declarations for each function.
+  ; Make %VAR declarations for each function.
   (needs-var-declarations?  nil)
 
-  ; Place local variables on the stack.  Generates expressions
+  ; Place local variables on the stack.  Makes expressions
   ; of the form (%STACK stack-index).
   (stack-locals?            nil)
 

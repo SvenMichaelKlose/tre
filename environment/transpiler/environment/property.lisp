@@ -1,5 +1,5 @@
 (fn props-alist (x)
-  (filter [. _ (slot-value x _)] (property-names x)))
+  (filter [. _ (slot-value x _)] (keys x)))
 
 (fn alist-props (x)
   (& x
@@ -9,9 +9,9 @@
 
 (fn merge-props (a b)
   (aprog1 (new)
-    (@ (i (property-names a))
+    (@ (i (keys a))
       (= (slot-value ! i) (slot-value a i)))
-    (@ (i (property-names b))
+    (@ (i (keys b))
       (= (slot-value ! i) (slot-value b i)))))
 
 (fn copy-props (x)
@@ -22,9 +22,9 @@
 
 (fn remove-props (props &rest names)
   (aprog1 (new)
-    (@ (i (property-names props))
+    (@ (i (keys props))
       (| (member i names)
          (= (slot-value ! i) (slot-value props i))))))
 
 (fn property-values (x)
-  (filter [slot-value x _] (property-names x)))
+  (filter [slot-value x _] (keys x)))

@@ -53,7 +53,7 @@
                                 "dot-expand.lisp"
                                 "math.lisp"
                                 "milliseconds-since-1970.lisp"
-                                "property-names.lisp"
+                                "keys.lisp"
                                 "../../../environment/property.lisp"
                                 "../../../environment/make-object.lisp"
                                 "../../../environment/files-unsupported.lisp")))

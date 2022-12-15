@@ -21,7 +21,7 @@
                       ,@(? (eql _ av)
                            `(:selected "yes"))
                 ,(aref schema.options _))]
-            (property-names schema.options)))))
+            (keys schema.options)))))
 
 (fn autoform-pattern-required (schema)
   `(,@(!? schema.pattern      `(:pattern ,!))
@@ -77,7 +77,7 @@
 
 
 (fn set-schema-items (value what schema &rest fields)
-  (@ (i (| fields (property-names schema)) schema)
+  (@ (i (| fields (keys schema)) schema)
     (= (aref (aref schema i) what) value)))
 
 (fn make-schema-editable (schema &rest fields)

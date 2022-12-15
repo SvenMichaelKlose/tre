@@ -39,7 +39,7 @@
   (& (enabled-pass? :accumulate-toplevel)
      (accumulated-toplevel-expressions)
      (with-temporaries ((sections-to-update) '(accumulated-toplevel))
-       (developer-note "Generating top–level expressions…~%")
+       (developer-note "Making top–level expressions…~%")
        (push :accumulate-toplevel (disabled-passes))
        (prog1
          (quick-compile-sections (list (. 'accumulated-toplevel
@@ -47,7 +47,7 @@
          (pop (disabled-passes))))))
 
 (fn compile-delayed-exprs ()
-  (developer-note "Generating delayed expressions…~%")
+  (developer-note "Making delayed expressions…~%")
   (with-temporary (sections-to-update) '(delayed-exprs)
     (quick-compile-sections (list (. 'delayed-exprs (delayed-exprs))))))
 
@@ -56,7 +56,7 @@
   (funcall (middleend-init))
   (with (before-imports    (codegen-sections before-import)
          imports-and-rest  (+ (progn
-                                (developer-note "Generating imports…~%")
+                                (developer-note "Making imports…~%")
                                 (codegen imports))
                               (compile-delayed-exprs)
                               (codegen-sections after-import)

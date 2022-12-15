@@ -40,13 +40,12 @@
     (& onresult
        (= req.onreadystatechange listener))
     (req.open (? post? "POST" "GET") url (& onresult t))
-    (req.set-request-header "Content-type" (+ "application/json; charset=UTF-8; boundary="
-                                              *multipart-boundary*))
+    (req.set-request-header "Content-type" "application/json; charset=UTF-8;")
     (req.send (json-encode data))
     (unless onresult
       (| (== 200 req.status)
          (funcall onerror req url data))
-      req.response)))
+      (json-decode req.response))))
 
 (fn http-request-error (req url data)
   (error (+ "Connection error: " req.status

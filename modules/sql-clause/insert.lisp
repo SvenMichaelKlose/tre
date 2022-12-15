@@ -7,7 +7,7 @@
             " VALUES()")
          (concat-stringtree
              " ("
-             (pad (property-names fields) ",")
+             (pad (keys fields) ",")
              ") VALUES ("
              (pad (@ [+ "\"" (escape-string _) "\""]
                      (property-values fields))

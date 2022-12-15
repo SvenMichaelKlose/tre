@@ -60,7 +60,7 @@
                        "../../../environment/print.lisp"
                        "../../../environment/list-string.lisp"
                        "string.lisp"
-                       "property-names.lisp"
+                       "keys.lisp"
                        "../../../environment/property.lisp"
                        "../../../environment/make-object.lisp"
                        "base64.lisp"

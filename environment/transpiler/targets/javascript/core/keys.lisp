@@ -1,3 +1,3 @@
-(fn property-names (x)
+(fn keys (x)
   (& x
      (carlist (%properties-list x))))

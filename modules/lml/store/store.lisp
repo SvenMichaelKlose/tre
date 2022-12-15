@@ -17,7 +17,7 @@
     (_update-component)))
 
 (defmethod store names ()
-  (property-names data))
+  (keys data))
 
 (defmethod store connect (comp)
   (= _component comp))
@@ -44,7 +44,7 @@
   data)
 
 (defmethod store set-schema-defaults (schema)
-  (@ (i (property-names schema))
+  (@ (i (keys schema))
     (!? (& (not (aref data i))
            (aref schema i).default)
         (= (aref data i) !))))

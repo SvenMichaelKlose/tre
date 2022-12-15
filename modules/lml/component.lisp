@@ -48,7 +48,7 @@
   (_schedule-update))
 
 (defmethod lml-component set-state (x)
-  (@ (n (property-names x))
+  (@ (n (keys x))
     (= (aref state n) (aref x n)))
   (_schedule-update)
   state)

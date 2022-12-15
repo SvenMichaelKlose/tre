@@ -35,7 +35,7 @@
               translated-name (? (defined-function name)
                                  (compiled-function-name-string name)
                                  name))
-         (developer-note "Generating function ~A…~%" name)
+         (developer-note "Making function ~A…~%" name)
          `(,*terpri*
            ,(funinfo-comment (= *funinfo* (get-funinfo name)))
            ,translated-name " = function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*terpri*
