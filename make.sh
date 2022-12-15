@@ -2,8 +2,11 @@
 
 set -e
 
+echo "Welcome to tré!"
+
 # Get revision number and date.
 git log | grep ^commit | wc -l >environment/_current-version
+echo "Git version is" `cat environment/_current-version`
 date >environment/_release-date
 mkdir -p compiled
 
@@ -44,9 +47,9 @@ install_it ()
 	sudo cp tre $BINDIR
     sudo mkdir -p /usr/local/lib/tre
     echo "Installing SBCL image to '/usr/local/lib/tre/image'…"
-    sudo cp image /usr/local/lib/tre
+    sudo cp -v image /usr/local/lib/tre
     echo "Installing environment to '/usr/local/lib/tre/environment/'…"
-    sudo cp -r environment /usr/local/lib/tre
+    sudo cp -rv environment modules /usr/local/lib/tre
     echo "Done."
 }
 
@@ -84,7 +87,7 @@ jstests)
     echo "JavaScript target tests…"
     $TRE tests/js.lisp
     node compiled/test.js | tee log-nodetests.lisp
-    chromium-browser compiled/test.html &
+    #chromium-browser compiled/test.html &
     cmp tests/js.correct-output log-nodetests.lisp || (diff tests/js.correct-output log-nodetests.lisp; exit 1)
     echo "JavaScript target tests passed in node.js."
 	;;
@@ -123,15 +126,15 @@ examples)
     $TRE examples/make-standard-php.lisp
     $TRE examples/make-coreless-js.lisp
     echo "Making compiler dump for BUTLAST in examples/hello-world.lisp…"
-    $TRE examples/make-compiler-dumps-for-butlast.lisp > compiled/compiler-dumps-for-butlast.lisp
+#    $TRE examples/make-compiler-dumps-for-butlast.lisp > compiled/compiler-dumps-for-butlast.lisp
 #   $TRE examples/make-obfuscated.lisp # TODO: Fix setting the current *PACKAGE*.
     ;;
 
 projects)
     clean_example_projects
-    cd examples/project-php && ./install-modules.sh && ./make.sh && cd -
-    cd examples/project-js && ./install-modules.sh && ./make.sh && cd -
-    cd examples/project-js-php && ./install-modules.sh && ./make.sh && cd -
+    cd examples/project-php && ./make.sh && cd -
+    cd examples/project-js && ./make.sh && cd -
+    cd examples/project-js-php && ./make.sh && cd -
     ;;
 
 all)
@@ -142,13 +145,6 @@ all)
     echo "All done."
     ;;
 
-extra)
-    echo "Making 'extra'…"
-#    ./make.sh nodeconsole
-    echo "Making complete compiler dump of examples/hello-world.lisp…"
-    $TRE examples/make-compiler-dumps.lisp > compiled/compiler-dumps.lisp
-    ;;
-
 releasetests)
     echo "Making release tests…" | tee log-make.lisp
     ./make.sh clean
@@ -157,7 +153,6 @@ releasetests)
     ./make.sh core
     ./make.sh tests
     ./make.sh examples
-    ./make.sh extra
     ./make.sh install
     ./make.sh projects
     echo "Release tests done." >>log-make.lisp
@@ -189,13 +184,12 @@ clean)
     echo ""
     echo "  examples      Compile everything in directory 'examples'."
     echo "  all           Compile everything listed until here."
-    echo "  extra         Also compiles what's listed below."
     echo "  projects      Make examples/project*."
     echo ""
     echo "  nodeconsole   Make node.js REPL. (defunct)"
     echo "  webconsole    Make web browser REPL. (defunct)"
     echo ""
-    echo "  releasetests  Make 'all', 'extra' and 'nodeconsole'."
+    echo "  releasetests  Make 'all' and 'nodeconsole'."
     echo "  updatetests   Generate new reference files from current test."
 
     ;;

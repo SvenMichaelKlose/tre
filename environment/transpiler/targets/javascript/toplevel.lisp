@@ -4,6 +4,7 @@
 
 (fn js-prologue ()
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
+     (format nil "'use strict';~%")
      (nodejs-prologue)
      (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
      (concat-stringtree (backend-generate-code `((%var ,@(funinfo-vars (global-funinfo))))))))

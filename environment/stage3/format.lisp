@@ -16,6 +16,16 @@
      (error "Argument ~A specified in format \"~A\" is missing." (format-info-processed-args inf) (format-info-text inf)))
   (%format inf txt .args))
 
+(fn %format-directive-hexadecimal (inf txt args)
+  (? args
+     (? (cons? args.)
+        (late-print args. (format-info-stream inf))
+        (? (< args. 256)
+            (print-hexbyte args. (format-info-stream inf))
+            (print-hexword args. (format-info-stream inf))))
+     (error "Argument ~A specified in format \"~A\" is missing." (format-info-processed-args inf) (format-info-text inf)))
+  (%format inf txt .args))
+
 (fn %format-directive-force-output (inf txt args)
   (force-output (format-info-stream inf))
   (%format inf txt args))
@@ -33,6 +43,7 @@
   (case (char-upcase txt.)
     #\%  (%format-directive-eol inf .txt args)
     #\A  (%format-directive-placeholder inf .txt args)
+    #\X  (%format-directive-hexadecimal inf .txt args)
     #\F  (%format-directive-force-output inf .txt args)
     #\L  (%format-directive-fresh-line inf .txt args)
     #\~  (progn

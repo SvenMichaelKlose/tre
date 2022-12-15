@@ -10,9 +10,8 @@
 (def-shared-transpiler-macro (js php) functional (&rest x)
   (print-definition `(functional ,@x))
   (@ (i x)
-    (? (transpiler-functional? *transpiler* i)
-       (warn "FUNCTIONAL: Already declared ~A as being a pure function." i))
-    (transpiler-add-functional *transpiler* i))
+    (| (transpiler-functional? *transpiler* i)
+       (transpiler-add-functional *transpiler* i)))
   nil)
 
 (def-shared-transpiler-macro (c js php) not (&rest x)

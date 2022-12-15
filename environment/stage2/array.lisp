@@ -18,3 +18,9 @@
   (with-queue q
     (dotimes (i (length hash) (queue-list q))
       (enqueue q (funcall fun (aref hash i))))))
+
+(fn ensure-array (x)
+  (& x
+     (? (array? x)
+        x
+        (array x))))

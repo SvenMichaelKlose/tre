@@ -26,7 +26,6 @@
 (env-load "stage1/cons-r.lisp")
 (env-load "stage1/count.lisp")
 (env-load "stage1/debug-print.lisp" :cl)
-(env-load "stage1/accent-circonflex.lisp")
 (env-load "stage1/integerp.lisp" :cl)
 (env-load "stage1/conditional.lisp")
 (env-load "stage1/@.lisp")

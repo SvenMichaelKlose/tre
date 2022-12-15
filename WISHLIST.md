@@ -38,7 +38,7 @@ Great for dealing with JSON objects.
 
 ## Literal arrays
 
-## . instead of &REST
+## Argument definitions: '.' instead of &REST
 
 ## Only import target-specific environment functions that are required, like imports from host environment..
 

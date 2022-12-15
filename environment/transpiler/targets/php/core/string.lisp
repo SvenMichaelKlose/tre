@@ -11,9 +11,11 @@
   (when (%%%< idx (strlen seq))
     (code-char (ord (substr seq idx 1)))))
 
-(fn string-subseq (seq start &optional (end 99999))
+(fn string-subseq (seq start &optional (end nil))
   (unless (== start end)
-    (substr seq start (- end start))))
+    (!= (substr seq start (? end (- end start)))
+      (unless (& (string? !) (== 0 (length !)))
+        !))))
 
 (fn number-string (x)
     (%%native "(string)$" x))

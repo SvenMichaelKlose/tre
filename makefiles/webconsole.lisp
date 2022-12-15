@@ -1,7 +1,5 @@
 (load "tre_modules/js/event/names.lisp")
 
-(var *log-events?* nil)
-
 (= *allow-redefinitions?* t)
 (= *have-compiler?* t)
 
@@ -27,18 +25,13 @@
                            "viewport.lisp"))
 
                 ,@(list+ "tre_modules/js/event/"
-                         '("log.lisp"
-                           "native.lisp"
-                           "event.lisp"
-                           "handler.lisp"
-                           "module.lisp"
+                         '("native.lisp"
                            "names.lisp"
-                           "manager.lisp"
                            "utils.lisp"
-                           "bind-event-methods.lisp"
+                           "listener-methods.lisp"
                            "keycodes.lisp"))
                 ,@(list+ "tre_modules/js/"
-                         '("log-message.lisp"))
+                         '("dump.lisp"))
 
                 (toplevel . ((document-extend)
                              (*event-manager*.init-document document)

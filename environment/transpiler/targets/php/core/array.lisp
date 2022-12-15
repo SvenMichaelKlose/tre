@@ -15,7 +15,7 @@
 (fn array? (x)
   (| (is_a x "__array")
      (& (is_array x)
-        (%%native "array_keys (" x ") === range (0, count (" x ") - 1)"))))
+        (%%native "array_keys ($" x ") === range (0, count ($" x ") - 1)"))))
 
 (fn list-phparray (x)
   (!= (%%%make-array)

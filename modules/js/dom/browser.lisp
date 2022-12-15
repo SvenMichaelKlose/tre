@@ -1,0 +1,7 @@
+(fn explorer? () (eql "Microsoft Internet Explorer" navigator.app-name))
+(fn gecko? ()    (< -1 (navigator.user-agent.index-of "Gecko")))
+(fn mozilla? ()  (< -1 (navigator.user-agent.index-of "Mozilla")))
+(fn opera? ()    (< -1 (navigator.user-agent.index-of "Opera")))
+(fn chrome? ()   (& (defined? window.chrome)
+                    (not (opera?))))
+(fn webkit? ()   (< -1 (navigator.user-agent.index-of "WebKit")))

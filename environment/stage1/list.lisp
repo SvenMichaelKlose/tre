@@ -76,7 +76,6 @@
 (fn cadadar (x) (cadr (cadr (car x))))
 (fn cddadar (x) (cddr (cadr (car x))))
 
-(fn (= elt) (val seq idx) (%set-elt val seq idx))
 (fn (= car) (val lst) (rplaca lst val) val)
 (fn (= cdr) (val lst) (rplacd lst val) val)
 (fn (= caar) (val lst) (rplaca (car lst) val) val)
@@ -94,9 +93,10 @@
 
 (functional ensure-list)
 (fn ensure-list (x)
-  (? (list? x)
-     x
-     (list x)))
+  (& x
+     (? (list? x)
+        x
+        (list x))))
 
 (defmacro push (elm expr)
   `(= ,expr (. ,elm ,expr)))
@@ -140,7 +140,7 @@
 (fn dynamic-map (func &rest lists)
   (?
     (string? lists.)  (list-string (apply #'mapcar func (mapcar #'string-list lists)))
-    (array? lists.)   (list-array (apply #'mapcar func (mapcar #'array-list lists)))
+    (array? lists.)   (apply #'mapcar func (mapcar #'array-list lists))
     (apply #'mapcar func lists)))
 
 (fn mapcan (func &rest lists)

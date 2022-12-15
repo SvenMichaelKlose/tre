@@ -1,4 +1,27 @@
-Changes relative to tre-0.18:
+Changes relative to tre-0.20:
+  * Fixed =-REF.
+  * Set *ASSERT?* to T by default.
+  * Moved external modules back in.  Their separate
+    repositories on Github will be removed.
+
+Changes of tre-0.20 relative to tre-0.19:
+  * Works with PHP-8.
+  * SUBSEQ (JS/PHP): Allow strings of any length.  (Ugly
+    hack from the old days.)
+  * @, DYNAMIC-MAP return lists of arguments are arrays.
+  * PAD accepts arrays.
+  * Function definitions: single argument does not have to
+    be put in a list.
+  * REF: New functions to look up from alists, arrays, hash
+    tables and objects.
+  * ^ is now synonymous for REF.  (It was for FN.)
+  * ACCCENT-CIRCONFLEX has been removed.
+  * ENSURE-LIST: Do not put NIL into a list.
+  * ENSURE-ARRAY: New function to convert lists into arrays.
+  * =-ELT has been fixed.
+  * FORMAT supports ~X to print hexadecimals. (Not complete.)
+
+Changes of tre-0.19 relative to tre-0.18:
   * Bug-fix: jump tag optimizer translated any number.
   * Braces '{}' cannot be used as an alias for PROGN anymore.
     Now property names may be variables.

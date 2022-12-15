@@ -119,7 +119,8 @@
          (%%%>        ">")
          (%%%<=       "<=")
          (%%%>=       ">=")
-         (%%%eq       "===")
+         (%%%===      "===")
+         (%%%!==      "!==")
 
          (%%%<<       "<<")
          (%%%>>       ">>")
@@ -211,9 +212,6 @@
 
 (def-js-codegen %js-typeof (x)
   `(%%native "typeof " ,x))
-
-(def-js-codegen %defined? (x)
-  `(%%native "\"undefined\" != typeof " ,x))
 
 (def-js-codegen %invoke-debugger ()
   '(%%native "null; debugger"))

@@ -27,11 +27,13 @@
   (x.to-lower-case))
 
 (functional string-subseq)
-(fn string-subseq (seq start &optional (end 99999))
+(fn string-subseq (seq start &optional (end nil))
   (unless (& (< (- (length seq) 1) start)
-             (< start end))
+             (? end
+                (< start end)
+                t))
     (unless (== start end)
-      (seq.substr start (- end start)))))
+      (seq.substr start (? end (- end start))))))
 
 (functional number-string)
 (fn number-string (x)
