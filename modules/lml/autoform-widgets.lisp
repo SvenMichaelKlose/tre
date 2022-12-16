@@ -11,7 +11,7 @@
 
 ; Editables
 
-(def-editable-autoform-widget (store name schema v) [eql _.type "selection"]
+(def-editable-autoform-widget (store name schema v) [eql (schema-type _) "selection"]
   (with (has-default?  (defined? schema.default)
          av            (autoform-value schema v))
     `(select :name       ,name
@@ -41,13 +41,12 @@
           :on-change  ,[store.write (make-object name _.target.value)]
           :value      ,(autoform-value schema v)))
 
-(def-editable-autoform-widget (store name schema v) [in? _.type "string" "password" "email"]
-  (make-autoform-input-element (? (eql schema.type "string")
-                                  "text"
-                                  schema.type)
+(def-editable-autoform-widget (store name schema v) [in? (schema-type _) "string" "password" "email"]
+  (make-autoform-input-element (!= (schema-type schema)
+                                 (? (eql ! "string") "text" !))
                                store name schema v))
 
-(def-editable-autoform-widget (store name schema v) [eql _.type "boolean"]
+(def-editable-autoform-widget (store name schema v) [eql (schema-type _) "boolean"]
   (let av (? (defined? (slot-value store.data name))
              v
              (!= (autoform-value schema v)
@@ -57,7 +56,7 @@
             :on-click  ,[store.write (make-object name _.target.checked)]
             ,@(& av '(:checked "1")))))
 
-(def-editable-autoform-widget (store name schema v) [eql _.type "string"]
+(def-editable-autoform-widget (store name schema v) [eql (schema-type _) "string"]
   `(textarea :name  ,name
              ,@(autoform-pattern-required schema)
              :on-change  ,[store.write (make-object name _.target.value)]
@@ -66,7 +65,7 @@
 
 ; Non-editables
 
-(def-autoform-widget (store name schema v) [eql _.type "string"]
+(def-autoform-widget (store name schema v) [eql (schema-type _) "string"]
   `(pre ,(autoform-value schema v)))
 
 (def-autoform-widget (store name schema v) [identity t]
