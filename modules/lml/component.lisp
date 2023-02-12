@@ -13,6 +13,7 @@
       (!.component-will-update)
       (!._rerender))))
 
+
 (defclass lml-component (init-props)
   (= props init-props)
   (= state (new))
