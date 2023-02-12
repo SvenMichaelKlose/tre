@@ -1,3 +1,5 @@
+(var *document-body* document.body)
+
 (fn make-extended-html-document ()
   (document-extend (document.implementation.create-h-t-m-l-document)))
 
