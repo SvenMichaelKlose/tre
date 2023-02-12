@@ -142,7 +142,8 @@ all)
     ./make.sh boot $ARGS
     ./make.sh tests
     ./make.sh examples
-    echo "All done."
+    echo
+    echo "Successfully built target 'all'."
     ;;
 
 releasetests)
