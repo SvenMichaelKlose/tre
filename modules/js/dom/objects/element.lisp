@@ -1,3 +1,6 @@
+; TODO: remove READ-ATTRIBUTE.
+; TODO: ATTR as short-cut for getAttribute()
+
 (fn tre-ancestor-or-self-if (node pred)
   (ancestor-or-self-if node pred))
 
