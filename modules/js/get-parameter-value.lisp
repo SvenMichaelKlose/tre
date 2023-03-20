@@ -1,3 +1,5 @@
+; TODO: Use new 'Location' object.
+
 (fn get-parameter-value (x)
   (with (url      window.location.href
          name     (x.replace "/[\[\]]/g" "\\$&")
