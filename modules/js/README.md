@@ -1,3 +1,5 @@
-# JavaScript implementations of tré functions.
+tré JavaScript module
+=====================
 
-Also comes with DOM and event library.
+Contains platform-dependent environment parts
+and additional DOM and event APIs.
