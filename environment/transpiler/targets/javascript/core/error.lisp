@@ -1,5 +1,5 @@
 (fn %error (msg)
-  (princ msg)
+  (dump msg)
   (invoke-debugger)
   nil)
 
