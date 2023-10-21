@@ -1,5 +1,3 @@
-,(= *have-lml-components?* t)
-
 (var *pending-component-updates* nil)
 
 (fn update-lml-components ()

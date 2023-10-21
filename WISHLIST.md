@@ -43,3 +43,4 @@ Great for dealing with JSON objects.
 ## Only import target-specific environment functions that are required, like imports from host environment..
 
 ## CL target: move DEFVARs (without inits) before imports.
+* C parser in Lisp to import code of other languages

@@ -1,7 +1,3 @@
-,(progn
-   (var *have-lml-components?* nil)
-   nil)
-
 (fn lml2dom-element (x doc)
   (make-extended-element (downcase (string x.)) :doc doc))
 
@@ -50,31 +46,34 @@
   (aprog1 (lml2dom ..x. :doc doc :parent parent)
     (funcall (lml2dom-exec-function x) parent !)))
 
+(fn lml2dom-expr-component (parent x doc)
+  (with (attrs     (%%%make-object)
+         children  nil
+         f  [& _
+               (? (lml-attr? _)
+                  (progn
+                    (=-%aref (? (keyword? ._.)
+                                (list-string (camel-notation (string-list (symbol-name ._.))))
+                                ._.)
+                             attrs (lml-attr-string _.))
+                    (f .._))
+                  (= children (@ [lml2dom _ :doc doc] _)))])
+    (f .x)
+    (=-%aref children attrs "children")
+    (aprog1 (make-lml-component x. attrs)
+      (& parent
+         (parent.add !)))))
+
 (fn lml2dom-expr (parent x doc)
   (| (atom x.)
      (lml2xml-error-tagname x))
   (? (%exec? x)
      (lml2dom-exec parent x doc)
      (progn
-       ,(& *have-lml-components?*
-           '(when (lml-component-name? x.)
-              (with (attrs     (%%%make-object)
-                     children  nil
-                     f  [& _
-                           (? (lml-attr? _)
-                              (progn
-                                (=-%aref (? (keyword? ._.)
-                                            (list-string (camel-notation (string-list (symbol-name ._.))))
-                                            ._.)
-                                         attrs (lml-attr-string _.))
-                                (f .._))
-                              (= children (@ [lml2dom _ :doc doc] _)))])
-                (f .x)
-                (=-%aref children attrs "children")
-                (!= (make-lml-component x. attrs)
-                  (& parent
-                     (parent.add !))
-                  (return-from lml2dom-expr !)))))
+       (? (& (function? (symbol-function 'lml-component))
+             (lml-component-name? x.))
+          (awhen (lml2dom-expr-component parent ! doc)
+            (return-from lml2dom-expr !)))
        (let e (lml2dom-element x doc)
          (& parent
             (parent.add e))
