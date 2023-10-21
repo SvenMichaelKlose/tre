@@ -72,7 +72,7 @@
      (progn
        (? (& (function? (symbol-function 'lml-component))
              (lml-component-name? x.))
-          (awhen (lml2dom-expr-component parent ! doc)
+          (awhen (lml2dom-expr-component parent x doc)
             (return-from lml2dom-expr !)))
        (let e (lml2dom-element x doc)
          (& parent
