@@ -5,7 +5,10 @@
     symbol?     (symbol-name x)
     number?     (number-string x)
     not         "NIL"
-    (error "Don't know how to convert ~A to string." x)))
+    (error "Don't know how to convert ~A to string."
+           (? (function? x)
+              "function"
+              x))))
 
 (defmacro string== (x &rest y)
   (?
