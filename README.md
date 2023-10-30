@@ -2,21 +2,22 @@ The tré programming language
 ============================
 
 tré transpiles its dialect of Lisp to JavaScript, PHP7+ and
-Common Lisp (mainly to compile itself).
+Common Lisp (the latter mainly to compile itself).
 
 
 # Build and install
 
 tré requires some Linux with "sbcl" (Steel Bank Common Lisp)
-installed.  But to get real kicks out of tré, you'd need "git"
-and "docker-compose", too.  On a Debia-derived distributions,
+installed.
+
+On a Debia-derived distributions,
 like "Ubuntu" or "Linux Mint"
 
 ```sh
-sudo apt install git sbcl docker-compose -y
+sudo apt install sbcl -y
 ```
 
-should do.  You won't need to have a web server installed.
+should do.
 
 Then run:
 
@@ -48,31 +49,24 @@ Can't wait? Copy examples/project-js to a directory of your own
 naming and step into it:
 
 ```sh
-cp examples/project-js <someplace-new>
-cd <someplace-new>
+mkdir new-js-project
+cp /usr/local/share/tre/examples/project-js new-js-project
 ```sh
-
-Then install the required modules;
-
-```sh
-./install-modules.sh
-```
 
 Now compile the example code:
 
 ```sh
+cd new-js-project
 ./make.sh
 ```
 
-Step into directory compiled and start the docker container:
+Step into directory 'compiled' and start the docker container:
 
 ```sh
 cd compiled
 sudo docker-compose up
 ```
 
-This may take a while and download several hundred megabytes to
-setup its very own Linux distribution the first time you do this.
 Now point your browser at http://localhost:19020/ – voilà!
 
 ## Creating a PHP-only project
@@ -81,17 +75,12 @@ This works the same as creating a JavaScript-only project, except
 that you have to copy examples/project-php.
 
 But this time the docker container also has a MySQL database
-installed.  Within the container it's listening on hostname "db"
-from the outside you can read it at IP 0.0.0.0.  It's got two
+installed.  Within the container it's listening on hostname "db".
+From the outside you can access it via IP 0.0.0.0.  It's got two
 users, "root" and "tre", both with password "secret".  You can
 change these in file "docker-compose.yml" before doing your
 first web server launch.  You can also remove the whole database
-section from that file, if you won't need it.  A database
-configuration has already been prepared for use with module
-"php-db-mysql".
-
-If you want to see a full-blown PHP-only example in action, please
-visit https://github.com/SvenMichaelKlose/phitamine-shop.
+section from that file, if you won't need it.
 
 ## Creating a JavaScript project with PHP server and function calls via HTTP
 
@@ -120,22 +109,25 @@ readable.  One of
 
 ```lisp
 (invoke-debugger)
+```
+or one of
+```lisp
 (console.log "%o" buggyobject)
+(dump my-object)
+(dump my-object "My object")
 ```
 
 in considerate places might help out a lot, as well as PRINT and
-LOG-MESSAGE on the PHP side.
-
+the DUMP function on the PHP side.
 
 # Syntax
 
-tré comes with a lot of syntactical sugar to get rid of those
-embarrassing braces and to keep things snappy.
+tré comes with a lot of syntactical sugar to keep things snappy.
 
 ## No LAMBDA symbol required
 
 The LAMBDA symbol may be omitted when defining functions.
-Influenced by Arc.
+(Influenced by Arc.)
 
 ```lisp
 ; Old style.
@@ -149,7 +141,7 @@ Influenced by Arc.
 
 ## Dots instead of CAR or CDR
 
-Probably inspired by some COBOL manual, tré first of all takes
+Probably inspired by some COBOL manual, tré takes
 the edge off by removing the zoo of CAR, CDR and related
 expressions.  Instead of doing "(car x)" you are now invited to
 use "x." instead.  The equivalent for "(cdr x)" would be ".x".
@@ -202,7 +194,7 @@ is the equivalent of
 If 'expr' starts with a symbol, it is wrapped into a list to
 form an expression.
 
-NOT IMPLEMENTED YET:
+PROPOSAL!  NOT IMPLEMENTED YET:
 Tré also lets you make your own argument definitions.  To roll
 your own basically end them with a closing parenthesis:
 
@@ -227,19 +219,17 @@ Otherwise it'll become a PROGN.
     (do-something-else)}
 
 ; Use as literal object.
-{:item1    "1"
- "item2"   "2"
- :oh-no    3}
+{"item2"   "2"  ; It's highly recommended to use strings!
+ :item1    "1"
+ :oh-no    3}   ; Will be converted to camel notation and
+                ; result in "ohNo".
 ```
-
-Note that keyword keys will be translated into camel notation.
-':oh-no' will become 'ohNo'.
 
 ## General abbreviations
 
 Inspired by the C syntax these are synonyms for what you
-would expect from Common Lisp.  The original names are,
-most of the time, still there.
+would otherwise expect from Common Lisp.  The original names
+are, most of the time, still there.
 
 * == instead of =
 * = instead of SETF
@@ -252,7 +242,7 @@ Due to name collision the original meaning of '=' is gone
 in favour of '=='.
 
 There are also abbreviations for some anaphoric macros
-inspired by Arc (which are still around):
+inspired by Arc (which are there as well):
 
 * != instead of ALET (Arc)
 * !? instead of AIF (Arc)
@@ -281,7 +271,7 @@ pass.
 Some exciting example missing here.
 ```
 
-## Comma for dynamic SLOT-VALUE access (NOT IMPLEMENTED)
+## PROPOSAL: Comma for dynamic SLOT-VALUE access (NOT IMPLEMENTED)
 
 When working with JSON data for example lots of SLOT-VALUE
 expressions can spoil the fun.  Here's an example:
@@ -300,25 +290,10 @@ Use %%NATIVE to inject native source strings:
 (some_php_function (%%native "LITERAL_CONSTANT_NAME_WITHOUT_DOLLAR"))
 ```
 
-A UNIX command line 6502-CPU assembler.
-
 ### Modules
 
-[JavaScript DOM and utilities](https://github.com/SvenMichaelKlose/tre-js)
-
-[Localisation](https://github.com/SvenMichaelKlose/tre-l10n)
-
-[PHP utilities](https://github.com/SvenMichaelKlose/tre-php)
-
-[PHP MySQL interface](https://github.com/SvenMichaelKlose/tre-php-db-mysql)
-
-[Utilities shared across platforms](https://github.com/SvenMichaelKlose/tre-shared)
-
-[SQL clause generators](https://github.com/SvenMichaelKlose/tre-sql-clause)
-
-[Lisp Markup Language utilities](https://github.com/SvenMichaelKlose/tre-lml)
-
-[Multitrack timetable + JS DOM graphics](https://github.com/SvenMichaelKlose/tre-timetable)
+TODO: This section should describe how directory 'modules' can be
+utilised.
 
 ## Examples
 
