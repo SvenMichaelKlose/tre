@@ -85,7 +85,7 @@ Event listeners can be applied as attributes starting with the prefix
 ```
 (!= [(alert "Thanks!")
      (_.prevent-default)]
-  (document.body.add ($$ `(button on-click ,!
+  (document.body.add ($$ `(button :on-click ,!
                             "Click me!"))))
 ```
 
