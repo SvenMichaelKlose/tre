@@ -84,6 +84,3 @@
   (? (cons? x)
      (lml2dom-expr parent x doc)
      (lml2dom-atom parent x doc)))
-
-(fn $$ (x &key (parent nil) (doc document))
-  (lml2dom x :parent parent :doc document))
