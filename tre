@@ -1,2 +1,2 @@
 #!/bin/sh
-sbcl --noinform --core /usr/local/lib/tre/image $1 $2 $3 $4
+sbcl --noinform --control-stack-size 16 --core /usr/local/lib/tre/image $1 $2 $3 $4
