@@ -2,8 +2,6 @@
 (const *fallback-language* :en)
 (const *available-languages* '(:en))
 
-(var *modules-path* "../../modules/")
-
 (load (+ *modules-path* "js/event/names.lisp"))
 (load (+ *modules-path* "l10n/compile-time.lisp"))
 

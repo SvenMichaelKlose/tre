@@ -7,6 +7,8 @@
 (%defvar *tre-has-math*  t) ; Mathematical functions.
 (%defvar *tre-has-class* t) ; STRUCT CLASS.
 
+(%defvar *modules-path* "/usr/local/lib/tre/modules/")
+
 ;; Transpiler
 
 ;;; Targets to include in environment:

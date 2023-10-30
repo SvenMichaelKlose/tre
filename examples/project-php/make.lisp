@@ -1,8 +1,6 @@
 (const *fallback-language* :en)
 (const *available-languages* '(:en))
 
-(var *modules-path* "../../modules/")
-
 (load (+ *modules-path* "l10n/compile-time.lisp"))
 
 (make-project "tré PHP only project"
