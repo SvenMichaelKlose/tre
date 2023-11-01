@@ -18,4 +18,5 @@
 
 (env-load "config-after-reload.lisp" :cl)
 
+(env-load "make-vim-syntax.lisp" :cl)
 (env-load "utils/write-image.lisp" :cl)
