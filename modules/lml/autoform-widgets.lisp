@@ -8,6 +8,12 @@
 (defmacro def-editable-autoform-widget (args predicate &body body)
   `(def-autoform-widget ,args [& _.is_editable (funcall ,predicate _)] ,@body))
 
+(fn autoform-value (schema v)
+  (| v
+     (& (defined? schema.default)
+        schema.default)
+     ""))
+
 
 ; Editables
 
@@ -15,7 +21,7 @@
   (with (has-default?  (defined? schema.default)
          av            (autoform-value schema v))
     `(select :name       ,name
-             :on-change  ,[store.write (make-object name ((_.element).get ":checked").value)]
+             :on-change  ,[store.write (make-object name ((_.element).$? ":checked").value)]
              ,@(!? schema.is_required `(:required "yes"))
        ,@(@ [`(option :value ,_
                       ,@(? (eql _ av)
@@ -27,15 +33,9 @@
   `(,@(!? schema.pattern      `(:pattern ,!))
     ,@(!? schema.is_required  `(:required "yes"))))
 
-(fn autoform-value (schema v)
-  (| v
-     (& (defined? schema.default)
-        schema.default)
-     ""))
-
 (fn make-autoform-input-element (typ store name schema v)
-  `(input :type  ,typ
-          :name  ,name
+  `(input :type       ,typ
+          :name       ,name
           ,@(!? schema.size `(:size ,!))
           ,@(autoform-pattern-required schema)
           :on-change  ,[store.write (make-object name _.target.value)]
@@ -49,17 +49,16 @@
 (def-editable-autoform-widget (store name schema v) [eql (schema-type _) "boolean"]
   (let av (? (defined? (slot-value store.data name))
              v
-             (!= (autoform-value schema v)
-               (store.write (make-object name !))))
+             (store.write (make-object name (autoform-value schema v))))
     `(input :type      "checkbox"
             :name      ,name
             :on-click  ,[store.write (make-object name _.target.checked)]
             ,@(& av '(:checked "1")))))
 
 (def-editable-autoform-widget (store name schema v) [eql (schema-type _) "string"]
-  `(textarea :name  ,name
-             ,@(autoform-pattern-required schema)
+  `(textarea :name       ,name
              :on-change  ,[store.write (make-object name _.target.value)]
+             ,@(autoform-pattern-required schema)
      ,(autoform-value schema v)))
 
 
