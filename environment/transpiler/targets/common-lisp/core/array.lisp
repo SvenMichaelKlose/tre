@@ -1,5 +1,5 @@
 (defbuiltin make-array (&optional (dimensions 1))
-  (cl:make-array dimensions))
+  (CL:MAKE-ARRAY dimensions))
 
 (defbuiltin =-aref (v x i)
-  (cl:setf (cl:aref x i) v))
+  (CL:SETF (CL:AREF x i) v))

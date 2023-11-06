@@ -1,5 +1,5 @@
 (defbuiltin sh (program &rest arguments)
-  (sb-ext:run-program program arguments :pty cl:*standard-output*))
+  (SB-EXT:RUN-PROGRAM program arguments :PTY CL:*STANDARD-OUTPUT*))
 
 (defbuiltin unix-sh-cp (from to &key (verbose? nil) (recursively? nil))
   (apply #'sh "/bin/cp" `(,@(? verbose?     '("-v"))
@@ -16,7 +16,7 @@
                           ,@(? force?       '("-f"))
                           ,x)))
 
-(const +unix-epoch-difference+ (cl:encode-universal-time 0 0 0 1 1 1970 0))
+(const +unix-epoch-difference+ (CL:ENCODE-UNIVERSAL-TIME 0 0 0 1 1 1970 0))
 
 (defbuiltin milliseconds-since-1970 ()
-  (* 1000 (- (cl:get-universal-time) +unix-epoch-difference+)))
+  (* 1000 (- (CL:GET-UNIVERSAL-TIME) +unix-epoch-difference+)))

@@ -4,4 +4,4 @@
 (var *eval* nil)
 
 (defbuiltin eval (x)
-  (cl:eval (= *eval* (tre2cl x))))
+  (CL:EVAL (= *eval* (tre2cl x))))

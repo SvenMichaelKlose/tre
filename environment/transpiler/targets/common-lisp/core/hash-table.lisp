@@ -1,26 +1,26 @@
 (defbuiltin make-hash-table (&key (test #'eql))
-  (cl:make-hash-table :test (?
-                              (cl:eq test #'eq)        #'cl:eq
-                              (| (cl:eq test #'eql)
-                                 (cl:eq test #'==))    #'cl:eql
-                              (cl:eq test #'string==)  #'cl:equal
+  (CL:MAKE-HASH-TABLE :TEST (?
+                              (CL:EQ test #'eq)        #'CL:EQ
+                              (| (CL:EQ test #'eql)
+                                 (CL:EQ test #'==))    #'CL:EQL
+                              (CL:EQ test #'string==)  #'CL:EQUAL
                               test)))
 
-(defbuiltin hash-table? (x)  (cl:hash-table-p x))
-(defbuiltin href (x i)       (cl:gethash i x))
-(defbuiltin =-href (v x i)   (cl:setf (cl:gethash i x) v))
-(defbuiltin hremove (x k)    (cl:remhash k x))
+(defbuiltin hash-table? (x)  (CL:HASH-TABLE-P x))
+(defbuiltin href (x i)       (CL:GETHASH i x))
+(defbuiltin =-href (v x i)   (CL:SETF (CL:gethash i x) v))
+(defbuiltin hremove (x k)    (CL:REMHASH k x))
 
 (defbuiltin copy-hash-table (x)
-  (aprog1 (cl:make-hash-table :test (cl:hash-table-test x)
-                              :size (cl:hash-table-size x))
-    (cl:maphash #'((k v)
-                    (cl:setf (cl:gethash k !) v))
+  (aprog1 (CL:MAKE-HASH-TABLE :TEST (CL:HASH-TABLE-TEST x)
+                              :SIZE (CL:HASH-TABLE-SIZE x))
+    (CL:MAPHASH #'((k v)
+                    (CL:SETF (CL:GETHASH k !) v))
                 x)))
 
 (defbuiltin hashkeys (x)
   (aprog1 nil
-    (cl:maphash (lambda (k v)
+    (CL:MAPHASH (lambda (k v)
                   v
-                  (cl:push k !))
+                  (CL:PUSH k !))
              x)))

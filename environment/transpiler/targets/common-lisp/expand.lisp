@@ -1,25 +1,25 @@
-(add-printer-argument-definition 'cl:labels      '(assignments &body body))
-(add-printer-argument-definition 'cl:lambda      '(args &body body))
-(add-printer-argument-definition 'cl:defun       '(name args &body body))
-(add-printer-argument-definition 'cl:defmacro    '(name args &body body))
-(add-printer-argument-definition 'cl:defvar      '(name init))
-(add-printer-argument-definition 'cl:defconstant '(name init))
+(add-printer-argument-definition 'CL:LABELS      '(assignments &body body))
+(add-printer-argument-definition 'CL:LAMBDA      '(args &body body))
+(add-printer-argument-definition 'CL:DEFUN       '(name args &body body))
+(add-printer-argument-definition 'CL:DEFMACRO    '(name args &body body))
+(add-printer-argument-definition 'CL:DEFVAR      '(name init))
+(add-printer-argument-definition 'CL:DEFCONSTANT '(name init))
 
 (def-cl-transpiler-macro defun (name args &body body)
   (print-definition `(fn ,name ,args))
   (add-defined-function name args body)
-  `(cl:defun ,name ,args ,@body))
+  `(CL:DEFUN ,name ,args ,@body))
 
 (def-cl-transpiler-macro defvar (name &optional (init nil))
   (print-definition `(var ,name))
   (add-defined-variable name)
-  (add-delayed-expr `((cl:setq ,name ,init)))
-  `(cl:defvar ,name))
+  (add-delayed-expr `((CL:SETQ ,name ,init)))
+  `(CL:DEFVAR ,name))
 
 (def-cl-transpiler-macro defconstant (name &optional (init nil))
   (print-definition `(const ,name))
   (add-defined-variable name)
-  (add-delayed-expr `((cl:defconstant ,name ,init))))
+  (add-delayed-expr `((CL:DEFCONSTANT ,name ,init))))
 
 (def-cl-transpiler-macro defmacro (name args &body body)
   (print-definition `(defmacro ,name ,args))
@@ -27,7 +27,7 @@
 
 (def-cl-transpiler-macro defspecial (name args &body body)
   (print-definition `(defspecial ,name ,args))
-  (add-delayed-expr `((cl:push (. (tre-symbol ',name)
+  (add-delayed-expr `((CL:PUSH (. (tre-symbol ',name)
                                   (. ',args
                                      #'(,(argument-expand-names 'defspecial args)
                                         ,@body)))
@@ -38,7 +38,7 @@
          end   (car (last tests)))
     (| body
        (error "Body is missing."))
-    `(cl:cond
+    `(CL:COND
        ,@(? .end
             tests
             (+ (butlast tests) (list (. t end)))))))

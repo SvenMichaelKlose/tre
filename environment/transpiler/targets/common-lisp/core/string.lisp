@@ -1,18 +1,18 @@
 (defbuiltin string-concat (&rest x)
-  (apply #'cl:concatenate 'cl:string x))
+  (apply #'CL:CONCATENATE 'CL:STRING x))
 
 (defbuiltin string (x)
-  (? (cl:numberp x)
-     (cl:format nil "~A" x)
-     (cl:string x)))
+  (? (CL:NUMBERP x)
+     (CL:FORMAT nil "~A" x)
+     (CL:STRING x)))
 
 (defbuiltin string== (a b)
-  (cl:string= a b))
+  (CL:STRING= a b))
 
 (defbuiltin list-string (x)
   (| (list? x)
      (error "List expected instead of ~A." x))
-  (cl:concatenate 'cl:string x))
+  (CL:CONCATENATE 'CL:STRING x))
 
 (defbuiltin %elt-string (obj idx)
-  (cl:elt obj idx))
+  (CL:ELT obj idx))

@@ -1,2 +1,2 @@
 (defbuiltin %error (msg)
-  (cl:break (neutralize-format-string msg)))
+  (CL:BREAK (neutralize-format-string msg)))

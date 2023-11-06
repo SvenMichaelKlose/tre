@@ -1,12 +1,12 @@
-(cl:defvar *builtin-atoms* (cl:make-hash-table :test #'cl:eq))
+(CL:DEFVAR *builtin-atoms* (CL:MAKE-HASH-TABLE :TEST #'CL:EQ))
 
 (defmacro defbuiltin (name args &body body)
   (print-definition `(defbuiltin ,name ,args))
   (push name *cl-builtins*)
   `(progn
      (fn ,name ,args ,@body)
-     (cl:setf (cl:gethash ',name *builtin-atoms*) #',name)))
+     (CL:SETF (CL:GETHASH ',name *builtin-atoms*) #',name)))
 
 (defbuiltin builtin? (x)
-  (| (cl:gethash x *builtin-atoms*)
-     (cl:member x +cl-function-imports+)))
+  (| (CL:GETHASH x *builtin-atoms*)
+     (CL:MEMBER x +cl-function-imports+)))

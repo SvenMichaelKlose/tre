@@ -1,10 +1,10 @@
 (defbuiltin code-char (x)
-  (? (cl:characterp x)
+  (? (CL:CHARACTERP x)
      x
-     (cl:code-char x)))
+     (CL:CODE-CHAR x)))
 
 (fn bits-integer (bits)
-  (cl:reduce #'((a b)
+  (CL:REDUCE #'((a b)
                  (+ (* a 2) b))
              bits))
 
@@ -17,23 +17,23 @@
   (!= (number x)
     (let l nil
       (dotimes (i 32)
-        (cl:multiple-value-bind (i r) (cl:truncate ! 2)
+        (CL:MULTIPLE-VALUE-BIND (i r) (CL:TRUNCATE ! 2)
           (= ! i)
-          (cl:push r l)))
-      (cl:coerce l 'cl:bit-vector))))
+          (CL:PUSH r l)))
+      (CL:COERCE l 'CL:BIT-VECTOR))))
 
 (defbuiltin bit-and (a b)
-  (bits-integer (cl:bit-and (integer-bits a) (integer-bits b))))
+  (bits-integer (CL:BIT-AND (integer-bits a) (integer-bits b))))
 
 (defbuiltin bit-or (a b)
-  (bits-integer (cl:bit-ior (integer-bits a) (integer-bits b))))
+  (bits-integer (CL:BIT-IOR (integer-bits a) (integer-bits b))))
 
 (defbuiltin bit-xor (a b)
-  (bits-integer (cl:bit-xor (integer-bits a) (integer-bits b))))
+  (bits-integer (CL:BIT-XOR (integer-bits a) (integer-bits b))))
 
 (defbuiltin >> (x bits)
   (dotimes (n bits x)
-    (cl:multiple-value-bind (i r) (cl:truncate x 2)
+    (CL:MULTIPLE-VALUE-BIND (i r) (CL:TRUNCATE x 2)
       (= x i))))
 
 (defbuiltin << (x bits)

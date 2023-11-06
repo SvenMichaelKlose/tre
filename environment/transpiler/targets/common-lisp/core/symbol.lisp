@@ -2,48 +2,48 @@
 (var *package* "TRE")
 
 (defbuiltin make-symbol (x &optional (package nil))
-  (cl:intern x (?
-                 (cl:not package)       *package*
-                 (cl:packagep package)  (cl:package-name package)
-                 (cl:symbolp package)   (cl:symbol-name package)
+  (CL:INTERN x (?
+                 (CL:NOT package)       *package*
+                 (CL:PACKAGEP package)  (CL:PACKAGE-NAME package)
+                 (CL:SYMBOLP package)   (CL:SYMBOL-NAME package)
                  package)))
 
 (defbuiltin symbol-name (x)
-  (? (cl:packagep x)
-     (cl:package-name x)
-     (cl:symbol-name x)))
+  (? (CL:PACKAGEP x)
+     (CL:PACKAGE-NAME x)
+     (CL:SYMBOL-NAME x)))
 
 (defbuiltin symbol-value (x)
-  (? (cl:boundp x)
-     (cl:symbol-value x)
+  (? (CL:BOUNDP x)
+     (CL:SYMBOL-VALUE x)
      x))
 
 (defbuiltin symbol-function (x)
-  (? (cl:fboundp x)
-     (cl:symbol-function x)))
+  (? (CL:FBOUNDP x)
+     (CL:SYMBOL-FUNCTION x)))
 
 (defbuiltin symbol-package (x)
-  (cl:symbol-package x))
+  (CL:SYMBOL-PACKAGE x))
 
 (defbuiltin =-symbol-function (v x)
-  (cl:setf (cl:symbol-function x) v))
+  (CL:SETF (CL:SYMBOL-FUNCTION x) v))
 
 (defbuiltin find-symbol (x &optional (pkg *package*))
-  (cl:find-symbol x pkg))
+  (CL:FIND-SYMBOL x pkg))
 
 (fn tre-symbol (x)
-  (cl:intern (symbol-name x) "TRE"))
+  (CL:INTERN (symbol-name x) "TRE"))
 
 (defspecial defpackage (name &rest options)
   (print-definition `(defpackage ,name ,@options))
-  (cl:eval `(cl:defpackage ,name ,@options))
+  (CL:EVAL `(CL:DEFPACKAGE ,name ,@options))
   nil)
 
 (defspecial in-package (name)
   (print-definition `(in-package ,name))
-  (cl:use-package name)
+  (CL:USE-PACKAGE name)
   (= *package* (symbol-name name))
   nil)
 
 (defbuiltin export (x &optional (pkg *package*))
-  (cl:export x *package*))
+  (CL:EXPORT x *package*))

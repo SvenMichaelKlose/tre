@@ -23,9 +23,9 @@
      (= args (? (cons? args)
                 args
                 (list args))))
-  `(cl:progn
-     (cl:push (. ',name ',(. args body)) *functions*)
-     (cl:defun ,name ,args ,@body)))
+  `(CL:PROGN
+     (CL:PUSH (. ',name ',(. args body)) *functions*)
+     (CL:DEFUN ,name ,args ,@body)))
 
 (defspecial %fn-quiet (name args &body body)
   (make-%fn-quiet name args body))
@@ -36,7 +36,7 @@
 
 (defspecial %defmacro (name args &body body)
   (print-definition `(%defmacro ,name ,args))
-  `(cl:push (. ',name
+  `(CL:PUSH (. ',name
                (. ',(. args body)
                   #'(,(argument-expand-names '%defmacro args)
                     ,@body)))
@@ -45,7 +45,7 @@
 (defspecial %defvar (name &optional (init nil))
   (print-definition `(%defvar ,name))
   `(progn
-     (cl:push (. ',name ',init) *variables*)
-     (cl:defvar ,name ,init)))
+     (CL:PUSH (. ',name ',init) *variables*)
+     (CL:DEFVAR ,name ,init)))
 
 (defspecial ? (&body body)            (make-? body))

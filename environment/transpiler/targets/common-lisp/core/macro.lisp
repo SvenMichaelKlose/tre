@@ -2,7 +2,7 @@
   (symbol-value (tre-symbol '*macros*)))
 
 (defbuiltin macro? (x)
-  (cl:rassoc x (env-macros) :test #'eq))
+  (CL:RASSOC x (env-macros) :TEST #'eq))
 
 (defbuiltin %%macrocall (x)
   (!= (cdr (assoc x. (env-macros) :test #'eq))

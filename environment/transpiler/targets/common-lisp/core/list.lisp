@@ -1,5 +1,5 @@
 (defbuiltin filter (fun x)
-  (cl:mapcar fun x))
+  (CL:MAPCAR fun x))
 
 (defbuiltin append (&rest x)
-  (apply #'cl:nconc (cl:mapcar #'cl:copy-list x)))
+  (apply #'CL:NCONC (CL:MAPCAR #'CL:COPY-LIST x)))

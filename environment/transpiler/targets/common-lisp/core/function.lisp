@@ -1,10 +1,10 @@
 (var *functions* nil)
 
 (defbuiltin function-source (x)
-  (cdr (cl:assoc x *functions* :test #'cl:eq)))
+  (cdr (CL:ASSOC x *functions* :TEST #'CL:EQ)))
 
 (defbuiltin =-function-source (v x)
   (error "Can't set function source in the Common Lisp core."))
-;(cl:setf (cdr (cl:assoc x *functions* :test #'cl:eq)) v))
+;(CL:SETF (cdr (CL:ASSOC x *functions* :TEST #'CL:EQ)) v))
 
 (defbuiltin function-bytecode (x) x nil)
