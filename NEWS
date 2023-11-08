@@ -1,4 +1,7 @@
 Changes relative to tre-0.20:
+  * READ-SYMBOL: Vertical bar '|' starts symbols with no
+    case conversion, also allowing special characters until
+    the next vertical bar.  '\' is the escape character.
   * Fixed(?) base64 functions.
   * Fixed =-REF.
   * Set *ASSERT?* to T by default.

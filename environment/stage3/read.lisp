@@ -36,10 +36,27 @@
 
 (fn read-symbol (str)
   (with (f [0 & (symbol-char? (peek-char str))
-                (. (char-upcase (read-char str))
-                   (f))})
-    (unless (special-char? (seek-char str))
-      (f))))
+                (. (read-char str) (f))]
+         f2 [0 unless (| (not (peek-char str))
+                         (eql #\| (peek-char str)))
+                 (? (eql #\\ (peek-char str))
+                    (progn
+                      (read-char str)
+                      (. (read-char str) (f2)))
+                    (. (read-char str) (f2)))])
+    (? (eql #\| (seek-char str))
+       (progn
+         (read-char str)
+         (when (whitespace? (peek-char str))
+           (return (list #\|)))
+         (prog1 (f2)
+           (!= (peek-char str)
+             (? (eql #\| !)
+                (read-char str)
+                (error "Vertical bar '|' expected as end of symbol name instead of '~A'."
+                       (string !))))))
+       (unless (special-char? (seek-char str))
+         (filter #'char-upcase (f))))))
 
 (fn read-symbol-and-package (str)
   (!= (read-symbol str)
@@ -133,14 +150,14 @@
 
 (fn read-atom (str token pkg sym)
   (case token :test #'eq
-    :dblquote  (read-string str)
-    :char      (read-char str)
-    :number    (with-stream-string s sym
-                 (read-number s))
-    :hexnum    (read-hex str)
-    :array     (. 'array (read-cons-slot str))
-    :function  `(function ,(read-expr str))
-    :symbol    (read-symbol-or-slot-value pkg sym)
+    :dblquote   (read-string str)
+    :char       (read-char str)
+    :number     (with-stream-string s sym
+                  (read-number s))
+    :hexnum     (read-hex str)
+    :array      (. 'array (read-cons-slot str))
+    :function   `(function ,(read-expr str))
+    :symbol     (read-symbol-or-slot-value pkg sym)
     (? (%read-closing-parens? token)
        (error "Unexpected closing ~A."
               (case token
