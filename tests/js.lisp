@@ -1,5 +1,4 @@
 (= *have-environment-tests* t)
-;(= (transpiler-dump-passes? *js-transpiler*) t)
 
 (unix-sh-mkdir "compiled" :parents t)
 (make-project

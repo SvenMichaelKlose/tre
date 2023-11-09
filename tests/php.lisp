@@ -1,5 +1,4 @@
 (= *have-environment-tests* t)
-;(= (transpiler-dump-passes? *php-transpiler*) t)
 
 (unix-sh-mkdir "compiled" :parents t)
 (make-project "PHP target test"
