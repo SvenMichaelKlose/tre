@@ -40,7 +40,7 @@
   (wait #'update-lml-components 0))
 
 (defmethod lml-component _unschedule-update ()
-  (= *pending-component-updates* (remove this *pending-component-updates* :test #'eq)))
+  (remove! this *pending-component-updates*))
 
 (defmethod lml-component force-update ()
   (= _force-update? t)
@@ -61,7 +61,7 @@
   (= element (render)))
 
 (defmethod lml-component close ()
-  (remove! this *pending-component-updates*)
+  (_unschedule-update)
   (element.remove))
 
 (finalize-class lml-component)
