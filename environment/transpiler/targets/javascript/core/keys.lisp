@@ -1,3 +1,3 @@
 (fn keys (x)
   (& x
-     (carlist (%properties-list x))))
+     (carlist (object-alist x))))

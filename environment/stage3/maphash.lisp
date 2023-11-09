@@ -1,3 +1,3 @@
 (fn maphash (fun hash)
-  (@ (i (%properties-list hash))
+  (@ (i (object-alist hash))
     (funcall fun i. .i)))
