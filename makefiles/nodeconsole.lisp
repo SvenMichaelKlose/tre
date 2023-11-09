@@ -1,8 +1,5 @@
 (= *allow-redefinitions?* t)
 (= *have-compiler?* t)
-;(= *expander-dump?* 'compiler)
-;(= (transpiler-dump-passes? *js-transpiler*) :frontend)
-;(= (transpiler-dump-selector *js-transpiler*) '(function princ-number))
 
 (unix-sh-mkdir "compiled" :parents t)
 (make-project "tré node.js console"
