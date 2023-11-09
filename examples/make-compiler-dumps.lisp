@@ -1,3 +1,4 @@
+(load (+ *modules-path* "/js/make-js-project.lisp"))
 (make-js-project
   :title
     "Hello World"
