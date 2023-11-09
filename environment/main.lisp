@@ -13,12 +13,9 @@
 (env-load "utils/lml-utils.lisp")
 (env-load "utils/lml2xml.lisp")
 (env-load "utils/print-html-script.lisp")
-
-(env-load "todo.lisp")
-
 (env-load "tests/main.lisp")
 
+(env-load "todo.lisp" :cl)
 (env-load "config-after-reload.lisp" :cl)
-
 (env-load "make-vim-syntax.lisp" :cl)
 (env-load "utils/write-image.lisp" :cl)
