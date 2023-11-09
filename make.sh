@@ -20,12 +20,8 @@ clean_example_projects ()
 {
 	echo "Cleaning examples (requires root privileges to remove docker containers)…"
 	sudo rm -rvf examples/project-js/compiled
-	rm -rvf examples/project-js/tre_modules
 	sudo rm -rvf examples/project-php/compiled
-	rm -rvf examples/project-php/tre_modules
 	sudo rm -rvf examples/project-js-php/compiled
-	rm -rvf examples/project-js-php/tre_modules
-	rm -rvf tre_modules
 }
 
 clean ()
@@ -114,8 +110,6 @@ nodeconsole)
 
 webconsole)
     echo "Making defunct 'webconsole'…"
-    mkdir tre_modules
-    git clone --depth=1 https://github.com/SvenMichaelKlose/tre-js.git tre_modules/js
     $TRE makefiles/webconsole.lisp
 	;;
 
