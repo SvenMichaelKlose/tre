@@ -1,5 +1,5 @@
-(make-project "Hello World for PHP"
-              "examples/hello-world.lisp"
-              :transpiler  *php-transpiler*
-              :emitter     [put-file "compiled/hello-world.php" _])
+(make-php-project
+  :title    "Hello World for PHP"
+  :outfile  "compiled/hello-world.php"
+  :files    '("examples/hello-world.lisp"))
 (quit)

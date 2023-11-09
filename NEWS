@@ -1,4 +1,6 @@
 Changes relative to tre-0.20:
+  * New MAKE-JS-PROJECT and MAKE-PHP-PROJECTS compile with
+    all available modules for each target.
   * READ-SYMBOL: Vertical bar '|' starts symbols with no
     case conversion, also allowing special characters until
     the next vertical bar.  '\' is the escape character.

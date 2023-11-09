@@ -1,5 +1,5 @@
-(make-project "Hello World for JavaScript in browsers"
-              "examples/hello-world.lisp"
-              :transpiler  *js-transpiler*
-              :emitter     [make-html-script "compiled/hello-world.html" _])
+(make-js-project
+  :title    "Hello World for JavaScript in browsers"
+  :outfile  "compiled/hello-world.html"
+  :files    '("examples/hello-world.lisp"))
 (quit)
