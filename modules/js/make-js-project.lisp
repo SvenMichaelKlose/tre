@@ -20,7 +20,8 @@
                `("lang.lisp"
                  "l10n.lisp"))
       ,@(list+ (+ *modules-path* "js/")
-               '("json.lisp"
+               '("dump.lisp"
+                 "json.lisp"
                  "wait.lisp"
                  "unicode.lisp"
                  "unicode-utf8.lisp"))
