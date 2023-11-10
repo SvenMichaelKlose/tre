@@ -38,7 +38,10 @@
                             "visible-node.lisp"
                             "element.lisp"
                             "text-node.lisp"
-                            "extend.lisp"))
+                            "extend.lisp"
+                            "query.lisp"
+                            "canvas.lisp"
+                            "video.lisp"))
                  "get.lisp"
                  "document-location.lisp"
                  "table.lisp"
