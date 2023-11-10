@@ -303,10 +303,7 @@
 
 (defmethod tre-element $? (css-selector)
   (? (head? css-selector "<")
-     (alet (subseq css-selector 1)
-       (? (is? !)
-          this
-          (ancestor-or-self !)))
+     (ancestor-or-self (subseq css-selector 1))
      (query-selector css-selector)))
 
 (defmethod tre-element $* (css-selector)
@@ -315,7 +312,7 @@
 (defmethod tre-element get-list (css-selector)
   (array-list (query-selector-all css-selector)))
 
-;(defmethod tre-element get-last (css-selector)
+;(defmethod tre-element get-last (css-selector) ; TODO: Remove.
 ;  (last (get-list css-selector)))
 
 (defmethod tre-element ancestor-or-self (css-selector)
