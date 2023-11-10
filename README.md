@@ -4,7 +4,6 @@ The tré programming language
 tré transpiles its dialect of Lisp to JavaScript, PHP7+ and
 Common Lisp (the latter mainly to compile itself).
 
-
 # Build and install
 
 tré requires some Linux with "sbcl" (Steel Bank Common Lisp)
@@ -31,6 +30,11 @@ It takes an optional pathname of a source file to compile and
 execute.  If none is specified, it'll prompt you for
 expressions to execute.
 
+## VIM syntax file
+
+During boot tré generates a syntax file for VIM named 'tre.vim'
+which you can copy to ~/.vim/after/syntax/.  It extends the
+already existing syntax highlighting rules for Lisp code.
 
 # Starting a project
 
