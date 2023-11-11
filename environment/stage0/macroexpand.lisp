@@ -32,7 +32,7 @@
                                      (? (cons? x)
                                         (. x. (%macroexpand-rest .x))
                                         x))
-                                 (apply *macrocall* (list x)))
+                                   (apply *macrocall* (list x)))
     (eq x. 'quote)              x
     (eq x. 'backquote)          (. 'backquote (apply *macroexpand-backquote* (list .x)))
     (eq x. 'quasiquote)         (. 'quasiquote (%macroexpand .x))
