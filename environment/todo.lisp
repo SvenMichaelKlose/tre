@@ -1,4 +1,6 @@
 ;;; TODO: For CL backend.
 
 (fn defined? (x)
-  (error))
+  (error "TODO: Implement 'defined?'."))
+
+(fn json-object? (x))
