@@ -1,4 +1,4 @@
-[ ] Case-sensitive symbols without conversion to upper case.
-    Will back-end more compatible to target language identifiers.
-[ ] Access objects like arrays.
-[ ] Move @ to stage 4 or it will spoil non-CL compiler boots.
+[ ] !!! Case-sensitive symbols without conversion to upper case.
+        Will back-end more compatible to target language identifiers.
+[ ] !!. QUASIQUOTE-SPLICE (',@'): Insert JS object as keyword/value pairs.
+[ ] !.. Move @ to stage 4 or it will spoil non-CL compiler boots.
