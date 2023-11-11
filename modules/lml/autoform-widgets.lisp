@@ -21,7 +21,7 @@
   (with (has-default?  (defined? schema.default)
          av            (autoform-value schema v))
     `(select :name       ,name
-             :on-change  ,[store.write (make-object name ((_.element).$? ":checked").value)]
+             :on-change  ,[store.write (make-json-object name ((_.element).$? ":checked").value)]
              ,@(!? schema.is_required `(:required "yes"))
        ,@(@ [`(option :value ,_
                       ,@(? (eql _ av)
@@ -38,7 +38,7 @@
           :name       ,name
           ,@(!? schema.size `(:size ,!))
           ,@(autoform-pattern-required schema)
-          :on-change  ,[store.write (make-object name _.target.value)]
+          :on-change  ,[store.write (make-json-object name _.target.value)]
           :value      ,(autoform-value schema v)))
 
 (def-editable-autoform-widget (store name schema v) [in? (schema-type _) "string" "password" "email"]
@@ -49,15 +49,15 @@
 (def-editable-autoform-widget (store name schema v) [eql (schema-type _) "boolean"]
   (let av (? (defined? (slot-value store.data name))
              v
-             (store.write (make-object name (autoform-value schema v))))
+             (store.write (make-json-object name (autoform-value schema v))))
     `(input :type      "checkbox"
             :name      ,name
-            :on-click  ,[store.write (make-object name _.target.checked)]
+            :on-click  ,[store.write (make-json-object name _.target.checked)]
             ,@(& av '(:checked "1")))))
 
 (def-editable-autoform-widget (store name schema v) [eql (schema-type _) "string"]
   `(textarea :name       ,name
-             :on-change  ,[store.write (make-object name _.target.value)]
+             :on-change  ,[store.write (make-json-object name _.target.value)]
              ,@(autoform-pattern-required schema)
      ,(autoform-value schema v)))
 

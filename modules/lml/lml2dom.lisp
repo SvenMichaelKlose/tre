@@ -47,7 +47,7 @@
     (funcall (lml2dom-exec-function x) parent !)))
 
 (fn lml2dom-expr-component (parent x doc)
-  (with (attrs     (%%%make-object)
+  (with (attrs     (%%%make-json-object)
          children  nil
          f  [& _
                (? (lml-attr? _)

@@ -36,7 +36,7 @@
         ,@(js-gen-inherit-methods class-name (!? (class-parent cls)
                                                  (class-name !)))
         (js-merge-props! (slot-value ,class-name 'prototype)
-                         (%%%make-object ,@(apply #'+ (carlist !)))))))
+                         (%%%make-json-object ,@(apply #'+ (carlist !)))))))
 
 (def-js-transpiler-macro finalize-class (class-name)
   (print-definition `(finalize-class ,class-name))

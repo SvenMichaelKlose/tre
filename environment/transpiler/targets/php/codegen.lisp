@@ -208,7 +208,7 @@
 (fn php-literal-object-elements (x)
   (pad (@ #'php-literal-object-element x) ", "))
 
-(def-php-codegen %%%make-object (&rest elements)
+(def-php-codegen %%%make-json-object (&rest elements)
   `(%%native "(object) array (" ,@(php-literal-object-elements (group elements 2)) ")"))
 
 (def-php-codegen %new (&rest x)

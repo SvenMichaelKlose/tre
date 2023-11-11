@@ -1,10 +1,10 @@
 (var *obj-id-counter* 0)
 
 (fn make-hash-table (&key (test #'eql) (size nil))
-  (aprog1 (%%%make-object)
+  (aprog1 (%%%make-json-object)
     (= !.__tre-test test)
     (unless (%href-==? test)
-      (= !.__tre-keys (%%%make-object)))))
+      (= !.__tre-keys (%%%make-json-object)))))
 
 (fn hash-table? (x)
   (& (object? x)

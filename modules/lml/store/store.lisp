@@ -63,7 +63,7 @@
     _parent)
 
 (defmethod child-store _update-parent ()
-  (_parent.write (make-object _name data)))
+  (_parent.write (make-json-object _name data)))
 
 (defmethod child-store write (new-data)
   (prog1 (_store-write new-data)

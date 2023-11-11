@@ -18,7 +18,7 @@
   (merge-props x nil))
 
 (fn add-props (x &rest props)
-  (merge-props x (apply #'make-object props)))
+  (merge-props x (apply #'make-json-object props)))
 
 (fn remove-props (props &rest names)
   (aprog1 (new)
