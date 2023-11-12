@@ -7,7 +7,7 @@
 (defmethod nodelist list () _list)
 
 (defmethod nodelist map (fun)
-  (@ fun _list))
+  (@ [funcall fun _] _list))
 
 (defmacro def-nodelist-method (name &rest args)
   `(defmethod nodelist ,name ,args
