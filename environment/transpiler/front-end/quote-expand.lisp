@@ -15,7 +15,15 @@
                         ,(backq ._))]
          qqs     [? (any-quasiquote? (cadr _.))
                     (error "Illegal ~A as argument to ,@ (QUASIQUOTE-SPLICE)." (cadr _.))
-                    `(append ,(cadr _.) ,(backq ._))]
+                    (with-gensym g
+                      ; TODO: Make TRANSPILER-MACROEXPAND work and use LET.
+                      (compiler-macroexpand
+                        `(#'((,g)
+                              (append (? (json-object? ,g)
+                                         (props-klist ,g)
+                                         ,g)
+                                ,(backq ._)))
+                           ,(cadr _.))))]
          backq   [?
                    (atom _)             (atomic _)
                    (pcase _.

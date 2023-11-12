@@ -1,5 +1,10 @@
 (fn props-alist (x)
-  (filter [. _ (slot-value x _)] (keys x)))
+  (filter [. _ (slot-value x _)]
+          (keys x)))
+
+(fn props-klist (x)
+  (mapcan [list (make-keyword (upcase _)) (slot-value x _)]
+          (keys x)))
 
 (fn alist-props (x)
   (& x
