@@ -36,12 +36,12 @@
 (fn thisify (x &optional (classes (defined-classes)) (exclusions nil))
   (?
     (atom x)        x
-    (%thisify? x.)  (transpiler-macroexpand
-                        (compiler-macroexpand
-                          `((let ~%this this
-                              ,@(| (+ (thisify-list classes (cddr x.) (cadr x.) exclusions)
-                                      (thisify .x classes exclusions))
-                                   '(nil))))))
+    (%thisify? x.)  (compiler-macroexpand
+                      (transpiler-macroexpand
+                        `((let ~%this this
+                            ,@(| (+ (thisify-list classes (cddr x.) (cadr x.) exclusions)
+                                    (thisify .x classes exclusions))
+                                 '(nil))))))
     (lambda? x.)    (. (copy-lambda x. :body (thisify (lambda-body x.)
                                                       classes
                                                       (+ exclusions (lambda-args x.))))
