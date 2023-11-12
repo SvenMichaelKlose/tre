@@ -61,8 +61,6 @@
                        "../../../environment/list-string.lisp"
                        "string.lisp"
                        "keys.lisp"
-                       "../../../environment/property.lisp"
-                       "../../../environment/make-json-object.lisp"
                        "base64.lisp"
                        "quit.lisp"
                        "math.lisp"

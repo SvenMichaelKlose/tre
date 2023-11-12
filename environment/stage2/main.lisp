@@ -27,3 +27,6 @@
 (env-load "stage2/doarray.lisp")
 (env-load "stage2/dosequence.lisp")
 (env-load "stage2/list-array.lisp")
+(env-load "stage2/braces.lisp")
+(env-load "stage2/make-json-object.lisp")
+(env-load "stage2/property.lisp")

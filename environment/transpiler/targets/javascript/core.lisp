@@ -54,8 +54,6 @@
                                 "math.lisp"
                                 "milliseconds-since-1970.lisp"
                                 "keys.lisp"
-                                "../../../environment/property.lisp"
-                                "../../../environment/make-json-object.lisp"
                                 "../../../environment/files-unsupported.lisp")))
 
 (when *have-compiler?*
