@@ -10,6 +10,7 @@
                  "json.lisp"
                  "dump.lisp"))
       (+ *modules-path* "/php-db-mysql/main.lisp")
+      (+ *modules-path* "/php-http-request/main.lisp")
       ,@(list+ (+ *modules-path* "/sql-clause/")
                `("selection-info.lisp"
                  "create-table.lisp"
