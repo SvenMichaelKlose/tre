@@ -1,4 +1,7 @@
 [ ] !!! Case-sensitive symbols without conversion to upper case.
-        Will back-end more compatible to target language identifiers.
-[ ] !!. QUASIQUOTE-SPLICE (',@'): Insert JS object as keyword/value pairs.
+        Will make conversions to back-end identifiers obsolete or
+        less confusing.
+[ ] !!. Remove module "sql-clause".
+[ ] !!. Add an object relation mapper (ORM).
 [ ] !.. Move @ to stage 4 or it will spoil non-CL compiler boots.
+[ ] !.. Rewrite modules/http-funcall to work with JSON instead of XML.
