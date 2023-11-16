@@ -4,10 +4,9 @@ set -e
 
 echo "Welcome to tré!"
 
-# Get revision number and date.
-git log | grep ^commit | wc -l >environment/_current-version
-echo "Git version is" `cat environment/_current-version`
-date >environment/_release-date
+git rev-parse --short=8 HEAD >environment/_git-revision
+echo "Git revision is" `cat environment/_git-revision`
+date >environment/_build-date
 mkdir -p compiled
 
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
@@ -29,8 +28,8 @@ clean ()
 	echo "Cleaning…"
 	rm -rvf compiled
 	rm -vf *.core environment/transpiler/targets/c/native/$COMPILED_ENV image files.lisp
-    rm -vf environment/_current-version
-    rm -vf environment/_release-date
+    rm -vf environment/_current-revision
+    rm -vf environment/_build-date
 	rm -vf log-nodetests.lisp log-phptests.lisp log-make.lisp
     clean_example_projects
 	echo "Checking out last working core…"

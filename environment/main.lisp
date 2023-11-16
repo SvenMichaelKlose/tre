@@ -6,7 +6,7 @@
 (env-load "stage5/main.lisp")
 (& *tre-has-math*   (env-load "math/main.lisp"))
 (& *tre-has-class*  (env-load "oo/class.lisp"))
-(env-load "utils/version.lisp")
+(env-load "utils/git-revision.lisp")
 (env-load "transpiler/main.lisp")
 (env-load "read-eval-loop.lisp")
 
