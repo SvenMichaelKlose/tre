@@ -48,4 +48,5 @@
      (CL:PUSH (. ',name ',init) *variables*)
      (CL:DEFVAR ,name ,init)))
 
-(defspecial ? (&body body)            (make-? body))
+(defspecial ? (&body body)
+  (make-? body))
