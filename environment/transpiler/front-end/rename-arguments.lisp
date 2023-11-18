@@ -6,13 +6,18 @@
   (| (assoc-value x replacements :test #'eq)
      x))
 
-(fn rename-arguments-lambda (replacements x)
-  (? (get-lambda-funinfo x)
-     x
-     (!= (+ (@ [. _ (argument-sym)] (expanded-lambda-args x))
-            replacements)
-       (copy-lambda x :args (rename-arguments-r ! (lambda-args x))
-                      :body (rename-arguments-r ! (lambda-body x))))))
+(fn add-argument-replacements (replacements lambda-form)
+  (+ (@ [. _ (argument-sym)]
+        (expanded-lambda-args lambda-form))
+     replacements))
+
+(fn rename-arguments-lambda (replacements lambda-form)
+  (? (get-lambda-funinfo lambda-form)   ; TODO: Check if still required. (pixel)
+     lambda-form
+     (!= (add-argument-replacements replacements lambda-form)
+       (copy-lambda lambda-form
+                    :args (rename-arguments-r ! (lambda-args lambda-form))
+                    :body (rename-arguments-r ! (lambda-body lambda-form))))))
 
 (define-tree-filter rename-arguments-r (replacements x)
   (atom x)          (rename-argument replacements x)
