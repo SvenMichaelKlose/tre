@@ -1,3 +1,8 @@
+;;; This is to avoid having the transpiler detect functions with no
+;;; side effects.  TODO: Add that to the transpiler.
+;;; For reasons yet unknown SBCL does not detect them either automactically.
+;;; Only has effect on non-CL targets.
+
 (var *functionals* nil)
 
 (%defmacro functional (&rest names)

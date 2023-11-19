@@ -1,8 +1,10 @@
-(%defvar *macros* nil)
-(%defvar *macro?* nil)
-(%defvar *macrocall* nil)
-(%defvar *current-macro* nil)
-(%defvar *macroexpand* nil)
+(%defvar *macros* nil)          ; All macros defined in the host environment.
+
+(%defvar *macro?* nil)          ; Predicate if symbol belongs to a named macro.
+(%defvar *macrocall* nil)       ; Function expanding a macro.
+(%defvar *macroexpand* nil)     ; The function called by DEFMACRO.
+
+(%defvar *current-macro* nil)   ; For debugging.
 
 (%fn %macroexpand-backquote (x)
   (?

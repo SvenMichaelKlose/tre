@@ -1,3 +1,6 @@
+;;; Quasiquotes outside backquotes are used to execute code in the host
+;;; environment at compile-time.
+
 (%fn %quasiquote-expand (x)
   (?
     (atom x)                     x
@@ -12,6 +15,6 @@
        (%quasiquote-expand .x))))
 
 (%fn quasiquote-expand (x)
-  (car (%quasiquote-expand (list x))))
+  (car (%quasiquote-expand (list x))))  ; TODO: Remove? (pixel)
 
 (%defvar *quasiquote-expand* #'quasiquote-expand)

@@ -1,3 +1,5 @@
-# Environemnt stage 3
+Environemnt stage 3
+===================
 
-Hash tables, streams and arguments expansion get alive here.
+Hash tables, streams, argument expansion, reader and printer  become alive
+here.

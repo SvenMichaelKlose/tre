@@ -1,4 +1,5 @@
-# Environment stage 1
+Environment stage 1
+===================
 
-The most essential things for dealing with lists, numbers,
-functions and macros are defined in here.
+Essentials for dealing with lists, numbers, functions and macros are
+defined in here.
