@@ -48,6 +48,6 @@
          print-info  (make-print-info :pretty-print? nil))
     (with-output-file o "boot-common.lisp"
         (print-init-decls o print-info)
-        (@ [late-print _ o :print-info print-info] c)
+        (@ [& _ (late-print _ o :print-info print-info]) c)
         (print-env-loader o))))
 (quit)
