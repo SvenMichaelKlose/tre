@@ -17,5 +17,5 @@
 
 (env-load "todo.lisp" :cl)
 (env-load "config-after-reload.lisp" :cl)
-(env-load "make-vim-syntax.lisp" :cl)
+(env-load "make-vim-syntax-file.lisp" :cl)
 (env-load "utils/write-image.lisp" :cl)
