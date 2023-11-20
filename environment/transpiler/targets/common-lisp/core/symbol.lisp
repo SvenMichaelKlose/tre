@@ -46,4 +46,4 @@
   nil)
 
 (defbuiltin export (x &optional (pkg *package*))
-  (CL:EXPORT x *package*))
+  (CL:EXPORT x pkg))
