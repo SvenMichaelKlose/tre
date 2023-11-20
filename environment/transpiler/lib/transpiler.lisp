@@ -274,7 +274,7 @@
 
 (transpiler-getter defined-function        (href (transpiler-defined-functions tr) x))
 (transpiler-getter defined-variable        (href (transpiler-defined-variables tr) x))
-(transpiler-getter defined-package         (href (transpiler-defined-variables tr) x))
+(transpiler-getter defined-package         (href (transpiler-defined-packages tr) x))
 (transpiler-getter host-function           (href (transpiler-host-functions tr) x))
 (transpiler-getter host-function-arguments (car (transpiler-host-function tr x)))
 (transpiler-getter host-function-body      (cdr (transpiler-host-function tr x)))
