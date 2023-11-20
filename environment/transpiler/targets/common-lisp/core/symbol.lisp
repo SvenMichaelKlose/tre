@@ -41,7 +41,7 @@
 
 (defspecial in-package (name)
   (print-definition `(in-package ,name))
-  (CL:USE-PACKAGE name)
+  (CL:IN-PACKAGE name)
   (= *package* (symbol-name name))
   nil)
 
