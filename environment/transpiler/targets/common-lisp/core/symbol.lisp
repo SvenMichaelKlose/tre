@@ -1,4 +1,4 @@
-(var *keyword-package* (find-package "KEYWORD"))
+(var *keyword-package* (CL:FIND-PACKAGE "KEYWORD"))
 (var *package* "TRE")
 
 (defbuiltin make-symbol (x &optional (package nil))

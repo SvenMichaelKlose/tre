@@ -40,6 +40,7 @@
 (fn print-env-loader (o)
   (format o (+ "(cl:in-package :tre)~%"
                "(cl:format t \"; Loading environment…\\~%\")~%"
+               "(cl:setq *package* \"TRE\")~%"
                "(env-load \"main.lisp\")~%")))
 
 (!= (copy-transpiler *cl-transpiler*)

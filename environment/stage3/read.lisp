@@ -126,14 +126,12 @@
                              #\|  (read-comment-block str)
                              (error "Invalid character after '#'."))
                       -1   :eof)))
-              pkg
+              (| pkg *package*)
               (list-string sym)))))
 
-(fn read-make-symbol (sym &optional (pkg nil))
-  (!? pkg
-      (make-symbol sym !)
-      (| (find-symbol sym *package*)
-         (make-symbol sym *package*))))
+(fn read-make-symbol (sym &optional (pkg *package*))
+  (| (find-symbol sym pkg)
+     (make-symbol sym pkg)))
 
 (fn read-slot-value (x)
   (?
