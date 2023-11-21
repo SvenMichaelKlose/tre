@@ -73,7 +73,7 @@
   (gen-string              #'literal-string)
 
   ; The very last pass.
-  (postprocessor           #'concat-stringtree)
+  (postprocessor           #'flatten)
 
   ; Prologue/epilogue of generated source.
   (prologue-gen            #'(()))

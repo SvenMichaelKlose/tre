@@ -7,7 +7,7 @@
     wrap-tags               #'wrap-tags
     codegen-expand          [expander-expand (codegen-expander) _]
     convert-identifiers     #'convert-identifiers
-    output-filter           #'concat-stringtree)
+    output-filter           #'flatten)
 
 (define-transpiler-end :backend-make-places
     make-framed-functions  #'make-framed-functions

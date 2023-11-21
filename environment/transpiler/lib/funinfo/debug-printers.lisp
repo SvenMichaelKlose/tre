@@ -4,7 +4,7 @@
 (fn print-funinfo (fi &optional (str nil))
   (with-default-stream s str
     (with (names [& _ (symbol-names-string (ensure-list _))])
-      (format s (concat-stringtree
+      (format s (flatten
                     (@ [!? ._.
                            (format s "  ~A~A~%" _. !)
                            !]

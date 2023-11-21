@@ -94,7 +94,7 @@
   (xml-unify-string (upcase (xml2lml-identifier in))))
 
 (fn charlist-to-octalstring (x)
-  (concat-stringtree
+  (flatten
       (@ [? (< _ 256)
             (+ "\\" (print-octal _ nil))
             (+ "\\u" (print-hexword _ nil))]

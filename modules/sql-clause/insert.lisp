@@ -1,11 +1,11 @@
 (fn sql-clause-insert (&key table (fields nil) (default-values-if-empty? nil))
-  (concat-stringtree
+  (flatten
       "INSERT INTO " table
       (? (not fields)
          (? default-values-if-empty?
             " DEFAULT VALUES"
             " VALUES()")
-         (concat-stringtree
+         (flatten
              " ("
              (pad (keys fields) ",")
              ") VALUES ("

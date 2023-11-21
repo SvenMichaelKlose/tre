@@ -47,4 +47,4 @@
   (make-? body))
 
 (def-cl-transpiler-macro %%comment (&rest x)
-  (concat-stringtree (convert-identifiers x)))
+  (flatten (convert-identifiers x)))

@@ -1,7 +1,7 @@
 (env-load "stage5/base64.lisp")
 (env-load "stage5/byte.lisp")
 (env-load "stage5/in-package.lisp" :c)
-(env-load "stage5/concat-stringtree.lisp")
+(env-load "stage5/flatten.lisp")
 (env-load "stage5/escape-string.lisp")
 (env-load "stage5/empty-string.lisp")
 (env-load "stage5/iterate.lisp")
