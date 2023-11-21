@@ -136,8 +136,8 @@
 (fn read-slot-value (x)
   (?
     (not x)       nil
-    .x            `(slot-value ,(read-slot-value (butlast x)) ',(read-make-symbol (car (last x)) "TRE"))
-    (string? x.)  (read-make-symbol x. "TRE")
+    .x            `(slot-value ,(read-slot-value (butlast x)) ',(read-make-symbol (car (last x))))
+    (string? x.)  (read-make-symbol x.)
     x.))
 
 (fn read-symbol-or-slot-value (pkg sym)
