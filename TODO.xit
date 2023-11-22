@@ -1,3 +1,4 @@
+[ ] !!! Packaging in user land.
 [ ] !!! Case-sensitive symbols without conversion to upper case.
         Will make conversions to back-end identifiers obsolete or
         less confusing.
