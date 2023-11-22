@@ -43,7 +43,9 @@
   (print-definition `(in-package ,name))
   (CL:IN-PACKAGE name)
   (= *package* name)
-  `(= *package* ,name))
+  `(progn
+     (CL:IN-PACKAGE ,name)
+     (= *package* ,name)))
 
 (defbuiltin export (x &optional (pkg *package*))
   (CL:EXPORT x pkg))
