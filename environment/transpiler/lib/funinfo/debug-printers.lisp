@@ -1,9 +1,9 @@
 (fn human-readable-funinfo-names (fi)
-  (symbol-names-string (butlast (funinfo-names fi))))
+  (late-print (butlast (funinfo-names fi)) nil))
 
 (fn print-funinfo (fi &optional (str nil))
   (with-default-stream s str
-    (with (names [& _ (symbol-names-string (ensure-list _))])
+    (with (names [& _ (late-print (ensure-list _) nil)])
       (format s (flatten
                     (@ [!? ._.
                            (format s "  ~A~A~%" _. !)

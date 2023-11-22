@@ -7,9 +7,6 @@
         _]
      x))
 
-(fn symbol-names-string (x &key (downcase? nil))
-  (apply #'string-concat (pad (symbol-names x :downcase? downcase?) " ")))
-
 (fn %print-note (fmt &rest args)
   (princ "; ")
   (apply #'format t fmt args))

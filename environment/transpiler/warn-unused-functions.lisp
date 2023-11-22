@@ -10,4 +10,4 @@
                           (head? ! "~"))
                      (list !))]
            (hashkeys !))
-      (warn "Unused functions: ~A." (symbol-names-string !)))))
+      (warn "Unused functions: ~A." (late-print ! nil)))))

@@ -6,7 +6,7 @@
                (symbol-name i)
                (human-readable-funinfo-names fi)
                (!? (butlast (funinfo-names fi))
-                   (+ "scope of " (symbol-names-string (reverse !)))
+                   (+ "scope of " (late-print (reverse !) nil))
                    "toplevel"))))))
 
 (metacode-walker warn-unused (x)
