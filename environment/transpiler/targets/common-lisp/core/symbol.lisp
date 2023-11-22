@@ -42,8 +42,8 @@
 (defspecial in-package (name)
   (print-definition `(in-package ,name))
   (CL:IN-PACKAGE name)
-  (= *package* (symbol-name name))
-  nil)
+  (= *package* name)
+  `(= *package* ,name))
 
 (defbuiltin export (x &optional (pkg *package*))
   (CL:EXPORT x pkg))
