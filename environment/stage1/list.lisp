@@ -98,6 +98,9 @@
         x
         (list x))))
 
+(defmacro ensure-list! (x)
+  `(= ,x (ensure-list ,x)))
+
 (defmacro push (elm expr)
   `(= ,expr (. ,elm ,expr)))
 
