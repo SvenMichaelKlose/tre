@@ -20,7 +20,7 @@
 
 (fn make-%fn-quiet (name args body)
   (? args
-     (= args (ensure-list args)))
+     (ensure-list! args))
   `(CL:PROGN
      (CL:PUSH (. ',name ',(. args body)) *functions*)
      (CL:DEFUN ,name ,args ,@body)))
