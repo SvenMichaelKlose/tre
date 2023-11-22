@@ -4,7 +4,7 @@
   (apply #'+ (@ [!= (+ *js-core-path* dir-path _)
                   (print-definition `(js-load-core ,!))
                   (with-temporary *package* "TRE-CORE"
-                    (load-file !))
+                    (read-file !))
                   (fetch-file !)]
                 files)))
 

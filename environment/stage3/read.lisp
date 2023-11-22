@@ -226,3 +226,7 @@
   (& (seek-char str)
      (. (read str)
         (read-all str))))
+
+(fn read-from-string (x)
+  (with-stream-string s x
+    (read-all s)))

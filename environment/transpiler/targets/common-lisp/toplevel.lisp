@@ -6,7 +6,7 @@
 
 (fn cl-sections-before-import ()
   (unless (configuration :exclude-core?)
-    (list (. 'cl-core (+ (load-string *cl-core*)
+    (list (. 'cl-core (+ (read-from-string *cl-core*)
                          (@ [`(defbuiltin ,_. (&rest x)
                                 (apply #',(cl-symbol ._.) x))]
                             +cl-renamed-imports+))))))

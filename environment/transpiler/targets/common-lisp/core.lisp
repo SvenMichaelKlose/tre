@@ -4,7 +4,7 @@
   (apply #'+ (@ [!= (+ dir-path _)
                   (print-definition `(cl-load-base ,!))
                   (with-temporary *package* "TRE-CORE"
-                    (load-file !))
+                    (read-file !))
                   (fetch-file !)]
                 files)))
 

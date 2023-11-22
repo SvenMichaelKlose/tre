@@ -1,4 +1,5 @@
 Changes relative to tre-0.20:
+  * LOAD-STRING is now READ-FROM-STRING.
   * CONCAT-STRINGTREE is now FLATTEN.
   * QUASIQUOTE-SPLICE turns JavaScript objects into keyword/
     value lists.

@@ -1,5 +1,4 @@
 (env-load "transpiler/targets/shared/c-identifier-char-p.lisp")
-(env-load "transpiler/targets/shared/load-file.lisp")
 (env-load "transpiler/targets/shared/opt-+.lisp")
 (env-load "transpiler/targets/shared/class.lisp")
 (env-load "transpiler/targets/shared/codegen/literal-string.lisp")
