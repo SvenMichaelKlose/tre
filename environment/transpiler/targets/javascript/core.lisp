@@ -1,12 +1,9 @@
 (var *js-core-path* "environment/transpiler/targets/javascript/core/")
 
-;;; We're loading the core files as strings to avoid time-consuming
-;;; READs when compiling on the target.
 (fn js-load-core (dir-path &rest files)
   (apply #'+ (@ [!= (+ *js-core-path* dir-path _)
                   (print-definition `(js-load-core ,!))
-                  (with-temporary *package* "TRE-CORE"
-                    (read-file !))
+                  (read-file !)
                   (fetch-file !)]
                 files)))
 
