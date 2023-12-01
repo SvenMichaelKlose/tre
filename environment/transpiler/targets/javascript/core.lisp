@@ -1,5 +1,7 @@
 (var *js-core-path* "environment/transpiler/targets/javascript/core/")
 
+;;; We're loading the core files as strings to avoid time-consuming
+;;; READs when compiling on the target.
 (fn js-load-core (dir-path &rest files)
   (apply #'+ (@ [!= (+ *js-core-path* dir-path _)
                   (print-definition `(js-load-core ,!))
@@ -36,30 +38,29 @@
         (js-load-core "../../../environment/"
                       "string.lisp")))
 
-(= *js-core1* (+ *js-core1*
-                 ,(js-load-core ""
-                                "bind.lisp"
-                                "../../../environment/eq.lisp"
-                                "../../../environment/equality.lisp"
-                                "late-cons.lisp"
-                                "late-symbol.lisp"
-                                "../../../environment/make-array.lisp"
-                                "sequence.lisp"
-                                "../../../environment/list-string.lisp"
-                                "string.lisp"
-                                "hash.lisp"
-                                "base64.lisp"
-                                "function-source.lisp"
-                                "dot-expand.lisp"
-                                "math.lisp"
-                                "milliseconds-since-1970.lisp"
-                                "keys.lisp"
-                                "../../../environment/files-unsupported.lisp")))
+(+! *js-core1* ,(js-load-core ""
+                              "bind.lisp"
+                              "../../../environment/eq.lisp"
+                              "../../../environment/equality.lisp"
+                              "late-cons.lisp"
+                              "late-symbol.lisp"
+                              "../../../environment/make-array.lisp"
+                              "sequence.lisp"
+                              "../../../environment/list-string.lisp"
+                              "string.lisp"
+                              "hash.lisp"
+                              "base64.lisp"
+                              "function-source.lisp"
+                              "dot-expand.lisp"
+                              "math.lisp"
+                              "milliseconds-since-1970.lisp"
+                              "keys.lisp"
+                              "../../../environment/files-unsupported.lisp"))
 
 (when *have-compiler?*
-  (= *js-core1* (+ *js-core1* ,(js-load-core "" "native-eval.lisp"))))
+  (+! *js-core1* ,(js-load-core "" "native-eval.lisp")))
 
-(= *js-core1* (+ *js-core1* ,(js-load-core "" "../../../environment/setf-function-p.lisp")))
+(+! *js-core1* ,(js-load-core "" "../../../environment/setf-function-p.lisp"))
 
 (fn js-core-stream ()
   (+ ,(js-load-core "" "error.lisp")
