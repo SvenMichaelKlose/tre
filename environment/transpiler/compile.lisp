@@ -77,19 +77,19 @@
                               (symbol-name section)
                               section))))
 
-(fn frontend-section (section data)
+(fn frontend-section (section x)
   (developer-note "Frontend ~A.~%" section)
   (apply #'+ (@ [frontend (list _)]
                 (+ (section-comment section)
                    (pcase section
-                     symbol?  (? (function? data)
-                                 (funcall data)
-                                 data)
+                     symbol?  (? (function? x)
+                                 (funcall x)
+                                 x)
                      string?  (frontend-section-load section)
                      (error "Don't know what to do with section ~A." section))))))
 
 (fn frontend-sections (sections)
-  (with-temporary *package* "TRE"
+  (with-temporary *package* *package*
     (!= (map-sections #'frontend-section sections (cached-frontend-sections))
       (= (cached-frontend-sections) !))))
 
@@ -99,7 +99,7 @@
                    (+ (frontend-sections (funcall (sections-after-import)))
                       (frontend-sections sections))
                    (+ (list "Section imports")
-                      (with-temporary *package* "TRE"
+                      (with-temporary *package* *package*
                         (import-from-host)))))
 
 (fn tell-number-of-warnings ()
