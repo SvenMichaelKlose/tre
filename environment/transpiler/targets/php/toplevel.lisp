@@ -9,13 +9,13 @@
   (add-defined-variable '*keyword-package*))
 
 (fn php-sections-before-import ()
-  (+ (list (. 'core-0 (read-from-string *php-core0*)))
+  (+ (list (section-from-string 'core-0 *php-core0*))
      (& (not (configuration :exclude-core?))
-        (list (. 'core (read-from-string *php-core*))))))
+        (list (section-from-string 'core *php-core*)))))
 
 (fn php-sections-after-import ()
   (+ (& (not (configuration :exclude-core?))
-        (list (. 'core-2 (read-from-string *php-core2*))))
+        (list (section-from-string 'core-2 *php-core2*)))
      (& (eq t *have-environment-tests*)
         (list (. 'env-tests (make-environment-tests))))))
 
