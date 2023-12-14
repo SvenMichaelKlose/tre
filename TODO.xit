@@ -1,3 +1,5 @@
+[ ] !!! JSON: Allow key expressions.  Currently a SLOT-VALUE gives
+        weird results.
 [ ] !!! Packaging in user land.
 [ ] !!! Case-sensitive symbols without conversion to upper case.
         Will make conversions to back-end identifiers obsolete or
