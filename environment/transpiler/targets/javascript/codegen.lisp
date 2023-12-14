@@ -158,7 +158,8 @@
   `(=-%aref ,val ,@x))
 
 (def-js-codegen %%%make-json-object (&rest args)
-  (c-list (@ [`( ,_. ": " ,._.)] (group args 2)) :parens-type :braces))
+  (c-list (@ [`( ,_. ": " ,._.)] (group args 2))
+          :parens-type :braces))
 
 (def-js-codegen %new (&rest x)
   (? x
