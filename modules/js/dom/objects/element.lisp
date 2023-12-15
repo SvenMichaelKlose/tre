@@ -352,9 +352,7 @@
        (& (element? i)
           (return nil)))))
 
-(progn
-  ,@(@ [`(defmethod tre-element ,(make-symbol (upcase _)) (fun)
-           (this.add-event-listener ,_ fun))]
-       *all-events*))
+(defmethod tre-element on (name fun)
+  (this.add-event-listener name fun))
 
 (finalize-class tre-element)

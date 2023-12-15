@@ -1,4 +1,6 @@
 Changes relative to tre-0.20:
+  * TRE-ELEMENT: All event methods have been replaced by
+    method ON, like done with jQuery.
   * LOAD-STRING is now READ-FROM-STRING.
   * CONCAT-STRINGTREE is now FLATTEN.
   * QUASIQUOTE-SPLICE turns JavaScript objects into keyword/
