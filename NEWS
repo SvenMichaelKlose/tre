@@ -4,6 +4,8 @@ Changes relative to tre-0.20:
       done in jQuery.
     * Historic class, ID and name attribute methods have been
       removed.
+    * General attribute accessors have been replaced by methods
+      ATTR, ATTR? and ATTRS.
   * LOAD-STRING is now READ-FROM-STRING.
   * CONCAT-STRINGTREE is now FLATTEN.
   * QUASIQUOTE-SPLICE turns JavaScript objects into keyword/

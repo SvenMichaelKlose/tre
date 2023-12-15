@@ -1,14 +1,14 @@
 (define-filter dom2lml-children #'dom2lml)
 
-; TODO: Translate keyword back from camel case.
 (fn dom2lml-attributes (x)
-  (mapcan [`(,(make-keyword (upcase _.)) ,._)]
-          x))
+  (maphash #'((k v)
+               `(,(make-keyword (upcase k)) ,v)]
+          x)))
 
 (fn dom2lml-element (x)
   (unless (eql (symbol-name nil) x.tag-name)
     `(,(make-symbol (upcase x.tag-name))
-      ,@(!? (x.attributes-alist)
+      ,@(!? (x.attrs)
             (dom2lml-attributes !))
       ,@(!? (x.child-list)
             (dom2lml-children !)))))
