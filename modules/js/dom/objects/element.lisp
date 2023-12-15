@@ -80,22 +80,6 @@
         (append-child child)))
   this)
 
-(defmethod tre-element move-front ()
-  (& this.next-sibling
-     (parent-node.add-front this))
-  this)
-
-(defmethod tre-element move-back ()
-  (& this.next-sibling
-     (parent-node.add this))
-  this)
-
-(defmethod tre-element add-element (name attrs)
-  (add (make-extended-element name attrs)))
-
-(defmethod tre-element add-text (text)
-  (add (new *text-node text)))
-
 (defmethod tre-element read-attribute (name)
   (| (!? (xlat-attribute name)
          (get-attribute !))
