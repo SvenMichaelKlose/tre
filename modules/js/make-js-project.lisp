@@ -45,11 +45,6 @@
                  "document-location.lisp"
                  "table.lisp"
                  "viewport.lisp"
-                 ,@(list+ "form/"
-                          '("predicates.lisp"
-                            "get.lisp"
-                            "select.lisp"
-                            "element-value.lisp"))
                  "window-url.lisp"))
       (+ *modules-path* "js/dump.lisp")
       ,@(list+ (+ *modules-path* "js/event/")
