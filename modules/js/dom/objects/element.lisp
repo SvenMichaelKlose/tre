@@ -174,15 +174,6 @@
        (return (| (i.find-element-at x y)
                   this)))))
 
-(defmethod tre-element from-point (x y)
-  (& (inside? x y)
-     (? (& (element? this)
-           first-child)
-        (do-children (i this)
-          (!? (i.seek-element x y)
-              (return !)))
-        this)))
-
 (defmethod tre-element is? (css-selector)
   (!= (| parent-node owner-document)
     (member this (array-list (!.query-selector-all css-selector)))))
