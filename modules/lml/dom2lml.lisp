@@ -2,8 +2,8 @@
 
 (fn dom2lml-attributes (x)
   (maphash #'((k v)
-               `(,(make-keyword (upcase k)) ,v)]
-          x)))
+               `(,(make-keyword (upcase k)) ,v))
+          x))
 
 (fn dom2lml-element (x)
   (unless (eql (symbol-name nil) x.tag-name)
