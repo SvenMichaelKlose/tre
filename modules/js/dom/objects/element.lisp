@@ -135,36 +135,6 @@
      (write-attribute name value)
      (read-attribute name)))
 
-(defmethod tre-element has-name? (x)
-  (member (downcase (get-name)) (@ #'downcase (ensure-list x)) :test #'string==))
-
-(defmethod tre-element get-name ()     (read-attribute "name"))
-(defmethod tre-element set-name (x)    (write-attribute "name" x))
-(defmethod tre-element get-class ()    class-name)
-(defmethod tre-element get-classes ()  (split #\  class-name :test #'character==))
-(defmethod tre-element class? (x)      (class-list.contains x))
-(defmethod tre-element set-class (x)   (= class-name x))
-
-(defmethod tre-element add-class (x)
-  (class-list.add x))
-
-(defmethod tre-element remove-class (x)
-  (class-list.remove x))
-
-(defmethod tre-element remove-classes (x)
-  (@ (i x)
-    (class-list.remove i)))
-
-(defmethod tre-element set-id (id)
-  (? id
-     (write-attribute "id" id)
-     (remove-attribute "id")))
-
-(defmethod tre-element get-id (id)
-  (!? (read-attribute "id")
-      (unless (empty-string? !)
-        (number !))))
-
 (defmethod tre-element set-styles (styles)
   (maphash #'((k v)
                (set-style k v))
