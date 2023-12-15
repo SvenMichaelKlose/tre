@@ -1,6 +1,3 @@
-; TODO: remove READ-ATTRIBUTE.
-; TODO: ATTR as short-cut for getAttribute()
-
 (fn tre-ancestor-or-self-if (node pred)
   (ancestor-or-self-if node pred))
 
@@ -13,7 +10,7 @@
   (aprog1 (make-native-element name doc ns)
     (js-merge-props! ! tre-element.prototype)
     (!.write-attributes attrs)
-    (!.set-styles style)))
+    (!.set-styles style)))  ; TODO: Remove. (pixel)
 
 (defclass (tre-element visible-node) ())
 
@@ -28,6 +25,7 @@
     set-attribute get-attribute remove-attribute
     get-elements-by-class-name
     get-elements-by-tag-name
+    has-attribute
     has-child-nodes
     inner-h-t-m-l
     style
@@ -87,37 +85,33 @@
        (doarray (a attributes attrs)
          (= (href attrs a.node-name) a.node-value)))))
 
-(defmethod tre-element set-styles (styles)
-  (maphash #'((k v)
-               (set-style k v))
-           styles)
-  styles)
+(defmethod tre-element css (key value)
+  (?
+    (object? key)
+      (maphash #'((k v)
+                   (= (aref style k) v))
+               key)
+    (string? key)
+      (= (aref style k) v))
+  (aref style))
 
-(defmethod tre-element remove-styles ()
-  (remove-attribute "style"))
-
-(defmethod tre-element set-style (k v)
-  (= (aref style k) v))
-
-(defmethod tre-element get-style (x)
-  (| (aref style x)
-     (aref (document.default-view.get-computed-style this nil) x)))
-
-(defmethod tre-element show () (set-style "display" ""))
-(defmethod tre-element hide () (set-style "display" "none"))
+(defmethod tre-element show () (css "display" ""))
+(defmethod tre-element hide () (css "display" "none"))
 
 ; TODO: Remove.  Replace by CSS animation where required. (pixel)
 (defmethod tre-element set-opacity (x)
   (? (== 1 x)
      (& (defined? style.remove-property)
         (style.remove-property "opacity"))
-     (set-style "opacity" x))
+     (css "opacity" x))
   x)
 
 ;; Set absolute position relative to browser window.
 (defmethod tre-element set-position (x y)
-  (set-styles (new "left" (+ x "px")
-                   "top"  (+ y "px")))
+  (css {
+    :left  (+ x "px")
+    :top   (+ y "px")
+  })
   this)
 
 (defmethod tre-element cumulative-offsets ()
@@ -156,11 +150,11 @@
        !)))
 
 (defmethod tre-element set-width (x)
-  (set-style "width" (+ x "px"))
+  (css "width" (+ x "px"))
   x)
 
 (defmethod tre-element set-height (x)
-  (set-style "height" (+ x "px"))
+  (css "height" (+ x "px"))
   x)
 
 (defmethod tre-element inside-x? (x)
