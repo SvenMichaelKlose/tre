@@ -40,8 +40,7 @@
                             "text-node.lisp"
                             "extend.lisp"
                             "query.lisp"
-                            "canvas.lisp"
-                            "video.lisp"))
+                            "canvas.lisp"))
                  "get.lisp"
                  "document-location.lisp"
                  "table.lisp"
@@ -51,11 +50,6 @@
                             "get.lisp"
                             "select.lisp"
                             "element-value.lisp"))
-                 ,@(list+ "iframe/"
-                          '("iframe.lisp"
-                            "make.lisp"
-                            "make-with-url.lisp"
-                            "copy.lisp"))
                  "window-url.lisp"))
       (+ *modules-path* "js/dump.lisp")
       ,@(list+ (+ *modules-path* "js/event/")

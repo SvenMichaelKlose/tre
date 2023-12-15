@@ -4,14 +4,14 @@
 
 (fn expr2xml (x)
   (? x
-     (!= (make-extended-element "div")
+     (!= ($$ '(div))
        (expr2dom ! x)
        !.inner-h-t-m-l)
      ""))
 
 (fn xml2expr (x)
   (unless (empty-string-or-nil? x)
-    (!= (make-extended-element "div")
+    (!= ($$ '(div))
       (!.set-inner-h-t-m-l x)
       (dom2expr !.first-child))))
 

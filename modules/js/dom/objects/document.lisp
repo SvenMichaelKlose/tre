@@ -22,9 +22,6 @@
   (unless (head? css-selector "<")
     (array-list (query-selector-all css-selector))))
 
-;(defmethod tre-html-document get-last (css-selector)
-;  (last (get-list css-selector)))
-
 (defmethod tre-html-document get-html ()
   document-element.outer-h-t-m-l)
 
@@ -33,19 +30,10 @@
   (document-extend this)
   x)
 
-;(defmethod tre-html-document get-html-body ()
-;  document-element.body.outer-h-t-m-l)
-
-;(defmethod tre-html-document set-html-body (x)
-;  (set-html (+ "<html>"
-;               "<head><meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\"></head>"
-;               "<body>" data "</body>"
-;               "</html>")))
-
 (defmethod tre-html-document add-style (txt)
   (with (head   (document-element.$? "head")
-         style  (make-extended-element "style" (new "type" "text/css") nil :doc this))
-    (head.add (style.add-text txt))))
+         style  ($$ `(style :type "text/css")))
+    (head.add (style.add ($$ txt)))))
 
 (progn
   ,@(@ [`(defmethod tre-html-document ,(make-symbol (upcase _)) (fun)

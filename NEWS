@@ -1,4 +1,8 @@
 Changes relative to tre-0.20:
+  * JavaScript DOM
+    * Removed GET-CANVAS-BY-CLASS-NAME.
+    * Removed ancestor getters.
+    * Remove VIDEO and IFRAME utilities.
   * TRE-ELEMENT:
     * All event methods have been replaced by method ON, like
       done in jQuery.

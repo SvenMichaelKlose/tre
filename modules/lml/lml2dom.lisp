@@ -1,5 +1,5 @@
 (fn lml2dom-element (x doc)
-  (make-extended-element (downcase (string x.)) :doc doc))
+  (element-extend (doc.create-element (downcase (string x.)))))
 
 (fn lml2dom-atom (parent x doc)
   (when x
@@ -32,7 +32,7 @@
 
 (fn lml2dom-attr (elm x doc)
   (let name (lml-attr-string x.)
-    (elm.write-attribute name (string (lml2dom-attr-exec elm name .x.)))
+    (elm.attr name (string (lml2dom-attr-exec elm name .x.)))
     (lml2dom-attr-or-body elm ..x doc)))
 
 (fn lml2dom-attr-or-body (e x doc)

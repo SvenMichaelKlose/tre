@@ -1,17 +1,3 @@
-(fn tre-ancestor-or-self-if (node pred)
-  (ancestor-or-self-if node pred))
-
-(fn make-native-element (name doc ns)
-  (? (& ns (defined? doc.create-element-n-s))
-     (doc.create-element-n-s ns name)
-     (doc.create-element name)))
-
-(fn make-extended-element (name &optional (attrs nil) (style nil) &key (doc document) (ns nil))
-  (aprog1 (make-native-element name doc ns)
-    (js-merge-props! ! tre-element.prototype)
-    (!.write-attributes attrs)
-    (!.set-styles style)))  ; TODO: Remove. (pixel)
-
 (defclass (tre-element visible-node) ())
 
 (defmember tre-element
@@ -65,10 +51,10 @@
         (append-child child)))
   this)
 
-(defmethod tre-element attr (name, value)
+(defmethod tre-element attr (name value)
   (? (not value)
      (get-attribute name)
-     (write-attribute name value)))
+     (set-attribute name value)))
 
 (defmethod tre-element attr? (name)
   (has-attribute name))
@@ -77,10 +63,10 @@
   (? new-attrs
      (? (hash-table? attrs)
         (maphash #'((k v)
-                     (write-attribute k v))
+                     (set-attribute k v))
                  attrs)
         (@ (i attrs)
-          (write-attribute i. .i)))
+          (set-attribute i. .i)))
      (let attrs (make-hash-table)
        (doarray (a attributes attrs)
          (= (href attrs a.node-name) a.node-value)))))
@@ -93,7 +79,7 @@
                key)
     (string? key)
       (= (aref style k) v))
-  (aref style))
+  style)
 
 (defmethod tre-element show () (css "display" ""))
 (defmethod tre-element hide () (css "display" "none"))
@@ -178,6 +164,9 @@
   (!= (| parent-node owner-document)
     (member this (array-list (!.query-selector-all css-selector)))))
 
+(defmethod tre-element ancestor-or-self (css-selector)
+  (ancestor-or-self-if this [_.is? css-selector]))
+
 (defmethod tre-element $? (css-selector)
   (? (head? css-selector "<")
      (ancestor-or-self (subseq css-selector 1))
@@ -188,24 +177,6 @@
 
 (defmethod tre-element get-list (css-selector)
   (array-list (query-selector-all css-selector)))
-
-(defmethod tre-element ancestor-or-self (css-selector)
-  (alet (array-list (this.owner-document.query-selector-all css-selector))
-    (do ((i this i.parent-node))
-        ((not i))
-      (& (member i ! :test #'eq)
-         (return i)))))
-
-(defmethod tre-element ancestor (css-selector)
-  (!? parent-node
-      (!.ancestor-or-self css-selector)))
-
-(defmethod tre-element ancestor-or-self-if (fun)
-  (tre-ancestor-or-self-if this fun))
-
-(defmethod tre-element get-first-child-by-class-name (name)
-  (find-if [eq this _.parent-node]
-           (this.get-list (+ "." name))))
 
 (defmethod tre-element set-inner-h-t-m-l (html)
   (this.remove-children)
