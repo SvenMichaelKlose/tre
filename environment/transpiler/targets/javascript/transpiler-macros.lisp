@@ -57,7 +57,7 @@
        (= (symbol-function ,g) ,dname))))
 
 (def-js-transpiler-macro %fn (name args &body body)
-  `(defun ,name ,args ,@body))
+  `(fn ,name ,args ,@body))
 
 (def-js-transpiler-macro slot-value (place slot)
   (?
