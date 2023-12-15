@@ -106,12 +106,7 @@
 (defmethod tre-element show () (set-style "display" ""))
 (defmethod tre-element hide () (set-style "display" "none"))
 
-(defmethod tre-element get-opacity ()
-  (!= (get-style "opacity")
-    (? (empty-string-or-nil? !)
-       1
-       (number (get-style "opacity")))))
-
+; TODO: Remove.  Replace by CSS animation where required. (pixel)
 (defmethod tre-element set-opacity (x)
   (? (== 1 x)
      (& (defined? style.remove-property)
@@ -119,22 +114,13 @@
      (set-style "opacity" x))
   x)
 
-(defmethod tre-element set-rotation (x)
-  (alet (mod x 360)
-    (= _tre-rotation x)
-    (@ (i '("" "webkit" "moz" "o") x)
-      (set-style (+ "-" i "-transform") (+ "rotate(" ! "deg)")))))
-
-(defmethod tre-element get-rotation ()
-  _tre-rotation)
-
 ;; Set absolute position relative to browser window.
 (defmethod tre-element set-position (x y)
   (set-styles (new "left" (+ x "px")
                    "top"  (+ y "px")))
   this)
 
-(defmethod tre-element cumulative-offset ()
+(defmethod tre-element cumulative-offsets ()
   (? (eql this.style.position "absolute")
      #((!= this.style.left
          (integer (subseq ! 0 (- (length !) 2))))
@@ -148,10 +134,10 @@
        (+! y i.offset-top))))
 
 (defmethod tre-element get-position-x ()
-  (aref (cumulative-offset) 0))
+  (aref (cumulative-offsets) 0))
 
 (defmethod tre-element get-position-y ()
-  (aref (cumulative-offset) 1))
+  (aref (cumulative-offsets) 1))
 
 (defmethod tre-element get-width ()
   (alet (| (? (< 0 offset-width)
@@ -204,8 +190,8 @@
         this)))
 
 (defmethod tre-element is? (css-selector)
-  (member this (array-list ((| parent-node
-                               owner-document).query-selector-all css-selector))))
+  (!= (| parent-node owner-document)
+    (member this (array-list (!.query-selector-all css-selector)))))
 
 (defmethod tre-element $? (css-selector)
   (? (head? css-selector "<")
@@ -217,9 +203,6 @@
 
 (defmethod tre-element get-list (css-selector)
   (array-list (query-selector-all css-selector)))
-
-;(defmethod tre-element get-last (css-selector) ; TODO: Remove.
-;  (last (get-list css-selector)))
 
 (defmethod tre-element ancestor-or-self (css-selector)
   (alet (array-list (this.owner-document.query-selector-all css-selector))

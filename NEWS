@@ -6,6 +6,7 @@ Changes relative to tre-0.20:
       removed.
     * General attribute accessors have been replaced by methods
       ATTR, ATTR? and ATTRS.
+    * Removed opacity setter and rotation.
   * LOAD-STRING is now READ-FROM-STRING.
   * CONCAT-STRINGTREE is now FLATTEN.
   * QUASIQUOTE-SPLICE turns JavaScript objects into keyword/
