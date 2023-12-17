@@ -32,10 +32,6 @@ Great for dealing with JSON objects.
 
 ## Warn/error when accessing undefined vars somehow.
 
-## Misc
-
-{} instead of (new).
-
 ## Literal arrays
 
 ## Argument definitions: '.' instead of &REST
