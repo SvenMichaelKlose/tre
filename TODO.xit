@@ -1,10 +1,11 @@
 [ ] !!! JSON: Allow key expressions.  Currently a SLOT-VALUE gives
         weird results.
 [ ] !!! Packaging in user land.
-[ ] !!! Case-sensitive symbols without conversion to upper case.
-        Will make conversions to back-end identifiers obsolete or
-        less confusing.
+[ ] !!. Override array and slot access.
 [ ] !!. Remove module "sql-clause".
 [ ] !!. Add an object relation mapper (ORM).
 [ ] !.. Move @ to stage 4 or it will spoil non-CL compiler boots.
 [ ] !.. Rewrite modules/http-funcall to work with JSON instead of XML.
+[ ] ... Case-sensitive symbols without conversion to upper case.
+        Will make conversions to back-end identifiers obsolete and
+        less confusing.
