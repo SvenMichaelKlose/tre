@@ -1,5 +1,7 @@
+;;; TODO: Rename 'field' to 'key'. (pixel)
+
 (defclass (autoform lml-component) (init-props)
-  (super (merge-props {:widgets *autoform-widgets*} init-props))
+  (super (merge {:widgets *autoform-widgets*} init-props))
   this)
 
 (defmethod autoform render ()
@@ -40,7 +42,7 @@
 
 (fn autoform-list (props)
   ($$ `(tr ,@(@ [`(td ,@(& (string? _) `(:class ,(field-class-name _)))
-                    (autoform-field :schema-item  ,(aref props.schema _)
+                    (autoform-field :schema-item  ,(ref props.schema _)
                                     :field        ,_
                                     :store        ,props.store))]
                 props.fields))))
@@ -49,16 +51,16 @@
 
 
 (fn autoform-record (props)
-  (let render-label [!? (aref (aref props.schema _) "title")
+  (let render-label [!? (ref (ref props.schema _) "title")
                         (? (object? !)
-                           (aref ! (downcase (symbol-name *language*)))
+                           (ref ! (downcase (symbol-name *language*)))
                            !)]
     ($$ `(div :class "autoform autoform-record"
            ,@(@ [`(label ,@(& (string? _) `(:class ,(field-class-name _)))
                     (span
                       ,(? (string? _)
                           (render-label _)))
-                    (autoform-field :schema-item  ,(aref props.schema _)
+                    (autoform-field :schema-item  ,(ref props.schema _)
                                     :field        ,_
                                     :store        ,props.store))]
                 props.fields)))))
