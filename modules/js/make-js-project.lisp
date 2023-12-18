@@ -65,6 +65,7 @@
                             "attribute.lisp"))
                  "container.lisp"
                  "schema.lisp"
+                 "i18n.lisp"
                  "autoform.lisp"
                  "autoform-widgets.lisp"
                  "toplevel.lisp"))
