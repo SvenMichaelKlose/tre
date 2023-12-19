@@ -227,9 +227,6 @@
                 (symbol? y)    (convert-identifier (make-symbol (symbol-name y) "TRE"))
                 y)))
 
-(def-php-codegen prop-value (x y)  ; TODO: Use SLOT-VALUE instead.
-  `(%%native ,(php-dollarize x) "->$" ,y))
-
 (def-php-codegen %php-class-head (name)
   `(%%native "class " ,name "{"))
 

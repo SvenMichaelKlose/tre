@@ -20,12 +20,11 @@
   (?
     (quote? slot)   `(%slot-value ,place ,.slot.)
     (string? slot)  `(%slot-value ,place ,slot)
-    (symbol? slot)  `(prop-value ,place ,slot)
     (with-gensym g
       `(%%block
          (%var ,g)
          (%= ,g ,slot)
-         (prop-value ,place ,g)))))
+         (%aref ,place ,g)))))
 
 (def-php-transpiler-macro undefined? (x)
   `(not (isset ,x)))

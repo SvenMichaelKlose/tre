@@ -142,14 +142,11 @@
 
 ;;;; HASH TABLES
 
-(def-js-codegen property-remove (h key)
-  `(%%native "delete " ,h "[" ,key "]"))
-
 (def-js-codegen hremove (h key)
   `(%%native "delete " ,h "[" ,key "]"))
 
 
-;;;; OBJECTS
+;;;; (JSON) OBJECTS
 
 (def-js-codegen oref (arr &rest idx)
   `(%aref ,arr ,@idx))
@@ -190,9 +187,6 @@
                        (symbol? y)    (convert-identifier (make-symbol (symbol-name y) "TRE"))
                        y)))
 
-(def-js-codegen prop-value (x y)
-  `(%aref ,x ,y))
-
 (def-js-codegen %try () ; TODO: Check if stale.
   '(%%native "try {"))
 
@@ -220,6 +214,7 @@
 (def-js-codegen %%%eval (x)
   `((%%native "window.eval (" ,x ")")))
 
+;;; TODO: Looking like a PHP target stub. (pixel)
 (def-js-codegen %global (x)
   x)
 
