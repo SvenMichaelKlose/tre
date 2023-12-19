@@ -1,5 +1,5 @@
-(defclass (lml-container lml-component) (init-props)
-  (super init-props)
+(defclass (lml-container lml-component) (attrs)
+  (super attrs)
   (= state props.store.data)
   this)
 

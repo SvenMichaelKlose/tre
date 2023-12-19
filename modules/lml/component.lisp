@@ -12,9 +12,9 @@
       (!._rerender))))
 
 
-(defclass lml-component (init-props)
-  (= props init-props)
-  (= state (new))
+(defclass lml-component (attrs)
+  (= props attrs)
+  (= state {})
   (= _force-update? nil)
   this)
 
