@@ -16,12 +16,13 @@
        (with (f  [?
                    (atom _)
                      _
-                   (keyword? _.)  (!? (lml-hook-attr? _.)
-                                      (progn
-                                        (enqueue q !)
-                                        (enqueue q ._.)
-                                        (f .._))
-                                      (. _. (. ._. (f .._))))
+                   (keyword? _.)
+                     (!? (lml-hook-attr? _.)
+                         (progn
+                           (enqueue q !)
+                           (enqueue q ._.)
+                           (f .._))
+                         (. _. (. ._. (f .._))))
                    (cons? _.)     (. (lml-hook _.) (f ._))
                    (. _. (f ._))]
                m  #'((x elm)
