@@ -1,3 +1,4 @@
+(env-load "stage3/object.lisp" :cl)
 (env-load "stage3/ref.lisp")
 (env-load "stage3/let-when.lisp")
 (env-load "stage3/ensure-tree.lisp")
