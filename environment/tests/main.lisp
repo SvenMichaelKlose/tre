@@ -18,7 +18,6 @@
 (env-load "tests/nconc.lisp")
 (env-load "tests/adjoin.lisp")
 (env-load "tests/butlast.lisp")
-(env-load "tests/copy-while.lisp")
 (env-load "tests/elt.lisp")
 (env-load "tests/subseq.lisp")
 (env-load "tests/search-sequence.lisp")
