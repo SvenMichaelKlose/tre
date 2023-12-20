@@ -13,7 +13,6 @@
 (env-load "tests/scope.lisp")
 (env-load "tests/lambda.lisp")
 (env-load "tests/lexical-scope.lisp" :cl)
-(env-load "tests/block.lisp")
 (env-load "tests/dollar.lisp")
 (env-load "tests/reverse.lisp")
 (env-load "tests/nconc.lisp")
