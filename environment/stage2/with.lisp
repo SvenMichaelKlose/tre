@@ -1,8 +1,3 @@
-(fn copy-while (pred x)
-  (& x
-     (funcall pred x.)
-     (. x. (copy-while pred .x))))
-
 (fn separate (pred x)
   (values (copy-while pred x)
           (remove-if pred x)))

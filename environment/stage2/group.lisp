@@ -1,11 +1,7 @@
-(functional copy-head group)
-
-(fn copy-head (x size)
-  (? (& x (< 0 size))
-     (. x. (copy-head .x (-- size)))))
+(functional group)
 
 (fn group (x size)
   (with-queue q
     (while x (queue-list q)
-       (enqueue q (copy-head x size))
+       (enqueue q (list-subseq x 0 size))
        (= x (nthcdr size x)))))

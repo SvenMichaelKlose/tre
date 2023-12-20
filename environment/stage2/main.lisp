@@ -5,6 +5,7 @@
 (env-load "stage2/array.lisp")
 (env-load "stage2/xchg.lisp")
 (env-load "stage2/group.lisp")
+(env-load "stage2/copy-while.lisp")
 (env-load "stage2/pcase.lisp")
 (env-load "stage2/remove.lisp")
 (env-load "stage2/elt.lisp")
