@@ -1,2 +1,2 @@
-(fn eq (x y)    ; TODO: Remove double in JS target.
+(fn eq (x y)
   (%%%=== x y))
