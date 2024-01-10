@@ -59,7 +59,7 @@
          name           (funinfo-name fi)
          num-locals     (length (funinfo-vars fi))
          compiled-name  (compiled-function-name name))
-    (developer-note "Making function ~A…~%" name)
+    (developer-note "#'~A~%" name)
     `(,*terpri*
       ,(funinfo-comment fi)
       "function " ,compiled-name ,@(php-argument-list (funinfo-args fi)) ,*terpri*
