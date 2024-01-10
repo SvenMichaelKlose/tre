@@ -78,9 +78,9 @@
     (list-string (f))))
 
 (fn read-comment-block (str)
-  (while (not (& (eql #\| (read-char str))
-                 (eql #\# (peek-char str))))
-     (read-char str)))
+  (| (& (eql #\| (read-char str))
+        (eql #\# (peek-char str)))
+    (read-comment-block str)))
 
 (fn list-number? (x)
   (& (| (& .x
