@@ -8,7 +8,7 @@
     '("examples/hello-world.lisp")
   :transpiler
     (aprog1 (copy-transpiler *js-transpiler*)
-      (= (transpiler-dump-passes? !) t)
+      (= (transpiler-dump-passes? !) nil)
       (= (transpiler-import-from-host? !) nil)
       (= (transpiler-configuration ! :exclude-core?) t)))
 (quit)
