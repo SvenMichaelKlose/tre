@@ -15,6 +15,7 @@
        (%quasiquote-expand .x))))
 
 (%fn quasiquote-expand (x)
-  (car (%quasiquote-expand (list x))))  ; TODO: Remove? (pixel)
+  ; TODO: Be the hero by finding out why this function cannot be removed. (pixel)
+  (car (%quasiquote-expand (list x))))
 
 (%defvar *quasiquote-expand* #'quasiquote-expand)
