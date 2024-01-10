@@ -32,8 +32,8 @@
 
 (defmethod lml-component _rerender ()
   (= element (? element.parent-node
-                (element.replace-by (render))
-                (render))))
+                (element.replace-by ($$ (render)))
+                ($$ (render)))))
 
 (defmethod lml-component _schedule-update ()
   (push this *pending-component-updates*)
@@ -58,7 +58,7 @@
   state)
 
 (defmethod lml-component init ()
-  (= element (render)))
+  (= element ($$ (render))))
 
 (defmethod lml-component close ()
   (_unschedule-update)
@@ -78,7 +78,7 @@
 
 (fn make-lml-component (name props)
   (!? (assoc-value name *lml-components*)
-      (!= (funcall ! props)
+      (!= ($$ (funcall ! props))
         (? (element? !)
            !
            (!.init)))))
