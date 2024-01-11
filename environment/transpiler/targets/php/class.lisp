@@ -21,13 +21,13 @@
                     ,@body))))))
 
 (def-php-transpiler-macro defclass (class-name args &body body)
-  (apply #'generic-defclass #'php-constructor class-name args body))
+  (generic-defclass #'php-constructor class-name args body))
 
 (def-php-transpiler-macro defmethod (class-name name args &body body)
-  (apply #'generic-defmethod class-name name args body))
+  (generic-defmethod class-name name args body))
 
 (def-php-transpiler-macro defmember (class-name &rest names)
-  (apply #'generic-defmember class-name names))
+  (generic-defmember class-name names))
 
 (fn php-method-function (class-name x)
   `(function ,(php-method-name class-name x.)

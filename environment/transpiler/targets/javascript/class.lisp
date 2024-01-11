@@ -9,7 +9,7 @@
        (%%native x " instanceof " ,(compiled-function-name-string class-name)))))
 
 (def-js-transpiler-macro defclass (class-name args &body body)
-  (apply #'generic-defclass #'js-gen-constructor class-name args body))
+  (generic-defclass #'js-gen-constructor class-name args body))
 
 (fn js-method-name (name)
   (? (eq 'ref name)
@@ -17,10 +17,10 @@
      name))
 
 (def-js-transpiler-macro defmethod (class-name name args &body body)
-  (apply #'generic-defmethod class-name (js-method-name name) args body))
+  (generic-defmethod class-name (js-method-name name) args body))
 
 (def-js-transpiler-macro defmember (class-name &rest names)
-  (apply #'generic-defmember class-name names))
+  (generic-defmember class-name names))
 
 (fn js-emit-method (class-name x)
   (!= ($ class-name '- x.)

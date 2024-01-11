@@ -1,6 +1,6 @@
 (var *delayed-constructors* nil)
 
-(fn generic-defclass (constructor-maker class-name args &body body)
+(fn generic-defclass (constructor-maker class-name args body)
   (with (cname   (? (cons? class-name)
                     class-name.
                     class-name)
@@ -27,7 +27,7 @@
             *delayed-constructors*)
     nil))
 
-(fn generic-defmethod (class-name name args &body body)
+(fn generic-defmethod (class-name name args body)
   (print-definition `(defmethod ,class-name ,name ,@(!? args (list !))))
   (!? (href (defined-classes) class-name)
       (let code (list args body)
@@ -39,7 +39,7 @@
       (error "Cannot define method ~A for undefined class ~A." name class-name))
   nil)
 
-(fn generic-defmember (class-name &rest names)
+(fn generic-defmember (class-name names)
   (print-definition `(defmember ,class-name ,@names))
   (!? (href (defined-classes) class-name)
       (+! (class-members !) (@ [list _ t] names))
