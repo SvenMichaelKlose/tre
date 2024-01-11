@@ -66,12 +66,9 @@
 ;;;;;;;;;;;;;;;;;;;;;
 
 (def-autoform-widget (store name schema v)
-                     [eql (schema-type _) "string"]
-  `(pre ,(autoform-value schema v)))
-
-(def-autoform-widget (store name schema v)
                      [identity t]
-  (autoform-value schema v))
+  `(pre :class "autoform-field-generic"
+     ,(autoform-value schema v)))
 
 (fn set-schema-items (value what schema &rest fields)
   (@ (i (| fields (keys schema.properties)) schema)
