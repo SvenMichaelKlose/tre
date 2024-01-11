@@ -212,21 +212,14 @@ your own basically end them with a closing parenthesis:
 ## Braces '{}' to make JSON objects
 
 If you open an expression with a curly brace it'll become a
-literal (JSON) object if the first element is a keyword or a
-string.  Then the argument is grouped into key/value pairs.
-Otherwise it'll become a PROGN.
+JSON object.
 
 ```lisp
-; Use as PROGN (first element is not a string or keyword).
-(| x
-   {(do-something)
-    (do-something-else)}
-
-; Use as literal object.
-{"item2"   "2"  ; It's highly recommended to use strings!
- :item1    "1"
- :oh-no    3}   ; Will be converted to camel notation and
-                ; result in "ohNo".
+{
+  "item2"  "2" ; It's highly recommended to use strings!
+  :item1   "1"
+  :oh-no   3   ; Will be converted to camel notation and result in "ohNo".
+}
 ```
 
 ## General abbreviations
