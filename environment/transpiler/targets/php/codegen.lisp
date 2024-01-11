@@ -227,8 +227,8 @@
                 (symbol? y)    (convert-identifier (make-symbol (symbol-name y) "TRE"))
                 y)))
 
-(def-php-codegen %php-class-head (name)
-  `(%%native "class " ,name "{"))
+(def-php-codegen %php-class-head (cls)
+  `(%%native "class " ,(class-name cls) "{"))
 
 (def-php-codegen %php-class-tail ()
   `(%%native "}" ""))
