@@ -17,7 +17,7 @@
   (backend (middleend x)))
 
 (fn codegen-section (section data)
-  (developer-note "Processing section ~A…~%" section)
+  (developer-note "Codegen ~A…~%" section)
   (codegen data))
 
 (fn codegen-sections (sections)
@@ -38,35 +38,37 @@
 (fn codegen-accumulated-toplevels ()
   (& (enabled-pass? :accumulate-toplevel)
      (accumulated-toplevel-expressions)
-     (with-temporaries ((sections-to-update) '(accumulated-toplevel))
+     (with-temporaries ((sections-to-update) '(:accumulated-toplevel)
+                        (disabled-passes)    (. :accumulate-toplevel
+                                                (disabled-passes)))
        (developer-note "Making top–level expressions…~%")
-       (push :accumulate-toplevel (disabled-passes))
-       (prog1
-         (quick-compile-sections (list (. 'accumulated-toplevel
-                                          #'gen-toplevel-function)))
-         (pop (disabled-passes))))))
+       (quick-compile-sections (list (. :accumulated-toplevel
+                                        #'gen-toplevel-function))))))
 
 (fn compile-delayed-exprs ()
   (developer-note "Making delayed expressions…~%")
-  (with-temporary (sections-to-update) '(delayed-exprs)
-    (quick-compile-sections (list (. 'delayed-exprs (delayed-exprs))))))
+  (with-temporary (sections-to-update) '(:delayed-exprs)
+    (quick-compile-sections (list (. :delayed-exprs (delayed-exprs))))))
 
 (fn generic-codegen (before-import after-import imports)
   (print-status "Let me think. Hmm…~F")
   (funcall (middleend-init))
-  (with (before-imports    (codegen-sections before-import)
-         imports-and-rest  (+ (progn
-                                (developer-note "Making imports…~%")
-                                (codegen imports))
-                              (compile-delayed-exprs)
-                              (codegen-sections after-import)
-                              (codegen-accumulated-toplevels)))
-    (funcall (postprocessor) (+ (list (funcall (prologue-gen)))
-                                before-imports
-                                (quick-compile-sections (list (. 'compiled-inits
-                                                                 (reverse (compiled-inits)))))
-                                imports-and-rest
-                                (list (funcall (epilogue-gen)))))))
+  (with (before-imports
+            (codegen-sections before-import)
+         imports-and-rest
+            (+ (progn
+                 (developer-note "Making imports…~%")
+                 (codegen imports))
+               (compile-delayed-exprs)
+               (codegen-sections after-import)
+               (codegen-accumulated-toplevels)))
+    (funcall (postprocessor)
+             (+ (list (funcall (prologue-gen)))
+                before-imports
+                (quick-compile-sections (list (. :compiled-inits
+                                                 (reverse (compiled-inits)))))
+                imports-and-rest
+                (list (funcall (epilogue-gen)))))))
 
 (fn frontend-section-load (path)
   (format t "; Loading \"~A\"…~%" path)
@@ -86,7 +88,7 @@
                                  (funcall x)
                                  x)
                      string?  (frontend-section-load section)
-                     (error "Don't know what to do with section ~A." section))))))
+                     (error "Alien section ~A." section))))))
 
 (fn frontend-sections (sections)
   (with-temporary *package* *package*
@@ -108,11 +110,13 @@
               (? (zero? !) "No" !)
               (? (== 1 !) "" "s"))))
 
+(fn seconds-passed (start-time)
+  (/ (- (milliseconds-since-1970) start-time) 1000))
+
 (fn print-transpiler-stats (start-time)
   (warn-unused-functions)
   (tell-number-of-warnings)
-  (print-status "~A seconds passed.~%"
-                (integer (/ (- (milliseconds-since-1970) start-time) 1000))))
+  (print-status "~A seconds passed.~%" (integer (seconds-passed start-time))))
 
 (fn compile-sections (sections &key (transpiler nil))
   (let start-time (milliseconds-since-1970)
