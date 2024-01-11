@@ -1,11 +1,9 @@
-[ ] !!! JSON: Allow key expressions.  Currently a SLOT-VALUE gives
-        weird results.
+[ ] !!! JS target: FINALIZE-CLASS: Transpile to 'class' expression.
+[ ] !!! DEFMETHOD: Add getters and setters.
 [ ] !!! Packaging in user land.
-[ ] !!. Override array and slot access.
-[ ] !!. Remove module "sql-clause".
-[ ] !!. Add an object relation mapper (ORM).
-[ ] !.. Move @ to stage 4 or it will spoil non-CL compiler boots.
-[ ] !.. Rewrite modules/http-funcall to work with JSON instead of XML.
-[ ] ... Case-sensitive symbols without conversion to upper case.
+        It's a pain up main street without and as funny to implement.
+[ ] !.. Case-sensitive symbols without conversion to upper case.
         Will make conversions to back-end identifiers obsolete and
         less confusing.
+[ ] ... Rewrite modules/http-funcall.
+[ ] ... Remove module "sql-clause".
