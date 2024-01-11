@@ -12,13 +12,12 @@
 
 (fn php-constructor (class-name unused-base args body)
   (add-defined-function class-name args body)
-  `(function ,(php-constructor-name class-name)
-             (,(. 'this args)
-              (let ~%this this
-                (%thisify ,class-name
-                  (macrolet ((super (&rest args)
-                              `((%%native "parent::__construct" ,,@args))))
-                    ,@body))))))
+  `(function ,(php-constructor-name class-name) (,(. 'this args)
+     (let ~%this this
+       (%thisify ,class-name
+         (macrolet ((super (&rest args)
+                     `((%%native "parent::__construct" ,,@args))))
+           ,@body))))))
 
 (def-php-transpiler-macro defclass (class-name args &body body)
   (generic-defclass #'php-constructor class-name args body))
@@ -30,52 +29,55 @@
   (generic-defmember class-name names))
 
 (fn php-method-function (class-name x)
-  `(function ,(php-method-name class-name x.)
-             (,(. 'this .x.)
-              (let ~%this this
-                (%thisify ,class-name ,@(| ..x. (list nil)))))))
+  `(function ,(php-method-name class-name x.) (,(. 'this .x.)
+     (let ~%this this
+       (%thisify ,class-name ,@(| ..x. (list nil)))))))
 
 (fn php-method-functions (class-name cls)
-  (awhen (class-methods cls)
+  (!? (class-methods cls)
     (@ [php-method-function class-name _]
        (reverse !))))
 
 (fn php-method (class-name x)
-  `("public function " ,x. " " ,(php-argument-list (argument-expand-names 'php-method .x.)) ,*terpri*
+  `("function " ,x. " " ,(php-argument-list (argument-expand-names 'php-method .x.)) ,*terpri*
     "{" ,*terpri*
-        ,*php-indent* "return " ,(php-compiled-method-name class-name x.) ,(php-argument-list (argument-expand-names 'php-method-function-call (. 'this .x.))) ,*php-separator*
+    ,*php-indent* "return " ,(php-compiled-method-name class-name x.)
+                            ,(php-argument-list (argument-expand-names 'php-method-function-call (. 'this .x.)))
+        ,*php-separator*
     "}"))
 
 (fn php-members (class-name cls)
-  (awhen (class-members cls)
-    (@ [`(%%native "var $" ,_. ,*php-separator*)]
-       (reverse !))))
+  (!? (class-members cls)
+    (@ [`(%%native "var $" ,_. ,*php-separator*)] !)))
 
 (fn php-methods (class-name cls)
-  (awhen (class-methods cls)
-    (mapcan [php-method class-name _]
-            (reverse !))))
+  (!? (class-methods cls)
+    (mapcan [php-method class-name _] !)))
+
+(fn php-class (class-name cls)
+  `((%php-class-head ,class-name)
+    ,(!= (argument-expand-names 'php-constructor
+                                (cadr (class-constructor-maker cls)))
+       `("function __construct " ,(php-argument-list !) ,*terpri*
+       "{" ,*terpri*
+       ,*php-indent* "return " ,(php-compiled-constructor-name class-name)
+                               ,(php-argument-list (. 'this !)) ,*php-separator*
+       "}")) ,*terpri*
+    ,@(php-members class-name cls)
+    ,@(php-methods class-name cls)
+    (%php-class-tail)))
 
 (def-php-transpiler-macro finalize-class (class-name)
   (let classes (defined-classes)
-    (!? (href classes class-name)
-        `(progn
-           (fn ,($ class-name '?) (x)
-             (& (object? x)
-                (is_a x ,(convert-identifier class-name))
-                x))
-           ,(apply (car (class-constructor-maker !))
-                   class-name (class-base !)
-                   (cdr (class-constructor-maker !)))
-           ,@(php-method-functions class-name !)
-           (%= nil (%%native
-                     (%php-class-head ,class-name)
-                     ,(!= (argument-expand-names 'php-constructor (transpiler-function-arguments *transpiler* class-name))
-                        `("function __construct " ,(php-argument-list !) ,*terpri*
-                          "{" ,*terpri*
-                              ,*php-indent* "return " ,(php-compiled-constructor-name class-name) ,(php-argument-list (. 'this !)) ,*php-separator*
-                          "}")) ,*terpri*
-                     ,@(php-members class-name !)
-                     ,@(php-methods class-name !)
-                     (%php-class-tail))))
-        (error "Cannot finalize undefined class ~A." class-name))))
+    (!= (| (href classes class-name)
+           (error "Cannot finalize undefined class ~A." class-name))
+      `(progn
+         (fn ,($ class-name '?) (x)
+           (& (object? x)
+              (is_a x ,(convert-identifier class-name))
+              x))
+         ,(apply (car (class-constructor-maker !))
+                 class-name (class-base !)
+                 (cdr (class-constructor-maker !)))
+         ,@(php-method-functions class-name !)
+         (%= nil (%%native ,@(php-class class-name !)))))))
