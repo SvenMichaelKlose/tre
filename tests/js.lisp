@@ -2,12 +2,18 @@
 
 (unix-sh-mkdir "compiled" :parents t)
 (make-project
-      "tré JavaScript target test"
-      `((toplevel . ((environment-tests)
-                     (late-print (function-body #'butlast)))))
-      :transpiler  (aprog1 (copy-transpiler *js-transpiler*)
-                     (= (transpiler-configuration ! :save-sources?) nil))
-      :emitter     [(make-html-script "compiled/test.html" _)
-                    (put-file "compiled/test.js" _)])
+  "tré JavaScript target test"
+  `((toplevel . ((environment-tests)
+                 (late-print (function-body #'butlast)))))
+  :transpiler  (copy-transpiler *js-transpiler*)
+  :emitter     [(make-html-script "compiled/test.html" _)
+                (put-file "compiled/test.js" _)])
+
+(make-project
+  "JavaScript test unit 1"
+  `("tests/unit-1.lisp")
+  :transpiler  (copy-transpiler *js-transpiler*)
+  :emitter     [(make-html-script "compiled/test.html" _)
+                (put-file "compiled/unit-1.js" _)])
 
 (quit)

@@ -76,6 +76,7 @@ phptests)
     $TRE tests/php.lisp
     php compiled/test.php | tee log-phptests.lisp
     cmp tests/php.correct-output log-phptests.lisp || (diff tests/php.correct-output log-phptests.lisp; exit 1)
+    for i in compiled/unit*.php; do php $i; done
 	;;
 
 jstests)
@@ -84,6 +85,7 @@ jstests)
     node compiled/test.js | tee log-nodetests.lisp
     #chromium-browser compiled/test.html &
     cmp tests/js.correct-output log-nodetests.lisp || (diff tests/js.correct-output log-nodetests.lisp; exit 1)
+    for i in compiled/unit*.js; do node $i; done
     echo "JavaScript target tests passed in node.js."
 	;;
 
