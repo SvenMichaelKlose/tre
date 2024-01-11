@@ -14,13 +14,8 @@
 (def-js-transpiler-macro defclass (class-name args &body body)
   (generic-defclass #'js-gen-constructor class-name args body))
 
-(fn js-method-name (name)
-  (? (eq 'ref name)
-     'at
-     name))
-
 (def-js-transpiler-macro defmethod (class-name name args &body body)
-  (generic-defmethod class-name (js-method-name name) args body))
+  (generic-defmethod class-name name args body))
 
 (def-js-transpiler-macro defmember (class-name &rest names)
   (generic-defmember class-name names))
@@ -33,16 +28,15 @@
             ,@(| ..x. (list nil)))))))
 
 (fn js-gen-inherit-methods (class-name base-name)
-  (!? base-name
-      `((= (slot-value ,class-name 'prototype)
-           (*object.create (slot-value ,! 'prototype))))))
+  `((= (slot-value ,class-name 'prototype)
+       (*object.create (slot-value ,base-name 'prototype)))))
 
 (fn js-emit-methods (class-name cls)
   (!= (@ [js-emit-method class-name _]
          (reverse (class-methods cls)))
       `(,@(cdrlist !)
-        ,@(js-gen-inherit-methods class-name (!? (class-parent cls)
-                                                 (class-name !)))
+        ,@(!? (class-parent cls)
+              (js-gen-inherit-methods class-name (class-name !)))
         (js-merge-props! (slot-value ,class-name 'prototype)
                          (%%%make-json-object ,@(apply #'+ (carlist !)))))))
 
