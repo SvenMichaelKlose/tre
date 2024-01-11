@@ -10,7 +10,7 @@
 (fn php-compiled-method-name (class-name name)
   (compiled-function-name (php-method-name class-name name)))
 
-(fn php-constructor (class-name bases args body)
+(fn php-constructor (class-name unused-base args body)
   (add-defined-function class-name args body)
   `(function ,(php-constructor-name class-name)
              (,(. 'this args)
@@ -64,7 +64,9 @@
              (& (object? x)
                 (is_a x ,(convert-identifier class-name))
                 x))
-           ,(assoc-value class-name *delayed-constructors*)
+           ,(apply (car (class-constructor-maker !))
+                   class-name (class-base !)
+                   (cdr (class-constructor-maker !)))
            ,@(php-method-functions class-name !)
            (%= nil (%%native
                      (%php-class-head ,class-name)

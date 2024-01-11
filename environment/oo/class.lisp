@@ -1,8 +1,10 @@
 (defstruct class
-  (name    nil)
-  (members nil)
-  (methods nil)
-  (parent  nil))
+  (name        nil)
+  (base        nil)
+  (members     nil)
+  (methods     nil)
+  (parent      nil)
+  (constructor-maker nil))
 
 (fn class-add-method (cls name code)
   (acons! name code (class-methods cls)))

@@ -1,30 +1,22 @@
-(var *delayed-constructors* nil)
-
 (fn generic-defclass (constructor-maker class-name args body)
-  (with (cname   (? (cons? class-name)
-                    class-name.
-                    class-name)
-         bases   (& (cons? class-name)
-                    .class-name)
-         classes (defined-classes))
-    (print-definition `(defclass ,class-name ,@(!? args (list !))))
+  (print-definition `(defclass ,class-name ,@(!? args (list !))))
+  (with (cname    (? (cons? class-name) class-name. class-name)
+         bases    (& (cons? class-name) .class-name)
+         classes  (defined-classes))
     (& (href classes cname)
        (error "Class ~A already defined." cname))
     (& .bases
-       (error "More than one base class but multiple inheritance is not supported."))
+       (error "Multiple inheritance is not supported."))
     (& bases
        (not (href classes bases.))
-       (error "Base class ~A is not defined." bases.))
+       (error "Undefined base class ~A." bases.))
     (= (href classes cname)
-       (? bases
-          (!= (href classes bases.)
-            (make-class :name    cname
-                        :members (class-members !)
-                        :parent  !))
-          (make-class :name cname)))
-    (acons! cname
-            (funcall constructor-maker cname bases args body)
-            *delayed-constructors*)
+       (make-class :name     cname
+                   :base     bases.
+                   :members  (& bases (class-members (href classes bases.)))
+                   :parent   (& bases (href classes bases.))
+                   :constructor-maker
+                     (list constructor-maker args body)))
     nil))
 
 (fn generic-defmethod (class-name name args body)
@@ -33,15 +25,16 @@
       (let code (list args body)
         (? (assoc name (class-methods !))
            (progn
-             (= (assoc-value name (class-methods !)) code)
-             (warn "In class '~A': member '~A' already defined." class-name name))
+             (warn "In class '~A': member '~A' already defined."
+                   class-name name)
+             (= (assoc-value name (class-methods !)) code))
            (acons! name code (class-methods !))))
-      (error "Cannot define method ~A for undefined class ~A." name class-name))
+      (error "Undefined class ~A." name class-name))
   nil)
 
 (fn generic-defmember (class-name names)
   (print-definition `(defmember ,class-name ,@names))
   (!? (href (defined-classes) class-name)
       (+! (class-members !) (@ [list _ t] names))
-      (error "Class ~A is not defined." class-name))
+      (error "Undefined lass ~A." class-name))
   nil)
