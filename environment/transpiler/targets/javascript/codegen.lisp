@@ -14,10 +14,12 @@
   `("(" ,x " == null || " ,x " === false)"))
 
 (def-js-codegen %%go-nil (tag val)
-  `(,*js-indent* "if " ,(js-nil? val) " { _I_= " ,tag "; continue; }" ,*terpri*))
+  `(,*js-indent* "if " ,(js-nil? val)
+                 " { _I_= " ,tag "; continue; }" ,*terpri*))
 
 (def-js-codegen %%go-not-nil (tag val)
-  `(,*js-indent* "if (!" ,(js-nil? val) ") { _I_=" ,tag "; continue; }" ,*terpri*))
+  `(,*js-indent* "if (!" ,(js-nil? val) ")"
+                 " { _I_=" ,tag "; continue; }" ,*terpri*))
 
 (def-js-codegen %set-local-fun (plc val)
   `(%%native ,*js-indent* ,plc " = " ,val ,*js-separator*))
@@ -25,20 +27,19 @@
 
 ;;;; FUNCTIONS
 
-(fn js-argument-list (debug-section args)
-  (c-list (argument-expand-names debug-section args)))
-
 (def-js-codegen function (&rest x)
   (!= (. 'function x)
     (? .x
-       (with (name            (lambda-name !)
-              translated-name (? (defined-function name)
-                                 (compiled-function-name-string name)
-                                 name))
+       (let name (lambda-name !)
          (developer-note "#'~A~%" name)
          `(,*terpri*
            ,(funinfo-comment (= *funinfo* (get-funinfo name)))
-           ,translated-name " = function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*terpri*
+           ,(? (defined-function name)
+               (compiled-function-name-string name)
+               name)
+           " = function "
+               ,@(c-list (argument-expand-names nil (lambda-args !)))
+               ,*terpri*
            "{" ,*terpri*
                ,@(lambda-body !)
            "}" ,*terpri*))
@@ -183,8 +184,10 @@
 
 (def-js-codegen %slot-value (x y)
   `(%%native ,x "." ,(?
-                       (%%string? y)  .y.
-                       (symbol? y)    (convert-identifier (make-symbol (symbol-name y) "TRE"))
+                       (%%string? y)
+                         .y.
+                       (symbol? y)
+                         (convert-identifier (make-symbol (symbol-name y) "TRE"))
                        y)))
 
 (def-js-codegen %try () ; TODO: Check if stale.
