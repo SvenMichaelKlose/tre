@@ -67,7 +67,8 @@
                  "schema.lisp"
                  "i18n.lisp"
                  "autoform.lisp"
-                 "autoform-widgets.lisp"
+                 "widgets.lisp"
+;                 "widgets-editable.lisp"
                  "toplevel.lisp"))
       ,@(list+ (+ *modules-path* "sql-clause/")
                '("create-table.lisp"

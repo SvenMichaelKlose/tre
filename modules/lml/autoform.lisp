@@ -1,12 +1,11 @@
-(defclass (autoform lml-component) (init-props)
-  (super init-props)
-  this)
+(var *autoform-widgets* nil)
 
-(finalize-class autoform)
-(declare-lml-component autoform)
+(defmacro def-autoform-widget (args predicate &body body)
+  `(+! *autoform-widgets* (list {:predicate  ,predicate
+                                 :maker      #'(,args ,@body)})))
 
 
-(defclass (autoform-field autoform) (init-props)
+(defclass (autoform-field lml-component) (init-props)
   (super init-props)
   this)
 
@@ -25,11 +24,12 @@
 (declare-lml-component autoform-field)
 
 
-(macro autoform-fn (name (schema data) &rest body)
+(macro autoform-fn (name (schema data &optional key) &rest body)
   `(progn
      (fn ,name (props)
        (with (,schema props.schema
-              ,data   props.data)
+              ,data   props.data
+              ,key    props.key)
          ,@body))
      (declare-lml-component ,name)))
 
@@ -39,11 +39,6 @@
                                 :schema  ,(aref schema.properties _)
                                 :data    ,(aref data _)))]
           props.fields)))
-
-(autoform-fn autoform-preview (schema data)
-  `(,(make-symbol (+ "AUTOFORM-PREVIEW- " (upcase schema.type)))
-     :schema ,schema
-     :data  ,data))
 
 (autoform-fn autoform-array (schema data)
   `(table :class "autoform-array"
@@ -64,3 +59,10 @@
   `(div :class "autoform-object"
      ,@(@ [`(autoform-property :schema ,schema :data ,data :key ,_)]
           props.fields)))
+
+(autoform-fn autoform (schema data)
+  `(,(? (in? (schema-type schema) "array" "object")
+        ($ 'autoform- (upcase (schema-type schema)))
+        'autoform-field)
+     :schema ,schema
+     :data   ,data))
