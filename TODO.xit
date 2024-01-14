@@ -1,13 +1,14 @@
-Methods
-[ ] !!! Public, static and protected.
-[ ] !!! SELF for static JS methods.
+Hot!
+[ ] !!! JS target: FINALIZE-CLASS: Transpile to 'class' expression.
+[ ] !!! Generic functions.
+[ ] !!! Public, static and protected methods.
 [ ] !!! Getters and setters.
 
 Miscellaneous
-[ ] !!! JS target: FINALIZE-CLASS: Transpile to 'class' expression.
-[ ] !!! DEFMETHOD: Add getters and setters.
-[ ] !!! Packaging in user land.
+[ ] !!. Packaging in user land.
         It's a pain up main street without and as funny to implement.
+
+Maybe later
 [ ] !.. Case-sensitive symbols without conversion to upper case.
         Will make conversions to back-end identifiers obsolete and
         less confusing.
