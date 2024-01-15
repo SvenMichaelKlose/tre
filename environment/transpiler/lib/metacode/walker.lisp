@@ -13,15 +13,19 @@
          (when ,x
            (let ,v (car ,x)
              (+ (?
+                  (%%native? ,v)
+                    (error "%%NATIVE in metacode.")
                   (atom ,v)             ,(| if-atom `(list ,v))
                   ,@(!? if-setq         `((%=? ,v) ,!))
                   ,@(!? if-go           `((%%go? ,v) ,!))
                   ,@(!? if-go-nil       `((%%go-nil? ,v) ,!))
                   ,@(!? if-go-not-nil   `((%%go-not-nil? ,v) ,!))
                   (%%comment? ,v)       (list ,v)
-                  (named-lambda? ,v)    (with-lambda-funinfo ,v
-                                          (list (copy-lambda ,v :body ,(| if-named-function
-                                                                          `(,name (lambda-body ,v) ,@r)))))
+                  (named-lambda? ,v)
+                    (with-lambda-funinfo ,v
+                      (list (copy-lambda ,v
+                                         :body ,(| if-named-function
+                                                   `(,name (lambda-body ,v) ,@r)))))
                   (not (metacode-statement? ,v))
                      (funinfo-error "Metacode statement expected instead of ~A." ,v)
                   ,(| if-cons `(list ,v)))
