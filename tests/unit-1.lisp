@@ -1,14 +1,9 @@
-(defclass a ()
-  this)
-
+(defclass a ())
 (defmethod a bla ()
   (identity 'a))
-
 (finalize-class a)
 
-(defclass (b a) ()
-  this)
-
+(defclass (b a) ())
 (finalize-class b)
 
 (| (eq 'a ((new b).bla))

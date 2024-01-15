@@ -4,8 +4,7 @@
           (+ fz (percent (- tz fz) p))))
 
 (defclass track-path (elm fx fy fz tx ty tz)
-  (super elm fx fy fz tx ty tz)
-  this)
+  (super elm fx fy fz tx ty tz))
 
 (defmember track-path
   _elm _fx _fy _fz _tx _ty _tz)

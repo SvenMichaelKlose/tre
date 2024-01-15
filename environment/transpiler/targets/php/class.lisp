@@ -14,7 +14,8 @@
        (%thisify ,class-name
          (macrolet ((super (&rest args)
                      `((%%native "parent::__construct" ,,@args))))
-           ,@body))))))
+           ,@body)))
+     this)))
 
 (def-php-transpiler-macro defmember (class-name &rest names)
   (generic-defmember class-name names))

@@ -1,8 +1,7 @@
 (defclass (session-store store) (name)
   (super nil)
   (= _session name)
-  (_fetch)
-  this)
+  (_fetch))
 
 (defmember session-store
     _session)

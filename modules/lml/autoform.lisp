@@ -6,8 +6,7 @@
 
 
 (defclass (autoform-field lml-component) (init-props)
-  (super init-props)
-  this)
+  (super init-props))
 
 (defmethod autoform-field render ()
   (!= props

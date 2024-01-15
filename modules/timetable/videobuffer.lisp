@@ -1,7 +1,8 @@
-(defclass videobuffer (&key (width nil) (height nil) (high nil) (low nil) (webm nil) (loop? nil))
+(defclass videobuffer (&key (width nil) (height nil)
+                            (high nil) (low nil) (webm nil)
+                            (loop? nil))
   (_init width height high low webm loop?)
-  (buffer-update)
-  this)
+  (buffer-update))
 
 (defmember videobuffer _element _canvas _width _height)
 

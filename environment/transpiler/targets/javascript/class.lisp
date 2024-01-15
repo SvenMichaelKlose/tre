@@ -8,7 +8,8 @@
        (%thisify ,class-name
          (macrolet ((super (&rest args)
                       `((slot-value ,base 'call) this ,,@args)))
-           ,@body)))
+           ,@body)
+         this))
      ,(js-gen-predicate class-name)))
 
 (def-js-transpiler-macro defclass (class-name args &body body)

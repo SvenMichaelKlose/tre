@@ -3,8 +3,7 @@
   (= _element element)
   (= _fields fields)
   (= _prefix prefix)
-  (_fetch)
-  this)
+  (_fetch))
 
 (defmember attribute-store
     _element

@@ -1,8 +1,7 @@
 (defclass track-circle (elm fx fy fz fr fd tx ty tz tr td)
   (= _elm elm
      _fx fx _fy fy _fz fz _fr fr _fd fd
-     _tx tx _ty ty _tz tz _tr tr _td td)
-  this)
+     _tx tx _ty ty _tz tz _tr tr _td td))
 
 (defmember track-circle
   _elm _fx _fy _fz _fr _fd _tx _ty _tz _tr _td)

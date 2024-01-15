@@ -3,8 +3,7 @@
      value v
      parent p)
   (clr left
-       right)
-  this)
+       right))
 
 (defmember bnode
   left

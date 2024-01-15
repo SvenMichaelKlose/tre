@@ -1,7 +1,6 @@
 (defclass store (&optional (init-data (new)))
   (= data       init-data
-     _children  (new))
-  this)
+     _children  (new)))
 
 (defmember store
     data

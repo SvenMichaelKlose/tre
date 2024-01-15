@@ -5,8 +5,7 @@
      _static-x 0
      _static-y 0
      _static-z 0
-     _forced-z nil)
-  this)
+     _forced-z nil))
 
 (defmember perspective
   _element

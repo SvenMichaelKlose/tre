@@ -6,8 +6,7 @@
   (= _column-names (make-hash-table))
   (= _logging? nil)
   (_conn.set_charset "utf8mb4")
-  (_conn.select_db _name)
-  this)
+  (_conn.select_db _name))
 
 (defmember db-mysql
     _name

@@ -4,8 +4,7 @@
      _video-x x
      _video-y y
      _video-width width
-     _video-height height)
-  this)
+     _video-height height))
 
 (defmember perspective-canvas-video _video _video-x _video-y _video-width _video-height)
 

@@ -1,10 +1,9 @@
 (defclass (track-path-ellipsis track-path) (elm fx fy fz tx ty tz r)
   (super elm fx fy fz tx ty tz)
-  (= _r r)
+  (= _r r))
 ;        _rg (integer (sqrt (+ (pow (- _tx _fx)) (pow (- _ty _fy))))))
 ;  (with ((x y z) (distance-percent fx fy fz tx ty tz 50))
 ;    (= _x x _y y _z z))
-  this)
 
 (defmember track-path-ellipsis _r _rg _x _y _z)
 

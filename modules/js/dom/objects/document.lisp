@@ -3,8 +3,7 @@
 (fn make-extended-html-document ()
   (document-extend (document.implementation.create-h-t-m-l-document)))
 
-(defclass tre-html-document ()
-  this)
+(defclass tre-html-document ())
 
 (defmember tre-html-document
     document-element

@@ -1,6 +1,5 @@
 (defclass nodelist (x)
-  (= _list x)
-  this)
+  (= _list x))
 
 (defmember nodelist _list)
 

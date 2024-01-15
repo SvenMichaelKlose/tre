@@ -1,7 +1,7 @@
-(defclass (perspective-image perspective) (&optional (url nil) (width nil) (height nil))
+(defclass (perspective-image perspective) (&optional (url nil)
+                                                     (width nil) (height nil))
   (super)
-  (set-url url width height)
-  this)
+  (set-url url width height))
 
 (defmethod perspective-image set-url (url width height)
   (when url

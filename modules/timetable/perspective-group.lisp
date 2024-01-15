@@ -1,7 +1,6 @@
 (defclass (perspective-group perspective) (width height)
   (super)
-  (clr _elements)
-  this)
+  (clr _elements))
 
 (defmember perspective-group _elements)
 

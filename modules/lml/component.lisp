@@ -15,8 +15,7 @@
 (defclass lml-component (attrs)
   (= props attrs)
   (= state {})
-  (= _force-update? nil)
-  this)
+  (= _force-update? nil))
 
 (defmember lml-component
     element

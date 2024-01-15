@@ -1,7 +1,6 @@
 (defclass timetable ()
   (= _list (make-queue))
-  (clr _done?)
-  this)
+  (clr _done?))
 
 (defmember timetable
   _start-time
