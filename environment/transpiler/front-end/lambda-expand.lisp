@@ -10,7 +10,7 @@
 
 (fn lambda-call-embed (lambda-call)
   (with-lambda-call (args vals body lambda-call)
-    (with (l  (argument-expand 'dummy-in-lambda-call-embed args vals)
+    (with (l  (argument-expand 'lambda-call-embed args vals)
            a  (carlist l)
            v  (cdrlist l))
       (@ [funinfo-var-add *funinfo* _] a)
@@ -64,10 +64,10 @@
     (lambda-expand-r x)))
 
 (fn lambda-expand-r (x)
-  (?
-    (atom x)   x
-    (. (lambda-expand-expr x.)
-       (lambda-expand-r .x))))
+  (? (atom x)
+     x
+     (. (lambda-expand-expr x.)
+        (lambda-expand-r .x))))
 
 (fn lambda-expand (x)
   (with-global-funinfo
