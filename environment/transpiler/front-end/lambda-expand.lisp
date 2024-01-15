@@ -66,7 +66,6 @@
 (fn lambda-expand-r (x)
   (?
     (atom x)   x
-    (atom x.)  (. x. (lambda-expand-r .x))
     (. (lambda-expand-expr x.)
        (lambda-expand-r .x))))
 

@@ -20,8 +20,8 @@
   (generic-defmember class-name names))
 
 (fn php-members (cls)
-  (!? (class-members cls)
-    (@ [`(%%native "var $" ,_. ,*php-separator*)] !)))
+  (@ [`(%%native "var $" ,_. ,*php-separator*)]
+     (class-members cls)))
 
 (def-php-transpiler-macro defmethod (class-name name args &body body)
   (generic-defmethod class-name name args body))
@@ -49,12 +49,12 @@
       "}")))
 
 (fn php-method-functions (cls)
-  (!? (class-methods cls)
-    (@ [php-method-function cls _] !)))
+  (@ [php-method-function cls _]
+     (class-methods cls)))
 
 (fn php-methods (cls)
-  (!? (class-methods cls)
-    (mapcan [php-method cls _] !)))
+  (mapcan [php-method cls _]
+          (class-methods cls)))
 
 (fn php-class (cls)
   `((%php-class-head ,cls)
