@@ -1,1 +1,1 @@
-(format t "Hello world!")
+(document.body.add ($$ "Hello world!"))
