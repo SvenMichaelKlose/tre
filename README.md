@@ -1,34 +1,28 @@
 The tré programming language
 ============================
 
-tré transpiles its dialect of Lisp to JavaScript, PHP7+ and
+tré transpiles a streamlined dialect of Lisp to JavaScript, PHP7+ and
 Common Lisp (the latter mainly to compile itself).
 
 # Build and install
 
 tré requires some Linux with "sbcl" (Steel Bank Common Lisp)
-installed.
-
-On a Debia-derived distributions,
-like "Ubuntu" or "Linux Mint"
-
-```sh
-sudo apt install sbcl -y
-```
-
-should do.
-
-Then run:
+installed.  To install run:
 
 ```sh
 ./make.sh boot
 ./make.sh install
 ```
 
-This will install an executable called "tre" in /usr/local/bin.
+This will install an executable called "tre" in /usr/local/bin/.
 It takes an optional pathname of a source file to compile and
 execute.  If none is specified, it'll prompt you for
 expressions to execute.
+
+## History
+
+tré started as a Lisp interpreter written in C in 2005 and makes
+JS and PHP code since 2008.
 
 ## VIM syntax file
 
