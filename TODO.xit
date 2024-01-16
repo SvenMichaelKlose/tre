@@ -8,6 +8,8 @@ Miscellaneous
 [ ] !!. Packaging in user land.
         It's a pain up main street without and as funny to implement.
 
+[ ] ... Add DO for PROGN.  (Leave PROGN in for the duration.
+
 PHP
 [?] Replace __array object by native arrays?
 [?] Native closures.
