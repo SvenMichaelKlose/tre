@@ -17,12 +17,11 @@
            (sloppy-tree-equal .x needle)))))
 
 (fn dump-pass? (name x)
-  (& *transpiler*
-     (| (!? (dump-passes?)
-            (| (eq t !)
-               (member name (ensure-list !))))
-        (!? (dump-selector)
-            (sloppy-tree-equal x !)))))
+   (| (!? (dump-passes?)
+          (| (eq t !)
+             (member name (ensure-list !))))
+      (!? (dump-selector)
+          (sloppy-tree-equal x !))))
 
 (fn dump-pass (end pass x)
   (& (| (dump-pass? pass x)
