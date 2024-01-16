@@ -53,11 +53,16 @@
 
 ;;;; ARGUMENT EXPANSION
 
+(fn compiled-expanded-argument (x)
+  (?
+    (%rest-or-%body? x)
+      (compiled-list .x)
+    (%key? x)
+      .x
+    x))
+
 (fn compiled-expanded-arguments (fun def vals)
-  (@ [?
-       (%rest-or-%body? _)  (compiled-list ._)
-       (%key? _)            ._
-        _]
+  (@ #'compiled-expanded-argument
      (cdrlist (argument-expand fun def vals))))
 
 (fn expex-argdef (fun)
@@ -69,11 +74,13 @@
 (fn expex-argexpand (x)
   (with (new?   (%new? x)
          fun    (? new? .x. x.)
-         args   (? new? ..x .x)
-         eargs  (? (defined-function fun)
-                   (compiled-expanded-arguments fun (expex-argdef fun) args)
-                   args))
-    `(,@(& new? '(%new)) ,@(!? fun (list !)) ,@(expand-literal-characters eargs))))
+         args   (? new? ..x .x))
+    `(,@(& new? '(%new))
+      ,@(!? fun (list !))
+      ,@(expand-literal-characters
+          (? (defined-function fun)
+             (compiled-expanded-arguments fun (expex-argdef fun) args)
+             args)))))
 
 
 ;;;;; MOVING ARGUMENTS

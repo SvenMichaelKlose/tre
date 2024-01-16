@@ -8,6 +8,10 @@ Miscellaneous
 [ ] !!. Packaging in user land.
         It's a pain up main street without and as funny to implement.
 
+PHP
+[?] Replace __array object by native arrays?
+[?] Native closures.
+
 Maybe later
 [ ] !.. Case-sensitive symbols without conversion to upper case.
         Will make conversions to back-end identifiers obsolete and
