@@ -60,7 +60,6 @@
 
 (fn argument-expand-0 (fun adef alst
                        apply-values?
-                       concatenate-sublists?
                        break-on-errors?)
   (with ((a k)      (make-&key-alist adef)
          argdefs    a
@@ -138,17 +137,10 @@
                (& apply-values? (atom vals.)
                   (return (err "Sublist expected for argument ~A."
                                (list num))))
-               (? concatenate-sublists?
-                  (nconc (argument-expand-0 fun def. vals.
-                                            apply-values?
-                                            concatenate-sublists?
-                                            break-on-errors?)
-                         (exp-main .def .vals))
-                  (. (. nil (argument-expand-0 fun def. vals.
-                                               apply-values?
-                                               concatenate-sublists?
-                                               break-on-errors?))
-                     (exp-main .def .vals))))
+               (nconc (argument-expand-0 fun def. vals.
+                                         apply-values?
+                                         break-on-errors?)
+                      (exp-main .def .vals)))
 
          exp-check-too-many
            #'((def vals)
@@ -181,10 +173,8 @@
           (nconc ! (nconc (@ [. _. (. '%key ._)] key-args) rest-arg))))))
 
 (fn argument-expand (fun def vals &key (apply-values? t)
-                                       (concatenate-sublists? t)
                                        (break-on-errors? t))
-  (!= (argument-expand-0 fun def vals
-                         apply-values? concatenate-sublists? break-on-errors?)
+  (!= (argument-expand-0 fun def vals apply-values? break-on-errors?)
     (? (| apply-values?
           (eq ! 'error))
        !
