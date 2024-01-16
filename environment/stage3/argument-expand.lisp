@@ -78,7 +78,7 @@
                                  (apply #'format nil msg args)
                                  adef
                                  alst))
-                  'error))
+                  :error))
          exp-static
            #'((def vals)
                (& no-static
@@ -134,7 +134,8 @@
                (& no-static
                   (return (err "Static sublevel argument definition after ~A."
                                (list no-static))))
-               (& apply-values? (atom vals.)
+               (& apply-values?
+                  (atom vals.)
                   (return (err "Sublist expected for argument ~A."
                                (list num))))
                (nconc (argument-expand-0 fun def. vals.
@@ -168,7 +169,7 @@
                         (exp-main-non-key def vals))))))
 
      (!= (exp-main argdefs alst)
-       (? (eq ! 'error)
+       (? (eq ! :error)
           !
           (nconc ! (nconc (@ [. _. (. '%key ._)] key-args) rest-arg))))))
 
@@ -176,7 +177,7 @@
                                        (break-on-errors? t))
   (!= (argument-expand-0 fun def vals apply-values? break-on-errors?)
     (? (| apply-values?
-          (eq ! 'error))
+          (eq ! :error))
        !
        (carlist !))))
 
