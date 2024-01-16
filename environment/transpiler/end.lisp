@@ -48,14 +48,10 @@
        (@ (p passes (? outpass out list-of-exprs))
          (? (enabled-pass? p.)
             (progn
-              (& (dump-passes?)
-                 (format t "; ++++ Running pass ~A in ~A~%" (symbol-name p.) (symbol-name name)))
               (= list-of-exprs (dump-pass name p. (transpiler-pass .p list-of-exprs)))
               (= (last-pass-result) list-of-exprs)
               (& (eq p. outpass)
-                 (= out list-of-exprs)))
-            (& (dump-passes?)
-               (format t "; ---- Skipping pass ~A in ~A~%" (symbol-name p.) (symbol-name name))))))))
+                 (= out list-of-exprs))))))))
 
 (defmacro define-transpiler-end (name &rest name-function-pairs)
   (!= (group name-function-pairs 2)
