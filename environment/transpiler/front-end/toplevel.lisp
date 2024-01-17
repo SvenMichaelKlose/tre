@@ -12,5 +12,5 @@
     :initialize-funinfos        [(place-expand _)
                                  _]
     :expression-expand          #'expression-expand
-    :unassign-lambdas           #'unassign-lambdas
+    :unassign-named-functions   #'unassign-named-functions
     :gather-imports             #'gather-imports)
