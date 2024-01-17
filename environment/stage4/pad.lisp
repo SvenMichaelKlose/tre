@@ -3,7 +3,7 @@
       (. !.  (& .!
                 (. p (pad .! p))))))
 
-(fn pad (seq p)
+(fn pad (seq p) ; TODO: Reverse arguments.
   (? (& (atom seq)
         (not (array? seq)))
      seq
