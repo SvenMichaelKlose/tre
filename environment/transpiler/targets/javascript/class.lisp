@@ -15,8 +15,8 @@
 (def-js-transpiler-macro defclass (class-name args &body body)
   (generic-defclass #'js-gen-constructor class-name args body))
 
-(def-js-transpiler-macro defmethod (class-name name args &body body)
-  (generic-defmethod class-name name args body))
+(def-js-transpiler-macro defmethod (&rest x)
+  (generic-defmethod x))
 
 (def-js-transpiler-macro defmember (class-name &rest names)
   (generic-defmember class-name names))
@@ -41,13 +41,16 @@
         (js-merge-props! (slot-value ,class-name 'prototype)
                          (%%%make-json-object ,@(apply #'+ (carlist !)))))))
 
+(fn js-emit-constructor (class-name x)
+  (apply (car (class-constructor-maker x))
+         class-name (class-base x)
+         (cdr (class-constructor-maker x))))
+
 (def-js-transpiler-macro finalize-class (class-name)
   (print-definition `(finalize-class ,class-name))
   (!? (href (defined-classes) class-name)
       `(progn
-         ,(apply (car (class-constructor-maker !))
-                 class-name (class-base !)
-                 (cdr (class-constructor-maker !)))
+         ,(js-emit-constructor class-name !)
          ,@(js-emit-methods class-name !)
          (= (slot-value (slot-value ,(compiled-function-name class-name)
                                     'prototype) 'constructor)

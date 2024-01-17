@@ -19,17 +19,29 @@
                      (list constructor-maker args body)))
     nil))
 
-(fn generic-defmethod (class-name name args body)
-  (print-definition `(defmethod ,class-name ,name ,@(!? args (list !))))
-  (!? (href (defined-classes) class-name)
-      (let code (list args body)
-        (? (assoc name (class-methods !))
-           (progn
-             (warn "In class '~A': member '~A' already defined."
-                   class-name name)
-             (= (assoc-value name (class-methods !)) code))
-           (acons! name code (class-methods !))))
-      (error "Undefined class ~A." name class-name))
+(fn get-method-flags-and-rest (x)
+  (with (r #'((x flags)
+               (? (in? x. :static :protected :private)
+                  (? (member x. flags)
+                     (error "Double method flag ~A." x.)
+                     (r .x (. x. flags)))
+                  (values x flags))))
+    (r x nil)))
+
+(fn generic-defmethod (x)
+  (with ((args flags) (get-method-flags-and-rest x))
+    (apply #'((class-name name args body)
+               (print-definition `(defmethod ,class-name ,name ,args))
+               (!? (href (defined-classes) class-name)
+                   (progn
+                     (& (assoc name (class-methods !))
+                        (error "In class '~A': member '~A' already defined."
+                               class-name name))
+                     (acons! name (list args body flags)
+                             (class-methods !)))
+                   (error "Undefined class ~A." class-name)))
+             (argument-expand-values nil '(class-name name args &body body)
+                                     args)))
   nil)
 
 (fn generic-defmember (class-name names)

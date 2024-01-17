@@ -24,8 +24,8 @@
   (@ [`(%%native "var $" ,_. ,*php-separator*)]
      (class-members cls)))
 
-(def-php-transpiler-macro defmethod (class-name name args &body body)
-  (generic-defmethod class-name name args body))
+(def-php-transpiler-macro defmethod (&rest x)
+  (generic-defmethod x))
 
 (fn php-method-name (cls name)
   ($ (class-name cls) '- name))
@@ -39,9 +39,14 @@
        (%thisify ,(class-name cls)
          ,@(| ..x. (list nil)))))))
 
+(fn php-method-flags (x)
+  (flatten (list " " (pad (@ [downcase (symbol-name _)] x) " ") " ")))
+
 (fn php-method (cls x)
   (!= (argument-expand-names 'php-method .x.)
-    `("function " ,x. " " ,(php-argument-list !) ,*terpri*
+    `(,@(!? ...x.
+            (list (php-method-flags !)))
+      "function " ,x. " " ,(php-argument-list !) ,*terpri*
       "{" ,*terpri*
       ,*php-indent* "return "
           ,(php-compiled-method-name cls x.)
