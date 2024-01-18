@@ -78,9 +78,7 @@
 ;;; Returns expanded arguments as an associative list whose
 ;;; values are all NIL if APPLY-VALUES? is also NIL.
 (fn argument-expand-0 (fun adef alst apply-values? break-on-errors?)
-  (with ((a k)      (make-&key-alist adef)
-         argdefs    a
-         key-args   k
+  (with ((argdefs key-args) (make-&key-alist adef)
          num        0
          no-static  nil
          rest-arg   nil
@@ -123,14 +121,13 @@
 
          exp-key
            #'((def vals)
-               (let k (assoc ($ vals.) key-args :test #'eq)
-                 (? k
-                    (!= vals
-                      (unless .!
-                        (return (err "Value of ~A missing." (list !.))))
-                      (rplacd k .!.)
-                      (exp-main def ..!))
-                    (exp-main-non-key def vals))))
+               (let-if k (assoc ($ vals.) key-args :test #'eq)
+                 (!= vals
+                   (unless .!
+                     (return (err "Value of ~A missing." (list !.))))
+                   (rplacd k (. '%key .!.))
+                   (exp-main def ..!))
+                 (exp-main-non-key def vals)))
 
          exp-rest
            #'((synonym def vals)
@@ -201,7 +198,7 @@
      (!= (exp-main argdefs alst)
        (? (eq ! :error)
           !
-          (nconc ! (nconc (@ [. _. (. '%key ._)] key-args) rest-arg))))))
+          (nconc ! (nconc key-args rest-arg))))))
 
 (fn argument-expand (fun def vals &key (apply-values? t) (break-on-errors? t))
   (!= (argument-expand-0 fun def vals apply-values? break-on-errors?)
