@@ -1,8 +1,8 @@
 Hot!
-[ ] !!! JS target: FINALIZE-CLASS: Transpile to 'class' expression.
-[ ] !!! Generic functions.
-[ ] !!! Public, static and protected methods.
 [ ] !!! Getters and setters.
+[ ] !!! JS target: Emulate protected/private slots by renaming them
+        randomly.
+[ ] !!! Generic functions.
 
 Miscellaneous
 [ ] !!. Packaging in user land.
