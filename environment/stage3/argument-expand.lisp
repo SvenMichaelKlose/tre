@@ -77,13 +77,13 @@
 
 ;;; Returns expanded arguments as an associative list whose
 ;;; values are all NIL if APPLY-VALUES? is also NIL.
-(fn argument-expand-0 (fun adef alst apply-values? break-on-errors?)
+(fn argument-expand-0 (fun adef vals apply-values? break-on-errors?)
   (with ((argdefs key-args) (make-&key-alist adef)
          num        0
          no-static  nil
          rest-arg   nil
          err
-           #'((msg args)
+           #'((msg &rest args)
                (? break-on-errors?
                   (error (+ "~L; In argument expansion for ~A:~A: ~A~%"
                             "; Argument definition: ~A~%"
@@ -92,16 +92,16 @@
                          (symbol-name fun)
                          (apply #'format nil msg args)
                          adef
-                         alst)
+                         vals)
                   :error))
 
          exp-static-assert
            #'((def vals)
                (& no-static
                   (return (err "Static argument definition after ~A."
-                               (list no-static))))
+                               no-static)))
                (& apply-values? (not vals)
-                  (return (err "Argument ~A missing." (list num)))))
+                  (return (err "Argument ~A missing." num))))
 
          exp-static
            #'((def vals)
@@ -114,8 +114,8 @@
                (exp-static-assert def vals)
                (unless (equal vals. (argdef-get-type def.))
                  (return (err "\"~A\" expected for argument ~A."
-                              (list (argdef-get-type def.)
-                                    (argdef-get-name def.)))))
+                              (argdef-get-type def.)
+                              (argdef-get-name def.))))
                (. (. (argdef-get-name def.) vals.)
                   (exp-main .def .vals)))
 
@@ -124,7 +124,7 @@
                (let-if k (assoc ($ vals.) key-args :test #'eq)
                  (!= vals
                    (unless .!
-                     (return (err "Value of ~A missing." (list !.))))
+                     (return (err "Value of ~A missing." !.)))
                    (rplacd k (. '%key .!.))
                    (exp-main def ..!))
                  (exp-main-non-key def vals)))
@@ -159,10 +159,10 @@
            #'((def vals)
                (& no-static
                   (return (err "Argument sublist definition after ~A."
-                               (list no-static))))
+                               no-static)))
                (& apply-values?
                   (atom vals.)
-                  (return (err "Sublist expected as ~A." (list num))))
+                  (return (err "Sublist expected as ~A." num)))
                (nconc (argument-expand-0 fun def. vals.
                                          apply-values?
                                          break-on-errors?)
@@ -172,7 +172,7 @@
            #'((def vals)
                (& (not def) vals
                   (return (err "~A too many argument(s). Maximum is ~A."
-                               (list (length vals) (length argdefs))))))
+                               (length vals) (length argdefs)))))
 
          exp-main-non-key
            #'((def vals)
@@ -195,7 +195,7 @@
                      (& def
                         (exp-main-non-key def vals))))))
 
-     (!= (exp-main argdefs alst)
+     (!= (exp-main argdefs vals)
        (? (eq ! :error)
           !
           (nconc ! (nconc key-args rest-arg))))))
