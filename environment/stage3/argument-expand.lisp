@@ -3,15 +3,23 @@
 (def-head-predicate %key)
 
 (fn %rest-or-%body? (x)
-  (| (%rest? x) (%body? x)))
+  (| (%rest? x)
+     (%body? x)))
+
 (fn argument-synonym? (x)
   (| (%rest-or-%body? x)
      (%key? x)))
 
 (fn argument-rest-keyword? (x)
   (in? x '&rest '&body))
-(fn argument-name? (x)
-  (atom x))
+
+;;; The only and only type specifier possible for the beginning.
+(fn argument-type-specifier? (x)
+  (string? x))
+
+(fn typed-argument? (x)
+  (& (cons? x)
+     (argument-type-specifier? .x.)))
 
 (fn error-argument-missing (fun-name arg-name)
   (error "Argument ~A missing for ~A." arg-name fun-name))
@@ -24,6 +32,29 @@
 (fn error-&rest-has-value (fun-name)
   (error "In arguments to ~A: &REST cannot have a value." fun-name))
 
+(fn argdef-get-name (x)
+  (? (cons? x)
+     x.
+     x))
+
+(fn argdef-get-default (x)
+  (? (cons? x)
+     (? (argument-type-specifier? .x.)
+        ..x.
+        .x.)
+     x))
+
+(fn argdef-get-type (x)
+  (& (cons? x)
+     (argument-type-specifier? .x.)
+     .x.))
+
+(fn argdef-get-value (defs vals)
+  (?
+    (cons? vals)   vals.
+    (cons? defs.)  (cadr defs.)
+    defs.))
+
 (fn make-&key-alist (def)
   (with (keys nil
          make-&key-descr
@@ -32,7 +63,7 @@
                 (copy-def-until-&key _)
                 (!= _.
                   (push (? (cons? !)
-                           (. !. .!.) ; with default value
+                           (. !. (argdef-get-default !))
                            (. ! !))   ; with itself
                         keys)
                   (make-&key-descr ._)))]
@@ -44,25 +75,9 @@
     (values (copy-def-until-&key def)
             (reverse keys))))
 
-(fn argdef-get-name (x)
-  (? (cons? x) x. x))
-
-(fn argdef-get-default (x)
-  (? (cons? x) .x. x))
-
-(fn argdef-get-value (defs vals)
-  (?
-    (cons? vals)
-      vals.
-    (cons? defs.)
-      (cadr defs.)
-    defs.))
-
 ;;; Returns expanded arguments as an associative list whose
 ;;; values are all NIL if APPLY-VALUES? is also NIL.
-(fn argument-expand-0 (fun adef alst
-                       apply-values?
-                       break-on-errors?)
+(fn argument-expand-0 (fun adef alst apply-values? break-on-errors?)
   (with ((a k)      (make-&key-alist adef)
          argdefs    a
          key-args   k
@@ -81,29 +96,30 @@
                          adef
                          alst)
                   :error))
-         exp-static
+
+         exp-static-assert
            #'((def vals)
                (& no-static
                   (return (err "Static argument definition after ~A."
                                (list no-static))))
                (& apply-values? (not vals)
-                  (return (err "Argument ~A missing." (list num))))
+                  (return (err "Argument ~A missing." (list num)))))
+
+         exp-static
+           #'((def vals)
+               (exp-static-assert def vals)
                (. (. (argdef-get-name def.) vals.)
                   (exp-main .def .vals)))
 
-         exp-optional
+         exp-static-typed
            #'((def vals)
-               (& (argument-keyword? def.)
-                  (return (err "Keyword ~A after &OPTIONAL." (list def.))))
-               (= no-static '&optional)
-               (. (. (argdef-get-name def.)
-                     (argdef-get-value def vals))
-                  (?
-                    (argument-keyword? .def.)
-                      (exp-main .def .vals)
-                    .def
-                      (exp-optional .def .vals)
-                    (exp-main .def .vals))))
+               (exp-static-assert def vals)
+               (unless (equal vals. (argdef-get-type def.))
+                 (return (err "\"~A\" expected for argument ~A."
+                              (list (argdef-get-type def.)
+                                    (argdef-get-name def.)))))
+               (. (. (argdef-get-name def.) vals.)
+                  (exp-main .def .vals)))
 
          exp-key
            #'((def vals)
@@ -111,8 +127,7 @@
                  (? k
                     (!= vals
                       (unless .!
-                        (return (err "Value of argument ~A missing."
-                                     (list !.))))
+                        (return (err "Value of ~A missing." (list !.))))
                       (rplacd k .!.)
                       (exp-main def ..!))
                     (exp-main-non-key def vals))))
@@ -124,6 +139,18 @@
                                     (. synonym vals))))
                nil)
 
+         exp-optional
+           #'((def vals)
+               (= no-static '&optional)
+               (. (. (argdef-get-name def.)
+                     (argdef-get-value def vals))
+                  (?
+                    (argument-keyword? .def.)
+                      (exp-main .def .vals)
+                    .def
+                      (exp-optional .def .vals)
+                    (exp-main .def .vals))))
+
          exp-optional-rest
            #'((def vals)
                (case def. :test #'eq
@@ -134,12 +161,11 @@
          exp-sub
            #'((def vals)
                (& no-static
-                  (return (err "Static sublevel argument definition after ~A."
+                  (return (err "Argument sublist definition after ~A."
                                (list no-static))))
                (& apply-values?
                   (atom vals.)
-                  (return (err "Sublist expected for argument ~A."
-                               (list num))))
+                  (return (err "Sublist expected as ~A." (list num))))
                (nconc (argument-expand-0 fun def. vals.
                                          apply-values?
                                          break-on-errors?)
@@ -157,7 +183,9 @@
                (?
                  (argument-keyword? def.)
                    (exp-optional-rest def vals)
-                 (not (argument-name? def.))
+                 (typed-argument? def.)
+                   (exp-static-typed def vals)
+                 (cons? def.)
                    (exp-sub def vals)
                  (exp-static def vals)))
 
@@ -175,8 +203,7 @@
           !
           (nconc ! (nconc (@ [. _. (. '%key ._)] key-args) rest-arg))))))
 
-(fn argument-expand (fun def vals &key (apply-values? t)
-                                       (break-on-errors? t))
+(fn argument-expand (fun def vals &key (apply-values? t) (break-on-errors? t))
   (!= (argument-expand-0 fun def vals apply-values? break-on-errors?)
     (? (| apply-values?
           (eq ! :error))

@@ -8,6 +8,16 @@
           '(a b)))
   t)
 
+(deftest "argument expansion works with type"
+  ((equal (argument-expand nil '((a "foo") b) '("foo" "bar"))
+          '((a . "foo") (b . "bar"))))
+  t)
+
+;(deftest "argument expansion works with wrong type"
+;  ((equal (argument-expand nil '((a "foo") b) '("fnord" "bar"))
+;          '((a . "foo") (b . "bar"))))
+;  t)
+
 (deftest "argument expansion can handle nested lists"
   ((equal (argument-expand 'test-3 '(a (b c) d) '(23 (2 3) 42))
           '((a . 23) (b . 2) (c . 3) (d . 42))))

@@ -50,12 +50,11 @@
                 ,@(main ._))]
 
          main
-           [when _
-            (argument-keyword? _.)
-              (optional-rest _)
-            (cons? _.)
-              (sub _)
-            (static _)])
+           [?
+             (not _)                nil
+             (argument-keyword? _.) (optional-rest _)
+             (cons? _.)             (sub _)
+             (static _)])
    (? key-args
       `((with (keywords
                   #'(()
