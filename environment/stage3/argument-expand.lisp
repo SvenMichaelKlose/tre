@@ -72,14 +72,14 @@
          err
            #'((msg args)
                (? break-on-errors?
-                  (return (error (+ "~L; In argument expansion for ~A:~A: ~A~%"
-                                    "; Argument definition: ~A~%"
-                                    "; Given arguments: ~A~%")
-                                 (package-name (symbol-package fun))
-                                 (symbol-name fun)
-                                 (apply #'format nil msg args)
-                                 adef
-                                 alst))
+                  (error (+ "~L; In argument expansion for ~A:~A: ~A~%"
+                            "; Argument definition: ~A~%"
+                            "; Given arguments: ~A~%")
+                         (package-name (symbol-package fun))
+                         (symbol-name fun)
+                         (apply #'format nil msg args)
+                         adef
+                         alst)
                   :error))
          exp-static
            #'((def vals)
