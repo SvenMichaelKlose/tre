@@ -42,6 +42,7 @@
 (env-load "stage3/format.lisp")
 (env-load "stage3/terpri.lisp")
 (env-load "stage3/error.lisp" :cl)
+(env-load "stage3/type.lisp")
 (env-load "stage3/bit-stream.lisp")
 (env-load "stage3/documentation.lisp")
 (env-load "stage3/assert.lisp")

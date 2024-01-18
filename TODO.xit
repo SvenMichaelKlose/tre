@@ -13,6 +13,9 @@ PHP
 [?] Replace __array object by native arrays?
 [?] Native closures.
 
+Bugs
+[ ] ... READ-FILE: Unterminated string at file end causes stack exhaustion.
+
 Maybe later
 [ ] !.. Case-sensitive symbols without conversion to upper case.
         Will make conversions to back-end identifiers obsolete and less

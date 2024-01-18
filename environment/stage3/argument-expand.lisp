@@ -15,7 +15,8 @@
 
 ;;; The only and only type specifier possible for the beginning.
 (fn argument-type-specifier? (x)
-  (string? x))
+  (| (string? x)
+     (assoc x *types*)))
 
 (fn typed-argument? (x)
   (& (cons? x)
@@ -112,10 +113,13 @@
          exp-static-typed
            #'((def vals)
                (exp-static-assert def vals)
-               (unless (equal vals. (argdef-get-type def.))
-                 (return (err "\"~A\" expected for argument ~A."
-                              (argdef-get-type def.)
-                              (argdef-get-name def.))))
+               (!= (argdef-get-type def.)
+                 (unless (| (& (string? !)
+                               (equal vals. !))
+                            (type? vals. !))
+                   (return (err "\"~A\" expected for argument ~A."
+                                (argdef-get-type def.)
+                                (argdef-get-name def.)))))
                (. (. (argdef-get-name def.) vals.)
                   (exp-main .def .vals)))
 
