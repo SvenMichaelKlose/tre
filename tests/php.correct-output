@@ -137,19 +137,20 @@ Test 136, TRIM-TAIL works<br>
 Test 137, TRIM works<br>
 Test 138, argument expansion works with simple list<br>
 Test 139, argument expansion works without :apply-values?<br>
-Test 140, argument expansion can handle nested lists<br>
-Test 141, argument expansion can handle nested lists without :apply-values?<br>
-Test 142, argument expansion can handle &REST<br>
-Test 143, argument expansion can handle &REST without :apply-values?<br>
-Test 144, argument expansion can handle missing &REST<br>
-Test 145, argument expansion can handle missing &REST without :apply-values?<br>
-Test 146, argument expansion can handle &OPTIONAL<br>
-Test 147, argument expansion can handle &OPTIONAL without :apply-values?<br>
-Test 148, argument expansion can handle &OPTIONAL with init forms<br>
-Test 149, argument expansion can handle &OPTIONAL with init forms without :apply-values?<br>
-Test 150, argument expansion can handle &KEY<br>
-Test 151, argument expansion can handle &KEY with overloaded init forms<br>
-Test 152, argument expansion can handle &KEY without :apply-values?<br>
-Test 153, argument expansion can handle &OPTIONAL and &KEY with init forms without :apply-values?<br>
-Test 154, argument expansion can handle &OPTIONAL and &KEY with init forms with :apply-values?<br>
+Test 140, argument expansion works with type<br>
+Test 141, argument expansion can handle nested lists<br>
+Test 142, argument expansion can handle nested lists without :apply-values?<br>
+Test 143, argument expansion can handle &REST<br>
+Test 144, argument expansion can handle &REST without :apply-values?<br>
+Test 145, argument expansion can handle missing &REST<br>
+Test 146, argument expansion can handle missing &REST without :apply-values?<br>
+Test 147, argument expansion can handle &OPTIONAL<br>
+Test 148, argument expansion can handle &OPTIONAL without :apply-values?<br>
+Test 149, argument expansion can handle &OPTIONAL with init forms<br>
+Test 150, argument expansion can handle &OPTIONAL with init forms without :apply-values?<br>
+Test 151, argument expansion can handle &KEY<br>
+Test 152, argument expansion can handle &KEY with overloaded init forms<br>
+Test 153, argument expansion can handle &KEY without :apply-values?<br>
+Test 154, argument expansion can handle &OPTIONAL and &KEY with init forms without :apply-values?<br>
+Test 155, argument expansion can handle &OPTIONAL and &KEY with init forms with :apply-values?<br>
 Tests done.
