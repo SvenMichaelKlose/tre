@@ -32,12 +32,19 @@
   `((= (slot-value ,class-name 'prototype)
        (*object.create (slot-value ,base-name 'prototype)))))
 
+(fn class-methods-by-access-type (cls typ)
+  (remove-if-not [eq ..._. typ] (class-methods cls)))
+
 (fn js-emit-methods (class-name cls)
   (!= (@ [js-emit-method class-name _]
-         (reverse (class-methods cls)))
+         (class-methods-by-access-type cls nil))
       `(,@(cdrlist !)
         ,@(!? (class-parent cls)
               (js-gen-inherit-methods class-name (class-name !)))
+        ,(!? (@ [js-emit-method class-name _]
+                (class-methods-by-access-type cls :static))
+             `(js-merge-props! ,class-name
+                               (%%%make-json-object ,@(apply #'+ (carlist !)))))
         (js-merge-props! (slot-value ,class-name 'prototype)
                          (%%%make-json-object ,@(apply #'+ (carlist !)))))))
 
