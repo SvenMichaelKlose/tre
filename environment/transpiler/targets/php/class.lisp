@@ -21,7 +21,10 @@
   (generic-defmember class-name names))
 
 (fn php-members (cls)
-  (@ [`(%%native "var $" ,_. ,*php-separator*)]
+  (@ [`(%%native ,(? (cons? _.)
+                     (downcase (symbol-name _..))
+                     "var")
+                 " $" ,(!? (cons? _.) (cadr _.) _.) ,*php-separator*)]
      (class-members cls)))
 
 (def-php-transpiler-macro defmethod (&rest x)
@@ -40,7 +43,8 @@
          ,@(| ..x. (list nil)))))))
 
 (fn php-method-flags (x)
-  (flatten (list " " (pad (@ [downcase (symbol-name _)] x) " ") " ")))
+  (flatten (list (pad (@ [downcase (symbol-name _)] x) " ")
+                 " ")))
 
 (fn php-method (cls x)
   (!= (argument-expand-names 'php-method .x.)

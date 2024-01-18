@@ -13,15 +13,18 @@
     (= (href classes cname)
        (make-class :name     cname
                    :base     bases.
-                   :members  (& bases (class-members (href classes bases.)))
+                   :members  nil
                    :parent   (& bases (href classes bases.))
                    :constructor-maker
                      (list constructor-maker args body)))
     nil))
 
+(fn access-type? (x)
+  (in? x :static :protected :private))
+
 (fn get-method-flags-and-rest (x)
   (with (r #'((x flags)
-               (? (in? x. :static :protected :private)
+               (? (access-type? x.)
                   (? (member x. flags)
                      (error "Double method flag ~A." x.)
                      (r .x (. x. flags)))
@@ -47,6 +50,11 @@
 (fn generic-defmember (class-name names)
   (print-definition `(defmember ,class-name ,@names))
   (!? (href (defined-classes) class-name)
-      (+! (class-members !) (@ [list _ t] names))
+      (+! (class-members !)
+          (@ [(& (cons? _)
+                 (not (access-type? _.))
+                 (error "Slot access type expected instead of ~A." _.))
+              (list _ t)]
+             names))
       (error "Undefined lass ~A." class-name))
   nil)

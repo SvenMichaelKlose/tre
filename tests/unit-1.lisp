@@ -1,4 +1,5 @@
 (defclass a ())
+(defmember a (:protected stayingvalue))
 (defmethod a bla ()
   (identity 'a))
 (finalize-class a)

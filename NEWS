@@ -1,5 +1,6 @@
 Changes relative to tre-0.20:
-  * PHP methods may be declare static, protected or private.
+  * PHP class members and methods may be declared static,
+    protected or private.
   * Return values of constructors are ignored.
   * PHP classes may inherit.
   * Removed obsolete JavaScript DOM features:
