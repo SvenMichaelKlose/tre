@@ -22,7 +22,8 @@ expressions to execute.
 ## History
 
 tré started as a Lisp interpreter written in C in 2005 and makes
-JS and PHP code since 2008.
+JS and PHP code since 2008.  2013 is has been moved to Steel Bank
+Common Lisp.
 
 ## VIM syntax file
 
