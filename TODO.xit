@@ -1,12 +1,11 @@
 Hot!
+[@] !!! Generic functions.
 [ ] !!! Getters and setters.
-[ ] !!! JS target: Emulate protected/private slots by renaming them
-        randomly.
-[ ] !!! Generic functions.
+[ ] !!. JS target: Emulate protected/private slots by renaming them randomly.
 
 Miscellaneous
 [ ] !!. Packaging in user land.
-        It's a pain up main street without and as funny to implement.
+        It's a pain up main street without and about as funny to implement.
 
 [ ] ... Add DO for PROGN.  (Leave PROGN in for the duration.
 
@@ -16,7 +15,7 @@ PHP
 
 Maybe later
 [ ] !.. Case-sensitive symbols without conversion to upper case.
-        Will make conversions to back-end identifiers obsolete and
-        less confusing.
+        Will make conversions to back-end identifiers obsolete and less
+        confusing.
 [ ] ... Rewrite modules/http-funcall.
 [ ] ... Remove module "sql-clause".

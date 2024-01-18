@@ -58,6 +58,8 @@
       (cadr defs.)
     defs.))
 
+;;; Returns expanded arguments as an associative list whose
+;;; values are all NIL if APPLY-VALUES? is also NIL.
 (fn argument-expand-0 (fun adef alst
                        apply-values?
                        break-on-errors?)
@@ -109,8 +111,8 @@
                  (? k
                     (!= vals
                       (unless .!
-                         (return (err "Value of argument ~A missing."
-                                      (list !.))))
+                        (return (err "Value of argument ~A missing."
+                                     (list !.))))
                       (rplacd k .!.)
                       (exp-main def ..!))
                     (exp-main-non-key def vals))))
