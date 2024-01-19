@@ -8,7 +8,7 @@
 (def-selection-info sql-clause-select (selection-info)
   (apply #'string-concat
          `("SELECT " ,@(!? fields
-                           (pad (symbol-names ! :downcase? t) ",")
+                           (pad (@ #'downcase (@ #'symbol-name !)) ",")
                            (list "*"))
            " FROM " ,table
            ,(sql-clause-where where)

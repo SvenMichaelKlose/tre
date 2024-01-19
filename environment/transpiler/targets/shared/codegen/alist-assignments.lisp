@@ -1,7 +1,7 @@
 (fn alist-assignments (x &key (padding ", ") (quote-char #\"))
   (apply #'+ (pad (@ #'((k v)
                          (+ k "=" (literal-string (string v) quote-char quote-char)))
-                     (symbol-names (carlist x) :downcase? t)
+                     (@ #'downcase (@ #'symbol-name (carlist x)))
                      (cdrlist x))
                   padding)))
 
