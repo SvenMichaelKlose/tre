@@ -19,5 +19,4 @@
 
 (%defvar *print-notes?*            t)
 (%defvar *print-status?*           t)
-(%defvar *have-environment-tests*  nil)
 (%defvar *have-compiler?*          nil)

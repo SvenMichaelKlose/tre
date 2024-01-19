@@ -14,10 +14,8 @@
         (list (section-from-string 'core *php-core*)))))
 
 (fn php-sections-after-import ()
-  (+ (& (not (configuration :exclude-core?))
-        (list (section-from-string 'core-2 *php-core2*)))
-     (& (eq t *have-environment-tests*)
-        (list (. 'env-tests (make-environment-tests))))))
+  (& (not (configuration :exclude-core?))
+     (list (section-from-string 'core-2 *php-core2*))))
 
 (fn php-identifier-char? (x)
   (unless (eql #\$ x)
