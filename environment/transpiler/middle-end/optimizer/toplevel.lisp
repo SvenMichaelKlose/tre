@@ -10,7 +10,7 @@
 (fn optimize (statements)
   (with-global-funinfo
     (with-temporary *body* statements
-      (optimize-funinfos (repeat-while-changes (optimizer-passes) statements)))))
+      (optimize-funinfos (refine (optimizer-passes) statements)))))
 
 (fn pass-opt-tailcall (x)
   (!= (opt-tailcall x)

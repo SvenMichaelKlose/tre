@@ -25,7 +25,8 @@
 (fn expander-has-macro? (expander macro-name)
   (href (expander-macros expander) macro-name))
 
-(fn define-expander (expander-name &key (pre nil) (post nil) (pred nil) (call nil))
+(fn define-expander (expander-name &key (pre nil) (post nil)
+                                        (pred nil) (call nil))
   (aprog1 (make-expander :name    expander-name
                          :macros  (make-hash-table :test #'eq)
                          :pred    pred
@@ -33,12 +34,14 @@
                          :pre     (| pre #'(nil))
                          :post    (| post #'(nil)))
     (| pred
-       (= (expander-pred !) [& (cons? _)
-                               (symbol? _.)
-                               (expander-function ! _.)]))
+       (= (expander-pred !)
+          [& (cons? _)
+             (symbol? _.)
+             (expander-function ! _.)]))
     (| call
-       (= (expander-call !) [apply (expander-function ! _.)
-                                   (argument-expand-values _. (expander-argdef ! _.) ._)]))
+       (= (expander-call !)
+          [apply (expander-function ! _.)
+                 (argument-expand-values _. (expander-argdef ! _.) ._)]))
     (= (expander-lookup !)
        #'((expander name)
            (href (expander-macros expander) name)))))
@@ -46,15 +49,17 @@
 (fn set-expander-macro (expander name argdef fun &key (may-redefine? nil))
   (& (not may-redefine?)
      (expander-has-macro? expander name)
-     (warn "Macro ~A already defined for expander ~A." name (expander-name expander)))
+     (warn "Macro ~A already defined for expander ~A."
+           name (expander-name expander)))
   (= (href (expander-macros expander) name) (. argdef fun)))
 
 (fn set-expander-macros (expander x)
   (mapcar [set-expander-macro expander _. ._. .._] x))
 
 (defmacro def-expander-macro (expander name args &body body)
-  (let expanded-argdef (argument-expand-names 'def-expander-macro args)
-    `(set-expander-macro ,expander ',name ',args #'(,expanded-argdef ,@body))))
+  `(set-expander-macro ,expander ',name ',args
+     #'(,(argument-expand-names 'def-expander-macro args)
+         ,@body)))
 
 (fn expander-expand-0 (expander expr)
   (with-temporaries (*macro?*     (expander-pred expander)
@@ -72,5 +77,5 @@
   (| (expander? expander)
      (error "Expander ~A is not defined." (expander-name expander)))
   (funcall (expander-pre expander))
-  (prog1 (repeat-while-changes [expander-expand-0 expander _] expr)
+  (prog1 (refine [expander-expand-0 expander _] expr)
     (funcall (expander-post expander))))

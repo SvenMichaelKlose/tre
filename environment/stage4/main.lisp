@@ -9,7 +9,7 @@
 (env-load "stage4/intersect.lisp")
 (env-load "stage4/head.lisp")
 (env-load "stage4/tail.lisp")
-(env-load "stage4/repeat-while-changes.lisp")
+(env-load "stage4/refine.lisp")
 (env-load "stage4/expander.lisp")
 (env-load "stage4/macrolet.lisp")
 (env-load "stage4/hcache.lisp")
