@@ -11,9 +11,6 @@
                       "symbol"
                       "array"))))
 
-(fn php-print-native-core (out)
-  (princ *php-core-native* out))
-
 (fn php-load-core (dir-path &rest files)
   (with-temporary *have-compiler?* nil
     (apply #'+ (@ [!= (+ *php-core-path* dir-path _)
