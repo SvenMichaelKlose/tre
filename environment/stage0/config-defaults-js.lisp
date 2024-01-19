@@ -1,20 +1,9 @@
-(%defvar *development?*       t)
 (%defvar *assert?*            t)
+(%defvar *targets* '(:js :php))
+(%defvar *development?* t)
+
 (%defvar *print-definitions?* t)
+(%defvar *print-notes?*       *development?*)
+(%defvar *print-status?*      *development?*)
 
-;; Optional environment sections.
-
-(%defvar *tre-has-math*  t)   ; Mathematical functions.
-(%defvar *tre-has-class* t)   ; Have CLASS.
-
-;; Transpiler
-
-;;; Targets to include in environment:
-;;; :cl     Common Lisp (sbcl)
-;;; :js     JavaScript/ECMAScript (browser + node.js)
-;;; :php    PHP
-(%defvar *targets*                 '(:js :php))
-
-(%defvar *print-notes?*            t)
-(%defvar *print-status?*           t)
-(%defvar *have-compiler?*          nil)
+(%defvar *have-compiler?* nil)

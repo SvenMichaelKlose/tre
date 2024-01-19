@@ -15,10 +15,6 @@
 (%defvar *print-notes?*       *development?*)
 (%defvar *print-status?*      *development?*)
 
-;; Optional environment sections. TODO: Remove.
-(%defvar *tre-has-math*  t) ; Mathematical functions.
-(%defvar *tre-has-class* t) ; STRUCT CLASS.
-
 ; TODO: Override by environment variable TRE_MODULES.
 (%defvar *modules-path* "/usr/local/lib/tre/modules/")
 
