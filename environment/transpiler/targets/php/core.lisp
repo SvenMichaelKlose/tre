@@ -42,6 +42,7 @@
         (php-load-core "../../../environment/"
                        "not.lisp")
         (php-load-core ""
+                       "arguments.lisp"
                        "character.lisp"
                        "eq.lisp"
                        "../../../environment/equality.lisp"

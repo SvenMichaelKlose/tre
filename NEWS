@@ -1,5 +1,6 @@
 Changes relative to tre-0.20:
-  * New GETENV reads environment variables.
+  * New ARGUMENTS returns command-line arguments.
+  * New GETENV returns environment variables.
   * File .tre in path working directory is read to update environment
     variables.
   * JS class methods may be declared static.

@@ -68,6 +68,8 @@
      ,(js-load-core "" "../../../environment/print.lisp")))
 
 (fn js-core-nodejs ()
-  ,(js-load-core "node.js/" "file.lisp"))
+  ,(+ (js-load-core "node.js/"
+                    "arguments.lisp"
+                    "file.lisp")))
 
 (var *js-core-eval* ,(js-load-core "" "eval.lisp"))
