@@ -2,7 +2,6 @@
 
 if [ -f ".tre" ]; then \
     while IFS='=' read -r key value; do \
-        echo "$key=$value"; \
         export "$key=$value"; \
     done < .tre; \
 fi
