@@ -33,4 +33,5 @@
                      "string.lisp"
                      "special.lisp"
                      "symbol.lisp"
+                     "env.lisp"
                      "unix-sh.lisp")))))

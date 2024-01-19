@@ -1,2 +1,11 @@
 #!/bin/sh
-sbcl --noinform --control-stack-size 16 --core /usr/local/lib/tre/image $1 $2 $3 $4
+
+if [ -f ".tre" ]; then \
+    while IFS='=' read -r key value; do \
+        echo "$key=$value"; \
+        export "$key=$value"; \
+    done < .tre; \
+fi
+
+sbcl --noinform --control-stack-size 16 \
+     --core /usr/local/lib/tre/image $@
