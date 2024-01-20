@@ -1,2 +1,3 @@
 (= *default-transpiler* *cl-transpiler*)
-(var *modules-path* (+ (getenv "TRE_PATH") "/modules/"))
+(var *tre-path* (getenv "TRE_PATH"))
+(var *modules-path* (+ *tre-path* "/modules/"))
