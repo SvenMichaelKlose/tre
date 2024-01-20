@@ -8,7 +8,7 @@ function tre_backtrace ($msg)
     die ();
 }
 
-function tre_error_handler ($errno, $errstr, $file, $line, $context)
+function tre_error_handler ($errno, $errstr, $file, $line)
 {
     tre_backtrace ("<b>$errstr</b> in file <b>$file</b> on line <b>$line</b>");
 }
