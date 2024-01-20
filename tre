@@ -1,10 +1,16 @@
 #!/bin/sh
 
-if [ -f "~/.tre" ]; then \
-    while IFS='=' read -r key value; do \
-        eval "export \"$key=$value\""; \
-    done < ~/.tre; \
+if [ -z "$TRE_PATH" ]; then
+  export TRE_PATH=/usr/local/lib/tre;
 fi
 
+CONFIG=`eval echo ~/.tre`
+if [ -e $CONFIG ]; then
+    while IFS='=' read -r key value; do
+        export "$key=$value";
+    done < $CONFIG;
+fi
+
+echo $TRE_PATH
 sbcl --noinform --control-stack-size 16 \
-     --core /usr/local/lib/tre/image $@
+     --core $TRE_PATH/image $@
