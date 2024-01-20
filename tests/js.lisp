@@ -1,7 +1,8 @@
 (unix-sh-mkdir "compiled" :parents t)
 
 (make-project "tré JavaScript target test"
-  (list (. 'tests (make-environment-tests))
+  (list "environment/stage3/type.lisp"
+        (. 'tests (make-environment-tests))
         (. 'toplevel '((environment-tests))))
   :transpiler  (copy-transpiler *js-transpiler*)
   :emitter     [(make-html-script "compiled/test.html" _)
