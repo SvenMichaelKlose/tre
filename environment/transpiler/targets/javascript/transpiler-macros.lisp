@@ -42,10 +42,7 @@
     (%= ,g (symbol ,(symbol-name sym)
                    ,(? (keyword? sym)
                        '*keyword-package*
-                       (!? (symbol-package sym)
-                           (? (& (not (string== "COMMON-LISP" (package-name !)))
-                                 (not (invisible-package? !)))
-                              `(symbol ,(symbol-name !) nil))))))))
+                       "TRE")))))
 
 (def-js-transpiler-macro defun (name args &body body)
   (with (dname  (%fn-name name)
