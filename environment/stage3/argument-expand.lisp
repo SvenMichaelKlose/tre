@@ -84,7 +84,7 @@
          no-static  nil
          rest-arg   nil
          err
-           #'((msg &rest args)
+           #'((msg args)
                (? break-on-errors?
                   (error (+ "~L; In argument expansion for ~A:~A: ~A~%"
                             "; Argument definition: ~A~%"
@@ -100,9 +100,9 @@
            #'((def vals)
                (& no-static
                   (return (err "Static argument definition after ~A."
-                               no-static)))
+                               (list no-static))))
                (& apply-values? (not vals)
-                  (return (err "Argument ~A missing." num))))
+                  (return (err "Argument ~A missing." (list num)))))
 
          exp-static
            #'((def vals)
@@ -118,8 +118,8 @@
                                (equal vals. !))
                             (type? vals. !))
                    (return (err "\"~A\" expected for argument ~A."
-                                (argdef-get-type def.)
-                                (argdef-get-name def.)))))
+                                (list (argdef-get-type def.)
+                                      (argdef-get-name def.))))))
                (. (. (argdef-get-name def.) vals.)
                   (exp-main .def .vals)))
 
@@ -128,7 +128,7 @@
                (let-if k (assoc ($ vals.) key-args :test #'eq)
                  (!= vals
                    (unless .!
-                     (return (err "Value of ~A missing." !.)))
+                     (return (err "Value of ~A missing." (list !.))))
                    (rplacd k (. '%key .!.))
                    (exp-main def ..!))
                  (exp-main-non-key def vals)))
@@ -163,7 +163,7 @@
            #'((def vals)
                (& no-static
                   (return (err "Argument sublist definition after ~A."
-                               no-static)))
+                               (list no-static))))
                (& apply-values?
                   (atom vals.)
                   (return (err "Sublist expected as ~A." num)))
@@ -176,7 +176,7 @@
            #'((def vals)
                (& (not def) vals
                   (return (err "~A too many argument(s). Maximum is ~A."
-                               (length vals) (length argdefs)))))
+                               (list (length vals) (length argdefs))))))
 
          exp-main-non-key
            #'((def vals)

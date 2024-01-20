@@ -13,10 +13,11 @@
           '((a . "foo") (b . "bar"))))
   t)
 
-;(deftest "ARGUMENT-EXPAND works with wrong type"
-;  ((equal (argument-expand nil '((a "foo") b) '("fnord" "bar"))
-;          '((a . "foo") (b . "bar"))))
-;  t)
+(deftest "ARGUMENT-EXPAND works with wrong type"
+  ((equal (argument-expand nil '((a "foo") b) '("fnord" "bar")
+                           :break-on-errors? nil)
+          '((a . "foo") (b . "bar"))))
+  nil)
 
 (deftest "ARGUMENT-EXPAND can handle nested lists"
   ((equal (argument-expand 'test-3 '(a (b c) d) '(23 (2 3) 42))

@@ -1,7 +1,8 @@
 (unix-sh-mkdir "compiled" :parents t)
 
 (make-project "PHP target test"
-  (list (. 'tests (make-environment-tests))
+  (list (. 'types '("environment/stage3/type.lisp"))
+        (. 'tests (make-environment-tests))
         (. 'toplevel '((environment-tests))))
   :transpiler  (copy-transpiler *php-transpiler*)
   :emitter     [put-file "compiled/test.php" _])
