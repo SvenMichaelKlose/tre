@@ -1,4 +1,5 @@
 Changes relative to tre-0.20:
+  * Added DIRECTORY to get directory lists.
   * Added DUMP to CL target.
   * Added GETENV.
   * Added standard set functions SET-DIFFERENCE,

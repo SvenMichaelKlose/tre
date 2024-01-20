@@ -53,7 +53,7 @@
                        "../../../environment/number.lisp"
                        "sequence.lisp"
                        "standard-stream.lisp"
-                       "%force-output.lisp"
+                       "file.lisp"
                        "../../../environment/print.lisp"
                        "../../../environment/list-string.lisp"
                        "string.lisp"

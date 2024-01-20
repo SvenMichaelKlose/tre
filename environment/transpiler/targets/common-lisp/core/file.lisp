@@ -6,7 +6,8 @@
                         (%princ i !))
       (CL:PRINC x !))))
 
-(defbuiltin %force-output (stream) (CL:FORCE-OUTPUT stream))
+(defbuiltin %force-output (stream)
+  (CL:FORCE-OUTPUT stream))
 
 (defbuiltin %fopen (pathname mode)
   (CL:OPEN pathname
@@ -16,7 +17,8 @@
            :IF-EXISTS :SUPERSEDE
            :ELEMENT-TYPE '(CL:UNSIGNED-BYTE 8)))
 
-(defbuiltin %fclose (stream) (CL:CLOSE stream))
+(defbuiltin %fclose (stream)
+  (CL:CLOSE stream))
 
 (defbuiltin %read-char (str)
   (!= (CL:READ-BYTE (| str CL:*STANDARD-INPUT*) nil 'eof)
@@ -26,3 +28,6 @@
 (defbuiltin file-exists? (pathname)
   (& (CL:PROBE-FILE pathname)
      t))
+
+(defbuiltin directory (pathname)
+  (CL:DIRECTORY (+ pathname "*.*"))) ; SBCL version

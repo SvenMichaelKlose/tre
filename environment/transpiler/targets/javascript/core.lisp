@@ -63,6 +63,8 @@
 (fn js-core-stream ()
   (+ ,(js-load-core "" "error.lisp")
      ,(js-load-core "" "../../../../stage3/stream.lisp")
+     (& (not (eq :browser (configuration :platform)))
+        ,(js-load-core "" "file.lisp"))
      (& (eq :browser (configuration :platform))
         ,(js-load-core "" "%force-output.lisp"))
      ,(js-load-core "" "standard-stream.lisp")
