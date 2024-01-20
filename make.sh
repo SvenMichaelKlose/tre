@@ -12,8 +12,15 @@ mkdir -p compiled
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
 SBCL="sbcl --noinform"
-TRE="$SBCL --core image"
+TRE="./tre"
 BINDIR="/usr/local/bin/"
+
+CONFIG=`eval echo ~/.tre`
+if [ -e $CONFIG ]; then
+    while IFS='=' read -r key value; do
+        export "$key=$value";
+    done < $CONFIG;
+fi
 
 clean_example_projects ()
 {
@@ -69,6 +76,7 @@ boot)
     ./make.sh core
     ./make.sh genboot
     ./make.sh core
+    ./make.sh genboot
 	;;
 
 phptests)
@@ -101,7 +109,7 @@ updatetests)
 tests)
     echo "Making tests…"
 	./make.sh phptests
-	./make.sh jstests
+	#./make.sh jstests
 	;;
 
 nodeconsole)
