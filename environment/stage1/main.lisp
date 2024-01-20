@@ -22,6 +22,7 @@
 (env-load "stage1/=.lisp")
 (env-load "stage1/math.lisp")
 (env-load "stage1/list.lisp")
+(env-load "stage1/set.lisp")
 (env-load "stage1/cons-r.lisp")
 (env-load "stage1/count.lisp")
 (env-load "stage1/debug-print.lisp" :cl)

@@ -6,7 +6,6 @@
 (env-load "stage4/def-gensym.lisp")
 (env-load "stage4/define-tree-filter.lisp")
 (env-load "stage4/destructive-arith.lisp")
-(env-load "stage4/intersect.lisp")
 (env-load "stage4/head.lisp")
 (env-load "stage4/tail.lisp")
 (env-load "stage4/refine.lisp")

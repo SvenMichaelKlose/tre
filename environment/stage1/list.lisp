@@ -165,15 +165,6 @@
     (dolist (i lst !)
       (push i !))))
 
-(functional adjoin)
-(fn adjoin (obj lst &rest args)
-  (? (apply #'member obj lst args)
-     lst
-     (. obj lst)))
-
-(defmacro adjoin! (obj &rest place)
-  `(= ,place. (adjoin ,obj ,@place)))
-
 (functional list-length)
 (fn list-length (x)
   (let len 0
