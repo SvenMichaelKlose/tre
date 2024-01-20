@@ -76,7 +76,6 @@ boot)
     ./make.sh core
     ./make.sh genboot
     ./make.sh core
-    ./make.sh genboot
 	;;
 
 phptests)
