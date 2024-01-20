@@ -1,3 +1,2 @@
-; It's up to you.
-
 (= *default-transpiler* *cl-transpiler*)
+(var *modules-path* (+ (getenv "TRE_PATH") "/modules/"))

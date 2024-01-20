@@ -15,7 +15,4 @@
 (%defvar *print-notes?*       *development?*)
 (%defvar *print-status?*      *development?*)
 
-; TODO: Override by environment variable TRE_MODULES.
-(%defvar *modules-path* "/usr/local/lib/tre/modules/")
-
 (%defvar *have-compiler?* nil) ; TODO: Remove.
