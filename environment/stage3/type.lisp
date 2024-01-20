@@ -2,8 +2,8 @@
 
 (macro deftype (name args &body body)
   (print-definition `(deftype ,name ,args))
-  (& (assoc name *types*)
-     (error "Type ~A is already defined." name))
+  ;(& (assoc name *types*)
+     ;(error "Type ~A is already defined." name))
   `(acons! ',name #'(,args ,@body) *types*))
 
 (fn type? (o x)
@@ -12,14 +12,17 @@
        (case x.
          'and        (every [type? o _] .x)
          'or         (some  [type? o _] .x)
-         'satisfies  (funcall (symbol-function .x.) o)
+         'satisfies  (funcall (| (symbol-function .x.)
+                                 (error "~A is not a predicate for SATISFIES."
+                                        .x.))
+                              o)
          (!? (assoc-value x. *types*)
              (apply ! .x)
              (error "Unknown type specifier symbol ~A." x.)))
        (? (string? x)
           (equal o x)
           (type? o (funcall (| (assoc-value x *types*)
-                              (error "No typespecifier for ~A." x))))))))
+                               (error "No typespecifier for ~A." x))))))))
 
 (deftype null ()
   '(satisfies not))
