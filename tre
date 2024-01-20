@@ -11,6 +11,5 @@ if [ -e $CONFIG ]; then
     done < $CONFIG;
 fi
 
-echo $TRE_PATH
 sbcl --noinform --control-stack-size 16 \
      --core $TRE_PATH/image $@
