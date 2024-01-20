@@ -1,6 +1,7 @@
 (fn php-prologue ()
   (format nil "<?php // tré revision ~A~%~A"
-              *tre-revision* (+ (configuration :native-code) *php-core-native*)))
+              *tre-revision* (+ (configuration :native-code)
+                                *php-core-native*)))
 
 (fn php-epilogue ()
   (format nil "?>~%"))
@@ -23,7 +24,8 @@
 
 (fn php-expex-initializer (ex)
   (= (expex-inline? ex)          #'%slot-value?
-     (expex-setter-filter ex)    (compose [@ #'php-setter-filter _] #'expex-compiled-funcall)
+     (expex-setter-filter ex)    (compose [@ #'php-setter-filter _]
+                                          #'expex-compiled-funcall)
      (expex-argument-filter ex)  #'php-argument-filter))
 
 (fn make-php-transpiler-0 ()
