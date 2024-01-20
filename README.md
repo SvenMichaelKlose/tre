@@ -1,23 +1,44 @@
 The tré programming language
 ============================
 
-tré transpiles a streamlined dialect of Lisp to JavaScript, PHP7+ and
-Common Lisp (the latter mainly to compile itself).
+tré transpiles a streamlined dialect of Lisp to JavaScript, PHP7
+and Common Lisp (the latter mainly to compile itself).
 
 # Build and install
 
-tré requires some Linux with "sbcl" (Steel Bank Common Lisp)
-installed.  To install run:
+## Prerequisites
 
-```sh
+tré requires SBCL and Git.  You require basic knowledge of
+Common LISP, PHP and JavaScript.
+
+To install the required packages on Ubuntu or derivates run:
+
+~~~sh
+sudo apt install sbcl git -y
+~~~
+
+## Makefile
+
+Shell script "make.sh" is the makefile for tre with several
+actions you can list by specifying target "help".
+
+~~~sh
+./make.sh help
+~~~
+
+To build and install just do:
+
+~~~sh
 ./make.sh boot
 ./make.sh install
-```
+~~~
 
-This will install an executable called "tre" in /usr/local/bin/.
-It takes an optional pathname of a source file to compile and
-execute.  If none is specified, it'll prompt you for
-expressions to execute.
+This will build and install executable "tre" to
+/usr/local/bin/ and all other files to /usr/local/.
+TODO: environment var "PREFIX" to change the destination
+directory.  It takes an optional pathname of a source file to
+compile and execute.  If no file was specified, it'll prompt
+you for expressions to execute.
 
 ## History
 
@@ -37,10 +58,10 @@ Let's get ready to hack.  There're three initial projects
 prepared for you in directory examples/ which you should copy to
 take off as they are subject to getting cleaned thoroughly.  All
 contain configurations for docker-compose to run your project in
-a virtual LAMP server.  "project-js" for making a plain JavaScript
-app,  "project-php" to create a PHP-only challenge and
-"project-js-php" to make a JS app that'll communicate with it's PHP
-server.
+a virtual LAMP server.  "project-js" for making a plain Java-
+Script app,  "project-php" to create a PHP-only challenge and
+"project-js-php" to make a JS app that'll communicate with it's
+PHP server.
 
 ## Creating a JavaScript-only project
 
@@ -59,6 +80,20 @@ cd new-js-project
 ./make.sh
 ```
 
+### Running with PHP on the command-line
+
+Step into directory 'compiled' and start the docker container:
+
+```sh
+php -S localhost:19020
+```
+
+Now point your browser at http://localhost:19020/ – voilà!
+
+
+### Running with docker-compose
+
+This will also run a MySQL server alongside Apache and PHP.
 Step into directory 'compiled' and start the docker container:
 
 ```sh
@@ -66,7 +101,8 @@ cd compiled
 sudo docker-compose up
 ```
 
-Now point your browser at http://localhost:19020/ – voilà!
+This may take while to do the first time if docker needs to
+download images.
 
 ## Creating a PHP-only project
 
@@ -91,33 +127,18 @@ just calling SERVER-APPLY as if it was a JavaScript function.
 This example also contains the MySQL database code and
 configuration.
 
-
-## Developing a project – here's the catch
-
-The initial project setups come with a bunch of external modules 
-included already, so you can play around with them without need
-to tweak the makefiles.  That's as simple as it can get at this
-time.  tré comes with no IDE whatsoever.
-If you decide to continue working with tré you WILL find
-inconveniences and bugs – and you are very welcome to help out.
-
-## How to debug tré programs
-
-What you'll see in your browser's debugger is more or less
-readable.  One of
+## Debugging functions
 
 ```lisp
 (invoke-debugger)
 ```
 or one of
+
 ```lisp
 (console.log "%o" buggyobject)
 (dump my-object)
-(dump my-object "My object")
+(dump my-object "My object title")
 ```
-
-in considerate places might help out a lot, as well as PRINT and
-the DUMP function on the PHP side.
 
 # Syntax
 
