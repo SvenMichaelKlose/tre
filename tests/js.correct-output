@@ -137,21 +137,22 @@ Test 136, TRIM-TAIL works<br>
 Test 137, TRIM works<br>
 Test 138, ARGUMENT-EXPAND works with simple list<br>
 Test 139, ARGUMENT-EXPAND works without :apply-values?<br>
-Test 140, ARGUMENT-EXPAND works with type<br>
-Test 141, ARGUMENT-EXPAND works with wrong type<br>
-Test 142, ARGUMENT-EXPAND can handle nested lists<br>
-Test 143, ARGUMENT-EXPAND can handle nested lists without :apply-values?<br>
-Test 144, ARGUMENT-EXPAND can handle &REST<br>
-Test 145, ARGUMENT-EXPAND can handle &REST without :apply-values?<br>
-Test 146, ARGUMENT-EXPAND can handle missing &REST<br>
-Test 147, ARGUMENT-EXPAND can handle missing &REST without :apply-values?<br>
-Test 148, ARGUMENT-EXPAND can handle &OPTIONAL<br>
-Test 149, ARGUMENT-EXPAND can handle &OPTIONAL without :apply-values?<br>
-Test 150, ARGUMENT-EXPAND can handle &OPTIONAL with init forms<br>
-Test 151, ARGUMENT-EXPAND can handle &OPTIONAL with init forms without :apply-values?<br>
-Test 152, ARGUMENT-EXPAND can handle &KEY<br>
-Test 153, ARGUMENT-EXPAND can handle &KEY with overloaded init forms<br>
-Test 154, ARGUMENT-EXPAND can handle &KEY without :apply-values?<br>
-Test 155, ARGUMENT-EXPAND can handle &OPTIONAL and &KEY with init forms without :apply-values?<br>
-Test 156, ARGUMENT-EXPAND can handle &OPTIONAL and &KEY with init forms with :apply-values?<br>
+Test 140, ARGUMENT-EXPAND works with constant type<br>
+Test 141, ARGUMENT-EXPAND works with wrong constant type<br>
+Test 142, ARGUMENT-EXPAND works with type<br>
+Test 143, ARGUMENT-EXPAND can handle nested lists<br>
+Test 144, ARGUMENT-EXPAND can handle nested lists without :apply-values?<br>
+Test 145, ARGUMENT-EXPAND can handle &REST<br>
+Test 146, ARGUMENT-EXPAND can handle &REST without :apply-values?<br>
+Test 147, ARGUMENT-EXPAND can handle missing &REST<br>
+Test 148, ARGUMENT-EXPAND can handle missing &REST without :apply-values?<br>
+Test 149, ARGUMENT-EXPAND can handle &OPTIONAL<br>
+Test 150, ARGUMENT-EXPAND can handle &OPTIONAL without :apply-values?<br>
+Test 151, ARGUMENT-EXPAND can handle &OPTIONAL with init forms<br>
+Test 152, ARGUMENT-EXPAND can handle &OPTIONAL with init forms without :apply-values?<br>
+Test 153, ARGUMENT-EXPAND can handle &KEY<br>
+Test 154, ARGUMENT-EXPAND can handle &KEY with overloaded init forms<br>
+Test 155, ARGUMENT-EXPAND can handle &KEY without :apply-values?<br>
+Test 156, ARGUMENT-EXPAND can handle &OPTIONAL and &KEY with init forms without :apply-values?<br>
+Test 157, ARGUMENT-EXPAND can handle &OPTIONAL and &KEY with init forms with :apply-values?<br>
 Tests done.
