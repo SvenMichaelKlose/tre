@@ -42,7 +42,7 @@
     (%= ,g (symbol ,(symbol-name sym)
                    ,(? (keyword? sym)
                        '*keyword-package*
-                       "TRE")))))
+                       '(symbol "TRE" nil))))))
 
 (def-js-transpiler-macro defun (name args &body body)
   (with (dname  (%fn-name name)
