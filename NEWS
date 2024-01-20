@@ -1,4 +1,6 @@
 Changes relative to tre-0.20:
+  * Added standard set functions SET-DIFFERENCE,
+    SET-EXCLUSIVE-OR and SUBSET?.
   * New ARGUMENTS returns command-line arguments.
   * New GETENV returns environment variables.
   * File ~/.tre is read to update environment variables.
