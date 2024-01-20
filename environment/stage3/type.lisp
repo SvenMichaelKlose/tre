@@ -16,8 +16,10 @@
          (!? (assoc-value x. *types*)
              (apply ! .x)
              (error "Unknown type specifier symbol ~A." x.)))
-       (case x
-         (type? o (funcall (assoc-value x *types*)))))))
+       (? (string? x)
+          (equal o x)
+          (type? o (funcall (| (assoc-value x *types*)
+                              (error "No typespecifier for ~A." x))))))))
 
 (deftype null ()
   '(satisfies not))
