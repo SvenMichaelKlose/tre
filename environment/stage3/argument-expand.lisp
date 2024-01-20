@@ -166,7 +166,7 @@
                                (list no-static))))
                (& apply-values?
                   (atom vals.)
-                  (return (err "Sublist expected as ~A." num)))
+                  (return (err "Sublist expected for ~A." (list def.))))
                (nconc (argument-expand-0 fun def. vals.
                                          apply-values?
                                          break-on-errors?)
