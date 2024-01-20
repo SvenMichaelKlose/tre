@@ -52,6 +52,7 @@
                               "math.lisp"
                               "milliseconds-since-1970.lisp"
                               "keys.lisp"
+                              "env.lisp"
                               "../../../environment/files-unsupported.lisp"))
 
 (when *have-compiler?*

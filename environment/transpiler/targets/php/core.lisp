@@ -61,6 +61,7 @@
                        "base64.lisp"
                        "quit.lisp"
                        "math.lisp"
+                       "env.lisp"
                        "milliseconds-since-1970.lisp")
         (php-load-core "../../../environment/"
                        "string.lisp"
