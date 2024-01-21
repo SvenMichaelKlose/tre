@@ -1,4 +1,4 @@
-(functional equal list? zero? even? odd? end? keyword? sole?)
+(functional equal list? end? keyword? sole?)
 
 (fn equal (x y)
   (?
