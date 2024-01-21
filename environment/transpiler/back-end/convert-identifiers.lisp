@@ -33,7 +33,7 @@
                                        (string-list (format nil "_~A" (print-hexbyte (char-code _.) nil)))])
                  (& x
                     (? (| (& (== 0 pos)
-                             (digit-char? x.))
+                             (digit? x.))
                           (transpiler-special-char? x.))
                        (+ (char-synonym x) (corrected-chars .x (++ pos)))
                        (. x. (corrected-chars .x (++ pos)))))))

@@ -86,9 +86,9 @@
   (& (| (& .x
            (| (eql #\- x.)
               (eql #\. x.)))
-        (digit-char? x.))
+        (digit? x.))
      (? .x
-        (every [| (digit-char? _)
+        (every [| (digit? _)
                   (eql #\. _)]
                .x)
         t)))

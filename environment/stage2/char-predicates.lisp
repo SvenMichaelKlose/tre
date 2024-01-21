@@ -35,22 +35,22 @@
      (| (%nondecimal-digit? x #\a base)
         (%nondecimal-digit? x #\A base))))
 
-(functional digit-char?)
-(fn digit-char? (c &key (base 10))
+(functional digit?)
+(fn digit? (c &key (base 10))
   (& (character? c)
      (| (decimal-digit? c)
         (nondecimal-digit? c :base base))))
 
-(functional hex-digit-char?)
-(fn hex-digit-char? (x)
-  (| (digit-char? x)
+(functional hex-digit?)
+(fn hex-digit? (x)
+  (| (digit? x)
      (& (character>= x #\A) (character<= x #\F))
      (& (character>= x #\a) (character<= x #\f))))
 
 (functional alphanumeric?)
 (def-rest-predicate alphanumeric? c ()
   (| (alpha-char? c)
-     (digit-char? c)))
+     (digit? c)))
 
 (functional whitespace?)
 (fn whitespace? (x)

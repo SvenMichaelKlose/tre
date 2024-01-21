@@ -3,7 +3,7 @@
   (with (f [when _
              (?
                (eql #\\ _.)
-                 (. #\\ (? (& ._ (digit-char? ._.))
+                 (. #\\ (? (& ._ (digit? ._.))
                            (f ._)
                            (. #\\ (f ._))))
                (eql quote-char _.)

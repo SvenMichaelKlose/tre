@@ -23,7 +23,7 @@
 (env-load "tests/search-sequence.lisp")
 (env-load "tests/string.lisp" :cl)
 (env-load "tests/empty-stringp.lisp")
-(env-load "tests/digit-charp.lisp")
+(env-load "tests/digitp.lisp")
 (env-load "tests/hash.lisp")
 (env-load "tests/split.lisp")
 (env-load "tests/trim.lisp")

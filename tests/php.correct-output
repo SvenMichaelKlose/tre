@@ -115,8 +115,8 @@ Test 114, STRING-LIST works<br>
 Test 115, UPCASE works<br>
 Test 116, DOWNCASE works<br>
 Test 117, EMPTY-STRING? works<br>
-Test 118, DIGIT-CHAR? #0<br>
-Test 119, DIGIT-CHAR? #a<br>
+Test 118, DIGIT? #0<br>
+Test 119, DIGIT? #a<br>
 Test 120, HREF symbol key<br>
 Test 121, HREF symbol key missing<br>
 Test 122, HREF number key<br>

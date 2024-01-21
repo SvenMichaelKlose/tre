@@ -1,6 +1,6 @@
 (fn peek-digit (str)
   (awhen (peek-char str)
-    (& (digit-char? !) !)))
+    (& (digit? !) !)))
 
 (fn peek-dot (str)
   (awhen (peek-char str)
@@ -15,7 +15,7 @@
 
 (fn read-decimal-places (&optional (str *standard-input*))
   (& (!? (peek-char str)
-         (digit-char? !))
+         (digit? !))
      (read-decimal-places-0 str 0 0.1)))
 
 (fn read-integer-0 (str v)
