@@ -23,7 +23,6 @@
 (env-load "stage2/pairlist.lisp")
 (env-load "stage2/in.lisp")
 (env-load "stage2/defstruct.lisp")
-(env-load "stage2/abs.lisp" :cl)
 (env-load "stage2/doarray.lisp")
 (env-load "stage2/dosequence.lisp")
 (env-load "stage2/list-array.lisp")

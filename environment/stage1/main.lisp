@@ -21,6 +21,7 @@
 (env-load "stage1/setf-function-p.lisp" :cl)
 (env-load "stage1/=.lisp")
 (env-load "stage1/math.lisp")
+(env-load "stage1/abs.lisp" :cl)
 (env-load "stage1/list.lisp")
 (env-load "stage1/set.lisp")
 (env-load "stage1/cons-r.lisp")
