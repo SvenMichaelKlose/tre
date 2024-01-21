@@ -101,7 +101,8 @@
 (fn %struct-fields (name)
   (carlist (%struct-def name)))
 
-(fn %defstruct-expander (name &rest fields-and-options)
+(defmacro defstruct (name &body fields-and-options)
+  (print-definition `(defstruct ,name))
   (with ((fields options) (%struct-sort-fields fields-and-options))
     (%struct-add-def name fields)
     `(progn
@@ -115,7 +116,11 @@
          `(fn ,,name ,,args
             (with-struct ,name ,name
               ,,@body))))))
-
-(defmacro defstruct (name &body fields-and-options)
-  (print-definition `(defstruct ,name))
-  (apply #'%defstruct-expander name fields-and-options))
+(defmacro with-struct (typ strct &body body)
+  (!= (assoc-value typ *struct-defs*)
+    (with-gensym g
+      `(let ,g ,strct
+         (#'((,typ ,@(@ #'%struct-field-name !))
+             ,@(@ [%struct-field-name _] !)
+             ,@body)
+          ,g ,@(@ [`(,(%struct-accessor-name typ (%struct-field-name _)) ,g)] !))))))

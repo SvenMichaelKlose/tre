@@ -5,7 +5,6 @@
 (env-load "stage3/declare.lisp")
 (env-load "stage3/maphash.lisp")
 (env-load "stage3/alist-hash.lisp")
-(env-load "stage3/with-struct.lisp")
 (env-load "stage3/stream.lisp" :cl)
 (env-load "stage3/standard-stream.lisp" :cl)
 (env-load "stage3/default-stream.lisp")
