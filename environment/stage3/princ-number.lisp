@@ -1,9 +1,6 @@
-(fn number-digit (x)
-  (code-char (+ x (char-code #\0))))
-
 (fn integer-chars-0 (x)
   (!= (integer (mod x 10))
-    (. (number-digit !)
+    (. (digit !)
        (& (<= 10 x)
           (integer-chars-0 (/ (- x !) 10))))))
 
@@ -13,7 +10,7 @@
 (fn decimals-chars (x)
   (!= (mod (* x 10) 10)
     (& (< 0 !)
-       (. (number-digit (integer !))
+       (. (digit (integer !))
           (decimals-chars !)))))
 
 (fn princ-number (x str)

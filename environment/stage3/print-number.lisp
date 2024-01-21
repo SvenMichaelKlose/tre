@@ -1,8 +1,3 @@
-(fn digit (x)
-  (code-char (? (< x 10)
-                (+ (char-code #\0) x)
-                (+ (char-code #\a) -10 x))))
-
 (fn integer-string (x n r)
   (with (f #'((x)
                 (. (digit (mod x r))
