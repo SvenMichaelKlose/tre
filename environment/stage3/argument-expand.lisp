@@ -27,7 +27,7 @@
 
 (fn error-too-many-arguments (fun-name argdef args)
   (without-automatic-newline
-    (error "Too many arguments ~A to ~A with argument definition ~A."
+    (error "Too many arguments: ~A to ~A with argument definition ~A."
            args fun-name argdef)))
 
 (fn error-&rest-has-value (fun-name)
@@ -175,8 +175,9 @@
          exp-check-too-many
            #'((def vals)
                (& (not def) vals
-                  (return (err "~A too many argument(s). Maximum is ~A."
-                               (list (length vals) (length argdefs))))))
+                  (return (err (+ "~%~A too many argument(s): ~A"
+                                  "Maximum is ~A.")
+                               (list (length vals) vals (length argdefs))))))
 
          exp-main-non-key
            #'((def vals)
