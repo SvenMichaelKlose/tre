@@ -12,7 +12,8 @@
                           (external-stylesheets nil)
                           (transpiler nil)
                           (section-list-gen nil)
-                          (sections-to-update nil))
+                          (sections-to-update nil)
+                          (emitter nil))
   (make-project title
     `(,@files-before-modules
        ,(+ *modules-path* "shared/continued.lisp")
@@ -83,12 +84,16 @@
                '("shared/expr2dom.lisp"
                  "js/toplevel.lisp"))
       ,@files)
-    :transpiler         (| transpiler
-                           (copy-transpiler *js-transpiler*))
-    :section-list-gen   section-list-gen
-    :sections-to-update sections-to-update
-    :emitter     [make-html-script outfile _
-                                   :copyright-title      copyright-title
-                                   :internal-stylesheet  internal-stylesheet
-                                   :external-stylesheets external-stylesheets
-                                   :title title]))
+    :transpiler
+        (| transpiler
+           (copy-transpiler *js-transpiler*))
+    :section-list-gen
+        section-list-gen
+    :sections-to-update
+        sections-to-update
+    :emitter
+           [make-html-script outfile _
+             :copyright-title      copyright-title
+             :internal-stylesheet  internal-stylesheet
+             :external-stylesheets external-stylesheets
+             :title title]))
