@@ -1,8 +1,3 @@
-(functional digit-number)
-
-(fn digit-number (x)
-  (- (char-code x) (char-code #\0)))
-
 (fn peek-digit (str)
   (awhen (peek-char str)
     (& (digit-char? !) !)))

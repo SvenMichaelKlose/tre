@@ -15,3 +15,13 @@
   (? (upper-case? c)
      (code-char (- (+ (char-code c) (char-code #\a)) (char-code #\A)))
      c))
+
+(functional number-digit digit-number)
+
+(fn number-digit (x)
+  (code-char (? (< x 10)
+                (+ (char-code #\0) x)
+                (+ (char-code #\a) -10 x))))
+
+(fn digit-number (x)
+  (- (char-code x) (char-code #\0)))

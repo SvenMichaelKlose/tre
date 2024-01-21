@@ -1,6 +1,6 @@
 (fn integer-chars-0 (x)
   (!= (integer (mod x 10))
-    (. (digit !)
+    (. (number-digit !)
        (& (<= 10 x)
           (integer-chars-0 (/ (- x !) 10))))))
 
@@ -10,7 +10,7 @@
 (fn decimals-chars (x)
   (!= (mod (* x 10) 10)
     (& (< 0 !)
-       (. (digit (integer !))
+       (. (number-digit (integer !))
           (decimals-chars !)))))
 
 (fn princ-number (x str)
