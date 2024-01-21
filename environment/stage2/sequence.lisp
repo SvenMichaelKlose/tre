@@ -61,9 +61,16 @@
 
 (fn every (pred &rest seqs)
   (@ (seq seqs t)
-    (adotimes ((length seq))
-      (| (funcall pred (elt seq !))
-         (return-from every nil)))))
+     (?
+       (list? seq)
+         (@ (i seq t)
+           (| (funcall pred i)
+              (return-from every nil)))
+       (vector? seq)
+         (adotimes ((length seq))
+           (| (funcall pred (elt seq !))
+              (return-from every nil)))
+       (error "Not a sequence: ~A." seq))))
 
 (fn notany (pred &rest args)
   (apply #'every [not (funcall pred _)] args))

@@ -1,4 +1,6 @@
 Changes relative to tre-0.20:
+  * Added VECTOR?.
+  * EVERY much faster on lists.
   * Added DIRECTORY to get directory lists.
   * Added DUMP to CL target.
   * Added GETENV.
