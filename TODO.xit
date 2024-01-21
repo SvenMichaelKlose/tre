@@ -1,13 +1,10 @@
 Hot!
 [@] !!! Generic functions.
 [ ] !!! Getters and setters.
-[ ] !!. JS target: Emulate protected/private slots by renaming them randomly.
-
-Miscellaneous
+[ ] !!. JS target: Emulate protected/private methods and members.
 [ ] !!. Packaging in user land.
         It's a pain up main street without and about as funny to implement.
-
-[ ] ... Add DO for PROGN.  (Leave PROGN in for the duration.
+[ ] !!. Sub-level FN and VAR forms.
 
 PHP
 [?] Replace __array object by native arrays?
