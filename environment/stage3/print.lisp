@@ -120,21 +120,24 @@
 (fn %print-call (x argdef str info)
   (%with-parens str info
     (%late-print x. str info)
-    (let expanded (%print-get-args .x argdef)
+    (let expanded (argument-expand '%print-call .x argdef)
       (? (eq expanded 'error)
          (%print-rest .x str info)
          (@ (i expanded)
            (%print-gap str)
            (?
-             (& (%body? .i) ..i)  (progn
-                                    (& *print-automatic-newline?*
-                                       (fresh-line str))
-                                    (%print-body ..i str info))
-             (%rest? .i)          (%print-rest ..i str info)
-             (%key? .i)           (progn
-                                    (%print-symbol (make-keyword i.) str info)
-                                    (princ " " str)
-                                    (%late-print ..i str info))
+             (& (%body? .i) ..i)
+               (progn
+                 (& *print-automatic-newline?*
+                    (fresh-line str))
+                 (%print-body ..i str info))
+             (%rest? .i)
+               (%print-rest ..i str info)
+             (%key? .i)
+               (progn
+                (%print-symbol (make-keyword i.) str info)
+                (princ " " str)
+                (%late-print ..i str info))
              (with-temporary *print-automatic-newline?* nil
                (%late-print .i str info))))))))
 
@@ -268,3 +271,25 @@
   x)
 
 (= *definition-printer* #'late-print)
+
+(fn integer-string (x n r)
+  (with (f #'((x)
+                (. (number-digit (mod x r))
+                   (unless (== 0 (--! n))
+                     (f (integer (/ x r)))))))
+    (list-string (reverse (f x)))))
+
+(fn print-hex (x n &optional (str *standard-output*))
+  (princ (integer-string (integer x) n 16) (default-stream str)))
+
+(fn print-hexbyte (x &optional (str *standard-output*))
+  (print-hex x 2 str))
+
+(fn print-hexword (x &optional (str *standard-output*))
+  (print-hex x 4 str))
+
+(fn print-hexdword (x &optional (str *standard-output*))
+  (print-hex x 8 str))
+
+(fn print-octal (x &optional (str *standard-output*))
+  (princ (integer-string x 3 8) (default-stream str)))
