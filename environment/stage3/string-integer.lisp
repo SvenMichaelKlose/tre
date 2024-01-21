@@ -1,4 +1,4 @@
 (fn string-integer (str)
   (!= (make-string-stream)
-    (format ! "~A" str)
+    (princ ! str)
     (read-integer !)))
