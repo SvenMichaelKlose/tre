@@ -43,7 +43,8 @@
                      (acons! name (list args body flags)
                              (class-methods !)))
                    (error "Undefined class ~A." class-name)))
-             (argument-expand-values nil '(class-name name args &body body)
+             (argument-expand-values 'defmethod
+                                     '(class-name name args &body body)
                                      args)))
   nil)
 
