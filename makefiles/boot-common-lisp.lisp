@@ -1,4 +1,4 @@
-(var *cl-debug?* nil)
+(var *cl-debug?* t)
 
 (load "environment/stage0/config-defaults-cl.lisp")
 

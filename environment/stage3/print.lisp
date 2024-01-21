@@ -229,11 +229,7 @@
 
 (fn %print-array (x str info)
   (princ "#" str)
-  (%with-parens str info
-    (doarray (i x)
-      (| (== 0 i)
-         (princ #\  str))
-      (%late-print i str info))))
+  (%print-cons (array-list x) str info))
 
 (fn %print-function (x str info)
   (princ "#'" str)
@@ -273,10 +269,9 @@
 (= *definition-printer* #'late-print)
 
 (fn integer-string (x n r)
-  (with (f #'((x)
-                (. (number-digit (mod x r))
-                   (unless (== 0 (--! n))
-                     (f (integer (/ x r)))))))
+  (with (f [. (number-digit (mod _ r))
+              (unless (== 0 (--! n))
+                (f (integer (/ _ r))))])
     (list-string (reverse (f x)))))
 
 (fn print-hex (x n &optional (str *standard-output*))

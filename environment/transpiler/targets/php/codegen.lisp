@@ -1,4 +1,4 @@
-;;;; CODE GENERATION HELPERS
+;;;; UTILITIES
 
 (fn php-line (&rest x)
   `(,*php-indent* ,@x ,*php-separator*))
@@ -62,7 +62,9 @@
     (developer-note "#'~A~%" name)
     `(,*terpri*
       ,(funinfo-comment fi)
-      "function " ,compiled-name ,@(php-argument-list (funinfo-args fi)) ,*terpri*
+      "function " ,compiled-name
+                  ,@(php-argument-list (funinfo-args fi))
+                  ,*terpri*
       "{" ,*terpri*
          ,@(!? (funinfo-globals fi)
                (php-line "global " (pad (@ #'php-dollarize !) ", ")))
@@ -83,7 +85,11 @@
   (with (fi            (get-funinfo name)
          native-name  `(%%string ,(compiled-function-name-string name)))
     (? (funinfo-scope-arg fi)
-       `(%%native "new __closure (" ,native-name "," ,(php-dollarize (funinfo-scope (funinfo-parent fi))) ")")
+       `(%%native "new __closure ("
+                      ,native-name
+                      ","
+                      ,(php-dollarize (funinfo-scope (funinfo-parent fi)))
+                  ")")
        native-name)))
 
 
@@ -128,16 +134,19 @@
   `(%%native ,(php-dollarize v) "->g (" ,(php-dollarize i) ")"))
 
 (def-php-codegen %set-vec (v i x)
-  `(%%native ,*php-indent* ,(php-dollarize v) "->s (" ,(php-dollarize i) ", " ,(php-%=-value x) ")",*php-separator*))
+  `(%%native ,*php-indent* ,(php-dollarize v) "->s ("
+                               ,(php-dollarize i) ", " ,(php-%=-value x)
+                           ")",*php-separator*))
 
 
 ;;;; NUMBERS
 
 (defmacro def-php-binary (op replacement-op)
   (print-definition `(def-php-binary ,op ,replacement-op))
-  `(def-expander-macro (transpiler-codegen-expander *php-transpiler*) ,op (&rest args)
+  `(def-expander-macro (transpiler-codegen-expander *php-transpiler*)
+                       ,op (&rest args)
      `(%%native ,,@(pad (@ #'php-dollarize args)
-                ,(+ " " replacement-op " ")))))
+                        ,(+ " " replacement-op " ")))))
 
 (progn
   ,@(@ [`(def-php-binary ,@_)]
@@ -170,7 +179,9 @@
   (@ [`("[" ,(php-dollarize _) "]")] indexes))
 
 (fn php-literal-array-element (x)
-  (list (compiled-function-name '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
+  (list (compiled-function-name '%%key) " ("
+            (php-dollarize x.)
+        ") => " (php-dollarize .x.)))
 
 (fn php-literal-array-elements (x)
   (pad (@ #'php-literal-array-element x) ", "))
@@ -182,7 +193,9 @@
   `(%%native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
 
 (def-php-codegen %aref-defined? (arr &rest indexes)
-  `(%%native "isset (" ,(php-dollarize arr) ,@(php-array-subscript indexes) ")"))
+  `(%%native "isset ("
+                 ,(php-dollarize arr) ,@(php-array-subscript indexes)
+             ")"))
 
 (def-php-codegen =-%aref (val &rest x)
   `(%%native (%aref ,@x) " = " ,(php-dollarize val)))
@@ -209,7 +222,9 @@
   (pad (@ #'php-literal-object-element x) ", "))
 
 (def-php-codegen %%%make-json-object (&rest elements)
-  `(%%native "(object) array (" ,@(php-literal-object-elements (group elements 2)) ")"))
+  `(%%native "(object) array ("
+                 ,@(php-literal-object-elements (group elements 2))
+             ")"))
 
 (def-php-codegen %new (&rest x)
   (? x
@@ -223,21 +238,22 @@
   `(%%native ,(php-dollarize x)
              "->"
              ,(?
-                (%%string? y)  .y.
-                (symbol? y)    (convert-identifier (make-symbol (symbol-name y) "TRE"))
+                (%%string? y)
+                  .y.
+                (symbol? y)
+                  (convert-identifier (make-symbol (symbol-name y) "TRE"))
                 y)))
 
 
 ;;;; CLASSES
 
-(def-php-codegen %php-class-head (cls)
+(def-php-codegen %php-class-head (cls &key (implements nil))
   `(%%native "class " ,(class-name cls)
              ,@(!? (class-base cls)
                    `(" extends " ,!))
+             ,@(!? implements
+                   `(" implements " ,(pad (ensure-list !) ", ")))
              "{"))
-
-(def-php-codegen %js-class-tail ()
-  `(%%native "}" ""))
 
 (def-php-codegen %php-class-tail ()
   `(%%native "}" ""))

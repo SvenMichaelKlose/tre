@@ -31,7 +31,10 @@
   (generic-defmethod x))
 
 (fn php-method-name (cls name)
-  ($ (class-name cls) '- name))
+  ($ (class-name cls) '- (?
+                           (eq 'aref name) 'offset-get
+                           (eq '=-aref name) 'offset-set
+                           name)))
 
 (fn php-compiled-method-name (cls name)
   (compiled-function-name (php-method-name cls name)))
@@ -50,7 +53,11 @@
   (!= (argument-expand-names 'php-method .x.)
     `(,@(!? ...x.
             (list (php-method-flags !)))
-      "function " ,x. " " ,(php-argument-list !) ,*terpri*
+      "function " ,(case x.
+                     'aref    'offset-get
+                     '=-aref  'offset-set
+                     x.)
+      " " ,(php-argument-list !) ,*terpri*
       "{" ,*terpri*
       ,*php-indent* "return "
           ,(php-compiled-method-name cls x.)
@@ -66,8 +73,12 @@
   (mapcan [php-method cls _]
           (class-methods cls)))
 
+(fn class-has-getset-methods? (cls)
+  (intersect '(aref =-aref) (print (carlist (class-methods cls)))))
+
 (fn php-class (cls)
-  `((%php-class-head ,cls)
+  `((%php-class-head ,cls ,@(& (class-has-getset-methods? cls)
+                               '(:implements "ArrayAccess")))
     ,(!= (argument-expand-names 'php-constructor
                                 (cadr (class-constructor-maker cls)))
        `("function __construct " ,(php-argument-list !) ,*terpri*
