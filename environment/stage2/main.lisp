@@ -10,7 +10,6 @@
 (env-load "stage2/elt.lisp")
 (env-load "stage2/subseq-c.lisp" :cl)
 (env-load "stage2/subseq.lisp")
-(env-load "stage2/range.lisp")
 (env-load "stage2/char.lisp")
 (env-load "stage2/char-predicates.lisp")
 (env-load "stage2/string.lisp")

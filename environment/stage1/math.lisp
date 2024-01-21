@@ -18,3 +18,9 @@
 
 (defmacro --! (place &optional (n 1))
   `(= ,place (- ,place ,n)))
+
+(functional range?)
+
+(fn range? (x bottom top)
+  (& (>= x bottom)
+     (<= x top)))
