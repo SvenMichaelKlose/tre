@@ -38,3 +38,4 @@
 (env-load "stage1/maptimes.lisp")
 (env-load "stage1/with-cons.lisp")
 (env-load "stage1/with-gensym.lisp")
+(env-load "stage1/define-filter.lisp")

@@ -2,8 +2,7 @@
   (with-gensym g
     `(fn ,name (,g)
        (filter ,(? (& (not .fun)
-                      (cons? fun.)
-                      (eq 'function fun..))
+                      (function-expr? fun.))
                    fun.
                    `#'(,@fun))
                ,g))))

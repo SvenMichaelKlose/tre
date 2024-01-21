@@ -17,7 +17,7 @@
 (env-load "stage2/vector.lisp")
 (env-load "stage2/sequence.lisp")
 (env-load "stage2/dot-expand.lisp")
-(env-load "stage2/define-mapped-fun.lisp")
+;(env-load "stage2/define-mapped-fun.lisp")
 (env-load "stage2/assoc.lisp")
 (env-load "stage2/pairlist.lisp")
 (env-load "stage2/in.lisp")
