@@ -5,7 +5,7 @@
     :encapsulate-strings    #'encapsulate-strings
     :count-tags             #'count-tags
     :wrap-tags              #'wrap-tags
-    :codegen-expand         [expander-expand (codegen-expander) _]
+    :codegen-expand         #'codegen-expand
     :convert-identifiers    #'convert-identifiers
     :output-filter          #'flatten)
 

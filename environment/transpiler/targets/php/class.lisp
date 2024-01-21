@@ -32,8 +32,8 @@
 
 (fn php-method-name (cls name)
   ($ (class-name cls) '- (?
-                           (eq 'aref name) 'offset-get
-                           (eq '=-aref name) 'offset-set
+                           (eq 'aref name)    'offset-get
+                           (eq '=-aref name)  'offset-set
                            name)))
 
 (fn php-compiled-method-name (cls name)
@@ -74,7 +74,7 @@
           (class-methods cls)))
 
 (fn class-has-getset-methods? (cls)
-  (intersect '(aref =-aref) (print (carlist (class-methods cls)))))
+  (intersect '(aref =-aref) (carlist (class-methods cls))))
 
 (fn php-class (cls)
   `((%php-class-head ,cls ,@(& (class-has-getset-methods? cls)
@@ -93,16 +93,16 @@
     (%php-class-tail)))
 
 (def-php-transpiler-macro finalize-class (class-name)
-  (let classes (defined-classes)
-    (!= (| (href classes class-name)
-           (error "Cannot finalize undefined class ~A." class-name))
-      `(progn
-         (fn ,($ class-name '?) (x)
-           (& (object? x)
-              (is_a x ,(convert-identifier class-name))
-              x))
-         ,(apply (car (class-constructor-maker !))
-                 class-name (class-base !)
-                 (cdr (class-constructor-maker !)))
-         ,@(php-method-functions !)
-         (%= nil (%%native ,@(php-class !)))))))
+  (with (classes  (defined-classes)
+         !        (| (href classes class-name)
+                     (error "Cannot finalize undefined class ~A." class-name)))
+    `(progn
+       (fn ,($ class-name '?) (x)
+         (& (object? x)
+            (is_a x ,(convert-identifier class-name))
+            x))
+       ,(apply (car (class-constructor-maker !))
+               class-name (class-base !)
+               (cdr (class-constructor-maker !)))
+       ,@(php-method-functions !)
+       (%= nil (%%native ,@(php-class !))))))

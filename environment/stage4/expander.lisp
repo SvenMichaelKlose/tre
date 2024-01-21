@@ -1,13 +1,7 @@
 (var *expander-dump?* nil)
 
 (defstruct expander
-  name
-  macros
-  pred
-  call
-  pre
-  post
-  lookup
+  name macros pred call pre post lookup
   user) ; For external use.
 
 (fn expander-macro (expander macro-name)

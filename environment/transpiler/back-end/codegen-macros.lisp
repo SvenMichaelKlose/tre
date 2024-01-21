@@ -18,6 +18,9 @@
         (pad x ,repl-op)
         (list ,repl-op x.))))
 
+(fn codegen-expand (x)
+  (expander-expand (codegen-expander) x))
+
 (fn codegen-macro? (name)
   (expander-has-macro? (codegen-expander) name))
 
