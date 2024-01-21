@@ -1,7 +1,3 @@
-(fn zero? (x)
-  (& (number? x)
-     (== 0 x)))
-
 (fn even? (x)
   (== 0 (mod x 2)))
 

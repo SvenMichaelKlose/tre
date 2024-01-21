@@ -107,7 +107,7 @@
     (aprog1 (curl_exec c)
       (let errno (number (curl_errno c))
         (curl_close c)
-        (? (zero? errno)
+        (? (== 0 errno)
            (& onresult (funcall onresult !))
            (funcall onerror (+ "cURL error code '" errno "'/CURLE"
                                (elt errno *curl-error-codes*))))))))

@@ -51,7 +51,7 @@
     (| (string? x)
        (character? x))
       (unless (& (string? x)
-                 (zero? (length x)))
+                 (== 0 (length x)))
         (= (stream-last-char str) (? (string? x)
                                      (elt x (-- (length x)))
                                      x))

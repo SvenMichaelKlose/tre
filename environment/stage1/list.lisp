@@ -33,7 +33,7 @@
 (functional nthcdr)
 (fn nthcdr (idx x)
   (& x
-     (? (zero? idx)
+     (? (== 0 idx)
         x
         (nthcdr (-- idx) .x))))
 

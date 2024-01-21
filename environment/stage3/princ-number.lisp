@@ -21,6 +21,6 @@
      (princ #\- str))
   (stream-princ (integer-chars x) str)
   (!= (mod x 1)
-    (unless (zero? !)
+    (unless (== 0 !)
       (princ #\. str)
       (stream-princ (decimals-chars !) str))))

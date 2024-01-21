@@ -228,7 +228,7 @@
   (princ "#" str)
   (%with-parens str info
     (doarray (i x)
-      (| (zero? i)
+      (| (== 0 i)
          (princ #\  str))
       (%late-print i str info))))
 

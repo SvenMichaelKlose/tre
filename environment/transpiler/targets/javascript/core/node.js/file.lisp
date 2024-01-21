@@ -38,7 +38,7 @@
 (fn %read-char (fd)
   (!= ((nodejs-file-fd-stream fd).read)
     (when (| (not !)
-             (zero? !.length))
+             (== 0 !.length))
       (= (nodejs-file-eof? fd) t)
       (return))
     (aref ! 0)))

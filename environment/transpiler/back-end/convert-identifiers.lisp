@@ -17,7 +17,7 @@
                      (& ._
                         (eql #\* _.)
                         (alpha-char? ._.)
-                        (zero? pos)))])
+                        (== 0 pos)))])
     (& x
        (? (bump? x)
           (. (char-upcase .x.)
@@ -32,7 +32,7 @@
                                        (list #\_)
                                        (string-list (format nil "_~A" (print-hexbyte (char-code _.) nil)))])
                  (& x
-                    (? (| (& (zero? pos)
+                    (? (| (& (== 0 pos)
                              (digit-char? x.))
                           (transpiler-special-char? x.))
                        (+ (char-synonym x) (corrected-chars .x (++ pos)))

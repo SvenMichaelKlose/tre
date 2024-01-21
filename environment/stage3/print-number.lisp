@@ -6,7 +6,7 @@
 (fn integer-string (x n r)
   (with (f #'((x)
                 (. (digit (mod x r))
-                   (unless (zero? (--! n))
+                   (unless (== 0 (--! n))
                      (f (integer (/ x r)))))))
     (list-string (reverse (f x)))))
 

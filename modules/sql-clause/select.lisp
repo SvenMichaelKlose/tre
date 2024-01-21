@@ -16,5 +16,5 @@
            ,(!? direction (+ " " !))
            ,(!? limit     (+ " LIMIT " !))
            ,(!? (& offset
-                   (not (zero? offset)))
+                   (not (== 0 offset)))
                 (+ " OFFSET " !)))))

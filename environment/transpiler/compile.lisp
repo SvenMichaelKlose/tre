@@ -107,7 +107,7 @@
 (fn tell-number-of-warnings ()
   (!= (length *warnings*)
     (format t "~L; ~A warning~A.~%"
-              (? (zero? !) "No" !)
+              (? (== 0 !) "No" !)
               (? (== 1 !) "" "s"))))
 
 (fn seconds-passed (start-time)
