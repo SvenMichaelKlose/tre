@@ -20,7 +20,6 @@
 (env-load "stage2/dot-expand.lisp")
 (env-load "stage2/define-mapped-fun.lisp")
 (env-load "stage2/assoc.lisp")
-(env-load "stage2/assoc-value.lisp")
 (env-load "stage2/pairlist.lisp")
 (env-load "stage2/in.lisp")
 (env-load "stage2/defstruct.lisp")

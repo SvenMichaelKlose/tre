@@ -1,4 +1,4 @@
-(functional assoc rassoc acons copy-alist ensure-alist)
+(functional assoc assoc-value rassoc acons copy-alist ensure-alist)
 
 (defmacro %define-assoc (name getter)
   `(fn ,name (key lst &key (test #'eql))
@@ -21,6 +21,14 @@
               (error "Pair expected instead of ~A." _)])
     (f lst)
     new-value))
+
+(fn assoc-value (key lst &key (test #'eql))
+  (cdr (assoc key lst :test test)))
+
+(fn (= assoc-value) (val key lst &key (test #'eql))
+  (!? (assoc key lst :test test)
+      (= .! val)
+      (acons! key val lst)))
 
 (fn acons (key val lst)
   (. (. key val) lst))
