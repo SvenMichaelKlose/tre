@@ -9,8 +9,8 @@
 (defbuiltin %force-output (stream)
   (CL:FORCE-OUTPUT stream))
 
-(defbuiltin %fopen (pathname mode)
-  (CL:OPEN pathname
+(defbuiltin %fopen (file-specifier mode)
+  (CL:OPEN file-specifier
            :DIRECTION (? (CL:FIND #\w mode :TEST #'CL:EQUAL)
                          :OUTPUT
                          :INPUT)
@@ -25,9 +25,9 @@
     (unless (eq ! 'eof)
       (CL:CODE-CHAR !))))
 
-(defbuiltin file-exists? (pathname)
-  (& (CL:PROBE-FILE pathname)
+(defbuiltin file-exists? (file-specifier)
+  (& (CL:PROBE-FILE file-specifier)
      t))
 
-(defbuiltin directory (pathname)
-  (CL:DIRECTORY (+ pathname "*.*"))) ; SBCL version
+(defbuiltin directory (file-specifier)
+  (CL:DIRECTORY (+ file-specifier "*.*"))) ; SBCL version

@@ -9,8 +9,8 @@
        x
        (%expand !))))
 
-(defbuiltin load (pathname)
-  (print-definition `(load ,pathname))
-  (@ (i (with-input-file s pathname
+(defbuiltin load (file-specifier)
+  (print-definition `(load ,file-specifier))
+  (@ (i (with-input-file s file-specifier
           (%load-r s)))
     (eval (%expand i))))

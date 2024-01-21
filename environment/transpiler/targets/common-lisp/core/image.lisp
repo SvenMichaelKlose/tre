@@ -1,5 +1,5 @@
-(defbuiltin sys-image-create (pathname fun)
-  (SB-EXT:SAVE-LISP-AND-DIE pathname
+(defbuiltin sys-image-create (file-specifier fun)
+  (SB-EXT:SAVE-LISP-AND-DIE file-specifier
                             :TOPLEVEL (lambda ()
                                         (CL:FUNCALL fun))))
 
