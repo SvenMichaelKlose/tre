@@ -1,5 +1,5 @@
-(%defvar *assert?*            t)
-(%defvar *targets* '(:js :php))
+(%defvar *assert?*      t)
+(%defvar *targets*      '(:js :php))
 (%defvar *development?* t)
 
 (%defvar *print-definitions?* t)

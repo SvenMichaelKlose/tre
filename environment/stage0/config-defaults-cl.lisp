@@ -5,10 +5,11 @@
 (%defvar *targets* '(:cl :js :php))
 
 ;; Enable run-time type checks,
-(%defvar *assert?* t)
+(%defvar *assert?* (| (getenv "TRE_ASSERT_CL")
+                      (getenv "TRE_ASSERT")))
 
 ;; Developer mode with various effects.
-(%defvar *development?* nil)
+(%defvar *development?* (getenv "TRE_DEVELOPMENT"))
 
 ;; Verbosity
 (%defvar *print-definitions?* t)
