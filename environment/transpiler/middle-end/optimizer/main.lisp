@@ -1,6 +1,5 @@
 (env-load "transpiler/middle-end/optimizer/message.lisp")
 (env-load "transpiler/middle-end/optimizer/define-optimizer.lisp")
-(env-load "transpiler/middle-end/optimizer/collect-places.lisp")
 (env-load "transpiler/middle-end/optimizer/usage-tracer.lisp")
 (env-load "transpiler/middle-end/optimizer/funinfos.lisp")
 (env-load "transpiler/middle-end/optimizer/tailcall.lisp")
