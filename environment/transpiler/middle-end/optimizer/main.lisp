@@ -1,4 +1,3 @@
-(env-load "transpiler/middle-end/optimizer/tree-find.lisp")
 (env-load "transpiler/middle-end/optimizer/message.lisp")
 (env-load "transpiler/middle-end/optimizer/define-optimizer.lisp")
 (env-load "transpiler/middle-end/optimizer/collect-places.lisp")

@@ -1,11 +1,14 @@
 (fn function-exits? (x)
   (!= x.
     (?
-      (not x)          t
-      (%%go? !)        (!? (member .!. .x)
-                           (function-exits? .!))
+      (not x)
+        t
+      (%%go? !)
+        (!? (member .!. .x)
+            (function-exits? .!))
       (| (vm-jump? !)
-         (%=? !))      nil
+         (%=? !))
+        nil
       (function-exits? .x))))
 
 (fn opt-tailcall-make-restart (l body front-tag)

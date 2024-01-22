@@ -2,7 +2,8 @@
   (| (member-if [& (number? _)
                    (== _ tag)]
                 *body*)
-     (funinfo-error "Internal compiler error: Tag ~A not found in body ~A." tag *body*)))
+     (funinfo-error "Internal compiler error: Tag ~A not found in body ~A."
+                    tag *body*)))
 
 (fn removable-place? (x)
   (!= *funinfo*
@@ -23,19 +24,22 @@
                   (~%ret? v))
                (with-cons a d _
                  (?
-                   (%=? a)         (with-%= place value a
-                                     (| (tree-find v value :test #'eq)
-                                        (unless (eq v place)
-                                          (| (tree-find v place :test #'eq)
-                                             (traverse-statements d)))))
-                   (%%go? a)       (traverse-tag .a.)
-                   (%%go-cond? a)  (| (eq v ..a.)
-                                      (traverse-tag .a.)
-                                      (traverse-statements d))
                    (| (number? a)
                       (%%comment? a)
                       (named-lambda? a))
-                                   (traverse-statements d)
+                     (traverse-statements d)
+                   (%=? a)
+                     (with-%= place value a
+                       (| (tree-find v value :test #'eq)
+                          (unless (eq v place)
+                            (| (tree-find v place :test #'eq)
+                               (traverse-statements d)))))
+                   (%%go? a)
+                     (traverse-tag .a.)
+                   (%%go-cond? a)
+                     (| (eq v ..a.)
+                        (traverse-tag .a.)
+                        (traverse-statements d))
                    (progn
                      (print _)
                      (funinfo-error "Illegal metacode statement ~A." _))))])

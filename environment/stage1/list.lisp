@@ -1,5 +1,6 @@
 (functional rest last butlast copy-list nthcdr nth append copy-tree ensure-list
-            reverse list-length caar cadr cdar cddr cadar cddar caadar caddr
+            reverse list-length ensure-tree
+            caar cadr cdar cddr cadar cddar caadar caddr
             caadr cdddr cdadar caaddr caddar cdddar cddddr cadadr cadaddr
             cadadar cddadar)
 
@@ -174,9 +175,15 @@
       (rplaca result (cdr (rplacd (| result.
                                      result)
                                   (list (funcall func i))))))))
-(functional ensure-tree)
 
 (fn ensure-tree (x)
   (? (cons? x.)
      x
      (list x)))
+
+(fn tree-find (v x &key (test #'eql))
+  (| (funcall test v x)
+     (& (cons? x)
+        (dolist (i x)
+          (& (tree-find v i)
+             (return t))))))

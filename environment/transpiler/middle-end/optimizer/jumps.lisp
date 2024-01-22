@@ -16,11 +16,14 @@
      (%%go? x)))
 
 (fn target-tag (x constant)
-  (& x
-     (?
-       (number? x.)                 (target-tag .x constant)
-       (constant-jump? x. constant) (| (target-tag (member (%%go-tag x.) *body*) constant)
-                                       (%%go-tag x.)))))
+  (?
+    (not x)
+      nil
+    (number? x.)
+      (target-tag .x constant)
+    (constant-jump? x. constant)
+      (| (target-tag (member (%%go-tag x.) *body*) constant)
+         (%%go-tag x.))))
 
 (fn setting-ret-to-bool? (x)
   (& (%=? x)
@@ -33,7 +36,8 @@
      (let dest (cdr (tag-code (%%go-tag a)))
        (& (%%go-cond? dest.)
           (eq a. dest..))))
-    (. `(,a. ,(%%go-tag (cadr (tag-code (%%go-tag a)))) ,(%%go-value a))
+    (. `(,a. ,(%%go-tag (cadr (tag-code (%%go-tag a))))
+             ,(%%go-value a))
        (optimize-jumps d))
   (& (setting-ret-to-bool? a)
      (!? (target-tag d ..a.)
