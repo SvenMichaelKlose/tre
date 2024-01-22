@@ -1,74 +1,78 @@
-(defstruct format-info
-  stream
-  text
-  args
-  (processed-args 0))
+(fn format (str text &rest args)
+  (with-default-stream s str
+    (with (processed-args 0
+           err-missing
+             #'(()
+                 (error "Argument ~A specified in format \"~A\" is missing."
+                        processed-args text))
+           eol
+            #'((txt args)
+                (terpri s)
+                (f txt args))
 
-(fn %format-directive-eol (inf txt args)
-  (terpri (format-info-stream inf))
-  (%format inf txt args))
+          d-placeholder
+            #'((txt args)
+                (? args
+                   (? (cons? args.)
+                      (late-print args. s)
+                      (princ args. s))
+                   (err-missing))
+                (f txt .args))
 
-(fn %format-directive-placeholder (inf txt args)
-  (? args
-     (? (cons? args.)
-        (late-print args. (format-info-stream inf))
-        (princ args. (format-info-stream inf)))
-     (error "Argument ~A specified in format \"~A\" is missing."
-            (format-info-processed-args inf) (format-info-text inf)))
-  (%format inf txt .args))
+          d-hexadecimal
+            #'((txt args)
+                (? args
+                   (? (cons? args.)
+                      (late-print args. s)
+                      (? (< args. 256)
+                          (print-hexbyte args. s)
+                          (print-hexword args. s)))
+                   (err-missing))
+                (f txt .args))
 
-(fn %format-directive-hexadecimal (inf txt args)
-  (? args
-     (? (cons? args.)
-        (late-print args. (format-info-stream inf))
-        (? (< args. 256)
-            (print-hexbyte args. (format-info-stream inf))
-            (print-hexword args. (format-info-stream inf))))
-     (error "Argument ~A specified in format \"~A\" is missing."
-            (format-info-processed-args inf) (format-info-text inf)))
-  (%format inf txt .args))
+          d-force-output
+            #'((txt args)
+                (force-output s)
+                (f txt args))
 
-(fn %format-directive-force-output (inf txt args)
-  (force-output (format-info-stream inf))
-  (%format inf txt args))
+          d-fresh-line
+            #'((txt args)
+                (fresh-line s)
+                (f txt args))
 
-(fn %format-directive-fresh-line (inf txt args)
-  (fresh-line (format-info-stream inf))
-  (%format inf txt args))
+          tilde
+            #'((txt args)
+                (princ #\~ s)
+                (f txt args))
 
-(fn %format-directive-tilde (inf txt args)
-  (princ #\~ (format-info-stream inf))
-  (%format inf txt args))
+          directive
+            #'((txt args)
+                (++! processed-args)
+                (case txt.
+                  #\%  (eol .txt args)
+                  #\A  (d-placeholder .txt args)
+                  #\X  (d-hexadecimal .txt args)
+                  #\F  (d-force-output .txt args)
+                  #\L  (d-fresh-line .txt args)
+                  #\~  (progn
+                         (princ txt. s)
+                         (f .txt args))
+                  (tilde txt args)))
 
-(fn %format-directive (inf txt args)
-  (++! (format-info-processed-args inf))
-  (case (char-upcase txt.)
-    #\%  (%format-directive-eol inf .txt args)
-    #\A  (%format-directive-placeholder inf .txt args)
-    #\X  (%format-directive-hexadecimal inf .txt args)
-    #\F  (%format-directive-force-output inf .txt args)
-    #\L  (%format-directive-fresh-line inf .txt args)
-    #\~  (progn
-           (princ txt. (format-info-stream inf))
-           (%format inf .txt args))
-    (%format-directive-tilde inf txt args)))
-
-(fn %format (inf txt args)
-  (when txt
-    (!= (format-info-stream inf)
-      (?
-        (eql txt. #\\)  (progn
-                          (princ txt. !)
-                          (princ .txt. !)
-                          (%format inf ..txt args))
-        (eql txt. #\~)  (%format-directive inf .txt args)
-        (progn
-          (princ txt. (format-info-stream inf))
-          (%format inf .txt args))))))
-
-(fn format (str txt &rest args)
-  (with-default-stream nstr str
-    (%format (make-format-info :stream nstr :text txt :args args) (string-list txt) args)))
+          f #'((txt args)
+                (when txt
+                  (?
+                    (eql txt. #\\)
+                      (progn
+                        (princ txt. s)
+                        (princ .txt. s)
+                        (f ..txt args))
+                    (eql txt. #\~)
+                      (directive .txt args)
+                    (progn
+                      (princ txt. s)
+                      (f .txt args))))))
+    (f (string-list text) args))))
 
 (fn neutralize-format-string (x)
   (list-string (mapcan [? (eql _ #\~)
