@@ -10,6 +10,7 @@
                    "toplevel"))))))
 
 (metacode-walker warn-unused (x)
-  :if-named-function (progn
-                       (warn-on-unused-variables (get-lambda-funinfo x.))
-                       (warn-unused (lambda-body x.))))
+  :if-named-function
+    (progn
+      (warn-on-unused-variables (get-lambda-funinfo x.))
+      (warn-unused (lambda-body x.))))

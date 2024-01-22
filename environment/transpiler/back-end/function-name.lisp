@@ -12,7 +12,8 @@
                           (symbol-name name)))
     (let-when n (real-function-name name)
       (| (eq n name)
-         (funinfo-error "Compiled function name clash ~A for ~A and ~A." ! name n)))
+         (funinfo-error "Compiled function name clash ~A for ~A and ~A."
+                        ! name n)))
     (= (href (transpiler-real-function-names *transpiler*) !) name)))
 
 (fn compiled-function-name-string (name)

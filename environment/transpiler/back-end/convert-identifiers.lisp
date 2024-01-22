@@ -28,9 +28,12 @@
 (fn convert-identifier-r (s)
   (with (corrected-chars
            #'((x pos)
-               (with (char-synonym  [? (& ._ (eql #\- _.))
-                                       (list #\_)
-                                       (string-list (format nil "_~A" (print-hexbyte (char-code _.) nil)))])
+               (with (char-synonym
+                        [? (& ._ (eql #\- _.))
+                           (list #\_)
+                           (. #\_
+                              (string-list (print-hexbyte (char-code _.)
+                                                          nil)))])
                  (& x
                     (? (| (& (== 0 pos)
                              (digit? x.))
@@ -38,7 +41,8 @@
                        (+ (char-synonym x) (corrected-chars .x (++ pos)))
                        (. x. (corrected-chars .x (++ pos)))))))
          capitals
-           [remove #\- (string-list (upcase (subseq _ 1 (-- (length _))))) :test #'character==])
+           [remove #\- (string-list (upcase (subseq _ 1 (-- (length _)))))
+                   :test #'character==])
     (? (| (string? s)
           (number? s)
           (character? s))
@@ -56,7 +60,7 @@
                     (eql "TRE-CORE" !)
                     (eql "COMMON-LISP" !))
                  (convert-identifier-r s)
-                 (convert-identifier-r (make-symbol (+ ! "_P_" (symbol-name s))))))
+                 (convert-identifier-r ($ ! "_P_" (symbol-name s)))))
        (awhen (href (converted-identifiers) n)
          (error "Identifier clash: symbol ~A and ~A are both converted to ~A."
                 s ! n))
@@ -69,7 +73,8 @@
              (string? _)         _
              (| (number? _)
                 (character? _))  (princ _ nil)
-             (symbol? _)         (| (assoc-value _ (symbol-translations) :test #'eq)
+             (symbol? _)         (| (assoc-value _ (symbol-translations)
+                                                 :test #'eq)
                                     (convert-identifier _))
              (%%string? _)       (funcall (gen-string) ._.)
              (%%native? _)       (convert-identifiers ._)

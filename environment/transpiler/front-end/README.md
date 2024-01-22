@@ -1,4 +1,5 @@
-# Front end
+Front end
+=========
 
 The front end breaks the input code down into few basic instructions.
 

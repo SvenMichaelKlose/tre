@@ -61,20 +61,24 @@
     `(%set-vec ,.p. ,..p. ,...p. ,(place-expand-0 fi ..x.))))
 
 (define-tree-filter place-expand-0 (fi x)
-  (atom x)              (place-expand-atom fi x)
+  (atom x)
+    (place-expand-atom fi x)
   (| (quote? x)
      (%%native? x)
-     (%var? x))         x
-  (named-lambda? x)     (place-expand-fun x)
+     (%var? x)
+     (%closure? x)
+     (%stackarg? x))
+    x
+  (named-lambda? x)
+    (place-expand-fun x)
   (& (%=? x)
      (%vec? (place-expand-0 fi .x.)))
-                        (place-expand-setter fi x)
+    (place-expand-setter fi x)
   (& (%set-local-fun? x)
      (%vec? (place-expand-0 fi .x.)))
-                        (place-expand-setter fi x)
-  (%closure? x)         x
-  (%slot-value? x)      `(%slot-value ,(place-expand-0 fi .x.) ,..x.)
-  (%stackarg? x)        x)
+    (place-expand-setter fi x)
+  (%slot-value? x)
+    `(%slot-value ,(place-expand-0 fi .x.) ,..x.))
 
 (fn place-expand (x)
   (place-expand-0 (global-funinfo) x))

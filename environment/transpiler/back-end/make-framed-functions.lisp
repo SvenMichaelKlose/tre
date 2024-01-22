@@ -30,4 +30,5 @@
                      `((%function-epilogue ,name)))))))
 
 (define-tree-filter make-framed-functions (x)
-  (named-lambda? x) (make-framed-function x))
+  (named-lambda? x)
+    (make-framed-function x))
