@@ -175,8 +175,7 @@
          exp-check-too-many
            #'((def vals)
                (& (not def) vals
-                  (return (err (+ "~%~A too many argument(s): ~A"
-                                  "Maximum is ~A.")
+                  (return (err "~%~A too many argument(s): ~AMaximum is ~A."
                                (list (length vals) vals (length argdefs))))))
 
          exp-main-non-key
