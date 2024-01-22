@@ -6,9 +6,10 @@
   (| (assoc-value x replacements :test #'eq)
      x))
 
-(fn add-argument-replacements (replacements lambda-form)
+(fn add-argument-replacements (replacements lambda-expr)
   (+ (@ [. _ (argument-sym)]
-        (expanded-lambda-args lambda-form))
+        (argument-expand-names (lambda-name lambda-expr)
+                               (lambda-args lambda-expr)))
      replacements))
 
 (fn rename-arguments-lambda (replacements lambda-form)

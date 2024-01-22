@@ -25,6 +25,3 @@
       ,@(? (eq 'no-body body)
            (lambda-body x)
            body))))
-
-(fn expanded-lambda-args (x)
-  (argument-expand-names (lambda-name x) (lambda-args x)))

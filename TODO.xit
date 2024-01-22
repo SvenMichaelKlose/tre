@@ -1,14 +1,10 @@
 Hot!
 [@] !!! Generic functions.
-[ ] !!! Getters and setters.
-[ ] !!. JS target: Emulate protected/private methods and members.
+[@] !!! Getters and setters.
+[@] !!. JS target: Emulate protected/private methods and members.
 [ ] !!. Packaging in user land.
         It's a pain up main street without and about as funny to implement.
 [ ] !!. Sub-level FN and VAR forms.
-
-PHP
-[?] Replace __array object by native arrays?
-[?] Native closures.
 
 Bugs
 [ ] ... READ-FILE: Unterminated string at file end causes stack exhaustion.
@@ -19,3 +15,5 @@ Maybe later
         confusing.
 [ ] ... Rewrite modules/http-funcall.
 [ ] ... Remove module "sql-clause".
+[?] ... PHP: Native closures?  Need to research the implications first.
+[?] ... Replace PHP __array object by native arrays?

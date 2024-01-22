@@ -32,7 +32,7 @@
 
 (deftest "SOME works"
   ((& (some #'number? '(a b 3)))
-      (not (some #'number? '(a b c))))
+      (notany #'number? '(a b c)))
   t)
 
 (deftest "EVERY works"

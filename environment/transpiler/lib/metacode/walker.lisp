@@ -1,12 +1,9 @@
 (var *body*)
 
-(defmacro metacode-walker (name args &key (if-atom nil)
-                                          (if-cons nil)
-                                          (if-setq nil)
-                                          (if-go nil)
-                                          (if-go-nil nil)
-                                          (if-go-not-nil nil)
-                                          (if-named-function nil))
+(defmacro metacode-walker (name args
+                           &key (if-atom nil) (if-cons nil) (if-setq nil)
+                                (if-go nil) (if-go-nil nil) (if-go-not-nil nil)
+                                (if-named-function nil))
   (with-cons x r args
     (with-gensym v
       `(fn ,name ,args
@@ -24,9 +21,9 @@
                   (named-lambda? ,v)
                     (with-lambda-funinfo ,v
                       (list (copy-lambda ,v
-                                         :body ,(| if-named-function
-                                                   `(,name (lambda-body ,v) ,@r)))))
+                                :body ,(| if-named-function
+                                          `(,name (lambda-body ,v) ,@r)))))
                   (not (metacode-statement? ,v))
-                     (funinfo-error "Metacode statement expected instead of ~A." ,v)
+                    (funinfo-error "METACODE-STATEMENT? is NIL for ~A." ,v)
                   ,(| if-cons `(list ,v)))
                 (,name (cdr ,x) ,@r))))))))

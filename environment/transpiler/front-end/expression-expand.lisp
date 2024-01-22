@@ -1,11 +1,18 @@
+(defstruct expex
+  (argument-filter  #'identity)
+  (setter-filter    #'list)
+  (inline?          [])
+  (warnings?        t))
+
 (var *expex* nil)
 
 
-(fn compiled-list (x)
+(fn compiled-list (x) ; TODO: Look better in a more general section.
   (? (cons? x)
      `(. ,x.
          ,(compiled-list .x))
      x))
+
 
 ;;;; SHARED SETTER FILTER
 

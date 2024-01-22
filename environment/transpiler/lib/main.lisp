@@ -1,6 +1,5 @@
 (env-load "transpiler/lib/print.lisp")
 
-(env-load "transpiler/lib/expex.lisp")
 (env-load "transpiler/lib/transpiler.lisp")
 
 (env-load "transpiler/lib/funinfo/funinfo.lisp")

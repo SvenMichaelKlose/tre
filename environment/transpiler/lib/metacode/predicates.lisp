@@ -1,14 +1,11 @@
 (progn
   ,@(@ [`(def-head-predicate ,_)]
-       '(quote %new
-         %%block %%go %%go-nil %%go-not-nil
-         %stack %stackarg %vec %set-vec %= %tag %%tag
-         %%native %%string
-         %closure %%closure
-         %set-local-fun
+       '(%= quote %new %closure
+         %%block %%go %%go-nil %%go-not-nil %tag %%tag
+         %stack %stackarg %vec %set-vec %set-local-fun
+         %%string
          %function-prologue %function-return %function-epilogue
-         %var %global
-         %%comment)))
+         %%native %var %global %%comment)))
 
 (fn atomic? (x)
   (| (atom x)
@@ -30,8 +27,11 @@
   (| (%%go-nil? x)
      (%%go-not-nil? x)))
 
-(fn %%go-tag (x) .x.)
-(fn %%go-value (x) ..x.)
+(fn %%go-tag (x)
+  .x.)
+
+(fn %%go-value (x)
+  ..x.)
 
 (fn %=-funcall? (x)
   (? (%=? x)
@@ -46,18 +46,10 @@
           (%var? x)
           (%%comment? x))))
 
-(fn named-lambda? (x)
-  (& (function-expr? x)
-     ..x
-     x))
-
-(fn any-lambda? (x)
-  (| (lambda? x)
-     (named-lambda? x)))
-
 (fn metacode-statement? (x)
   (| (number? x)
      (& (cons? x)
         (| (named-lambda? x)
-           (in? x. '%= '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag '%%comment)
+           (in? x. '%= '%set-vec '%var '%function-prologue '%function-epilogue
+                   '%function-return '%%tag '%%comment)
            (vm-jump? x)))))

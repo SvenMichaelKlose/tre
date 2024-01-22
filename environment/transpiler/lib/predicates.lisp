@@ -21,9 +21,9 @@
 
 (fn simple-argument-list? (x)
   (? x
-     (not (some [| (cons? _)
-                   (argument-keyword? _)]
-                x))
+     (notany [| (cons? _)
+                (argument-keyword? _)]
+             x)
      t))
 
 (fn constant-literal? (x)

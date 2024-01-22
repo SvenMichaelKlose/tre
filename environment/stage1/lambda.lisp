@@ -1,5 +1,6 @@
 ;;;; (FUNCTION name)
-;;;; (FUNCTION [name] [LAMBDA] arguments body…)
+;;;; (FUNCTION [name] (arguments body…))
+;;;; (FUNCTION [name] (LAMBDA (arguments body…)))
 
 (fn lambda-name (x)
   (? (eq x. 'function)
@@ -43,6 +44,15 @@
      (let l (past-lambda .x.)
        (& (cons? l)
           (list? l.)))))
+
+(fn named-lambda? (x)
+  (& (function-expr? x)
+     ..x
+     x))
+
+(fn any-lambda? (x)
+  (| (lambda? x)
+     (named-lambda? x)))
 
 (fn lambda-call? (x)
   (& (cons? x)

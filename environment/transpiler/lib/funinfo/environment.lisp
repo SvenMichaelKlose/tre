@@ -7,8 +7,9 @@
 ;;;; FUNCTION NAME
 
 (fn funinfo-names (fi)
-  (& fi (. (funinfo-name fi)
-           (funinfo-names (funinfo-parent fi)))))
+  (& fi
+     (. (funinfo-name fi)
+        (funinfo-names (funinfo-parent fi)))))
 
 
 ;;;; ARGUMENTS
