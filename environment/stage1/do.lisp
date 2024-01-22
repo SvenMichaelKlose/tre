@@ -13,3 +13,8 @@
                         `(setq ,_. ,.._.)]
                       vars)
            (go ,tag))))))
+
+(defmacro while (test result &body body)
+  `(do ()
+       ((not ,test) ,result)
+     ,@body))

@@ -43,3 +43,8 @@
             params)
     `(dotimes (! ,p. ,.p.)
        ,@body)))
+
+(defmacro awhile (test result &body body)
+  `(do ((! nil))
+       ((not (setq ! ,test)) ,result)
+     ,@body))
