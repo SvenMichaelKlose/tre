@@ -15,11 +15,9 @@ SBCL="sbcl --noinform"
 TRE="./tre"
 BINDIR="/usr/local/bin/"
 
-CONFIG=`eval echo ~/.tre`
-if [ -e $CONFIG ]; then
-    while IFS='=' read -r key value; do
-        export "$key=$value";
-    done < $CONFIG;
+SHCONFIG=`eval echo ~/.tre.sh`
+if [ -e $SHCONFIG ]; then
+    . $SHCONFIG
 fi
 
 clean_example_projects ()

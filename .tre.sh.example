@@ -1,0 +1,8 @@
+export TRE_ASSERT=1
+export TRE_ASSERT_CL=1
+#export TRE_PATH=~/Desktop/git/tre/
+
+## These enable one sending useful bug reports:
+
+#export TRE_DEBUG=1
+#export TRE_DEVELOPMENT=1

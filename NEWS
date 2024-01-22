@@ -8,7 +8,8 @@ Changes relative to tre-0.20:
     SET-EXCLUSIVE-OR and SUBSET?.
   * New ARGUMENTS returns command-line arguments.
   * New GETENV returns environment variables.
-  * File ~/.tre is read to update environment variables.
+  * File ~/.tre.sh is shell evaluated to update environment variables
+    before launching tré.
   * JS class methods may be declared static.
   * PHP class members and methods may be declared static,
     protected or private.

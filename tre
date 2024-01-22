@@ -1,15 +1,14 @@
 #!/bin/sh
 
 if [ -z "$TRE_PATH" ]; then
-  export TRE_PATH=/usr/local/lib/tre;
+  export TRE_PATH=/usr/local/lib/tre/
 fi
 
-CONFIG=`eval echo ~/.tre`
-if [ -e $CONFIG ]; then
-    while IFS='=' read -r key value; do
-        export "$key=$value";
-    done < $CONFIG;
+SHCONFIG=`eval echo ~/.tre.sh`
+if [ -e $SHCONFIG ]; then
+echo "config"
+    . $SHCONFIG;
 fi
 
-sbcl --noinform --control-stack-size 16 \
-     --core $TRE_PATH/image $@
+echo $TRE_PATH
+sbcl --noinform --control-stack-size 16 --core $TRE_PATH/image $@
