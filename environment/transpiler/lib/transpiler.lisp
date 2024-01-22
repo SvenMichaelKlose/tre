@@ -22,38 +22,39 @@
   ;;; For users.
   ;;;
 
-  ; Also generate argument expanders for functions with simple argument
-  ; lists to validate all calls at run-time.
-  (always-expand-arguments?   nil)
-
-  ; Import functions from host if missing.
+  ;; Import functions from host if missing.
   (import-from-host?          t)
 
-  ; Import global variables from host if missing.
+  ;; Import global variables from host if missing.
   (import-variables?          t)
 
-  ; Dump outputs of all passes if T.  Might also be a pass name or a list
-  ; of names.
+  ;; Dump outputs of all passes if T.  Might also be a pass name or a list
+  ;; of names.  See alse DEFINE-TRANSPILER-END.
   (dump-passes?               nil)
 
-  ; Dump outputs of passes in which this expression is found.
-  ; '(FUNCTION BUTLAST) would dump every pass result containing symbol BUTLAST.
+  ;; Dump outputs of passes in which an EQUAL expression is found.
+  ;; '(FUNCTION BUTLAST) would dump every pass result containing symbol BUTLAST.
   (dump-selector              nil)
 
-  ; Dump FUNINFOs in comments before their functions.
+  ;; Dump FUNINFOs in comments before their functions.
   (funinfo-comments?          nil)
 
-  ; Used for incremental compilations.  If set only this list of sections
-  ; is compiled and the rest is taken from the cache.
+  ;; Used for incremental compilations.  If set only this list of sections
+  ;; is compiled and the rest is taken from the cache.
   (sections-to-update         nil)
 
-  ; Include assertions.
-  (assert?                    nil)
+  ;; Include assertions.
+  (assert?                    *assert?*)
 
-  ; Trace call stack at run-time.
+  ;; Also generate argument expanders for functions with simple argument
+  ;; lists to validate all calls at run-time.
+  ;; TODO: Revive.  Seems to be hanging up on functionals.
+  (always-expand-arguments?   nil) ; *assert?*)
+
+  ;; Trace call stack at run-time.
   (backtrace?                 nil)
 
-  ; Associative list of target-dependent configurations.
+  ;; Associative list of target-dependent configurations.
   (configurations             nil)
 
   ;;;
@@ -71,10 +72,10 @@
   (identifier-char?        [_ (identity t)])
   (gen-string              #'literal-string)
 
-  ; The very last pass.
+  ;; The very last pass.
   (postprocessor           #'flatten)
 
-  ; Prologue/epilogue of generated source.
+  ;; Prologue/epilogue of generated source.
   (prologue-gen            #'(()))
   (epilogue-gen            #'(()))
 
@@ -84,25 +85,26 @@
   transpiler-macro-expander
   codegen-expander
 
-  ; Initialising EXPEX in TRANSPILER-EXPEX.
+  ;; Initialising EXPEX in TRANSPILER-EXPEX.
   (expex-initializer       #'identity)
 
-  ; Turn closures into top-level functions.
+  ;; Turn closures into top-level functions.
   (lambda-export?           nil)
 
+  ;; TODO: Elaborate.
   (function-frames?         t)
 
-  ; Make %VAR declarations for each function.
+  ;; Make %VAR declarations for each function. TODO: Elaborate.
   (needs-var-declarations?  nil)
 
-  ; Place local variables on the stack.  Makes expressions of the form
-  ; (%STACK stack-index).
+  ;; Place local variables on the stack.  Makes expressions of the form
+  ;; (%STACK stack-index).
   (stack-locals?            nil)
 
-  ; Have arguments on GC stack. (Was C core.)
+  ;; Have arguments on GC stack. (Was C core.)
   (arguments-on-stack?      nil)
 
-  ; Copy arguments to GC stack. (Was C core.)
+  ;; Copy arguments to GC stack. (Was C core.)
   (copy-arguments-to-stack? nil)
 
   (function-name-prefix     "tre_")
@@ -111,48 +113,48 @@
   ;;; Generic
   ;;;
 
-  ; Class EXPEX object to configure EXPRESSION-EXPAND.
+  ;; Class EXPEX object to configure EXPRESSION-EXPAND.
   (expex                    nil)
 
-  ; Symbol to identifier translations that override CONVERT-IDENTIFIER,
-  ; e.g. to translate NIL to "false" and T to "true".
+  ;; Symbol to identifier translations that override CONVERT-IDENTIFIER,
+  ;; e.g. to translate NIL to "false" and T to "true".
   (symbol-translations      nil)
 
-  ; Closures cut out of their parent functions.
+  ;; Closures cut out of their parent functions.
   (closures                 nil)
 
-  ; Declarations that appear right after the imports.
+  ;; Declarations that appear right after the imports.
   (delayed-exprs            nil)
 
-  ; DEFUN function sources.
+  ;; DEFUN function sources.
   (memorized-sources        nil)
 
-  ; FUNINFOs by function name.
+  ;; FUNINFOs by function name.
   (funinfos                 (make-hash-table :test #'eq))
 
-  ; The root of the FUNINFO tree.
+  ;; The root of the FUNINFO tree.
   (global-funinfo           nil)
 
   (defined-functions        (make-hash-table :test #'eq))
   (defined-variables        (make-hash-table :test #'eq))
   (defined-packages         (make-hash-table :test #'eq))
 
-  ; Defined CLASSes.
+  ;; Defined CLASSes.
   (defined-classes          (make-hash-table :test #'eq))
 
   (host-functions           nil)
   (host-variables           nil)
   (functionals              nil)
 
-  ; Functions and variables we want to import.  Imports take place after
-  ; running everything through the front end.
+  ;; Functions and variables we want to import.  Imports take place after
+  ;; running everything through the front end.
   (wanted-functions nil)
   (wanted-functions-hash    (make-hash-table :test #'eq))
   (wanted-variables nil)
   (wanted-variables-hash    (make-hash-table :test #'eq))
 
-  ; List of used functions to warn about unused functions
-  ; at the end of COMPILE.
+  ;; List of used functions to warn about unused functions
+  ;; at the end of COMPILE.
   (used-functions           (make-hash-table :test #'eq))
 
   (accumulated-toplevel-expressions nil)
@@ -161,10 +163,10 @@
   (compiled-decls           nil)
   (compiled-inits           nil)
 
-  ; Identifier conversions.
+  ;; Identifier conversions.
   (identifiers              (make-hash-table :test #'eq))
 
-  ; Reversed conversions to detect clashes.
+  ;; Reversed conversions to detect clashes.
   (converted-identifiers    (make-hash-table :test #'eq))
   (real-function-names      (make-hash-table :test #'eq))
 
