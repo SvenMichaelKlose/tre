@@ -12,4 +12,9 @@
     :transpiler  (copy-transpiler *php-transpiler*)
     :emitter     [put-file "compiled/unit-1.php" _])
 
+;(make-project "PHP test unit 2"
+;    `("tests/unit-2-getter.lisp")
+;    :transpiler  (copy-transpiler *php-transpiler*)
+;    :emitter     [put-file "compiled/unit-2-getter.php" _])
+
 (quit)
