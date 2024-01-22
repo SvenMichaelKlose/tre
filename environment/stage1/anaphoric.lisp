@@ -26,7 +26,7 @@
      ,@body))
 
 (defmacro aprog1 (obj &body body)
-  `(let ! ,obj
+  `(!= ,obj
      ,@body
      !))
 

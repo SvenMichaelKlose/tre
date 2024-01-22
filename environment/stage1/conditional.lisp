@@ -24,10 +24,9 @@
  
 (fn %case (g cases)
   (let test (%case-test cases)
-    (mapcar #'((x)
-                (? .x
-                   `((,test ,g ,x.) ,.x.)
-                   (list x.)))
+    (mapcar [? ._
+               `((,test ,g ,_.) ,._.)
+               (list _.)]
             (group2 (? (eq :test .cases.)
                        ...cases
                        .cases)))))

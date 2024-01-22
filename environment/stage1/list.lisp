@@ -1,8 +1,11 @@
-(functional rest)
+(functional rest last butlast copy-list nthcdr nth append copy-tree ensure-list
+            reverse list-length caar cadr cdar cddr cadar cddar caadar caddr
+            caadr cdddr cdadar caaddr caddar cdddar cddddr cadadr cadaddr
+            cadadar cddadar)
+
 (fn rest (x)
   .x)
 
-(functional last)
 (fn last (x)
   (? .x
      (last .x)
@@ -19,29 +22,24 @@
 (fn nconc (&rest lsts)
   (%nconc-0 lsts))
 
-(functional butlast)
 (fn butlast (plist)
   (? .plist
      (. plist. (butlast .plist))))
 
-(functional copy-list)
 (fn copy-list (x)
   (? (atom x)
      x
      (. x. (copy-list .x))))
 
-(functional nthcdr)
 (fn nthcdr (idx x)
   (& x
      (? (== 0 idx)
         x
         (nthcdr (-- idx) .x))))
 
-(functional nth)
 (fn nth (i x)
   (car (nthcdr i x)))
 
-(functional append)
 (fn append (&rest lists)
   (& lists
      (let result nil
@@ -52,8 +50,6 @@
                  (setq l (last (rplacd l (copy-list i))))
                  (setq result (copy-list i)
                        l (last result)))))))))
-
-(functional caar cadr cdar cddr cadar cddar caadar caddr caadr cdddr cdadar caaddr caddar cdddar cddddr cadadr cadaddr cadadar cddadar)
 
 (fn caar (x) (car (car x)))
 (fn cadr (x) (car (cdr x)))
@@ -84,14 +80,12 @@
 (fn (= cddr) (val lst) (rplacd (cdr lst) val) val)
 (fn (= caddr) (val lst) (rplaca (cddr lst) val) val)
 
-(functional copy-tree)
 (fn copy-tree (x)
   (? (atom x)
      x
      (. (copy-tree x.)
         (copy-tree .x))))
 
-(functional ensure-list)
 (fn ensure-list (x)
   (& x
      (? (list? x)
@@ -115,7 +109,8 @@
        .args ..args)
     ret))
 
-(const *first-to-tenth* '(first second third fourth fifth sixth seventh eighth ninth tenth))
+(const *first-to-tenth*
+       '(first second third fourth fifth sixth seventh eighth ninth tenth))
 
 (fn %make-cdr (i)
   (? (== i 0)
@@ -142,8 +137,10 @@
 
 (fn dynamic-map (func &rest lists)
   (?
-    (string? lists.)  (list-string (apply #'mapcar func (mapcar #'string-list lists)))
-    (array? lists.)   (apply #'mapcar func (mapcar #'array-list lists))
+    (string? lists.)
+      (list-string (apply #'mapcar func (mapcar #'string-list lists)))
+    (array? lists.)
+      (apply #'mapcar func (mapcar #'array-list lists))
     (apply #'mapcar func lists)))
 
 (fn mapcan (func &rest lists)
@@ -159,13 +156,11 @@
 (fn member-if-not (pred &rest lsts)
   (member-if #'((_) (not (funcall pred _))) lsts))
 
-(functional reverse)
 (fn reverse (lst)
   (!= nil
     (dolist (i lst !)
       (push i !))))
 
-(functional list-length)
 (fn list-length (x)
   (let len 0
     (while (cons? x)
@@ -174,9 +169,8 @@
       (++! len))))
 
 (fn filter (func lst)
-  (let result (. nil nil)
+  (let result (. () ())
     (dolist (i lst .result)
-      (rplaca result
-              (cdr (rplacd (| result.
-                              result)
-                           (list (funcall func i))))))))
+      (rplaca result (cdr (rplacd (| result.
+                                     result)
+                                  (list (funcall func i))))))))

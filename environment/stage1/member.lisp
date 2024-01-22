@@ -4,4 +4,4 @@
   (do ((i lst .i))
       ((not i))
     (? (funcall test elm i.)
-       (return-from member i))))
+       (return i))))

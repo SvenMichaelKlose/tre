@@ -1,15 +1,15 @@
-(defmacro do (binds (test &rest result) &body body)
+(defmacro do (vars (test &rest result) &body body)
   (let tag (gensym)
     `(block nil
-       (let* ,(mapcar #'((_)
-                          `(,_. ,._.))
-                      binds)
+       (let* ,(mapcar [`(,_. ,._.)]
+                      vars)
          (tagbody
            ,tag
            (? ,test
-              (return (progn ,@result)))
+              (return (progn
+                        ,@result)))
            ,@body
-           ,@(mapcar #'((_)
-                         (& .._. `(setq ,_. ,.._.)))
-                     binds)
+           ,@(mapcar [& .._.
+                        `(setq ,_. ,.._.)]
+                      vars)
            (go ,tag))))))

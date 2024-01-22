@@ -1,10 +1,5 @@
-;;;; (FUNCTION [LAMBDA] [name] [arguments body...])
 ;;;; (FUNCTION name)
-
-(fn past-lambda-1 (x)
-  (? (eq x. 'lambda)
-     .x
-     x))
+;;;; (FUNCTION [name] [LAMBDA] arguments body…)
 
 (fn lambda-name (x)
   (? (eq x. 'function)
@@ -19,7 +14,10 @@
      x))
 
 (fn past-lambda (x)
-  (past-lambda-1 (past-function x)))
+  (!= (past-function x)
+    (? (eq !. 'lambda)
+       .!
+       !)))
 
 (fn lambda-args (x)
   (car (past-lambda x)))

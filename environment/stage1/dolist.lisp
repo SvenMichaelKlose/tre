@@ -14,4 +14,5 @@
            (setq ,tmplst (cdr ,tmplst))
            (go ,starttag)
            ,endtag
-           (return (progn ,@result)))))))
+           (return (progn
+                     ,@result)))))))

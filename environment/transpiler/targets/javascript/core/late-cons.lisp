@@ -9,12 +9,10 @@
      (assert (not x) "Cons or NIL expected instead of ~A." x)))
 
 (fn rplaca (x val)
-  (declare type cons x)
   (= x._ val)
   x)
 
 (fn rplacd (x val)
-  (declare type cons x)
   (= x.__ val)
   x)
 

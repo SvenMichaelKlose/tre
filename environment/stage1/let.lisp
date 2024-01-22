@@ -10,14 +10,16 @@
       (error "Place ~A: symbol expected instead of an argument keyword." place)
     `(#'((,place)
            ,@body)
-       ,expr)))
+         ,expr)))
 
 (defmacro let* (alst &body body)
   (?
-    (not alst)        `(progn
-                         ,@body)
-    (not (cdr alst))  `(let ,(car (car alst)) ,(car (cdr (car alst)))
-                         ,@body)
+    (not alst)
+      `(progn
+         ,@body)
+    (not (cdr alst))
+      `(let ,(car (car alst)) ,(car (cdr (car alst)))
+         ,@body)
     `(let ,(car (car alst)) ,(car (cdr (car alst)))
        (let* ,(cdr alst)
          ,@body))))

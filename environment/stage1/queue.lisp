@@ -1,7 +1,7 @@
-(functional queue-list queue-front)
+(functional make-queue queue-list queue-front)
 
 (fn make-queue ()
-  (. nil nil))
+  (. () ()))
 
 (fn enqueue (x &rest vals)
   (rplaca x (cdr (rplacd (| x. x) vals)))

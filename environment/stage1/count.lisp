@@ -1,3 +1,5 @@
+(functional count)
+
 (fn count-if (pred lst &optional (init 0))
   (? lst
      (count-if pred .lst (? (apply pred (list lst.))
@@ -5,8 +7,5 @@
                             init))
      init))
 
-(functional count)
 (fn count (x lst &optional (init 0) &key (test #'eql))
-  (count-if #'((i)
-                (apply test i (list x)))
-            lst init))
+  (count-if [apply test _ (list x)] lst init))
