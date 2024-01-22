@@ -132,6 +132,15 @@ examples)
 #   $TRE examples/make-obfuscated.lisp # TODO: Fix setting the current *PACKAGE*.
     ;;
 
+all)
+    echo "Making 'all'…"
+    ./make.sh boot
+    ./make.sh tests
+    ./make.sh examples
+    echo
+    echo "Successfully built target 'all'."
+    ;;
+
 projects)
     clean_example_projects
     cd examples/project-php && ./make.sh && cd -
@@ -139,23 +148,10 @@ projects)
     cd examples/project-js-php && ./make.sh && cd -
     ;;
 
-all)
-    echo "Making 'all'…"
-    ./make.sh boot $ARGS
-    ./make.sh tests
-    ./make.sh examples
-    echo
-    echo "Successfully built target 'all'."
-    ;;
-
-releasetests)
+release)
     echo "Making release tests…" | tee log-make.lisp
     ./make.sh clean
-    ./make.sh boot
-    ./make.sh genboot
-    ./make.sh core
-    ./make.sh tests
-    ./make.sh examples
+    ./make.sh all
     ./make.sh install
     ./make.sh projects
     echo "Release tests done." >>log-make.lisp
@@ -192,7 +188,7 @@ clean)
     echo "  nodeconsole   Make node.js REPL. (defunct)"
     echo "  webconsole    Make web browser REPL. (defunct)"
     echo ""
-    echo "  releasetests  Make 'all' and 'nodeconsole'."
+    echo "  release       Make 'all' and 'nodeconsole'."
     echo "  updatetests   Generate new reference files from current test."
 
     ;;
