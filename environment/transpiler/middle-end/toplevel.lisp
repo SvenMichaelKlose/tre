@@ -3,7 +3,7 @@
     :expression-expand      #'expression-expand
     :unassign-named-functions       #'unassign-named-functions
     :accumulate-toplevel    #'accumulate-toplevel-expressions
-    :quote-keywords         #'quote-keywords
+    :collect-keywords       #'collect-keywords
     :validate-metacode      #'validate-metacode
     :optimize               #'optimize
     :opt-tailcall           #'pass-opt-tailcall)
