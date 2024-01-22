@@ -18,12 +18,11 @@
        (xchg (elt x i) (elt x right)))
     i))
 
-(fn sort-0 (x left right test<)
-  (when (< left right)
-    (let divisor (sort-divide x left right test<)
-      (sort-0 x left (-- divisor) test<)
-      (sort-0 x (++ divisor) right test<))))
-
 (fn sort (x &key (test #'<))
-  (& x (sort-0 x 0 (-- (length x)) test))
+  (with (f #'((left right)
+                (when (< left right)
+                  (let divisor (sort-divide x left right test)
+                    (f left (-- divisor))
+                    (f (++ divisor) right)))))
+    (& x (f 0 (-- (length x)))))
   x)

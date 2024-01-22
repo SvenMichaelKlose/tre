@@ -108,6 +108,9 @@
 (fn remove (elm x &key (test #'eql))
   (remove-if [funcall test elm _] x))
 
+(defmacro remove! (x lst &rest args)
+  `(= ,lst (remove ,x ,lst ,@args)))
+
 (fn list-subseq (seq start &optional (end 999999))
   (when (& seq
            (not (== start end)))

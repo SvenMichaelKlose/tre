@@ -1,4 +1,4 @@
-(fn make-stream-stream (&key stream
+(fn make-file-stream (&key stream
                              (input-location (make-stream-location))
                              (output-location (make-stream-location)))
   (make-stream

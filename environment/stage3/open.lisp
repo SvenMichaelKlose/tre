@@ -7,7 +7,7 @@
 
 (fn open (path &key direction)
   (!? (%fopen path (%fopen-direction direction))
-      (make-stream-stream :stream !
+      (make-file-stream :stream !
                           :input-location (make-stream-location :id path))
       (error "Couldn't open file `~A'." path)))
 

@@ -1,13 +1,12 @@
 (defmacro compose (&rest function-list)
-  (with (rec #'((l)
-                  `(,(!= l.
-                       (? (& (cons? !)
-                             (eq 'function !.)
-                             (atom .!.))
-                          .!.
-                          !))
-                       ,(? .l
-                           (rec .l)
-                           'x))))
+  (with (f [`(,(!= _.
+                 (? (& (cons? !)
+                       (eq 'function !.)
+                       (atom .!.))
+                    .!.
+                    !))
+               ,(? ._
+                   (f ._)
+                   'x))])
     `#'((x)
-          ,(rec function-list))))
+         ,(f function-list))))
