@@ -7,10 +7,6 @@
   (!? (remove-if #'not x)
       (implode (list-phparray !))))
 
-(fn %elt-string (seq idx)
-  (when (%%%< idx (strlen seq))
-    (code-char (ord (substr seq idx 1)))))
-
 (fn string-subseq (seq start &optional (end nil))
   (unless (== start end)
     (!= (substr seq start (? end (- end start)))

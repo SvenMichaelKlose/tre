@@ -16,3 +16,6 @@
 
 (defbuiltin %elt-string (obj idx)
   (CL:ELT obj idx))
+
+(defbuiltin char (obj idx)
+  (CL:ELT obj idx))

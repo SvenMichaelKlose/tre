@@ -2,13 +2,14 @@
   (is_a x "__character"))
 
 (fn code-char (x)
-  (declare type number x)
   (new __character x))
 
 (fn char-code (x)
-  (declare type character x)
   x.v)
 
 (fn char-string (x)
-  (declare type character x)
   (chr x.v))
+
+(fn char (seq idx)
+   (when (%%%< idx (strlen seq))
+     (code-char (ord (substr seq idx 1)))))
