@@ -9,7 +9,7 @@
   (@ [cons _. ._.] (group x 2)))
 
 (fn alist-kwlist (x)
-  (mapcan [list _. ._] x))
+  (+@ [list _. ._] x))
 
 (fn kwlist-evalist (x)
   (list 'backquote (@ [list _. (list 'quasiquote ._)]

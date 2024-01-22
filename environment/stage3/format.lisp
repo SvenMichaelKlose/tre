@@ -75,7 +75,7 @@
     (f (string-list text) args))))
 
 (fn neutralize-format-string (x)
-  (list-string (mapcan [? (eql _ #\~)
-                          (list _ _)
-                          (list _)]
-                       (string-list x))))
+  (list-string (+@ [? (eql _ #\~)
+                      (list _ _)
+                      (list _)]
+                   (string-list x))))

@@ -3,7 +3,8 @@
 (fn init-compiler-macros ()
   (= *tagbody-replacements* nil))
 
-(var *compiler-macro-expander* (define-expander 'compiler :pre #'init-compiler-macros))
+(var *compiler-macro-expander* (define-expander 'compiler
+                                                :pre #'init-compiler-macros))
 
 (defmacro def-compiler-macro (name args &body x)
   (print-definition `(def-compiler-macro ,name ,args))
@@ -15,27 +16,29 @@
 (def-compiler-macro cond (&rest args)
   (with-compiler-tag end-tag
     `(%%block
-       ,@(mapcan [with-compiler-tag next
-                   (when _.
-                     `(,@(unless (eq t _.)
-                           `((%= ,*return-id* ,_.)
-                             (%%go-nil ,next ,*return-id*)))
-                       ,@(!? (wrap-atoms ._)
-                             `((%= ,*return-id* (%%block ,@!))))
-                       (%%go ,end-tag)
-                       ,@(unless (eq t _.)
-                           (list next))))]
-                 args)
+       ,@(+@ [with-compiler-tag next
+               (when _.
+                 `(,@(unless (eq t _.)
+                       `((%= ,*return-id* ,_.)
+                         (%%go-nil ,next ,*return-id*)))
+                   ,@(!? (wrap-atoms ._)
+                         `((%= ,*return-id* (%%block ,@!))))
+                   (%%go ,end-tag)
+                   ,@(unless (eq t _.)
+                       (list next))))]
+             args)
        ,end-tag
        (identity ,*return-id*))))
 
 (def-compiler-macro progn (&body body)
   (!? body
-      `(%%block ,@(wrap-atoms !))))
+      `(%%block
+         ,@(wrap-atoms !))))
 
 (def-compiler-macro setq (&rest args)
-  `(%%block ,@(@ [`(%= ,_. ,._.)]
-                 (group args 2))))
+  `(%%block
+     ,@(@ [`(%= ,_. ,._.)]
+          (group args 2))))
 
 (def-compiler-macro ? (&body body)
   (with (tests (group body 2)
@@ -63,7 +66,7 @@
        body)
     `(%%block
        ,@(@ [| (& (atom _)
-                   (tag-replacement _))
+                  (tag-replacement _))
                _]
             (expander-expand *tagbody-expander* body))
        (identity nil))))

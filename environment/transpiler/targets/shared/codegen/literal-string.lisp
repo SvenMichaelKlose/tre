@@ -1,8 +1,8 @@
 (fn make-c-newlines (x)
-  (list-string (mapcan [? (== 10 (char-code _))
-                          `(#\\ #\n)
-                          `(,_)]
-                       (string-list x))))
+  (list-string (+@ [? (== 10 (char-code _))
+                      `(#\\ #\n)
+                      `(,_)]
+                   (string-list x))))
 
 (fn literal-string (x &optional (quote-char #\") (chars-to-escape #\"))
   (string-concat (string quote-char)

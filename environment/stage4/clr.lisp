@@ -1,2 +1,3 @@
 (defmacro clr (&rest places)
-  `(= ,@(mapcan [`(,_ nil)] places)))
+  `(= ,@(+@ [list _ nil]
+            places)))

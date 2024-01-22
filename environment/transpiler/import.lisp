@@ -52,18 +52,18 @@
   (awhen (wanted-functions)
     (= (wanted-functions) nil)
     (developer-note "Importing functions ~A…~%" !)
-    (frontend (mapcan [unless (defined-function _)
-                        `((fn ,_ ,(host-function-arguments _)
-                           ,@(host-function-body _)))]
-                      !))))
+    (frontend (+@ [unless (defined-function _)
+                    `((fn ,_ ,(host-function-arguments _)
+                       ,@(host-function-body _)))]
+                  !))))
 
 (fn import-wanted-variables ()
   (awhen (wanted-variables)
     (= (wanted-variables) nil)
     (developer-note "Importing variables ~A…~%" !)
-    (frontend (mapcan [unless (defined-variable _)
-                       `((var ,_ ,(assoc-value _ *variables* :test #'eq)))]
-                      !))))
+    (frontend (+@ [unless (defined-variable _)
+                   `((var ,_ ,(assoc-value _ *variables* :test #'eq)))]
+                  !))))
 
 (fn import-from-host ()
   (when (import-from-host?)

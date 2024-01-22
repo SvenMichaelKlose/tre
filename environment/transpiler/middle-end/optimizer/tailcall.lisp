@@ -15,10 +15,10 @@
   (optimizer-message "Resolved tail call in ~A.~%"
                      (!= (human-readable-funinfo-names *funinfo*)
                        (? .! ! !.)))
-  (+ (mapcan #'((arg val)
-                  `((%= ,arg ,val)))
-             (funinfo-args *funinfo*)
-             (cdr (caddr body.)))
+  (+ (+@ #'((arg val)
+             `((%= ,arg ,val)))
+         (funinfo-args *funinfo*)
+         (cdr (caddr body.)))
      `((%%go ,front-tag))
      (opt-tailcall-fun l .body front-tag)))
 

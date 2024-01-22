@@ -70,8 +70,8 @@
      (class-methods cls)))
 
 (fn php-methods (cls)
-  (mapcan [php-method cls _]
-          (class-methods cls)))
+  (+@ [php-method cls _]
+      (class-methods cls)))
 
 (fn class-has-getset-methods? (cls)
   (intersect '(aref =-aref) (carlist (class-methods cls))))

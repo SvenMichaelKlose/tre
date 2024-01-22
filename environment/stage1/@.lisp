@@ -11,3 +11,6 @@
         `(dynamic-map ,!
           ,@body)
       (error !))))
+
+(defmacro +@ (fun &rest x)
+  `(mapcan ,fun ,@x))

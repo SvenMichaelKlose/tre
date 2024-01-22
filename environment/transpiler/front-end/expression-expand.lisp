@@ -185,9 +185,9 @@
                           (list _))
                        (make-%= *return-id* _)])
     (expex-make-return-value s 
-        (mapcan [with ((moved new-expr) (expex-expr _))
-                  (+ moved (mapcan #'ensure-%= new-expr))]
-                (wrap-atoms (remove 'no-args x))))))
+        (+@ [with ((moved new-expr) (expex-expr _))
+              (+ moved (+@ #'ensure-%= new-expr))]
+            (wrap-atoms (remove 'no-args x))))))
 
 
 ;;;; TOPLEVEL

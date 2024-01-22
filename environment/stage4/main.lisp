@@ -11,7 +11,6 @@
 (env-load "stage4/macrolet.lisp")
 (env-load "stage4/hcache.lisp")
 (env-load "stage4/head-if.lisp")
-(env-load "stage4/keyword-copiers.lisp")
 (env-load "stage4/maptree.lisp")
 (env-load "stage4/pad.lisp")
 (env-load "stage4/replace.lisp")

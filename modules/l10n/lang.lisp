@@ -9,8 +9,8 @@
      (with (defs     (group args 2)
             default  (assoc *fallback-language* defs))
        `(funcall *l10n-text-filter* (case *language* :test #'eq
-                                      ,@(mapcan [. (make-keyword _.) ._]
-                                                (remove default defs))
+                                      ,@(+@ [. (make-keyword _.) ._]
+                                            (remove default defs))
                                       ,.default.)))))
 
 (fn translate (x)

@@ -61,11 +61,11 @@
                       (while (keyword? (car ,p))
                              nil
                           (?
-                            ,@(mapcan [`((eq (car ,p) ,(make-keyword _))
-                                         (= ,p (cdr ,p)
-                                            ,_ (car ,p)
-                                            ,p (cdr ,p)))]
-                                      (carlist key-args))
+                            ,@(+@ [`((eq (car ,p) ,(make-keyword _))
+                                     (= ,p (cdr ,p)
+                                        ,_ (car ,p)
+                                        ,p (cdr ,p)))]
+                                  (carlist key-args))
                             (return nil)))))
           ,@(& argdefs
                (main argdefs))

@@ -32,10 +32,10 @@
               (list (section-from-string 'js-core-nodejs (js-core-nodejs))))))))
 
 (fn js-environment-files ()
-  (mapcan [& (| (not ._)
-                (member :js ._))
-             `((,(+ "environment/" _.)))]
-          (reverse *environment-filenames*)))
+  (+@ [& (| (not ._)
+            (member :js ._))
+         `((,(+ "environment/" _.)))]
+      (reverse *environment-filenames*)))
 
 (fn js-sections-compiler ()
   (!= *js-core-path*

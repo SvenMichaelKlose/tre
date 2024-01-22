@@ -21,16 +21,21 @@
                                ,@(!? copyright-href
                                      `(:href  ,(escape-string !))))))
                   ,@(!? external-stylesheets
-                        (mapcan [`(link :rel "stylesheet" :type "text/css" :href ,_)]
-                                (ensure-list !)))
+                        (+@ [`(link :rel "stylesheet" :type "text/css"
+                                    :href ,_)]
+                            (ensure-list !)))
                   ,@(!? internal-stylesheet
                         `((style ,!)))
                   ,@(!? external-script
-                        (mapcan [`((script :src ,_ ""))] (ensure-list !))))
+                        (+@ [`((script :src ,_ ""))]
+                            (ensure-list !))))
                 (body
                   ,@body
                   (script ,script)))
              o)))
+
+(fn keyword-copiers (&rest x)
+  (+@ [list (make-keyword _) (make-symbol (symbol-name _))] x))
 
 (fn make-html-script (pathname script &key (title nil)
                                            (no-cache? nil)

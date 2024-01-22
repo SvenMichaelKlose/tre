@@ -9,11 +9,11 @@
       `((%= ,scope (%make-scope ,(length scoped-vars)))
         ,@(!? (funinfo-scoped-var? fi scope)
               `((%set-vec ,scope ,! ,scope)))
-        ,@(mapcan [& (funinfo-scoped-var? fi _)
-                     `((%= ,_ ,(? (arguments-on-stack?)
-                                  `(%stackarg ,(funinfo-name fi) ,_)
-                                  `(%%native ,_))))]
-                  (funinfo-args fi))))))
+        ,@(+@ [& (funinfo-scoped-var? fi _)
+                 `((%= ,_ ,(? (arguments-on-stack?)
+                              `(%stackarg ,(funinfo-name fi) ,_)
+                              `(%%native ,_))))]
+              (funinfo-args fi))))))
 
 (fn make-framed-function (x)
   (with (fi   (get-lambda-funinfo x)
