@@ -37,8 +37,7 @@
   (dump-passes?               nil)
 
   ; Dump outputs of passes in which this expression is found.
-  ; '(FUNCTION BUTLAST) would dump every pass result containing
-  ; symbol BUTLAST.
+  ; '(FUNCTION BUTLAST) would dump every pass result containing symbol BUTLAST.
   (dump-selector              nil)
 
   ; Dump FUNINFOs in comments before their functions.
@@ -96,8 +95,8 @@
   ; Make %VAR declarations for each function.
   (needs-var-declarations?  nil)
 
-  ; Place local variables on the stack.  Makes expressions
-  ; of the form (%STACK stack-index).
+  ; Place local variables on the stack.  Makes expressions of the form
+  ; (%STACK stack-index).
   (stack-locals?            nil)
 
   ; Have arguments on GC stack. (Was C core.)
@@ -145,9 +144,8 @@
   (host-variables           nil)
   (functionals              nil)
 
-  ; Functions and variables we want to import.  Imports
-  ; take place after running everything through the front
-  ; end.
+  ; Functions and variables we want to import.  Imports take place after
+  ; running everything through the front end.
   (wanted-functions nil)
   (wanted-functions-hash    (make-hash-table :test #'eq))
   (wanted-variables nil)
@@ -223,7 +221,7 @@
         :codegen-expander         codegen-expander
         :expex-initializer        expex-initializer
         :lambda-export?           lambda-export?
-        :function-frames?      function-frames?
+        :function-frames?         function-frames?
         :needs-var-declarations?  needs-var-declarations?
         :stack-locals?            stack-locals?
         :arguments-on-stack?      arguments-on-stack?
@@ -236,7 +234,8 @@
         :delayed-exprs            (copy-list delayed-exprs)
         :memorized-sources        (copy-list memorized-sources)
         :funinfos                 (copy-hash-table funinfos)
-        :global-funinfo           (& global-funinfo (copy-funinfo global-funinfo))
+        :global-funinfo           (& global-funinfo
+                                     (copy-funinfo global-funinfo))
         :defined-functions        (copy-hash-table defined-functions)
         :defined-variables        (copy-hash-table defined-variables)
         :defined-packages         (copy-hash-table defined-packages)
@@ -248,7 +247,8 @@
         :wanted-variables         (copy-list wanted-variables)
         :wanted-variables-hash    (copy-hash-table wanted-variables-hash)
 
-        :accumulated-toplevel-expressions (copy-list accumulated-toplevel-expressions)
+        :accumulated-toplevel-expressions
+                                  (copy-list accumulated-toplevel-expressions)
 
         :compiled-symbols         (copy-hash-table compiled-symbols)
         :compiled-decls           (copy-list compiled-decls)
@@ -272,26 +272,41 @@
        (let tr *transpiler*
          ,@body))))
 
-(transpiler-getter defined-function        (href (transpiler-defined-functions tr) x))
-(transpiler-getter defined-variable        (href (transpiler-defined-variables tr) x))
-(transpiler-getter defined-package         (href (transpiler-defined-packages tr) x))
-(transpiler-getter host-function           (href (transpiler-host-functions tr) x))
-(transpiler-getter host-function-arguments (car (transpiler-host-function tr x)))
-(transpiler-getter host-function-body      (cdr (transpiler-host-function tr x)))
-(transpiler-getter host-variable?          (href (transpiler-host-variables tr) x))
-(transpiler-getter-not-global function-arguments (car (transpiler-defined-function tr x)))
-(transpiler-getter-not-global function-body      (cdr (transpiler-defined-function tr x)))
-(transpiler-getter wanted-function?        (href (transpiler-wanted-functions-hash tr) x))
-(transpiler-getter wanted-variable?        (href (transpiler-wanted-variables-hash tr) x))
+(transpiler-getter defined-function
+  (href (transpiler-defined-functions tr) x))
+(transpiler-getter defined-variable
+  (href (transpiler-defined-variables tr) x))
+(transpiler-getter defined-package
+  (href (transpiler-defined-packages tr) x))
+(transpiler-getter host-function
+  (href (transpiler-host-functions tr) x))
+(transpiler-getter host-function-arguments
+  (car (transpiler-host-function tr x)))
+(transpiler-getter host-function-body
+  (cdr (transpiler-host-function tr x)))
+(transpiler-getter host-variable?
+  (href (transpiler-host-variables tr) x))
+(transpiler-getter-not-global function-arguments
+  (car (transpiler-defined-function tr x)))
+(transpiler-getter-not-global function-body
+  (cdr (transpiler-defined-function tr x)))
+(transpiler-getter wanted-function?
+  (href (transpiler-wanted-functions-hash tr) x))
+(transpiler-getter wanted-variable?
+  (href (transpiler-wanted-variables-hash tr) x))
 
-(transpiler-getter add-defined-variable  (= (href (transpiler-defined-variables tr) x) t)
-                                         x)
-(transpiler-getter add-defined-package   (= (href (transpiler-defined-packages tr) x) t)
-                                         x)
-(transpiler-getter-not-global macro? (| (expander-has-macro? (transpiler-transpiler-macro-expander tr) x)
-                                        (expander-has-macro? (transpiler-codegen-expander tr) x)))
-(transpiler-getter imported-variable? (& (transpiler-import-from-host? tr)
-                                         (transpiler-host-variable? tr x)))
+(transpiler-getter add-defined-variable
+  (= (href (transpiler-defined-variables tr) x) t)
+  x)
+(transpiler-getter add-defined-package
+  (= (href (transpiler-defined-packages tr) x) t)
+  x)
+(transpiler-getter-not-global macro?
+  (| (expander-has-macro? (transpiler-transpiler-macro-expander tr) x)
+     (expander-has-macro? (transpiler-codegen-expander tr) x)))
+(transpiler-getter imported-variable?
+  (& (transpiler-import-from-host? tr)
+     (transpiler-host-variable? tr x)))
 
 (fn transpiler-add-defined-function (tr name args body)
   (= (href (transpiler-defined-functions tr) name) (. args body))
@@ -311,10 +326,11 @@
   (push x (accumulated-toplevel-expressions)))
 
 (fn make-global-funinfo (tr)
-  (= (transpiler-global-funinfo tr) (create-funinfo :name        'global-scope
-                                                    :parent      nil
-                                                    :args        nil
-                                                    :transpiler  tr)))
+  (= (transpiler-global-funinfo tr)
+     (create-funinfo :name        'global-scope
+                     :parent      nil
+                     :args        nil
+                     :transpiler  tr)))
 
 (fn transpiler-add-functional (tr x)
   (= (href (transpiler-functionals tr) x) t))
@@ -366,7 +382,8 @@
 (fn transpiler-configuration-item (tr x)
   (!= (transpiler-configurations tr)
     (| (assoc x ! :test #'eq)
-       (error "Transpiler ~A has no configuration item ~A. Available items are ~A."
+       (error (+ "Transpiler ~A has no configuration item ~A."
+                 " Available items are ~A.")
               (transpiler-name tr) x (carlist !)))))
 
 (fn transpiler-configuration (tr x)
