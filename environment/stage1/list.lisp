@@ -174,3 +174,9 @@
       (rplaca result (cdr (rplacd (| result.
                                      result)
                                   (list (funcall func i))))))))
+(functional ensure-tree)
+
+(fn ensure-tree (x)
+  (? (cons? x.)
+     x
+     (list x)))

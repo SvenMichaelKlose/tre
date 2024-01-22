@@ -6,4 +6,5 @@
       (= (href h i.) .i))))
 
 (fn hash-alist (x)
-  (@ [. _ (href x _)] (hashkeys x)))
+  (@ [. _ (href x _)]
+     (hashkeys x)))
