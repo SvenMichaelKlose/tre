@@ -1,4 +1,4 @@
-(functional assoc assoc-value rassoc acons copy-alist ensure-alist)
+(functional assoc assoc-value rassoc acons copy-alist ensure-alist pairlist)
 
 (defmacro %define-assoc (name getter)
   `(fn ,name (key lst &key (test #'eql))
@@ -58,3 +58,6 @@
     (& (atom x)  (= x (list x)))
     (& (atom x.) (= x (list x)))
     x))
+
+(fn pairlist (keys vals)
+  (@ #'cons keys vals))

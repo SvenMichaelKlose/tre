@@ -1,2 +1,3 @@
 (defmacro in? (obj &rest lst)
-  `(| ,@(@ [`(eql ,obj ,_)] lst)))
+  `(| ,@(@ [`(eql ,obj ,_)]
+           lst)))

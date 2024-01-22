@@ -1,6 +1,0 @@
-(fn list-array (x)
-  (with (a    (make-array (length x))
-         idx  0)
-    (@ (i x a)
-      (= (aref a idx) i)
-      (++! idx))))

@@ -1,4 +1,16 @@
-(functional array copy-array array-list)
+(functional array copy-array array-list ensure-array)
+
+(fn list-array (x)
+  (with (a    (make-array (length x))
+         idx  0)
+    (@ (i x a)
+      (= (aref a idx) i)
+      (++! idx))))
+
+(fn array-list (x)
+  (let result (make-queue)
+    (adotimes ((length x) (queue-list result))
+      (enqueue result (aref x !)))))
 
 (fn array (&rest elms)
   (list-array elms))
@@ -8,11 +20,6 @@
        (i 0 (++ i)))
       ((== i (length arr)) ret)
     (= (aref ret i) (aref arr i))))
-
-(fn array-list (x)
-  (let result (make-queue)
-    (adotimes ((length x) (queue-list result))
-      (enqueue result (aref x !)))))
 
 (fn maparray (fun hash)
   (with-queue q
@@ -24,3 +31,9 @@
      (? (array? x)
         x
         (array x))))
+(defmacro doarray ((v seq &rest result) &body body)
+  (with-gensym (! idx)
+    `(let-when ,! ,seq
+       (dotimes (,idx (length ,!) ,@result)
+         (let ,v (aref ,! ,idx)
+           ,@body)))))

@@ -7,8 +7,9 @@
          .i.))))
 
 (defmacro %%make-json-object (&rest props)
-  `(%%%make-json-object ,@(mapcan [list (? (symbol? _.)
-                                      (list-string (camel-notation (string-list (symbol-name _.))))
-                                      _.)
-                                   ._.]
-                             (group props 2))))
+  `(%%%make-json-object
+       ,@(mapcan [list (? (symbol? _.)
+                          (list-string (camel-notation (string-list (symbol-name _.))))
+                          _.)
+                        ._.]
+                 (group props 2))))
