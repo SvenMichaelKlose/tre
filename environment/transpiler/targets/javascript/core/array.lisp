@@ -1,6 +1,6 @@
 (fn list-array (x)
   (!= (%%native "" "[]")
-    (dolist (i x !)
+    (@ (i x !)
       (%%native ! ".push (" i ")"))))
 
 (fn array (&rest elms)

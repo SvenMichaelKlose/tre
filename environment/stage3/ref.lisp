@@ -1,5 +1,5 @@
 (fn ref (o &rest indexes)
-  (dolist (i indexes o)
+  (@ (i indexes o)
     (= o (?
            (cons? o)        (assoc-value i o)
            (array? o)       (aref o i)

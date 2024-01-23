@@ -2,4 +2,4 @@
   (case direction
     'input   "r"
     'output  "w"
-    t         (%error ":DIRECTION isn't specified.")))
+    t        (%error ":DIRECTION isn't specified.")))

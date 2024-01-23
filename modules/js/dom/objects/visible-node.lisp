@@ -31,7 +31,7 @@
 
 (defmethod visible-node add-after (new-elm)
   (let to this
-    (dolist (i (ensure-list new-elm))
+    (@ (i (ensure-list new-elm))
       (!? to.next-sibling
           (!.add-before i)
           (parent-node.add i))

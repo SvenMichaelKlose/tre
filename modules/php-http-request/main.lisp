@@ -93,15 +93,16 @@
     (curl_setopt c (%%native "CURLOPT_URL") url)
     (awhen header
       (curl_setopt c (%%native "CURLOPT_HTTPHEADER")
-                   (list-phparray (mapcar [+ _. ": " ._]
-                                          (? urlencoded?
-                                             (. (. "Content-Type" "application/x-www-form-urlencoded")
-                                                header)
-                                             header)))))
+                   (list-phparray (@ [+ _. ": " ._]
+                                     (? urlencoded?
+                                        (. (. "Content-Type"
+                                              "application/x-www-form-urlencoded")
+                                           header)
+                                        header)))))
     (curl_setopt c (%%native "CURLOPT_POST") T)
     (curl_setopt c (%%native "CURLOPT_POSTFIELDS")
                  (? (list? data)
-                    (apply #'string-concat (pad (mapcar [+ _. "=" ._] data) "&"))
+                    (apply #'string-concat (pad (@ [+ _. "=" ._] data) "&"))
                     data))
     (curl_setopt c (%%native "CURLOPT_RETURNTRANSFER") T)
     (aprog1 (curl_exec c)

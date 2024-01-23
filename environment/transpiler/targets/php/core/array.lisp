@@ -6,7 +6,7 @@
 
 (fn list-array (x)
   (aprog1 (%%native "" "new __array ()")
-    (dolist (i x !)
+    (@ (i x !)
       (!.p i))))
 
 (fn array (&rest elms)

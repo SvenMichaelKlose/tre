@@ -36,7 +36,7 @@
 (defmethod tre-element add (x)
   (?
     (cons? x)
-      (dolist (i x this)
+      (@ (i x this)
         (add i))
     (array? x)
       (doarray (i x this)

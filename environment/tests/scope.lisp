@@ -16,6 +16,5 @@
 (deftest "can handle closures"
   ((equal '(1 2 3)
           (let n 1
-            (mapcar [+ _ n]
-                    '(0 1 2)))))
+            (@ [+ _ n] '(0 1 2)))))
   t)
