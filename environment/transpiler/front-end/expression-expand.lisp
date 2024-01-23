@@ -38,24 +38,15 @@
 ;;;; UTILS
 
 (fn make-%= (p v)
-  (when (atom v)
-    (= v (funcall (expex-argument-filter *expex*) v)))
-  (expex-guest-filter-setter `(%= ,p ,(? (%=? v)
-                                         .v.
-                                         v))))
+  (expex-guest-filter-setter
+      `(%= ,p ,(? (atom v)
+                  (funcall (expex-argument-filter *expex*) v)
+                  v))))
 
 (def-gensym expex-sym e)
 
 (fn expex-add-var ()
   (funinfo-var-add *funinfo* (expex-sym)))
-
-
-;;;; PREDICATES
-
-(fn unexpex-able? (x)
-  (| (atom x)
-     (literal-function? x)
-     (in? x. '%%go '%%go-nil '%%native '%%string 'quote '%%comment)))
 
 
 ;;;; ARGUMENT EXPANSION
@@ -110,6 +101,11 @@
              (make-%= s new-expr.)
              new-expr))
        s)))
+
+(fn unexpex-able? (x)
+  (| (atom x)
+     (literal-function? x)
+     (in? x. '%%go '%%go-nil '%%native '%%string 'quote '%%comment)))
 
 (fn expex-inlinable? (x)
   (funcall (expex-inline? *expex*) x))
