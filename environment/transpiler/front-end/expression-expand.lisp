@@ -140,9 +140,6 @@
 
 (fn expex-expr-%= (x)
   (with-%= p v x
-    (? (%=? v)
-       (return (values nil (expex-body `(,v
-                                         (%= ,p ,.v.))))))
     (with ((moved new-expr) (expex-move-args (list v)))
       (values moved (make-%= p new-expr.)))))
 
