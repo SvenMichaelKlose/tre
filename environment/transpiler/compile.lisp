@@ -1,17 +1,9 @@
-(fn update-section? (section cached-sections)
-  (| (member section (sections-to-update))
-     (not (assoc section cached-sections))))
-
-(fn map-section (x fun sections cached-sections)
+(fn map-section (fun x)
   (with-cons section data x
-    (. section
-       (? (update-section? section cached-sections)
-          (funcall fun section data)
-          (assoc-value section cached-sections)))))
+    (. section (funcall fun section data))))
 
-(fn map-sections (fun sections cached-sections)
-  (@ [map-section _ fun sections cached-sections]
-     sections))
+(fn map-sections (fun sections)
+  (@ [map-section fun _] sections))
 
 (fn codegen (x)
   (backend (middleend x)))
@@ -21,9 +13,7 @@
   (codegen data))
 
 (fn codegen-sections (sections)
-  (!= (map-sections #'codegen-section sections (cached-output-sections))
-    (= (cached-output-sections) !)
-    (apply #'+ (@ #'cdr !))))
+  (apply #'+ (cdrlist (map-sections #'codegen-section sections))))
 
 (fn quick-compile (x)
   (codegen (frontend x)))
@@ -92,8 +82,7 @@
 
 (fn frontend-sections (sections)
   (with-temporary *package* *package*
-    (!= (map-sections #'frontend-section sections (cached-frontend-sections))
-      (= (cached-frontend-sections) !))))
+    (map-sections #'frontend-section sections)))
 
 (fn generic-frontend (sections)
   (funcall (frontend-init))

@@ -1,8 +1,5 @@
 (fn make-php-project (&key outfile title files
-                           (files-before-modules nil)
-                           (transpiler nil)
-                           (section-list-gen nil)
-                           (sections-to-update nil))
+                           (files-before-modules nil) (transpiler nil))
   (make-project title
     `(,@files-before-modules
       ,@(list+ (+ *modules-path* "/php/")
@@ -25,8 +22,5 @@
       ,@(list+ (+ *modules-path* "/session/")
                '("php/toplevel.lisp"
                  "api.lisp")))
-    :transpiler         (| transpiler
-                           (copy-transpiler *php-transpiler*))
-    :section-list-gen   section-list-gen
-    :sections-to-update sections-to-update
-    :emitter            [put-file outfile _]))
+    :transpiler (| transpiler (copy-transpiler *php-transpiler*))
+    :emitter    [put-file outfile _]))

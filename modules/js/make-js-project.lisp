@@ -11,8 +11,6 @@
                           (internal-stylesheet nil)
                           (external-stylesheets nil)
                           (transpiler nil)
-                          (section-list-gen nil)
-                          (sections-to-update nil)
                           (emitter nil))
   (make-project title
     `(,@files-before-modules
@@ -85,12 +83,7 @@
                  "js/toplevel.lisp"))
       ,@files)
     :transpiler
-        (| transpiler
-           (copy-transpiler *js-transpiler*))
-    :section-list-gen
-        section-list-gen
-    :sections-to-update
-        sections-to-update
+        (| transpiler (copy-transpiler *js-transpiler*))
     :emitter
            [make-html-script outfile _
              :copyright-title      copyright-title
