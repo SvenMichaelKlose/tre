@@ -9,4 +9,5 @@
 (env-load "transpiler/compile.lisp")
 (env-load "transpiler/targets/main.lisp")
 ;(env-load "transpiler/eval.lisp")
+(env-load "transpiler/overload.lisp")
 (env-load "transpiler/make-project.lisp" :cl)

@@ -28,9 +28,12 @@
 ;;;
 ;;; Being that restrictive is not really what we want but we'll go for it to
 ;;; have a working base which is easier to implement and goes well with the
-;;; AINSI Common Lisp standard.
+;;; ANSI Common Lisp standard.
+
+(fn subtype-of? (a b))
 
 (fn add-overload (fun expanded-types &optional (typelist nil))
+  "Add result of ARGUMENT-EXPAND-TYPES to typed argument tree."
   (unless expanded-types
     (return fun))
   (!? (find-if [equal expanded-types. _.] typelist)
@@ -39,8 +42,21 @@
         typelist)
       (!= (. expanded-types. (add-overload fun .expanded-types))
          (? typelist
-            (sort #'((a b) (subtype-of? a. b.)) (. ! typelist))
+            (sort (. ! typelist) :test #'((a b) (subtype-of? a. b.)))
             (list !)))))
+
+(!? (add-overload 'bar '(string cons integer) (add-overload 'fnord '(a b c)))
+    (unless (equal ! '((string (. (integer . bar))) (a (b (c . fnord)))))
+      (error "ADD-OVERLOAD -> ~A")))
+
+(fn find-closest-type (type typelist))
+
+(fn dispatch-overload (expanded-types &optional (typelist nil))
+  "Find function of closest matching overload."
+  (!? (find-closest-type expanded-types. typelist)
+      (? (cons? .!)
+         (dispatch-overload .expanded-types .!)
+         .!)))
 
 (var *overloads* (make-hash-table :test #'eq))
 
