@@ -71,14 +71,14 @@
 
 (fn frontend-section (section x)
   (developer-note "Frontend ~A.~%" section)
-  (apply #'+ (@ [frontend (list _)]
-                (+ (section-comment section)
-                   (pcase section
-                     symbol?  (? (function? x)
-                                 (funcall x)
-                                 x)
-                     string?  (frontend-section-load section)
-                     (error "Alien section ~A." section))))))
+  (+@ [frontend (list _)]
+      (+ (section-comment section)
+         (pcase section
+           symbol?  (? (function? x)
+                       (funcall x)
+                       x)
+           string?  (frontend-section-load section)
+           (error "Alien section ~A." section)))))
 
 (fn frontend-sections (sections)
   (with-temporary *package* *package*
