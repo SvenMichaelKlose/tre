@@ -17,7 +17,7 @@ To install the required packages on Ubuntu or derivates run:
 sudo apt install sbcl git -y
 ~~~
 
-## Makefile
+## Build and install
 
 Shell script "make.sh" is the makefile for tre with several
 actions you can list by specifying target "help".
@@ -44,17 +44,17 @@ you for expressions to execute.
 
 tré started as a Lisp interpreter written in C in 2005 and makes
 JS and PHP code since 2008.  2013 is has been moved to Steel Bank
-Common Lisp.
+Common Lisp.  That's why you might find eerie code in some places.
 
 ## VIM syntax file
 
-During boot tré generates a syntax file for VIM named 'tre.vim'
-which you can copy to ~/.vim/after/syntax/.  It extends the
+While booting the environment tré generates a syntax file for VIM named
+'tre.vim' which you can copy to ~/.vim/after/syntax/.  It extends the
 already existing syntax highlighting rules for Lisp code.
 
 # Starting a project
 
-Let's get ready to hack.  There're three initial projects
+Let's get ready to hack!  There're three initial projects
 prepared for you in directory examples/ which you should copy to
 take off as they are subject to getting cleaned thoroughly.  All
 contain configurations for docker-compose to run your project in
@@ -70,7 +70,7 @@ naming and step into it:
 
 ```sh
 mkdir new-js-project
-cp /usr/local/share/tre/examples/project-js new-js-project
+cp -r /usr/local/share/tre/examples/project-js new-js-project
 ```sh
 
 Now compile the example code:
@@ -79,6 +79,8 @@ Now compile the example code:
 cd new-js-project
 ./make.sh
 ```
+
+It should create file 'compiled/index.html'.
 
 ### Running with PHP on the command-line
 
@@ -89,7 +91,6 @@ php -S localhost:19020
 ```
 
 Now point your browser at http://localhost:19020/ – voilà!
-
 
 ### Running with docker-compose
 
@@ -262,7 +263,9 @@ inspired by Arc (which are there as well):
 * !@ instead of ADOLIST (Arc) (See also '@'.)
 
 
-## At sign @ instead of DOLIST or FILTER
+## @ instead of DOLIST or FILTER
+
+Also warks with arrays.
 
 ```lisp
 ; Use as FILTER.
@@ -270,18 +273,24 @@ inspired by Arc (which are there as well):
 ```
 
 ```lisp
+; Use as DOLIST.
 (@ (i x)
   (filter-function/return-value-lost i))
 ```
 
-## Comma for anonymous macros
+## +@ instead of MAPCAN
+
+Only works for lists.
+
+## BACKQUOTE for anonymous macros
 
 These are QUASIQUOTEs aka commas outside BACKQUOTEs aka backticks
 aka '`'.  They are evaluated before the standard macro expansion
 pass.
 
 ```lisp
-Some exciting example missing here.
+(progn
+  ,@(generate-some-code-expressions))
 ```
 
 ## PROPOSAL: Comma for dynamic SLOT-VALUE access (NOT IMPLEMENTED)
