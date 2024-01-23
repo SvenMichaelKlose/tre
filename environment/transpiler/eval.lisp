@@ -1,12 +1,12 @@
 (var *eval-transpiler* nil)
 
 (fn make-eval-transpiler ()
-  (cache (!= (copy-transpiler *bc-transpiler*)
+  (cache *eval-transpiler*
+         (!= (copy-transpiler *bc-transpiler*)
            (transpiler-reset !)
            (clr (transpiler-import-from-host? !)
                 (transpiler-dump-passes? !))
-           (= *eval-transpiler* !))
-         *eval-transpiler*))
+           (= *eval-transpiler* !))))
 
 (defmacro with-mute-environment (&body x)
   `(with-temporaries (*print-definitions?*  nil
