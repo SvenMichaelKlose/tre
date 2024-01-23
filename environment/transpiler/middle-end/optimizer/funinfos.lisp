@@ -68,6 +68,7 @@
                                   (funinfo-vars fi))))
 
 (fn warn-unused-arguments (fi)
+  (return) ; TODO: Instead of renamed args show real names.
   (@ (i (funinfo-args fi))
     (| (funinfo-used-var? fi i)
        (warn "Unused argument ~A of function ~A."
@@ -76,7 +77,7 @@
 (fn correct-funinfo (fi)
   (when (lambda-export?)
     (remove-unused-scope-arg fi)
-    ;(remove-scoped-vars !)   ; TODO: Fix
+    ;(remove-scoped-vars fi)   ; TODO: Fix
     (replace-scope-arg fi))
   (funinfo-vars-set fi (intersect (funinfo-vars fi) (funinfo-used-vars fi)
                                   :test #'eq))
@@ -88,8 +89,8 @@
     (& (named-lambda? x.)
        (with-lambda-funinfo x.
          (correct-funinfo *funinfo*)
-         (remove-unused-vars (lambda-body x.))))
-;         (warn-unused-arguments *funinfo*) ; TODO: Fix.
+         (remove-unused-vars (lambda-body x.))
+         (warn-unused-arguments *funinfo*)))
     (remove-unused-vars .x)))
 
 (fn optimize-funinfos (x)
