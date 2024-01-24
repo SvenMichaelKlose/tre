@@ -86,9 +86,9 @@
          err
            #'((msg args)
                (? break-on-errors?
-                  (error (+ "~L; In argument expansion for ~A:~A: ~A~%"
-                            "; Argument definition: ~A~%"
-                            "; Given arguments: ~A~%")
+                  (error (+ "~LIn argument expansion for ~A:~A: ~A~%"
+                            "Argument definition: ~A~%"
+                            "Given arguments: ~A~%")
                          (package-name (symbol-package fun))
                          (symbol-name fun)
                          (apply #'format nil msg args)
