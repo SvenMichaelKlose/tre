@@ -1,6 +1,7 @@
 (fn js-gen-predicate (class-name)
   `(fn ,($ class-name '?) (x)
-     (%%native x " instanceof " ,(compiled-function-name-string class-name))))
+     (!= (%%native x " instanceof " ,(compiled-function-name-string class-name))
+       x)))
 
 (fn js-gen-constructor (class-name base args body)
   `(progn

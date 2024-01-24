@@ -9,13 +9,12 @@
                  (with (result    ,._.
                         expected  ,.._.)
                    (unless (equal result expected)
-                     (%princ " FAILED")
-                     (%princ " Expected:")
+                     (%princ " !!! FAILED !!! Expected:")
                      (%princ expected)
                      (%princ " Result:")
-                     (%princ result)))
-                     (%princ "<br>
-")))]
+                     (%princ result))
+                   (%princ "
+"))))]
            *tests*)
       (fn environment-tests ()
         ,@(@ #'list (reverse names))
