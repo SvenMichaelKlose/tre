@@ -1,5 +1,8 @@
 (fn %load-launchfile ()
   (%start-core)
+  (!= (getenv "TRE_PATH")
+    (= *tre-path* !))
+  (= *modules-path* (+ *tre-path* "/modules/"))
   (!? *launchfile*
       (load !))
   (read-eval-loop)
