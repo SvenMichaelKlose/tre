@@ -147,10 +147,9 @@ projects)
     ;;
 
 release)
-    echo "Making release tests…" | tee log-make.lisp
+    echo "Making release. Have your TRE_PATH set!" | tee log-make.lisp
     ./make.sh clean
     ./make.sh all
-    ./make.sh install
     ./make.sh projects
     echo "Release tests done." >>log-make.lisp
 	;;
@@ -186,7 +185,7 @@ clean)
     echo "  nodeconsole   Make node.js REPL. (defunct)"
     echo "  webconsole    Make web browser REPL. (defunct)"
     echo ""
-    echo "  release       Make 'all' and 'nodeconsole'."
+    echo "  release       Pass this before initiating git pull requests."
     echo "  updatetests   Generate new reference files from current test."
 
     ;;
