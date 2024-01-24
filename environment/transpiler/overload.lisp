@@ -1,3 +1,7 @@
+;;;;;;;;;;;;;;;;;;;;;;;
+;;; WORK IN PROGRSS ;;;
+;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;;; Function overloading
 
 ;;; Type tree
@@ -30,7 +34,14 @@
 ;;; have a working base which is easier to implement and goes well with the
 ;;; ANSI Common Lisp standard.
 
-(fn subtype-of? (a b))
+(fn subtype-of? (a b)
+  (with (err [error "Type specifier expected instead of ~A." _]
+         f   [!? (type-parent (find-type _))
+                 (| (equal a _)
+                    (f !))])
+     (| (find-type a) (err a))
+     (| (find-type b) (err b))
+     (f a)))
 
 (fn add-overload (fun expanded-types &optional (typelist nil))
   "Add result of ARGUMENT-EXPAND-TYPES to typed argument tree."
@@ -38,6 +49,8 @@
     (return fun))
   (!? (find-if [equal expanded-types. _.] typelist)
       (progn
+        (print !)
+        (| .! (error "Cannot continue with ~A on ~A." expanded-types !))
         (add-overload fun .expanded-types .!)
         typelist)
       (!= (. expanded-types. (add-overload fun .expanded-types))
@@ -45,9 +58,26 @@
             (sort (. ! typelist) :test #'((a b) (subtype-of? a. b.)))
             (list !)))))
 
-(!? (add-overload 'bar '(string cons integer) (add-overload 'fnord '(a b c)))
-    (unless (equal ! '((string (. (integer . bar))) (a (b (c . fnord)))))
-      (error "ADD-OVERLOAD -> ~A")))
+(print '(add-overload 'bar '(string integer)))
+(!? (add-overload 'bar '(string integer))
+    (unless (equal ! (list (. 'string (list (. 'integer 'bar)))))
+      (error "ADD-OVERLOAD -> ~A" !)))
+
+(print '(add-overload 'bar '(string character)))
+(!? (add-overload 'bar '(string integer)
+                  (add-overload 'fnord '(string character)))
+    (unless (equal ! (list (. 'string 
+                              (list (. 'integer 'bar)
+                                    (. 'character 'fnord)))))
+      (error "ADD-OVERLOAD -> ~A" !)))
+
+(print '(add-overload 'bar '(string cons integer)))
+(!? (add-overload 'bar '(string cons integer)
+                  (add-overload 'fnord '(string number number)))
+    (unless (equal ! (list (. 'string 
+                              (list (. 'cons (list (. 'integer 'bar)))
+                                    (. 'number (list (. 'number 'fnord)))))))
+      (error "ADD-OVERLOAD -> ~A" !)))
 
 (fn find-closest-type (type typelist))
 
@@ -67,5 +97,5 @@
 ;; Call best fitting method.
 (fn apply-typed (f a v))
 
-; Compiled version of APPLY-TYPED-
+; Compiled version of APPLY-TYPED.
 (fn gen-method-dispatcher (f a v))

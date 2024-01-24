@@ -1,10 +1,37 @@
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;; WORK IN PROGRESS ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+
 (var *types* nil)
 
-(macro deftype (name args &body body)
+(defstruct type
+  name
+  fun
+  (parent nil))
+
+(fn find-type (name)
+  (assoc-value name *types*))
+
+(macro deftype (name args &key (parent nil)
+                          &body body)
   (print-definition `(deftype ,name ,args))
-  ;(& (assoc name *types*)
-     ;(error "Type ~A is already defined." name))
-  `(acons! ',name #'(,args ,@body) *types*))
+  (& (assoc name *types*)
+     (error "Type ~A is already defined." name))
+  (& parent
+     (| (find-type parent)
+        (error "Parent type ~A is not defined." parent)))
+  (acons! name
+          (make-type :name   name
+                     :parent parent
+                     :fun    (eval `#'(,args
+                                        ,@body)))
+          *types*)
+  `(acons! ',name
+          (make-type :name   ',name
+                     :parent ',parent
+                     :fun    #'(,args
+                                 ,@body))
+          *types*))
 
 (fn type? (o x)
   (when x
@@ -16,12 +43,13 @@
                                  (error "~A is not a predicate for SATISFIES."
                                         .x.))
                               o)
-         (!? (assoc-value x. *types*)
-             (apply ! .x)
+         (!? (find-type x.)
+             (apply (type-fun !) .x)
              (error "Unknown type specifier symbol ~A." x.)))
        (? (string? x)
           (equal o x)
-          (type? o (funcall (| (assoc-value x *types*)
+          (type? o (funcall (| (!? (find-type x)
+                                   (type-fun !))
                                (error "No typespecifier for ~A." x))))))))
 
 (deftype null ()
