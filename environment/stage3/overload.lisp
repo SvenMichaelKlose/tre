@@ -36,7 +36,7 @@
 
 (fn subtype-of? (a b)
   (with (err [error "Type specifier expected instead of ~A." _]
-         f   [!? (type-parent (find-type _))
+         f   [!? (%type-parent (find-type _))
                  (| (equal a _)
                     (f !))])
      (| (find-type a) (err a))
