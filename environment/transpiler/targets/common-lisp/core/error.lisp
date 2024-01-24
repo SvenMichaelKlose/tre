@@ -1,2 +1,2 @@
-(defbuiltin break (&optional msg)
+(defbuiltin break (&optional (msg nil))
   (CL:BREAK msg))
