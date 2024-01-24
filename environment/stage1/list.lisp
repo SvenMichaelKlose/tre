@@ -172,9 +172,10 @@
 (fn filter (func lst)
   (let result (. () ())
     (dolist (i lst .result)
-      (rplaca result (cdr (rplacd (| result.
-                                     result)
-                                  (list (funcall func i))))))))
+      (rplaca result
+              (cdr (rplacd (| result.
+                              result)
+                           (list (funcall func i))))))))
 
 (fn ensure-tree (x)
   (? (cons? x.)
