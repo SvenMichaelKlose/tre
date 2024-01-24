@@ -51,7 +51,7 @@
                typelist)
       (progn
         (| .! (error "Cannot continue with ~A on ~A." expanded-types !))
-        (add-overload fun .expanded-types .!)
+        (= .! (add-overload fun .expanded-types .!))
         typelist)
       (!= (. expanded-types. (add-overload fun .expanded-types))
          (? typelist
