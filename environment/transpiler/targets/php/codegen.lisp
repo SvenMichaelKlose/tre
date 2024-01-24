@@ -125,7 +125,7 @@
   `(%%native ,(php-dollarize plc) " = " ,(php-dollarize val)))
 
 
-;;;; VECTORS
+;;;; INTERNAL VECTORS
 
 (def-php-codegen %make-scope (&rest elements)
   `(%%native "new __l ()" ""))
@@ -200,11 +200,8 @@
 (def-php-codegen =-%aref (val &rest x)
   `(%%native (%aref ,@x) " = " ,(php-dollarize val)))
 
-
-;;;; HASH TABLES
-
-(def-php-codegen hremove (h key)
-  `(%%native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))
+(def-php-codegen %unset-aref (x key)
+  `(%%native "null; unset ($" ,x "[" ,(php-dollarize key) "])"))
 
 
 ;;;; OBJECTS
@@ -219,12 +216,12 @@
   `(,x. " => " ,(php-dollarize .x.)))
 
 (fn php-literal-object-elements (x)
-  (pad (@ #'php-literal-object-element x) ", "))
+  (pad (@ #'php-literal-object-element
+          (group x 2))
+       ")"))
 
-(def-php-codegen %%%make-json-object (&rest elements)
-  `(%%native "(object) array ("
-                 ,@(php-literal-object-elements (group elements 2))
-             ")"))
+(def-php-codegen %%%make-json-object (&rest x)
+  `(%%native "array (" ,@(php-literal-object-elements x) ")"))
 
 (def-php-codegen %new (&rest x)
   (? x
