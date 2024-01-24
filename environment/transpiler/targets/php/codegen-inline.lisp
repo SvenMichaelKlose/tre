@@ -1,7 +1,7 @@
 ;(def-php-binary - "-")
 (def-php-binary / "/")
 (def-php-binary * "*")
-;(def-php-binary == "==") ; XXX these will give us trouble with chars.
+;(def-php-binary == "==") ; TODO: these will give us trouble with chars.
 ;(def-php-binary < "<")
 ;(def-php-binary > ">")
 (def-php-binary string== "==")
