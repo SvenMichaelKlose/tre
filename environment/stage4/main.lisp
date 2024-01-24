@@ -13,7 +13,5 @@
 (env-load "stage4/pad.lisp")
 (env-load "stage4/replace.lisp")
 (env-load "stage4/search.lisp")
-(env-load "stage4/sort.lisp")
-(env-load "stage4/split.lisp" :cl)
 (env-load "stage4/trim.lisp")
 (env-load "stage4/merge.lisp")

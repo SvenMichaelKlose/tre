@@ -30,6 +30,7 @@
 (env-load "stage3/dump.lisp" :cl)
 (env-load "stage3/error.lisp" :cl)
 (env-load "stage3/type.lisp")
+(env-load "stage3/overload.lisp")
 (env-load "stage3/bit-stream.lisp")
 (env-load "stage3/documentation.lisp")
 (env-load "stage3/assert.lisp")

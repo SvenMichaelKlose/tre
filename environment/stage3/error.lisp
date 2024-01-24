@@ -6,7 +6,7 @@
      ,@body))
 
 (fn %error (msg)
-  (break (format t "In file '~A':~%~A" *load* msg)))
+  (break (format nil "In file '~A':~%~A" *load* msg)))
 
 (fn error (msg &rest args)
   (without-automatic-newline

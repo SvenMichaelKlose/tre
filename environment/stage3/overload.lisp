@@ -47,9 +47,9 @@
   "Add result of ARGUMENT-EXPAND-TYPES to typed argument tree."
   (unless expanded-types
     (return fun))
-  (!? (find-if [equal expanded-types. _.] typelist)
+  (!? (find-if [equal expanded-types. _.]
+               typelist)
       (progn
-        (print !)
         (| .! (error "Cannot continue with ~A on ~A." expanded-types !))
         (add-overload fun .expanded-types .!)
         typelist)
