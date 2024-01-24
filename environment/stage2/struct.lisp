@@ -113,6 +113,7 @@
          `(fn ,,name ,,args
             (with-struct ,name ,name
               ,,@body))))))
+
 (defmacro with-struct (typ strct &body body)
   (!= (assoc-value typ *struct-defs*)
     (with-gensym g
