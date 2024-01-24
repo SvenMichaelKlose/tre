@@ -3,15 +3,18 @@
 
 (defmember record _data)
 
+(defmethod record aref? (name)
+  (defined? (%aref _data name)))
+
 (defmethod record aref (name)
-  (aref _data name))
+  (%aref _data name))
 
 (defmethod record =-aref (v name)
-  (= (aref _data name) v)
+  (%=-aref v _data name)
   v)
 
 (defmethod record delete-aref (name)
-  (aref _data name))
+  (%unset (%aref _data name)))
 
 (finalize-class record)
 

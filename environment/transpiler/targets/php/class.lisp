@@ -1,4 +1,4 @@
-(defconstant +php-array-methods+ '("AREF" "=-AREF" "DELETE-AREF"))
+(defconstant +php-array-methods+ '("AREF?" "AREF" "=-AREF" "DELETE-AREF"))
 
 (def-php-transpiler-macro defclass (class-name args &body body)
   (generic-defclass #'php-constructor class-name args body))
@@ -34,6 +34,7 @@
 
 (fn php-method-name-w/o-class (x)
   (case x
+    'aref?        'offset-exists
     'aref         'offset-get
     '=-aref       'offset-set
     'delete-aref  'offset-unset
@@ -61,11 +62,16 @@
             (list (php-method-flags !)))
       "function " ,(php-method-name-w/o-class x.)
                   ,(php-argument-list (? (eq x. '=-aref)
-                                         `(("mixed $" ,.!.) ,!.)
+                                         `(("mixed $" ,.!.) ("mixed $" ,!.))
                                          !))
-                " : mixed " ,*terpri*
+                " : " ,(?
+                         (eq x. 'aref?) "bool"
+                         (in? x. '=-aref 'delete-aref) "void"
+                         "mixed")
+                " " ,*terpri*
       "{" ,*terpri*
-      ,*php-indent* "return "
+      ,*php-indent* ,@(unless (in? x. '=-aref 'delete-aref)
+                        '("return "))
           ,(php-compiled-method-name cls x.)
           ,(php-argument-list (. 'this !))
           ,*php-separator*
