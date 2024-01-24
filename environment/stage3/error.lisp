@@ -5,13 +5,17 @@
      (fresh-line)
      ,@body))
 
+(fn %error (msg)
+  (break (format t "In file '~A':~%~A" *load* msg)))
+
 (fn error (msg &rest args)
   (without-automatic-newline
     (%error (apply #'format nil msg args))))
 
 (fn warn (msg &rest args)
   (without-automatic-newline
-    (push (apply #'format t (+ "; WARNING: " msg "~%") args) *warnings*)))
+    (push (apply #'format t (+ "; WARNING: " msg "~%") args)
+          *warnings*)))
 
 (fn hint (msg &rest args)
   (without-automatic-newline

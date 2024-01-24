@@ -2,28 +2,32 @@
 
 (load "environment/stage0/config-defaults-cl.lisp")
 
-(const +core-variables+ '(*universe* *variables* *functions*
-                          *environment-path* *environment-filenames*
-                          *macroexpand* *quasiquote-expand* *dot-expand*
-                          *package* *keyword-package*
-                          *pointer-size* *launchfile*
-                          *assert?* *targets*
-                          *endianess* *cpu-type* *libc-path* *rand-max*
-                          *eval*))
+(const +core-variables+
+       '(*universe* *variables* *functions*
+         *environment-path* *environment-filenames*
+         *macroexpand* *quasiquote-expand* *dot-expand*
+         *package* *keyword-package*
+         *pointer-size* *launchfile*
+         *assert?* *targets*
+         *endianess* *cpu-type* *libc-path* *rand-max*
+         *eval*))
 
 (fn cl-packages ()
   `((defpackage "TRE-CORE"
-      (:export       ,@(@ #'symbol-name
-                          (+ +cl-symbol-imports+
-                             +cl-core-symbols+
-                             +cl-function-imports+
-                             *cl-builtins*
-                             +cl-special-forms+
-                             +core-variables+
-                             (carlist +cl-renamed-imports+))))
-      (:import-from  "CL" ,@(@ #'symbol-name
-                               (+ +cl-symbol-imports+
-                                  +cl-function-imports+))))
+      (:export
+        "*LOAD*"
+         ,@(@ #'symbol-name
+              (+ +cl-symbol-imports+
+                 +cl-core-symbols+
+                 +cl-function-imports+
+                 *cl-builtins*
+                 +cl-special-forms+
+                 +core-variables+
+                 (carlist +cl-renamed-imports+))))
+      (:import-from
+         "CL" ,@(@ #'symbol-name
+                   (+ +cl-symbol-imports+
+                      +cl-function-imports+))))
     (defpackage "TRE"
       (:use "TRE-CORE"))))
 
@@ -48,7 +52,7 @@
   (with (c           (compile-sections (list (. 'dummy nil)) :transpiler !)
          print-info  (make-print-info :pretty-print? nil))
     (with-output-file o "boot-common.lisp"
-        (print-init-decls o print-info)
-        (@ [& _ (late-print _ o :print-info print-info]) c)
-        (print-env-loader o))))
+      (print-init-decls o print-info)
+      (@ [& _ (late-print _ o :print-info print-info]) c)
+      (print-env-loader o))))
 (quit)

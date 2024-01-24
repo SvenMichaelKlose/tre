@@ -46,7 +46,7 @@
                        "character.lisp"
                        "eq.lisp"
                        "../../../environment/equality.lisp"
-                       "error.lisp"
+                       "break.lisp"
                        "late-cons.lisp"
                        "late-symbol.lisp"
                        "number.lisp"

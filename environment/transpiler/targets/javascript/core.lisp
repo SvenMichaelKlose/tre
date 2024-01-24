@@ -61,7 +61,7 @@
 (+! *js-core1* ,(js-load-core "" "../../../environment/setf-function-p.lisp"))
 
 (fn js-core-stream ()
-  (+ ,(js-load-core "" "error.lisp")
+  (+ ,(js-load-core "" "break.lisp")
      ,(js-load-core "" "../../../../stage3/stream.lisp")
      (& (not (eq :browser (configuration :platform)))
         ,(js-load-core "" "file.lisp"))
