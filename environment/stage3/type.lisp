@@ -33,7 +33,7 @@
                                  ,@body))
           *types*))
 
-(fn type? (o x)
+(fn %type? (o x)
   (when x
     (? (cons? x)
        (case x.
@@ -48,9 +48,12 @@
              (error "Unknown type specifier symbol ~A." x.)))
        (? (string? x)
           (equal o x)
-          (type? o (funcall (| (!? (find-type x)
-                                   (type-fun !))
-                               (error "No typespecifier for ~A." x))))))))
+          (%type? o (funcall (| (assoc-value x *types*)
+                                (error "No typespecifier for ~A." x))))))))
+
+(fn type? (o x)
+  (& (%type? o x)
+     t))
 
 (deftype null ()
   '(satisfies not))

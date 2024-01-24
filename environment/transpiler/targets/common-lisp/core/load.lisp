@@ -9,8 +9,11 @@
        x
        (%expand !))))
 
+(var *load* nil)
+
 (defbuiltin load (file-specifier)
   (print-definition `(load ,file-specifier))
-  (@ (i (with-input-file s file-specifier
-          (%load-r s)))
-    (eval (%expand i))))
+  (with-temporary *load* file-specifier
+    (@ (i (with-input-file s file-specifier
+            (%load-r s)))
+      (eval (%expand i)))))

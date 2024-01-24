@@ -11,7 +11,7 @@
 (defmacro defun (name args &body body)
   (#'((name)
        `(block nil
-          (print-definition `(defun ,name ,args))
+          (print-definition `(fn ,name ,args))
           (%fn-quiet ,name ,args
             (block ,name
               (block nil

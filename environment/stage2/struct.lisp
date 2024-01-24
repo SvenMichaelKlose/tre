@@ -70,15 +70,12 @@
     (@ [%struct-slot-accessors name _ (++! index) options]
        fields)))
 
-(fn struct-predicate (x)
-  (& (array? x)
-     (eq 'struct (aref x 0))))
-
 (fn %struct-predicate (name)
   `(fn ,(%struct-predicate-name name) (x)
      (& (array? x)
         (eq 'struct (aref x 0))
-        (eq ',name (aref x 1)))))
+        (eq ',name (aref x 1))
+        x)))
 
 (fn %struct-sort-fields (fields-and-options)
   (with-queue (fields options)

@@ -15,8 +15,7 @@
       mod sqrt sin cos tan asin acos atan exp round floor
       aref char-code
       make-package package-name find-package
-      print
-      break))
+      print))
 
 (defconstant +cl-renamed-imports+
     '((cons?        CONSP)

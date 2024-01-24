@@ -1,3 +1,5 @@
+(defconstant +php-array-methods+ '("AREF?" "AREF" "=-AREF" "DELETE-AREF"))
+
 (def-php-transpiler-macro defclass (class-name args &body body)
   (generic-defclass #'php-constructor class-name args body))
 
@@ -30,11 +32,16 @@
 (def-php-transpiler-macro defmethod (&rest x)
   (generic-defmethod x))
 
+(fn php-method-name-w/o-class (x)
+  (case x
+    'aref?        'offset-exists
+    'aref         'offset-get
+    '=-aref       'offset-set
+    'delete-aref  'offset-unset
+    x))
+
 (fn php-method-name (cls name)
-  ($ (class-name cls) '- (?
-                           (eq 'aref name)    'offset-get
-                           (eq '=-aref name)  'offset-set
-                           name)))
+  ($ (class-name cls) '- (php-method-name-w/o-class name)))
 
 (fn php-compiled-method-name (cls name)
   (compiled-function-name (php-method-name cls name)))
@@ -53,17 +60,22 @@
   (!= (argument-expand-names 'php-method .x.)
     `(,@(!? ...x.
             (list (php-method-flags !)))
-      "function " ,(case x.
-                     'aref    'offset-get
-                     '=-aref  'offset-set
-                     x.)
-      " " ,(php-argument-list !) ,*terpri*
+      "function " ,(php-method-name-w/o-class x.)
+                  ,(php-argument-list (? (eq x. '=-aref)
+                                         `(("mixed $" ,.!.) ("mixed $" ,!.))
+                                         !))
+                " : " ,(?
+                         (eq x. 'aref?) "bool"
+                         (in? x. '=-aref 'delete-aref) "void"
+                         "mixed")
+                " " ,*terpri*
       "{" ,*terpri*
-      ,*php-indent* "return "
+      ,*php-indent* ,@(unless (in? x. '=-aref 'delete-aref)
+                        '("return "))
           ,(php-compiled-method-name cls x.)
-          ,(php-argument-list (argument-expand-names nil (. 'this .x.)))
+          ,(php-argument-list (. 'this !))
           ,*php-separator*
-      "}")))
+      "}" ,*terpri*)))
 
 (fn php-method-functions (cls)
   (@ [php-method-function cls _]
@@ -73,11 +85,24 @@
   (+@ [php-method cls _]
       (class-methods cls)))
 
-(fn class-has-getset-methods? (cls)
-  (intersect '(aref =-aref) (carlist (class-methods cls))))
+(fn class-method-names (cls)
+  (@ #'symbol-name (carlist (class-methods cls))))
+
+(fn class-array-methods (cls)
+  (intersect +php-array-methods+ (class-method-names cls)
+             :test #'string==))
+
+(fn class-has-all-array-methods? (cls)
+  (subseq? ! +php-array-methods+ :test #'string==))
 
 (fn php-class (cls)
-  `((%php-class-head ,cls ,@(& (class-has-getset-methods? cls)
+  (!= (carlist (class-methods cls))
+    (!? (class-array-methods cls)
+       (| (subseq? ! +php-array-methods+)
+          (error (+ "With PHP interface 'ArrayAccess' its methods must "
+                    "be implemented.  Missing: ~A")
+                 (set-difference (print !) (print +php-array-methods+))))))
+  `((%php-class-head ,cls ,@(& (class-array-methods cls)
                                '(:implements "ArrayAccess")))
     ,(!= (argument-expand-names 'php-constructor
                                 (cadr (class-constructor-maker cls)))

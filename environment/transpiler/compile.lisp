@@ -62,7 +62,8 @@
 
 (fn frontend-section-load (path)
   (format t "; Loading \"~A\"…~%" path)
-  (read-file path))
+  (with-temporary *load* path
+    (read-file path)))
 
 (fn section-comment (section)
   `((%%comment "Section " ,(? (symbol? section)
