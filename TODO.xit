@@ -6,6 +6,7 @@ Hot!
         It's a pain up main street without and about as funny to implement.
 [ ] !!. Sub-level FN and VAR forms.
 [ ] !!. CL objects compatible to JS/PHP targets.
+[ ] ... Reverse arguments of PAD to improve readability.
 
 Bugs
 [ ] ... READ-FILE: Unterminated string at file end causes stack exhaustion.
