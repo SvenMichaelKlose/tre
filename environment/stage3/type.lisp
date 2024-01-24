@@ -4,7 +4,7 @@
 
 (var *types* nil)
 
-(defstruct type
+(defstruct %type
   name
   fun
   (parent nil))
@@ -15,19 +15,19 @@
 (macro deftype (name args &key (parent nil)
                           &body body)
   (print-definition `(deftype ,name ,args))
-  (& (assoc name *types*)
-     (error "Type ~A is already defined." name))
+;  (& (assoc name *types*)
+;     (error "Type ~A is already defined." name))
   (& parent
      (| (find-type parent)
         (error "Parent type ~A is not defined." parent)))
   (acons! name
-          (make-type :name   name
+          (make-%type :name   name
                      :parent parent
                      :fun    (eval `#'(,args
                                         ,@body)))
           *types*)
   `(acons! ',name
-          (make-type :name   ',name
+          (make-%type :name   ',name
                      :parent ',parent
                      :fun    #'(,args
                                  ,@body))
@@ -44,11 +44,11 @@
                                         .x.))
                               o)
          (!? (find-type x.)
-             (apply (type-fun !) .x)
+             (apply (%type-fun !) .x)
              (error "Unknown type specifier symbol ~A." x.)))
        (? (string? x)
           (equal o x)
-          (type? o (funcall (| (type-fun (assoc-value x *types*))
+          (type? o (funcall (| (%type-fun (assoc-value x *types*))
                                (error "No typespecifier for ~A." x))))))))
 
 (deftype null ()
