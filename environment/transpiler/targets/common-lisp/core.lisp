@@ -18,7 +18,7 @@
                      "array.lisp"
                      "env-load.lisp"
                      "../make-lambdas.lisp"
-                     "error.lisp"
+                     "break.lisp"
                      "eval.lisp"
                      "file.lisp"
                      "function.lisp"
