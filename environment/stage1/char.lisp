@@ -30,22 +30,15 @@
 (fn charrange? (x start end)
   (range? (char-code x) (char-code start) (char-code end)))
 
-(defmacro def-rest-predicate (name iter args test-expr)
-  (with-gensym x
-    `(fn ,name (&rest ,x ,@args)
-       (@ (,iter ,x t)
-         (| ,test-expr
-            (return nil))))))
+(fn lower-case? (x)
+  (charrange? x #\a #\z))
 
-(def-rest-predicate lower-case? c ()
-  (charrange? c #\a #\z))
+(fn upper-case? (x)
+  (charrange? x #\A #\Z))
 
-(def-rest-predicate upper-case? c ()
-  (charrange? c #\A #\Z))
-
-(def-rest-predicate alpha-char? c ()
-  (| (lower-case? c)
-     (upper-case? c)))
+(fn alpha-char? (x)
+  (| (lower-case? x)
+     (upper-case? x)))
 
 (fn decimal-digit? (x)
   (charrange? x #\0 #\9))
@@ -68,9 +61,9 @@
      (& (character>= x #\A) (character<= x #\F))
      (& (character>= x #\a) (character<= x #\f))))
 
-(def-rest-predicate alphanumeric? c ()
-  (| (alpha-char? c)
-     (digit? c)))
+(fn alphanumeric? (x)
+  (| (alpha-char? x)
+     (digit? x)))
 
 (fn whitespace? (x)
   (& (character? x)
