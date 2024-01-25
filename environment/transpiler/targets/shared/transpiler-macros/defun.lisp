@@ -7,8 +7,7 @@
     (with-temporaries (*print-automatic-newline?*
                          nil
                        *invisible-package-names*
-                         (. "COMMON-LISP"
-                            *invisible-package-names*))
+                         (. "COMMON-LISP" *invisible-package-names*))
       (late-print body s))))
 
 (fn shared-defun-source-setter (name args body)
@@ -39,9 +38,6 @@
   (let body-with-block `((block ,name
                            (block nil
                              ,@(remove 'no-args body))))
-    (& (defined-function name)
-       (warn "Redefining #'~A." name))
-
     (add-defined-function name args body-with-block)
     `((function ,name (,args
                        ,@(& (eq 'no-args body.)

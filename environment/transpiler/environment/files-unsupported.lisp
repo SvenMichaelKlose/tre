@@ -4,5 +4,5 @@
 (fn close (str)
   (error "CLOSE is unsupported"))
 
-(fn %fclose (str)
-  (error "%FCLOSE is unsupported"))
+;(fn %fclose (str)
+;  (error "%FCLOSE is unsupported"))

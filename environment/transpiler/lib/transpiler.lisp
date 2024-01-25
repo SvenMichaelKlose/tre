@@ -298,21 +298,30 @@
   (href (transpiler-wanted-variables-hash tr) x))
 
 (transpiler-getter add-defined-variable
+  (& (transpiler-defined-variable tr x)
+     (error "Variable ~A is already defined." x))
   (= (href (transpiler-defined-variables tr) x) t)
   x)
+
 (transpiler-getter add-defined-package
+  (& (transpiler-defined-package tr x)
+     (error "Package ~A is already defined." x))
   (= (href (transpiler-defined-packages tr) x) t)
   x)
+
+(fn transpiler-add-defined-function (tr name args body)
+  (& (transpiler-defined-function tr name)
+     (error "Function ~A is already defined." name))
+  (= (href (transpiler-defined-functions tr) name) (. args body))
+  name)
+
 (transpiler-getter-not-global macro?
   (| (expander-has-macro? (transpiler-transpiler-macro-expander tr) x)
      (expander-has-macro? (transpiler-codegen-expander tr) x)))
+
 (transpiler-getter imported-variable?
   (& (transpiler-import-from-host? tr)
      (transpiler-host-variable? tr x)))
-
-(fn transpiler-add-defined-function (tr name args body)
-  (= (href (transpiler-defined-functions tr) name) (. args body))
-  name)
 
 (fn add-defined-function (name args body)
   (transpiler-add-defined-function *transpiler* name args body))

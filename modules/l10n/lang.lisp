@@ -1,5 +1,3 @@
-(var *language* :en)
-(var *fallback-language* :en)
 ,(unless (transpiler-defined-variable *transpiler* '*l10n-text-filter*)
   '(var *l10n-text-filter* #'identity))
 

@@ -35,5 +35,3 @@
 
 (fn package-name (x)
   x.n)
-
-(fn find-symbol (name pkg))
