@@ -3,7 +3,8 @@
 (var *l10n-package* nil)
 
 (@ (i *available-languages*)
-  (= (href *compile-time-l10ns* i) (make-hash-table :test #'eq)))
+  (= (href *compile-time-l10ns* (make-keyword i))
+     (make-hash-table :test #'eq)))
 
 (defmacro in-l10n (package)
   (print-definition `(in-l10n ,package))
