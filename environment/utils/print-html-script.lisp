@@ -1,6 +1,6 @@
 (fn print-html-script (out script &key (title nil)
                                        (no-cache? nil)
-                                       (copyright-title nil) (copyright-href nil)
+                                       (copyright nil) (copyright-href nil)
                                        (external-script nil)
                                        (external-stylesheets nil)
                                        (internal-stylesheet nil)
@@ -13,10 +13,10 @@
                   (meta :charset "utf-8")
                   ,@(& no-cache?
                        `((meta :http-equiv "pragma" :content "no-cache")))
-                  ,@(& (| copyright-title
+                  ,@(& (| copyright
                           copyright-href)
                        `((link :rel "copyright"
-                               ,@(!? copyright-title
+                               ,@(!? copyright
                                      `(:title ,(escape-string !)))
                                ,@(!? copyright-href
                                      `(:href  ,(escape-string !))))))
@@ -39,14 +39,14 @@
 
 (fn make-html-script (pathname script &key (title nil)
                                            (no-cache? nil)
-                                           (copyright-title nil) (copyright-href nil)
+                                           (copyright nil) (copyright-href nil)
                                            (external-script nil)
                                            (external-stylesheets nil)
                                            (internal-stylesheet nil)
                                            (body nil))
   (with-output-file o pathname
     (print-html-script o script ,@(keyword-copiers :title :no-cache?
-                                                   :copyright-title :copyright-href
+                                                   :copyright :copyright-href
                                                    :external-script
                                                    :external-stylesheets
                                                    :internal-stylesheet

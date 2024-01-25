@@ -1,12 +1,9 @@
-(var *available-languages* '(en de))
-(var *fallback-language* 'en)
-(var *development-version?* t)
+(var *fallback-language* :en)
 
 (load (+ *modules-path* "js/event/names.lisp"))
-(load (+ *modules-path* "l10n/compile-time.lisp"))
 
 (fn make-js-project (&key outfile title files
-                          (copyright-title nil)
+                          (copyright nil)
                           (files-before-modules nil)
                           (internal-stylesheet nil)
                           (external-stylesheets nil)
@@ -86,7 +83,7 @@
         (| transpiler (copy-transpiler *js-transpiler*))
     :emitter
            [make-html-script outfile _
-             :copyright-title      copyright-title
+             :copyright            copyright
              :internal-stylesheet  internal-stylesheet
              :external-stylesheets external-stylesheets
              :title title]))

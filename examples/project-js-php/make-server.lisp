@@ -1,5 +1,3 @@
-(load (+ *modules-path* "php/make-php-project.lisp"))
-
 (make-php-project
   :title
     "PHP server"
@@ -8,4 +6,5 @@
   :files
     `("server-api.lisp"
       "server/toplevel.lisp"))
+
 (quit)
