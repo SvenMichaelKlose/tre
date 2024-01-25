@@ -83,12 +83,12 @@
     ((%%native ,(compiled-function-name fun-name)) ,@names)))
 
 (fn compile-argument-expansion-function-body (fun-name adef p)
-  (body-with-noargs-tag
-    (!? (argument-expand-names 'compile-argument-expansion adef)
-        `((#'(,!
-              ,@(compile-argument-expansion-function-body-0 fun-name adef p !))
-            ,@(@ [`',_] !)))
-        (compile-argument-expansion-function-body-0 fun-name adef p !))))
+  (. 'has-argexp!
+     (!? (argument-expand-names 'compile-argument-expansion adef)
+         `((#'(,!
+               ,@(compile-argument-expansion-function-body-0 fun-name adef p !))
+             ,@(@ [`',_] !)))
+         (compile-argument-expansion-function-body-0 fun-name adef p !))))
 
 (fn compile-argument-expansion-function (this-name fun-name adef)
   (with-gensym p

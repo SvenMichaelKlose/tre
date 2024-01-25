@@ -4,12 +4,12 @@
     (with-gensym g
       `(%%block
          (%var ,g)
-         ,(copy-lambda x :name ! :body (body-with-noargs-tag (lambda-body x)))
+         ,(copy-lambda x :name ! :body (. 'has-argexp! (lambda-body x)))
          (= (slot-value ,! 'tre-exp) ,(compile-argument-expansion g ! (lambda-args x)))
          ,!))))
 
 (fn js-requires-expander? (x)
-  (unless (eq 'no-args (car (lambda-body x)))
+  (unless (eq 'has-argexp! (car (lambda-body x)))
     (| (assert?)
        (not (simple-argument-list? (lambda-args x))))))
 
@@ -34,7 +34,7 @@
   (js-make-late-symbol-function-assignment name)
   `(progn
      (%var ,(%fn-name name))
-     ,(shared-defun name args (body-with-noargs-tag body) :allow-source-memorizer? nil)))
+     ,(shared-defun name args (. 'has-argexp! body) :allow-source-memorizer? nil)))
 
 (fn js-early-symbol-maker (g sym)
   `(,@(unless (eq g '~%tfun)
