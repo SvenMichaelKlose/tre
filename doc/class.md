@@ -1,5 +1,4 @@
-Object-oriented programming
-===========================
+# Class
 
 Only for JS and PHP target.
 
