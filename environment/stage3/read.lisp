@@ -1,3 +1,155 @@
+(fn read-peeked-char (str)
+  (prog1 (stream-peeked-char str)
+    (= (stream-peeked-char str) nil)))
+
+(fn read-char-0 (str)
+  (| (read-peeked-char str)
+     (= (stream-last-char str) (funcall (stream-fun-in str) str))))
+
+(fn read-char (&optional (str *standard-input*))
+  (%track-location (stream-input-location str) (read-char-0 str)))
+
+(fn peek-char (&optional (str *standard-input*))
+  (| (stream-peeked-char str)
+     (= (stream-peeked-char str) (read-char-0 str))))
+
+(fn read-chars (in num)
+  (list-string (maptimes [read-char in] num)))
+
+(fn read-file (name)
+  (with-open-file in-stream (open name :direction 'input)
+    (read-all in-stream)))
+
+(fn read-hex (str)
+  (with (f [!? (& (peek-char str)
+                  (!= (char-upcase (peek-char str))
+                    (& (hex-digit? !)
+                       !)))
+               (progn
+                 (read-char str)
+                 (f (number+ (* _ 16)
+                             (- (char-code !)
+                                (? (digit? !)
+                                   (char-code #\0)
+                                   (- (char-code #\A) 10))))))
+               _])
+    (| (hex-digit? (peek-char str))
+       (error "Illegal character '~A' at begin of hexadecimal number."
+              (peek-char str)))
+    (prog1
+      (f 0)
+      (& (symbol-char? (peek-char str))
+         (error "Illegal character '~A' in hexadecimal number."
+                (peek-char str))))))
+
+(fn read-binary (&optional (in *standard-input*))
+  (let n 0
+    (while (!? (peek-char in)
+               (in? ! #\0 #\1))
+           n
+      (= n (bit-or (<< n 1) (- (read-byte in) (char-code #\0)))))))
+
+(fn peek-byte (i)
+  (!= (peek-char i)
+    (& ! (char-code !))))
+
+(fn read-byte (i)
+  (!= (read-char i)
+    (& ! (char-code !))))
+
+(fn read-word (i)   ; TODO: Flexible endianess.
+  (!= (read-byte i)
+    (+ (| ! (return))
+       (<< (| (read-byte i)
+              (return !))
+           8))))
+
+(fn read-dword (i)
+  (!= (read-word i)
+    (+ (| ! (return))
+       (<< (| (read-word i)
+              (return !))
+           16))))
+
+(fn write-byte (x o)
+  (princ (code-char x) o))
+
+(fn write-word (x o)
+  (write-byte (bit-and x #xff) o)
+  (write-byte (>> x 8) o))
+
+(fn write-dword (x o)
+  (write-word (bit-and x #xffff) o)
+  (write-word (>> x 16) o))
+
+(fn read-byte-string (i num)
+  (list-string (maptimes [read-byte i] num)))
+
+(fn gen-read-array (i reader num)
+  (list-array (maptimes [funcall reader i] num)))
+
+(fn read-byte-array (i num)
+  (gen-read-array i #'read-byte num))
+
+(fn read-word-array (i num)
+  (gen-read-array i #'read-word num))
+
+(fn cr-or-lf? (x)
+  (in? (char-code x) 10 13))
+
+(fn read-line (&optional (str *standard-input*))
+  (with-default-stream nstr str
+    (with-queue q
+      (while (!? (peek-char nstr)
+                 (not (cr-or-lf? !)))
+             (!? (peek-char nstr)
+                 (when (cr-or-lf? !)
+                   (enqueue q (read-char nstr))
+                   (let-when c (peek-char nstr)
+                     (& (cr-or-lf? c)
+                        (not (character== c !))
+                        (enqueue q (read-char nstr))))))
+        (enqueue q (read-char nstr)))
+      (!? (queue-list q)
+          (list-string !)))))
+
+(fn read-all-lines (&optional (str *standard-input*))
+  (with-default-stream nstr str
+    (with-queue q
+      (awhile (read-line nstr)
+              (queue-list q)
+        (enqueue q !)))))
+
+(fn read-decimal-places-0 (str v s)
+  (? (ahead? #'digit? str)
+     (read-decimal-places-0 str
+                            (+ v (* s (digit-number (read-char str))))
+                            (/ s 10))
+     v))
+
+(fn read-decimal-places (&optional (str *standard-input*))
+  (& (ahead? #'digit? str)
+     (read-decimal-places-0 str 0 0.1)))
+
+(fn read-integer-0 (str v)
+  (? (ahead? #'digit? str)
+     (read-integer-0 str (+ (* v 10) (digit-number (read-char str))))
+     v))
+
+(fn read-integer (&optional (str *standard-input*))
+  (& (ahead? #'digit? str)
+     (integer (read-integer-0 str 0))))
+
+(fn read-number (&optional (str *standard-input*))
+  (* (? (ahead? #\- str)
+        (prog1 -1 (read-char str))
+        1)
+     (+ (read-integer str)
+        (| (& (ahead? #\. str)
+              (read-char str)
+              (read-decimal-places str))
+           0))))
+
 (fn token-is-quote? (x)
   (in? x :quote :backquote :quasiquote :quasiquote-splice))
 
@@ -131,7 +283,7 @@
                              #\'  :function
                              #\(  :array
                              #\|  (read-comment-block str)
-                             (error "Invalid character after '#'."))
+                             (error "Reader macro #~A unsupported." !))
                       -1   :eof)))
               (| pkg *package*)
               (list-string sym)))))
@@ -244,155 +396,3 @@
 (fn read-from-string (x)
   (with-stream-string s x
     (read-all s)))
-
-(fn read-binary (&optional (in *standard-input*))
-  (let n 0
-    (while (!? (peek-char in)
-               (in? ! #\0 #\1))
-           n
-      (= n (bit-or (<< n 1) (- (read-byte in) (char-code #\0)))))))
-
-(fn peek-byte (i)
-  (!= (peek-char i)
-    (& ! (char-code !))))
-
-(fn read-byte (i)
-  (!= (read-char i)
-    (& ! (char-code !))))
-
-(fn read-word (i)   ; TODO: Flexible endianess.
-  (!= (read-byte i)
-    (+ (| ! (return))
-       (<< (| (read-byte i)
-              (return !))
-           8))))
-
-(fn read-dword (i)
-  (!= (read-word i)
-    (+ (| ! (return))
-       (<< (| (read-word i)
-              (return !))
-           16))))
-
-(fn write-byte (x o)
-  (princ (code-char x) o))
-
-(fn write-word (x o)
-  (write-byte (bit-and x #xff) o)
-  (write-byte (>> x 8) o))
-
-(fn write-dword (x o)
-  (write-word (bit-and x #xffff) o)
-  (write-word (>> x 16) o))
-
-(fn read-byte-string (i num)
-  (list-string (maptimes [read-byte i] num)))
-
-(fn gen-read-array (i reader num)
-  (list-array (maptimes [funcall reader i] num)))
-
-(fn read-byte-array (i num)
-  (gen-read-array i #'read-byte num))
-
-(fn read-word-array (i num)
-  (gen-read-array i #'read-word num))
-
-(fn read-peeked-char (str)
-  (prog1 (stream-peeked-char str)
-    (= (stream-peeked-char str) nil)))
-
-(fn read-char-0 (str)
-  (| (read-peeked-char str)
-     (= (stream-last-char str) (funcall (stream-fun-in str) str))))
-
-(fn read-char (&optional (str *standard-input*))
-  (%track-location (stream-input-location str) (read-char-0 str)))
-
-(fn peek-char (&optional (str *standard-input*))
-  (| (stream-peeked-char str)
-     (= (stream-peeked-char str) (read-char-0 str))))
-
-(fn read-chars (in num)
-  (list-string (maptimes [read-char in] num)))
-
-(fn read-file (name)
-  (with-open-file in-stream (open name :direction 'input)
-    (read-all in-stream)))
-
-(fn read-hex (str)
-  (with (f [!? (& (peek-char str)
-                  (!= (char-upcase (peek-char str))
-                    (& (hex-digit? !)
-                       !)))
-               (progn
-                 (read-char str)
-                 (f (number+ (* _ 16)
-                             (- (char-code !)
-                                (? (digit? !)
-                                   (char-code #\0)
-                                   (- (char-code #\A) 10))))))
-               _])
-    (| (hex-digit? (peek-char str))
-       (error "Illegal character '~A' at begin of hexadecimal number."
-              (peek-char str)))
-    (prog1
-      (f 0)
-      (& (symbol-char? (peek-char str))
-         (error "Illegal character '~A' in hexadecimal number."
-                (peek-char str))))))
-
-(fn cr-or-lf? (x)
-  (in? (char-code x) 10 13))
-
-(fn read-line (&optional (str *standard-input*))
-  (with-default-stream nstr str
-    (with-queue q
-      (while (!? (peek-char nstr)
-                 (not (cr-or-lf? !)))
-             (!? (peek-char nstr)
-                 (when (cr-or-lf? !)
-                   (enqueue q (read-char nstr))
-                   (let-when c (peek-char nstr)
-                     (& (cr-or-lf? c)
-                        (not (character== c !))
-                        (enqueue q (read-char nstr))))))
-        (enqueue q (read-char nstr)))
-      (!? (queue-list q)
-          (list-string !)))))
-
-(fn read-all-lines (&optional (str *standard-input*))
-  (with-default-stream nstr str
-    (with-queue q
-      (awhile (read-line nstr)
-              (queue-list q)
-        (enqueue q !)))))
-
-(fn read-decimal-places-0 (str v s)
-  (? (ahead? #'digit? str)
-     (read-decimal-places-0 str
-                            (+ v (* s (digit-number (read-char str))))
-                            (/ s 10))
-     v))
-
-(fn read-decimal-places (&optional (str *standard-input*))
-  (& (ahead? #'digit? str)
-     (read-decimal-places-0 str 0 0.1)))
-
-(fn read-integer-0 (str v)
-  (? (ahead? #'digit? str)
-     (read-integer-0 str (+ (* v 10) (digit-number (read-char str))))
-     v))
-
-(fn read-integer (&optional (str *standard-input*))
-  (& (ahead? #'digit? str)
-     (integer (read-integer-0 str 0))))
-
-(fn read-number (&optional (str *standard-input*))
-  (* (? (ahead? #\- str)
-        (prog1 -1 (read-char str))
-        1)
-     (+ (read-integer str)
-        (| (& (ahead? #\. str)
-              (read-char str)
-              (read-decimal-places str))
-           0))))
