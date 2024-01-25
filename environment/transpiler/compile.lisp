@@ -44,14 +44,14 @@
   (print-status "Let me think. Hmm…~F")
   (funcall (middleend-init))
   (with (before-imports
-            (codegen-sections before-import)
+          (codegen-sections before-import)
          imports-and-rest
-            (+ (progn
-                 (developer-note "Making imports…~%")
-                 (codegen imports))
-               (compile-delayed-exprs)
-               (codegen-sections after-import)
-               (codegen-accumulated-toplevels)))
+          (+ (progn
+               (developer-note "Making imports…~%")
+               (codegen imports))
+             (compile-delayed-exprs)
+             (codegen-sections after-import)
+             (codegen-accumulated-toplevels)))
     (funcall (postprocessor)
              (+ (list (funcall (prologue-gen)))
                 before-imports

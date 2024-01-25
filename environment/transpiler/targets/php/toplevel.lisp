@@ -28,7 +28,7 @@
                                           #'expex-compiled-funcall)
      (expex-argument-filter ex)  #'php-argument-filter))
 
-(fn make-php-transpiler-0 ()
+(fn %make-php-transpiler-0 ()
   (create-transpiler
       :name                     :php
       :frontend-init            #'php-frontend-init
@@ -38,7 +38,7 @@
       :sections-after-import    #'php-sections-after-import
       :lambda-export?           t
       :stack-locals?            nil
-      :gen-string               [literal-string _ #\" (list #\$)]
+      :gen-string               [literal-string _ #\" '(#\$)]
       :identifier-char?         #'php-identifier-char?
       :expex-initializer        #'php-expex-initializer
       :configurations           '((:exclude-core?            . nil)
@@ -47,7 +47,7 @@
                                   (:native-code              . nil))))
 
 (fn make-php-transpiler ()
-  (aprog1 (make-php-transpiler-0)
+  (aprog1 (%make-php-transpiler-0)
     (transpiler-add-defined-function ! '%cons '(a d) nil)
     (transpiler-add-defined-function ! 'phphash-hash-table '(x) nil)
     (transpiler-add-defined-function ! 'phphash-hashkeys '(x) nil)))
