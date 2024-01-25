@@ -3,6 +3,7 @@
 (env-load "stage1/defmacro.lisp" :cl)
 (env-load "stage1/deftest.lisp" :cl)
 (env-load "stage1/return.lisp")
+(env-load "stage1/abbreviations.lisp")
 (env-load "stage1/andor.lisp")
 (env-load "stage1/brackets.lisp")
 (env-load "stage1/defun.lisp" :cl)
