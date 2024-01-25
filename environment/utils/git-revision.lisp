@@ -1,3 +1,1 @@
-(var *tre-revision* 
-     ,(with-open-file in (open "environment/_git-revision" :direction 'input)
-        (read-number in)))
+(var *tre-revision* ,(subseq (fetch-file "environment/_git-revision") 0 8))
