@@ -4,15 +4,18 @@
 
 (fn shared-defun-source (body)
   (with-string-stream s
-    (with-temporaries (*print-automatic-newline?*  nil
-                       *invisible-package-names*   (. "COMMON-LISP"
-                                                      *invisible-package-names*))
+    (with-temporaries (*print-automatic-newline?*
+                         nil
+                       *invisible-package-names*
+                         (. "COMMON-LISP"
+                            *invisible-package-names*))
       (late-print body s))))
 
 (fn shared-defun-source-setter (name args body)
-  `((%= (slot-value ,name '__source) (. ,(shared-defun-source args)
-                                        ,(unless (configuration :save-argument-defs-only?)
-                                           (shared-defun-source body))))))
+  `((%= (slot-value ,name '__source)
+        (. ,(shared-defun-source args)
+           ,(unless (configuration :save-argument-defs-only?)
+              (shared-defun-source body))))))
 
 (fn shared-defun-source-memorizer (name args body)
   (when (configuration :save-sources?)
@@ -29,8 +32,9 @@
          (%backtrace-pop)))
      body))
 
-(fn shared-defun-without-expander (name args body &key (allow-source-memorizer? nil)
-                                                       (allow-backtrace? nil))
+(fn shared-defun-without-expander (name args body
+                                   &key (allow-source-memorizer? nil)
+                                        (allow-backtrace? nil))
   (print-definition `(fn ,name ,args))
   (let body-with-block `((block ,name
                            (block nil
@@ -49,7 +53,8 @@
       ,@(& allow-source-memorizer?
            (shared-defun-source-memorizer name args (remove 'no-args body))))))
 
-(fn shared-defun (name args body &key (make-expander? t) (allow-source-memorizer? t))
+(fn shared-defun (name args body
+                  &key (make-expander? t) (allow-source-memorizer? t))
 (? args
    (= args (? (cons? args)
               args
@@ -57,12 +62,14 @@
   (let fun-name (%fn-name name)
     `(progn
        ,@(shared-defun-without-expander fun-name args body
-                                        :allow-source-memorizer? allow-source-memorizer?
-                                        :allow-backtrace? t)
+             :allow-source-memorizer? allow-source-memorizer?
+             :allow-backtrace? t)
        ,@(& make-expander?
             (| (always-expand-arguments?)
                (not (simple-argument-list? args)))
             (with-gensym expander-arg
-              (shared-defun-without-expander (c-expander-name fun-name)
-                                             (list expander-arg)
-                                             (compile-argument-expansion-function-body fun-name args expander-arg)))))))
+              (shared-defun-without-expander
+                  (c-expander-name fun-name)
+                  (list expander-arg)
+                  (compile-argument-expansion-function-body fun-name args
+                                                            expander-arg)))))))
