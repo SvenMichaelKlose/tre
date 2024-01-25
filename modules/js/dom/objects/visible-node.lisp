@@ -45,7 +45,7 @@
 
 (defmethod visible-node walk (fun)
   (declare type function fun)
-  (& (not (eq 'next-sibling (funcall fun this)))
+  (& (not (eq 'next-sibling (~> fun this)))
      (element? this)
      (doarray (x this.child-nodes this)
        (element-extend x)
@@ -72,7 +72,7 @@
 (defmethod visible-node split-up-unless (predicate)
   (let new-elm (split-before)
     (? (| (not new-elm)
-          (funcall predicate new-elm.parent-node))
+          (~> predicate new-elm.parent-node))
        new-elm
        (new-elm.split-up-unless predicate))))
 

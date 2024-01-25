@@ -2,10 +2,10 @@
   (aprog1 (define-expander ($ (transpiler-name tr) '-standard (gensym)))
     (with (mypred  (expander-pred !)
            mycall  (expander-call !))
-      (= (expander-pred !) [| (funcall mypred _)
+      (= (expander-pred !) [| (~> mypred _)
                               (%%macro? _)]
-         (expander-call !) [? (funcall mypred _)
-                              (funcall mycall _)
+         (expander-call !) [? (~> mypred _)
+                              (~> mycall _)
                               (%%macrocall _)]))))
 
 (fn copy-transpiler-macro-expander (tr-old tr-new)

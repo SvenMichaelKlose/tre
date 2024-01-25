@@ -1,11 +1,11 @@
 (var *js-core-path* "environment/transpiler/targets/javascript/core/")
 
 (fn js-load-core (dir-path &rest files)
-  (apply #'+ (@ [!= (+ *js-core-path* dir-path _)
-                  (print-definition `(js-load-core ,!))
-                  (read-file !)
-                  (fetch-file !)]
-                files)))
+  (*> #'+ (@ [!= (+ *js-core-path* dir-path _)
+               (print-definition `(js-load-core ,!))
+               (read-file !)
+               (fetch-file !)]
+             files)))
 
 (var *js-core0* ,(js-load-core "" "return-value.lisp"))
 (var *js-core*

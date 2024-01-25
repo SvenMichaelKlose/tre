@@ -7,7 +7,7 @@
            (object? o)      (oref o i)))))
 
 (fn (= ref) (v o &rest indexes)
-  (= o (apply #'ref o (butlast indexes)))
+  (= o (*> #'ref o (butlast indexes)))
   (!= (car (last indexes))
     (?
       (cons? o)        (= (assoc-value o !) v)
@@ -16,7 +16,7 @@
       (object? o)      (=-oref v o !))))
 
 (fn ^ (o &rest indexes)
-  (apply #'ref o indexes))
+  (*> #'ref o indexes))
 
 (fn =-^ (v o &rest indexes)
-  (apply #'=-ref v o indexes))
+  (*> #'=-ref v o indexes))

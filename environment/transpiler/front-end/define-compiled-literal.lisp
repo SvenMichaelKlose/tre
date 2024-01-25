@@ -7,7 +7,7 @@
                 (unless (funinfo-var? (global-funinfo) !)
                   (funinfo-var-add (global-funinfo) !))
                 ,@(& decl-maker
-                     `((push (funcall ,decl-maker !)
+                     `((push (~> ,decl-maker !)
                              (compiled-decls))))
-                (push `(= ,,! ,(list 'quasiquote init-maker))
+                (push `(= ,,! ,(… 'quasiquote init-maker))
                       (compiled-inits)))))))

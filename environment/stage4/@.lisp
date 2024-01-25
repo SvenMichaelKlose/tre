@@ -5,5 +5,5 @@
         (hash-table? x)  (href x keys.)
         (error "Can only handle alists, ARRAY or HASH-TABLE, but got ~A.~%" x))
     (? .keys
-       (apply #'@ ! .keys)
+       (~> #'@ ! .keys)
        !)))

@@ -35,7 +35,7 @@
   x)
 
 (fn transpiler-pass (p list-of-exprs)
-  (with-global-funinfo (funcall p list-of-exprs)))
+  (with-global-funinfo (~> p list-of-exprs)))
 
 (fn transpiler-end (name passes list-of-exprs)
   (| (enabled-end? name)
@@ -48,7 +48,8 @@
        (@ (p passes (? outpass out list-of-exprs))
          (? (enabled-pass? p.)
             (progn
-              (= list-of-exprs (dump-pass name p. (transpiler-pass .p list-of-exprs)))
+              (= list-of-exprs (dump-pass name p.
+                                          (transpiler-pass .p list-of-exprs)))
               (= (last-pass-result) list-of-exprs)
               (& (eq p. outpass)
                  (= out list-of-exprs))))))))
@@ -57,7 +58,7 @@
   (!= (group name-function-pairs 2)
     `(fn ,(make-symbol (symbol-name name)) (list-of-exprs)
        (transpiler-end ,name
-                       (list ,@(@ [`(. ,@_)]
-                                  (pairlist (@ #'make-keyword (carlist !))
-                                            (cdrlist !))))
+                       (… ,@(@ [`(. ,@_)]
+                               (pairlist (@ #'make-keyword (carlist !))
+                                         (cdrlist !))))
                        list-of-exprs))))

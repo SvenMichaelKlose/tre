@@ -25,7 +25,7 @@
   (?
     (%exec? x)
       (aprog1 ...x.
-        (funcall (lml2dom-exec-function x) name (lml2dom-exec-param x) elm !))
+        (~> (lml2dom-exec-function x) name (lml2dom-exec-param x) elm !))
     (keyword? x)
       (list-string (camel-notation (string-list (symbol-name x))))
     x))
@@ -44,7 +44,7 @@
   (& ...x
      (error "%EXEC expects a single child only."))
   (aprog1 (lml2dom ..x. :doc doc :parent parent)
-    (funcall (lml2dom-exec-function x) parent !)))
+    (~> (lml2dom-exec-function x) parent !)))
 
 (fn lml2dom-expr-component (parent x doc)
   (with (attrs     (%%%make-json-object)

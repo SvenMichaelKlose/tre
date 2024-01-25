@@ -28,7 +28,7 @@
   (href (href *l10ns* *language*) (make-keyword id)))
 
 (fn call-localiser (id &rest args)
-  (funcall *l10n-text-filter* (apply (get-localiser id) args)))
+  (~> *l10n-text-filter* (*> (get-localiser id) args)))
 
 (defmacro l10n (id &rest args)
   (= id (make-keyword id))

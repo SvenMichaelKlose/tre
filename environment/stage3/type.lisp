@@ -39,17 +39,16 @@
        (case x.
          'and        (every [type? o _] .x)
          'or         (some  [type? o _] .x)
-         'satisfies  (funcall (| (symbol-function .x.)
-                                 (error "~A is not a predicate for SATISFIES."
-                                        .x.))
-                              o)
+         'satisfies  (~> (| (symbol-function .x.)
+                            (error "~A is not a predicate for SATISFIES." .x.))
+                         o)
          (!? (find-type x.)
-             (apply (%type-fun !) .x)
+             (*> (%type-fun !) .x)
              (error "Unknown type specifier symbol ~A." x.)))
        (? (string? x)
           (equal o x)
-          (type? o (funcall (| (%type-fun (find-type x))
-                               (error "No type specifier for ~A." x))))))))
+          (type? o (~> (| (%type-fun (find-type x))
+                          (error "No type specifier for ~A." x))))))))
 
 (fn subtype? (a b)
   (with (err [error "Type specifier expected instead of ~A." _]

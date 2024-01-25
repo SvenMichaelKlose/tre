@@ -6,7 +6,7 @@
 
 (defbuiltin %%macrocall (x)
   (!= (cdr (assoc x. (env-macros) :test #'eq))
-    (apply .! (argument-expand-values x. !.. .x))))
+    (*> .! (argument-expand-values x. !.. .x))))
 
 (defbuiltin %%macro? (x)
   (& (cons? x)
@@ -19,7 +19,7 @@
 
 (defbuiltin macroexpand-1 (x)
   (!? (symbol-value (tre-symbol '*macroexpand*))
-      (apply ! (list x))
+      (*> ! (list x))
       x))
 
 (defbuiltin macroexpand (x)

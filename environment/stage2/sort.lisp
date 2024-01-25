@@ -5,16 +5,16 @@
     (while (< i j)
            nil
       (while (& (< i right)
-                (not (funcall test< pivot (elt x i))))
+                (not (~> test< pivot (elt x i))))
              nil
         (++! i))
       (while (& (> j left)
-                (funcall test< pivot (elt x j)))
+                (~> test< pivot (elt x j)))
              nil
         (--! j))
       (& (< i j)
          (xchg (elt x i) (elt x j))))
-    (& (funcall test< pivot (elt x i))
+    (& (~> test< pivot (elt x i))
        (xchg (elt x i) (elt x right)))
     i))
 

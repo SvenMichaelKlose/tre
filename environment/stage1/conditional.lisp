@@ -9,8 +9,8 @@
 (fn group2 (x)
   (? x
      (. (? .x
-           (list x. .x.)
-           (list x.))
+           (… x. .x.)
+           (… x.))
         (group2 ..x))))
 
 (fn %case-test (cases)
@@ -26,7 +26,7 @@
   (let test (%case-test cases)
     (mapcar [? ._
                `((,test ,g ,_.) ,._.)
-               (list _.)]
+               (… _.)]
             (group2 (? (eq :test .cases.)
                        ...cases
                        .cases)))))
@@ -37,4 +37,4 @@
   (let g (gensym)
     `(let ,g ,cases.
        (? 
-         ,@(apply #'append (%case g cases))))))
+         ,@(*> #'append (%case g cases))))))

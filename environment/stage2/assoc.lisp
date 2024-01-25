@@ -5,7 +5,7 @@
      (& lst
         (@ (i lst)
           (? (cons? i)
-             (? (funcall test key (,getter i))
+             (? (~> test key (,getter i))
                 (return i))
              (error "Pair expected instead of ~A." i))))))
 
@@ -15,7 +15,7 @@
 (fn (= assoc) (new-value key lst &key (test #'eql))
   (with (f [? (list? _)
               (& _
-                 (? (funcall test key _.)
+                 (? (~> test key _.)
                     (= _. new-value)
                     (f ._)))
               (error "Pair expected instead of ~A." _)])
@@ -41,7 +41,7 @@
 
 (fn aremove (obj lst &key (test #'eql))
   (& lst
-     (? (funcall test obj (caar lst))
+     (? (~> test obj (caar lst))
         (aremove obj .lst :test test)
         (. (. (caar lst)
               (cdar lst))
@@ -55,8 +55,8 @@
 
 (fn ensure-alist (x)
   (when x
-    (& (atom x)  (= x (list x)))
-    (& (atom x.) (= x (list x)))
+    (& (atom x)  (= x (… x)))
+    (& (atom x.) (= x (… x)))
     x))
 
 (fn pairlist (keys vals)

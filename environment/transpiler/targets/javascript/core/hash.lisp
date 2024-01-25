@@ -56,7 +56,7 @@
 
 (fn %href-user (hash key)
   (@ (k (hashkeys hash))
-    (& (funcall hash.__tre-test k key)
+    (& (~> hash.__tre-test k key)
        (return (%aref hash (%href-key hash k))))))
 
 (fn href (hash key)

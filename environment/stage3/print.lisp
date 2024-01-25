@@ -155,7 +155,7 @@
 (fn %print-list (x str info)
   (!? (%print-call? x info)
       (? (function? !)
-         (funcall ! x str info)
+         (~> ! x str info)
          (%print-call x ! str info))
       (%with-parens str info
         (%late-print x. str info)

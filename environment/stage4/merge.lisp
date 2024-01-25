@@ -1,6 +1,6 @@
 (fn merge (&rest x)
   (? (json-object? x.)
-     (apply #'merge-props x)
+     (*> #'merge-props x)
      (!= nil
-       (@ (x (apply #'append x) !)
+       (@ (x (*> #'append x) !)
          (adjoin! x !)))))

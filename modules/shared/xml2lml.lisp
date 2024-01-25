@@ -8,8 +8,8 @@
 (fn xml-error (form &rest args)
   (princ (list-string (reverse *xml2lml-read*)))
   (error (? args
-            (apply #'format t form args)
-            (funcall #'format t form))))
+            (*> #'format t form args)
+            (~> #'format t form))))
 
 (fn xml-error-unexpected-eof (in)
   (xml-error "Unexpected end of file."))
@@ -64,7 +64,7 @@
   #\ )
 
 (fn xml-read-while (in pred)
-  (with-queue-string-while q (funcall pred (xml-peek-char in))
+  (with-queue-string-while q (~> pred (xml-peek-char in))
     (with (c (xml-read-char in))
       (enqueue q 
         (? (xml-whitespace? c) ; Compress whitespace sequence.

@@ -1,4 +1,4 @@
 (fn flatten (x)
   (? (cons? x)
-     (apply #'+ (@ #'flatten x))
+     (*> #'+ (@ #'flatten x))
      x))

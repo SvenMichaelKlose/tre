@@ -2,6 +2,6 @@
   (& x
      (? .x
         (? (< x. .x.)
-           (apply #'min x. ..x)
-           (apply #'min .x))
+           (*> #'min x. ..x)
+           (*> #'min .x))
         x.)))

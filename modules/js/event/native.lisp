@@ -2,7 +2,7 @@
 ; TODO: Remove all of these since Internet Explorer is gone. (Yes!)
 
 (fn native-add-event-listener (elm typ fun)
-  (elm.add-event-listener typ [funcall fun _] false))
+  (elm.add-event-listener typ [~> fun _] false))
 
 (fn native-remove-event-listener (elm typ fun)
    (elm.remove-event-listener typ fun false))

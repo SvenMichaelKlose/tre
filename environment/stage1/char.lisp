@@ -4,10 +4,10 @@
             whitespace? control-char?)
 
 (fn character>= (&rest x)
-  (apply #'>= (@ #'char-code x)))
+  (*> #'>= (@ #'char-code x)))
 
 (fn character<= (&rest x)
-  (apply #'<= (@ #'char-code x)))
+  (*> #'<= (@ #'char-code x)))
 
 (fn char-upcase (c)
   (? (lower-case? c)

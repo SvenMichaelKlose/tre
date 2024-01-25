@@ -56,8 +56,8 @@
                                      (elt x (-- (length x)))
                                      x))
         (%track-location (stream-output-location str) x)
-        (funcall (stream-fun-out str) x str))
-    (funcall (stream-fun-out str) x str)))
+        (~> (stream-fun-out str) x str))
+    (~> (stream-fun-out str) x str)))
 
 (fn stream-track-input-location? (x)
   (stream-location-track? (stream-input-location x)))
@@ -71,4 +71,4 @@
 
 (fn end-of-file? (&optional (str *standard-input*))
   (!? (stream-fun-eof str)
-      (funcall ! str)))
+      (~> ! str)))

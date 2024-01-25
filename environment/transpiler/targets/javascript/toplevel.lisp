@@ -1,6 +1,6 @@
 (fn nodejs-prologue ()
-  (apply #'+ (@ [format nil "var ~A = require ('~A');~%" _ _]
-                (configuration :nodejs-requirements))))
+  (*> #'+ (@ [format nil "var ~A = require ('~A');~%" _ _]
+             (configuration :nodejs-requirements))))
 
 (fn js-prologue ()
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
@@ -23,13 +23,13 @@
 (fn js-sections-before-import ()
   (. (section-from-string '*js-core0* *js-core0*)
      (& (not (configuration :exclude-core?))
-        (+ (list (section-from-string '*js-core* *js-core*))
+        (+ (… (section-from-string '*js-core* *js-core*))
            (& (assert?)
-              (list (section-from-string '*js-core-debug-print* *js-core-debug-print*)))
-           (list (section-from-string '*js-core1* *js-core1*)
-                 (section-from-string 'js-core-stream (js-core-stream)))
+              (… (section-from-string '*js-core-debug-print* *js-core-debug-print*)))
+           (… (section-from-string '*js-core1* *js-core1*)
+              (section-from-string 'js-core-stream (js-core-stream)))
            (& (eq :nodejs (configuration :platform))
-              (list (section-from-string 'js-core-nodejs (js-core-nodejs))))))))
+              (… (section-from-string 'js-core-nodejs (js-core-nodejs))))))))
 
 (fn js-environment-files ()
   (+@ [& (| (not ._)
@@ -39,18 +39,18 @@
 
 (fn js-sections-compiler ()
   (!= *js-core-path*
-    (+ (list (. 'js-emit-early-defined-functions
-                #'js-emit-early-defined-functions)
-             (list (+ ! "env-load-stub.lisp")))
+    (+ (… (. 'js-emit-early-defined-functions
+             #'js-emit-early-defined-functions)
+          (… (+ ! "env-load-stub.lisp")))
        (js-environment-files)
-       (list (list (+ ! "late-macro.lisp"))
-             (list (+ ! "eval.lisp"))))))
+       (… (… (+ ! "late-macro.lisp"))
+          (… (+ ! "eval.lisp"))))))
 
 (fn js-sections-after-import ()
-  (+ (list (. 'emit-late-symbol-function-assignments
-              #'emit-late-symbol-function-assignments)
-           (. 'js-emit-memorized-sources
-              #'js-emit-memorized-sources))
+  (+ (… (. 'emit-late-symbol-function-assignments
+           #'emit-late-symbol-function-assignments)
+        (. 'js-emit-memorized-sources
+           #'js-emit-memorized-sources))
      (& *have-compiler?*
         (js-sections-compiler))))
 

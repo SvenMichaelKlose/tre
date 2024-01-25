@@ -1,10 +1,10 @@
 (fn play-tracks-0 (continuer timetables callback)
   (? (timetables-done? timetables)
-     (funcall continuer)
+     (~> continuer)
      (progn
        (update-timetables timetables)
        (!? callback
-           (funcall !))
+           (~> !))
        (do-wait 0
          (play-tracks-0 continuer timetables callback)))))
 

@@ -2,4 +2,4 @@
   (aprog1 #()
     (dotimes (i dimensions.)
       (= (aref ! i) (!? .dimensions
-                        (apply #'make-array !))))))
+                        (*> #'make-array !))))))

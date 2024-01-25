@@ -1,6 +1,6 @@
 (fn %print-note (fmt args)
   (princ "; ")
-  (apply #'format t fmt args))
+  (*> #'format t fmt args))
 
 (fn print-note (fmt &rest args)
   (& *print-notes?*

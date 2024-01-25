@@ -1,5 +1,5 @@
 (fn generic-defclass (constructor-maker class-name args body)
-  (print-definition `(defclass ,class-name ,@(!? args (list !))))
+  (print-definition `(defclass ,class-name ,@(!? args (… !))))
   (with (cname    (? (cons? class-name) class-name. class-name)
          bases    (& (cons? class-name) .class-name)
          classes  (defined-classes))
@@ -16,7 +16,7 @@
                    :members  nil
                    :parent   (& bases (href classes bases.))
                    :constructor-maker
-                     (list constructor-maker args body)))
+                     (… constructor-maker args body)))
     nil))
 
 (fn access-type? (x)
@@ -33,19 +33,19 @@
 
 (fn generic-defmethod (x)
   (with ((args flags) (get-method-flags-and-rest x))
-    (apply #'((class-name name args body)
-               (print-definition `(defmethod ,class-name ,name ,args))
-               (!? (href (defined-classes) class-name)
-                   (progn
-                     (& (assoc name (class-methods !))
-                        (error "In class '~A': member '~A' already defined."
-                               class-name name))
-                     (acons! name (list args body flags)
-                             (class-methods !)))
-                   (error "Undefined class ~A." class-name)))
-             (argument-expand-values 'defmethod
-                                     '(class-name name args &body body)
-                                     args)))
+    (*> #'((class-name name args body)
+            (print-definition `(defmethod ,class-name ,name ,args))
+            (!? (href (defined-classes) class-name)
+                (progn
+                  (& (assoc name (class-methods !))
+                     (error "In class '~A': member '~A' already defined."
+                            class-name name))
+                  (acons! name (… args body flags)
+                          (class-methods !)))
+                (error "Undefined class ~A." class-name)))
+          (argument-expand-values 'defmethod
+                                  '(class-name name args &body body)
+                                  args)))
   nil)
 
 (fn generic-defmember (class-name names)
@@ -55,7 +55,7 @@
           (@ [(& (cons? _)
                  (not (access-type? _.))
                  (error "Slot access type expected instead of ~A." _.))
-              (list _ t)]
+              (… _ t)]
              names))
       (error "Undefined lass ~A." class-name))
   nil)

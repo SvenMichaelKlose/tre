@@ -7,7 +7,7 @@
 
 (fn pathlist-path (x)
   (? x
-     (apply #'string-concat (pad x "/"))
+     (*> #'string-concat (pad x "/"))
      ""))
 
 (fn path-filename (x)

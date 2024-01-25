@@ -10,7 +10,7 @@
 
 (fn adjoin (obj lst &rest args)
   "Add an element to a set."
-  (? (apply #'member obj lst args)
+  (? (*> #'member obj lst args)
      lst
      (. obj lst)))
 

@@ -15,5 +15,5 @@
 
 (fn mapcar (func &rest lists)
   (let-if args (%map-args lists)
-    (. (apply func args)
-       (apply #'mapcar func lists))))
+    (. (*> func args)
+       (*> #'mapcar func lists))))

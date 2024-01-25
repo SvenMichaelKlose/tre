@@ -21,7 +21,7 @@
                   (funs    (remove-if-not [lambda? ._.] items))
                   (others  (remove-if [lambda? ._.] items)))
              `(labels ,(@ [`(,_. ,@(past-lambda ._.))] funs)
-                ,@(sub (apply #'append others))))
+                ,@(sub (*> #'append others))))
 
         `(let ,plc ,val
            ,@(sub ..alst))))))

@@ -6,4 +6,4 @@
                               (@ [. h (copy-list _)] !))
                           head)
                       (@ #'list head)))))
-    (& x (r x. (apply #'permutate .x)))))
+    (& x (r x. (*> #'permutate .x)))))

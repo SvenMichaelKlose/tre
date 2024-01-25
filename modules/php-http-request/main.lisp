@@ -102,13 +102,13 @@
     (curl_setopt c (%%native "CURLOPT_POST") T)
     (curl_setopt c (%%native "CURLOPT_POSTFIELDS")
                  (? (list? data)
-                    (apply #'string-concat (pad (@ [+ _. "=" ._] data) "&"))
+                    (*> #'string-concat (pad (@ [+ _. "=" ._] data) "&"))
                     data))
     (curl_setopt c (%%native "CURLOPT_RETURNTRANSFER") T)
     (aprog1 (curl_exec c)
       (let errno (number (curl_errno c))
         (curl_close c)
         (? (== 0 errno)
-           (& onresult (funcall onresult !))
-           (funcall onerror (+ "cURL error code '" errno "'/CURLE"
-                               (elt errno *curl-error-codes*))))))))
+           (& onresult (~> onresult !))
+           (~> onerror (+ "cURL error code '" errno "'/CURLE"
+                          (elt errno *curl-error-codes*))))))))

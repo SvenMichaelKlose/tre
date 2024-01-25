@@ -22,17 +22,17 @@
           (| (function-expr? !.)
              (funinfo-find *funinfo* !.)))
        (with-%= p v x
-         (expex-body (apply #'+ (frontend `(((%= ,p (apply ,v. ,(compiled-list .v)))))))))
+         (expex-body (*> #'+ (frontend `(((%= ,p (*> ,v. ,(compiled-list .v)))))))))
        (list x))))
 
 
 ;;;; GUEST CALLBACKS
 
 (fn expex-guest-filter-setter (x)
-  (funcall (expex-setter-filter *expex*) x))
+  (~> (expex-setter-filter *expex*) x))
 
 (fn expex-guest-filter-arguments (x)
-  (@ [funcall (expex-argument-filter *expex*) _] x))
+  (@ [~> (expex-argument-filter *expex*) _] x))
 
 
 ;;;; UTILS
@@ -40,7 +40,7 @@
 (fn make-%= (p v)
   (expex-guest-filter-setter
       `(%= ,p ,(? (atom v)
-                  (funcall (expex-argument-filter *expex*) v)
+                  (~> (expex-argument-filter *expex*) v)
                   v))))
 
 (def-gensym expex-sym e)
@@ -108,7 +108,7 @@
      (in? x. '%%go '%%go-nil '%%native '%%string 'quote '%%comment)))
 
 (fn expex-inlinable? (x)
-  (funcall (expex-inline? *expex*) x))
+  (~> (expex-inline? *expex*) x))
 
 (fn expex-move (x)
   (pcase x
@@ -121,7 +121,7 @@
   (with (args      (@ #'expex-move (expex-guest-filter-arguments x))
          moved     (carlist args)
          new-expr  (cdrlist args))
-    (values (apply #'+ moved) new-expr)))
+    (values (*> #'+ moved) new-expr)))
 
 
 ;;;; EXPRESSION EXPANSION

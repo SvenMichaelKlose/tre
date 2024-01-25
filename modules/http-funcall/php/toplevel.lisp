@@ -28,4 +28,4 @@
     (header "Content-Type: text/plain")
     (!= (xml2expr (%aref *_post* "q"))
       (%= nil (echo (without-xml-type (explode (%%native "\"\\n\"")
-                                               (expr2xml (apply (href *server-commands* !.) .!)))))))))
+                                               (expr2xml (*> (href *server-commands* !.) .!)))))))))

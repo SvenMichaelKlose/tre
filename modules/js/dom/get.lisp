@@ -1,6 +1,6 @@
 (fn ancestor-or-self-if (x pred)
   (while x nil
-    (& (funcall pred x)
+    (& (~> pred x)
        (return x))
     (= x x.parent-node)))
 
@@ -10,6 +10,6 @@
 (fn ancestors-or-self-if (x pred)
   (with-queue elms
     (while x (queue-list elms)
-      (& (funcall pred x)
+      (& (~> pred x)
          (enqueue elms x))
       (= x x.parent-node))))

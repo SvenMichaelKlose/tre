@@ -1,8 +1,8 @@
 (var *autoform-widgets* nil)
 
 (defmacro def-autoform-widget (args predicate &body body)
-  `(+! *autoform-widgets* (list {:predicate  ,predicate
-                                 :maker      #'(,args ,@body)})))
+  `(+! *autoform-widgets* (… {:predicate ,predicate
+                              :maker     #'(,args ,@body)})))
 
 
 (defclass (autoform-field lml-component) (init-props)
@@ -12,12 +12,12 @@
   (!= props
     (?
       (function? !.key)
-        (funcall !.key !.data)
+        (~> !.key !.data)
       (@ (widget *autoform-widgets*)
-        (when (funcall widget.predicate !.schema)
-          (return (funcall widget.maker
-                           !.schema !.key !.data
-                           (aref !.data !.key))))))))
+        (when (~> widget.predicate !.schema)
+          (return (~> widget.maker
+                      !.schema !.key !.data
+                      (aref !.data !.key))))))))
 
 (finalize-class autoform-field)
 (declare-lml-component autoform-field)

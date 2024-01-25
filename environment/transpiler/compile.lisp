@@ -1,6 +1,6 @@
 (fn map-section (fun x)
   (with-cons section data x
-    (. section (funcall fun section data))))
+    (. section (~> fun section data))))
 
 (fn map-sections (fun sections)
   (@ [map-section fun _] sections))
@@ -13,7 +13,7 @@
   (codegen data))
 
 (fn codegen-sections (sections)
-  (apply #'+ (cdrlist (map-sections #'codegen-section sections))))
+  (*> #'+ (cdrlist (map-sections #'codegen-section sections))))
 
 (fn quick-compile (x)
   (codegen (frontend x)))
@@ -32,17 +32,17 @@
                         (disabled-passes)    (. :accumulate-toplevel
                                                 (disabled-passes)))
        (developer-note "Making top–level expressions…~%")
-       (quick-compile-sections (list (. :accumulated-toplevel
-                                        #'gen-toplevel-function))))))
+       (quick-compile-sections (… (. :accumulated-toplevel
+                                     #'gen-toplevel-function))))))
 
 (fn compile-delayed-exprs ()
   (developer-note "Making delayed expressions…~%")
   (with-temporary (sections-to-update) '(:delayed-exprs)
-    (quick-compile-sections (list (. :delayed-exprs (delayed-exprs))))))
+    (quick-compile-sections (… (. :delayed-exprs (delayed-exprs))))))
 
 (fn generic-codegen (before-import after-import imports)
   (print-status "Let me think. Hmm…~F")
-  (funcall (middleend-init))
+  (~> (middleend-init))
   (with (before-imports
           (codegen-sections before-import)
          imports-and-rest
@@ -52,13 +52,13 @@
              (compile-delayed-exprs)
              (codegen-sections after-import)
              (codegen-accumulated-toplevels)))
-    (funcall (postprocessor)
-             (+ (list (funcall (prologue-gen)))
-                before-imports
-                (quick-compile-sections (list (. :compiled-inits
-                                                 (reverse (compiled-inits)))))
-                imports-and-rest
-                (list (funcall (epilogue-gen)))))))
+    (~> (postprocessor)
+        (+ (… (~> (prologue-gen)))
+           before-imports
+           (quick-compile-sections (… (. :compiled-inits
+                                         (reverse (compiled-inits)))))
+           imports-and-rest
+           (… (~> (epilogue-gen)))))))
 
 (fn frontend-section-load (path)
   (format t "; Loading \"~A\"…~%" path)
@@ -72,11 +72,11 @@
 
 (fn frontend-section (section x)
   (developer-note "Frontend ~A.~%" section)
-  (+@ [frontend (list _)]
+  (+@ [frontend (… _)]
       (+ (section-comment section)
          (pcase section
            symbol?  (? (function? x)
-                       (funcall x)
+                       (~> x)
                        x)
            string?  (frontend-section-load section)
            (error "Alien section ~A." section)))))
@@ -86,11 +86,11 @@
     (map-sections #'frontend-section sections)))
 
 (fn generic-frontend (sections)
-  (funcall (frontend-init))
-  (generic-codegen (frontend-sections (funcall (sections-before-import)))
-                   (+ (frontend-sections (funcall (sections-after-import)))
+  (~> (frontend-init))
+  (generic-codegen (frontend-sections (~> (sections-before-import)))
+                   (+ (frontend-sections (~> (sections-after-import)))
                       (frontend-sections sections))
-                   (+ (list "Section imports")
+                   (+ (… "Section imports")
                       (with-temporary *package* *package*
                         (import-from-host)))))
 
@@ -116,7 +116,7 @@
                        *assert?*     (| *assert?* (assert?)))
       (= (host-functions) (make-host-functions))
       (= (host-variables) (make-host-variables))
-      (prog1 (generic-frontend (@ [? (string? _) (list _) _] sections))
+      (prog1 (generic-frontend (@ [? (string? _) (… _) _] sections))
         (print-transpiler-stats start-time)
         (print-status "Phew!~%")))))
 

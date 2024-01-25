@@ -3,5 +3,5 @@
   (= sections (ensure-list sections))
   (let code (compile-sections sections :transpiler transpiler)
     (!? emitter
-        (funcall ! code))
+        (~> ! code))
     code))

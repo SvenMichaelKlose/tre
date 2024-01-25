@@ -1,11 +1,11 @@
 (var *cl-builtins* nil)
 
 (fn cl-load-base (dir-path &rest files)
-  (apply #'+ (@ [!= (+ dir-path _)
-                  (print-definition `(cl-load-base ,!))
-                  (read-file !)
-                  (fetch-file !)]
-                files)))
+  (*> #'+ (@ [!= (+ dir-path _)
+               (print-definition `(cl-load-base ,!))
+               (read-file !)
+               (fetch-file !)]
+             files)))
 
 (var *cl-core-path* "environment/transpiler/targets/common-lisp/core/")
 

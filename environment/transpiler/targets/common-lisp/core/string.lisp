@@ -1,5 +1,5 @@
 (defbuiltin string-concat (&rest x)
-  (apply #'CL:CONCATENATE 'CL:STRING x))
+  (*> #'CL:CONCATENATE 'CL:STRING x))
 
 (defbuiltin string (x)
   (? (CL:NUMBERP x)

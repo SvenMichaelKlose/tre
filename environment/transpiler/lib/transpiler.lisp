@@ -413,8 +413,8 @@
   (transpiler-configuration *transpiler* x))
 
 (fn transpiler-make-expex (tr)
-  (funcall (transpiler-expex-initializer tr)
-           (= (transpiler-expex tr) (make-expex))))
+  (~> (transpiler-expex-initializer tr)
+      (= (transpiler-expex tr) (make-expex))))
 
 (fn default-configurations ()
   '((:save-sources?)
@@ -422,7 +422,7 @@
     (:memorize-sources? . t)))
 
 (fn create-transpiler (&rest args)
-  (aprog1 (apply #'make-transpiler args)
+  (aprog1 (*> #'make-transpiler args)
     (transpiler-reset !)
     (= (transpiler-assert? !) *assert?*)
     (= (transpiler-transpiler-macro-expander !) (make-transpiler-macro-expander !))

@@ -7,11 +7,11 @@
     (? with-index
        (let idx 0
          (@ (i !)
-           (& (funcall pred i idx)
+           (& (~> pred i idx)
               (return i))
            (++! idx)))
        (@ (i !)
-         (& (funcall pred i)
+         (& (~> pred i)
             (return i))))))
 
 (fn %find-if-sequence (pred seq start end from-end with-index)
@@ -28,7 +28,7 @@
                (< i e)
                (> i e)))
          (!= (elt seq i)
-           (& (apply pred (. ! (& with-index (list i))))
+           (& (*> pred (. ! (& with-index (… i))))
               (return !)))))))
  
 (fn find-if (pred seq &key (start nil) (end nil) (from-end nil) (with-index nil))
@@ -37,43 +37,44 @@
      (%find-if-sequence pred seq start end from-end with-index)))
 
 (fn find-if-not (pred seq &key (start nil) (end nil) (from-end nil) (with-index nil))
-  (find-if [not (funcall pred _)] seq :start start :end end :from-end from-end :with-index with-index))
+  (find-if [not (~> pred _)] seq :start start :end end :from-end from-end :with-index with-index))
 
 (fn find (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
-  (find-if [funcall test _ obj] seq :start start :end end :from-end from-end))
+  (find-if [~> test _ obj] seq :start start :end end :from-end from-end))
 
 (fn position (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
   (aprog1 nil
     (find-if #'((x i)
-                 (& (funcall test x obj)
+                 (& (~> test x obj)
                     (= ! i)))
              seq :start start :end end :from-end from-end :with-index t)))
 
 (fn position-if (pred seq &key (start nil) (end nil) (from-end nil))
   (aprog1 nil
     (find-if #'((x i)
-                  (& (funcall pred x)
+                  (& (~> pred x)
                      (= ! i)))
              seq :start start :end end :from-end from-end :with-index t)))
 
 (fn some (pred &rest seqs)
-  (find-if pred (apply #'append seqs)))
+  (find-if pred (*> #'append seqs)))
 
 (fn every (pred &rest seqs)
   (@ (seq seqs t)
      (?
        (list? seq)
          (@ (i seq t)
-           (| (funcall pred i)
+           (| (~> pred i)
               (return-from every nil)))
        (vector? seq)
          (adotimes ((length seq))
-           (| (funcall pred (elt seq !))
+           (| (~> pred (elt seq !))
               (return-from every nil)))
        (error "Not a sequence: ~A." seq))))
 
 (fn notany (pred &rest args)
-  (apply #'every [not (funcall pred _)] args))
+  (*> #'every [not (~> pred _)] args))
+
 (defmacro dosequence ((v seq &rest result) &body body)
   (with-gensym (evald-seq idx)
     `(let ,evald-seq ,seq
@@ -84,7 +85,7 @@
 
 (defmacro adosequence (params &body body)
   (let p (? (atom params)
-            (list params)
+            (… params)
             params)
     `(dosequence (! ,p. ,.p.)
        ,@body)))
@@ -94,7 +95,7 @@
      (list-array (remove-if fun (array-list x)))
      (with-queue q
        (@ (i x (queue-list q))
-         (| (funcall fun i)
+         (| (~> fun i)
             (enqueue q i))))))
 
 (fn remove-if-not (fun x)
@@ -102,11 +103,11 @@
      (list-array (remove-if-not fun (array-list x)))
      (with-queue q
        (@ (i x (queue-list q))
-         (& (funcall fun i)
+         (& (~> fun i)
             (enqueue q i))))))
 
 (fn remove (elm x &key (test #'eql))
-  (remove-if [funcall test elm _] x))
+  (remove-if [~> test elm _] x))
 
 (defmacro remove! (x lst &rest args)
   `(= ,lst (remove ,x ,lst ,@args)))
@@ -133,7 +134,7 @@
         (& (>= end !)
            (= end !))
         (with (l  (- end start)
-               s  (funcall maker l))
+               s  (~> maker l))
           (dotimes (x l s)
             (= (elt s x) (elt seq (+ start x)))))))))
 

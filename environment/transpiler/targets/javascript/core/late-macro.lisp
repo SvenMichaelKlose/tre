@@ -5,6 +5,6 @@
   (expander-has-macro? *standard-macro-expander* x.))
 
 (fn %%macrocall (x)
-  (funcall (expander-call *standard-macro-expander*) x))
+  (~> (expander-call *standard-macro-expander*) x))
 
 (= *macroexpand-backquote* #'%macroexpand-backquote)

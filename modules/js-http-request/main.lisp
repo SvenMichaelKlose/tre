@@ -1,7 +1,8 @@
 (fn multipart-rand ()
   (string (+ 1000 (*math.floor (*math.random 8999)))))
 
-(var *multipart-boundary* (base64-encode (apply #'+ (maptimes #'(() (multipart-rand)) 4))))
+(var *multipart-boundary*
+     (base64-encode (*> #'+ (maptimes #'(() (multipart-rand)) 4))))
 
 (fn multipart-formdata (key value)
   (+ "--" *multipart-boundary* *terpri*
@@ -17,26 +18,26 @@
   (with (req       (new *x-m-l-http-request)
          listener  [0 & (== 4 req.ready-state)
                         (? (== 200 req.status)
-                           (funcall onresult req.response-text)
-                           (funcall onerror req url data))])
+                           (~> onresult req.response-text)
+                           (~> onerror req url data))])
     (& onresult
        (= req.onreadystatechange listener))
     (req.open "POST" url (& onresult t))
     (req.set-request-header "Content-type" (+ "multipart/form-data; charset=UTF-8; boundary="
                                               *multipart-boundary*))
-    (req.send (+ (apply #'string-concat (@ [multipart-formdata _. ._] data))
+    (req.send (+ (*> #'string-concat (@ [multipart-formdata _. ._] data))
                  (multipart-tail)))
     (unless onresult
       (| (== 200 req.status)
-         (funcall onerror req url data))
+         (~> onerror req url data))
       req.response-text)))
 
 (fn ajax (url data &key (onerror nil) (onresult nil) (post? t))
   (with (req       (new *x-m-l-http-request)
          listener  [0 & (== 4 req.ready-state)
                         (? (== 200 req.status)
-                           (funcall onresult req.response)
-                           (funcall onerror req url data))])
+                           (~> onresult req.response)
+                           (~> onerror req url data))])
     (& onresult
        (= req.onreadystatechange listener))
     (req.open (? post? "POST" "GET") url (& onresult t))
@@ -44,7 +45,7 @@
     (req.send (json-encode data))
     (unless onresult
       (| (== 200 req.status)
-         (funcall onerror req url data))
+         (~> onerror req url data))
       (json-decode req.response))))
 
 (fn http-request-error (req url data)

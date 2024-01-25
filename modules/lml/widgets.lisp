@@ -11,4 +11,4 @@
     (= (ref (ref schema i) what) value)))
 
 (fn make-schema-editable (schema &rest fields)
-  (apply #'set-schema-items t "is_editable" schema fields))
+  (*> #'set-schema-items t "is_editable" schema fields))

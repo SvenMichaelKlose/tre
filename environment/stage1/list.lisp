@@ -139,23 +139,23 @@
 (fn dynamic-map (func &rest lists)
   (?
     (string? lists.)
-      (list-string (apply #'mapcar func (mapcar #'string-list lists)))
+      (list-string (*> #'mapcar func (mapcar #'string-list lists)))
     (array? lists.)
-      (apply #'mapcar func (mapcar #'array-list lists))
-    (apply #'mapcar func lists)))
+      (*> #'mapcar func (mapcar #'array-list lists))
+    (*> #'mapcar func lists)))
 
 (fn mapcan (func &rest lists)
-  (apply #'nconc (apply #'mapcar func lists)))
+  (*> #'nconc (*> #'mapcar func lists)))
 
 (fn member-if (pred &rest lsts)
   (dolist (i lsts)
     (do ((j i .j))
         ((not j))
-      (? (funcall pred j.)
+      (? (~> pred j.)
          (return-from member-if j)))))
 
 (fn member-if-not (pred &rest lsts)
-  (member-if #'((_) (not (funcall pred _))) lsts))
+  (member-if #'((_) (not (~> pred _))) lsts))
 
 (fn reverse (lst)
   (!= nil
@@ -175,7 +175,7 @@
       (rplaca result
               (cdr (rplacd (| result.
                               result)
-                           (list (funcall func i))))))))
+                           (list (~> func i))))))))
 
 (fn ensure-tree (x)
   (? (cons? x.)
@@ -183,7 +183,7 @@
      (list x)))
 
 (fn tree-find (v x &key (test #'eql))
-  (| (funcall test v x)
+  (| (~> test v x)
      (& (cons? x)
         (dolist (i x)
           (& (tree-find v i)

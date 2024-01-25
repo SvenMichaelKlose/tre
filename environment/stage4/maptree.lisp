@@ -1,7 +1,7 @@
 (fn maptree (fun x)
   (? (atom x)
-     (funcall fun x)
+     (~> fun x)
      (@ [? (cons? _)
-           (funcall fun (maptree fun (funcall fun _)))  ; TODO: Redux.
-           (funcall fun _)]
+           (~> fun (maptree fun (~> fun _)))  ; TODO: Redux.
+           (~> fun _)]
         x)))

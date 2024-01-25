@@ -31,4 +31,4 @@
 (fn funinfo-error (fmt &rest args)
   (error "In scope ~A: ~A"
          (human-readable-funinfo-names *funinfo*)
-         (apply #'format nil fmt args)))
+         (*> #'format nil fmt args)))

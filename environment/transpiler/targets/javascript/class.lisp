@@ -1,7 +1,7 @@
 (fn js-gen-predicate (class-name)
   `(fn ,($ class-name '?) (x)
-     (!= (%%native x " instanceof " ,(compiled-function-name-string class-name))
-       x)))
+     (& (%%native x " instanceof " ,(compiled-function-name-string class-name))
+        x)))
 
 (fn js-gen-constructor (class-name base args body)
   `(progn
@@ -27,7 +27,7 @@
     (. `(,(convert-identifier x.) #',!)
        `(fn ,! ,.x.
           (%thisify ,class-name
-            ,@(| ..x. (list nil)))))))
+            ,@(| ..x. (… nil)))))))
 
 (fn js-gen-inherit-methods (class-name base-name)
   `((= (slot-value ,class-name 'prototype)
@@ -45,14 +45,14 @@
         ,(!? (@ [js-emit-method class-name _]
                 (class-methods-by-access-type cls :static))
              `(js-merge-props! ,class-name
-                               (%%%make-json-object ,@(apply #'+ (carlist !)))))
+                               (%%%make-json-object ,@(*> #'+ (carlist !)))))
         (js-merge-props! (slot-value ,class-name 'prototype)
-                         (%%%make-json-object ,@(apply #'+ (carlist !)))))))
+                         (%%%make-json-object ,@(*> #'+ (carlist !)))))))
 
 (fn js-emit-constructor (class-name x)
-  (apply (car (class-constructor-maker x))
-         class-name (class-base x)
-         (cdr (class-constructor-maker x))))
+  (*> (car (class-constructor-maker x))
+      class-name (class-base x)
+      (cdr (class-constructor-maker x))))
 
 (def-js-transpiler-macro finalize-class (class-name)
   (print-definition `(finalize-class ,class-name))

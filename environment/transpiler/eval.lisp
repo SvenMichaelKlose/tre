@@ -24,4 +24,4 @@
         (load-bytecode (expr-to-code ! (compile-sections `((eval . ((fn ,tmpfun () ,x))))
                                                          :transpiler !))
                        :temporary? t))
-      (funcall (symbol-function tmpfun)))))
+      (~> (symbol-function tmpfun)))))

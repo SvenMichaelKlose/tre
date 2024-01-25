@@ -2,7 +2,7 @@
 
 (fn special-%%macrocall (x)
   (!= (cdr (assoc x. *special-forms* :test #'eq))
-    (apply .! (argument-expand-values x. !. .x))))
+    (*> .! (argument-expand-values x. !. .x))))
 
 (fn special-%%macro? (x)
   (& (cons? x)

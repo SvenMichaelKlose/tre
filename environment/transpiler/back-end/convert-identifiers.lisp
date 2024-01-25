@@ -2,7 +2,7 @@
   (acons! from to (transpiler-symbol-translations tr)))
 
 (fn transpiler-special-char? (x)
-  (not (funcall (identifier-char?) x)))
+  (not (~> (identifier-char?) x)))
 
 (fn global-variable-notation? (x)
   (let l (length x)
@@ -30,7 +30,7 @@
            #'((x pos)
                (with (char-synonym
                         [? (& ._ (eql #\- _.))
-                           (list #\_)
+                           (… #\_)
                            (. #\_
                               (string-list (print-hexbyte (char-code _.)
                                                           nil)))])
@@ -76,7 +76,7 @@
              (symbol? _)         (| (assoc-value _ (symbol-translations)
                                                  :test #'eq)
                                     (convert-identifier _))
-             (%%string? _)       (funcall (gen-string) ._.)
+             (%%string? _)       (~> (gen-string) ._.)
              (%%native? _)       (convert-identifiers ._)
              (cons? _)           _
              (error "Cannot translate ~A to string." _)]

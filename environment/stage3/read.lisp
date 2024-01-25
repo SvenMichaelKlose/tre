@@ -4,7 +4,7 @@
 
 (fn read-char-0 (str)
   (| (read-peeked-char str)
-     (= (stream-last-char str) (funcall (stream-fun-in str) str))))
+     (= (stream-last-char str) (~> (stream-fun-in str) str))))
 
 (fn read-char (&optional (str *standard-input*))
   (%track-location (stream-input-location str) (read-char-0 str)))
@@ -86,7 +86,7 @@
   (list-string (maptimes [read-byte i] num)))
 
 (fn gen-read-array (i reader num)
-  (list-array (maptimes [funcall reader i] num)))
+  (list-array (maptimes [~> reader i] num)))
 
 (fn read-byte-array (i num)
   (gen-read-array i #'read-byte num))
@@ -172,7 +172,7 @@
 (fn ahead? (what str)
   (!= (peek-char str)
     (& (? (function? what)
-          (funcall what !)
+          (~> what !)
           (eql what !))
        !)))
 
@@ -207,7 +207,7 @@
        (progn
          (read-char str)
          (when (whitespace? (peek-char str))
-           (return (list #\|)))
+           (return (… #\|)))
          (prog1 (f2)
            (? (ahead? #\| str)
               (read-char str)
@@ -328,7 +328,7 @@
        (error "Closing bracket missing."))))
 
 (fn read-quote (str token)
-  (list (make-symbol (symbol-name token)) (read-expr str)))
+  (… (make-symbol (symbol-name token)) (read-expr str)))
 
 (fn read-cons (str)
   (with (err
@@ -369,7 +369,7 @@
        (progn
          (read-char str)
          (with ((token pkg sym) (read-token str))
-           (read-slot-value (list ! sym))))
+           (read-slot-value (… ! sym))))
        !)))
 
 (fn read-expr (str)
