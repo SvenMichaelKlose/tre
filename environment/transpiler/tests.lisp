@@ -8,13 +8,14 @@
                  (%princ ,(+ "Test " (string num) ", " _.))
                  (with (result    ,._.
                         expected  ,.._.)
-                   (unless (equal result expected)
-                     (%princ " !!! FAILED !!! Expected:")
-                     (%princ expected)
-                     (%princ " Result:")
-                     (%princ result))
-                   (%princ "
-"))))]
+                   (? (equal result expected)
+                     (%princ "
+")
+                     (progn
+                       (%princ " !!! FAILED !!! Expected: ")
+                       (print expected)
+                       (%princ " Result: ")
+                       (print result))))))]
            *tests*)
       (fn environment-tests ()
         ,@(@ #'list (reverse names))
