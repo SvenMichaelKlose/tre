@@ -48,8 +48,17 @@
              (error "Unknown type specifier symbol ~A." x.)))
        (? (string? x)
           (equal o x)
-          (type? o (funcall (| (%type-fun (assoc-value x *types*))
-                               (error "No typespecifier for ~A." x))))))))
+          (type? o (funcall (| (%type-fun (find-type x))
+                               (error "No type specifier for ~A." x))))))))
+
+(fn subtype? (a b)
+  (with (err [error "Type specifier expected instead of ~A." _]
+         f   [!? (%type-parent (find-type _))
+                 (| (equal a _)
+                    (f !))])
+     (| (find-type a) (err a))
+     (| (find-type b) (err b))
+     (f a)))
 
 (deftype null ()
   '(satisfies not))
@@ -58,7 +67,16 @@
   ,@(@ [`(deftype ,_ () '(satisfies ,($ _ '?)))]
        '(symbol cons list
          number float integer character
-         array string hash-table)))
+         hash-table)))
+
+(deftype vector ()
+  `(satisfies vector?))
+
+(deftype array () :parent vector
+  `(satisfies array?))
+
+(deftype string () :parent vector
+  `(satisfies string?))
 
 (| (& (type? nil 'null)
       (type? 'a 'symbol)

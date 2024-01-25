@@ -34,15 +34,6 @@
 ;;; have a working base which is easier to implement and goes well with the
 ;;; ANSI Common Lisp standard.
 
-(fn subtype-of? (a b)
-  (with (err [error "Type specifier expected instead of ~A." _]
-         f   [!? (%type-parent (find-type _))
-                 (| (equal a _)
-                    (f !))])
-     (| (find-type a) (err a))
-     (| (find-type b) (err b))
-     (f a)))
-
 (fn add-overload (fun expanded-types &optional (typelist nil))
   "Add result of ARGUMENT-EXPAND-TYPES to typed argument tree."
   (unless expanded-types
@@ -55,7 +46,9 @@
         typelist)
       (!= (. expanded-types. (add-overload fun .expanded-types))
          (? typelist
-            (sort (. ! typelist) :test #'((a b) (subtype-of? a. b.)))
+            (sort (. ! typelist)
+                  :test #'((a b)
+                            (subtype? a. b.)))
             (list !)))))
 
 (print '(add-overload 'bar '(string integer)))
