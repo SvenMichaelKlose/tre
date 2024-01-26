@@ -66,14 +66,6 @@
                  "widgets.lisp"
 ;                 "widgets-editable.lisp"
                  "toplevel.lisp"))
-      ,@(list+ (+ *modules-path* "sql-clause/")
-               '("create-table.lisp"
-                 "delete.lisp"
-                 "insert.lisp"
-                 "selection-info.lisp"
-                 "select.lisp"
-                 "update.lisp"
-                 "utils-querystring.lisp"))
       ,(+ *modules-path* "js-http-request/main.lisp")
       ,@(list+ (+ *modules-path* "http-funcall/")
                '("shared/expr2dom.lisp"

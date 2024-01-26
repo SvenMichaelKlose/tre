@@ -16,6 +16,5 @@ Maybe later
         Will make conversions to back-end identifiers obsolete and less
         confusing.
 [ ] ... Rewrite modules/http-funcall.
-[ ] ... Remove module "sql-clause".
 [?] ... PHP: Native closures?  Need to research the implications first.
 [?] ... Replace PHP __array object by native arrays?

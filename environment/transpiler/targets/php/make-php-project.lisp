@@ -8,14 +8,6 @@
                  "dump.lisp"))
       (+ *modules-path* "/php-db-mysql/main.lisp")
       (+ *modules-path* "/php-http-request/main.lisp")
-      ,@(list+ (+ *modules-path* "/sql-clause/")
-               `("selection-info.lisp"
-                 "create-table.lisp"
-                 "delete.lisp"
-                 "insert.lisp"
-                 "select.lisp"
-                 "update.lisp"
-                 "utils-querystring.lisp"))
       ,@(list+ (+ *modules-path* "/http-funcall/")
                '("shared/expr2dom.lisp"
                  "php/toplevel.lisp"))
