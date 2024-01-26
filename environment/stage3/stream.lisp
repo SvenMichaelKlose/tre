@@ -53,7 +53,7 @@
       (unless (& (string? x)
                  (== 0 (length x)))
         (= (stream-last-char str) (? (string? x)
-                                     (elt x (-- (length x)))
+                                     (char x (-- (length x)))
                                      x))
         (%track-location (stream-output-location str) x)
         (~> (stream-fun-out str) x str))

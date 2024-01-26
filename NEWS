@@ -1,4 +1,5 @@
 Changes relative to tre-0.20:
+  * AREF does not work an strings anymore. Use CHAR.
   * New abbreviating macros: *>: APPLY, ~>: FUNCALL, …:  LIST.
   * PHP array class accessors may be overloaded by members AREF, =-AREF and
     DELETE-AREF.  PHP requires them all to be there if used.
