@@ -61,3 +61,9 @@
 
 (fn pairlist (keys vals)
   (@ #'cons keys vals))
+
+(fn kwlist-alist (x)
+  (@ [. _. ._.] (group x 2)))
+
+(fn alist-kwlist (x)
+  (+@ [… _. ._] x))

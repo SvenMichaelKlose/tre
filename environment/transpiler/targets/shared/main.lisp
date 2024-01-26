@@ -4,5 +4,4 @@
 (env-load "transpiler/targets/shared/section-from-string.lisp")
 (env-load "transpiler/targets/shared/codegen/literal-string.lisp")
 (env-load "transpiler/targets/shared/codegen/c-list.lisp")
-(env-load "transpiler/targets/shared/codegen/alist-assignments.lisp")
 (env-load "transpiler/targets/shared/codegen/funinfo-comment.lisp")
