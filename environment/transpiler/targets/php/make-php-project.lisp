@@ -21,6 +21,7 @@
                  "php/toplevel.lisp"))
       ,@(list+ (+ *modules-path* "/session/")
                '("php/toplevel.lisp"
-                 "api.lisp")))
+                 "api.lisp"))
+      ,@files)
     :transpiler (| transpiler (copy-transpiler *php-transpiler*))
     :emitter    [put-file outfile _]))
