@@ -1,9 +1,15 @@
 Changes relative to tre-0.20:
+  * NEW without arguments does not create a JSON object but a standard object.
+    Use MAKE-JSON-OBJECT.
   * AREF does not work an strings anymore. Use CHAR.
-  * New abbreviating macros: *>: APPLY, ~>: FUNCALL, …:  LIST.
-  * PHP array class accessors may be overloaded by members AREF, =-AREF and
+  * New abbreviating macros:
+       …: LIST
+      *>: APPLY
+      ~>: FUNCALL
+      +@: MAPCAN
+      @n: MAPTIMES
+  * PHP classes: array accessors may be overloaded by members AREF, =-AREF and
     DELETE-AREF.  PHP requires them all to be there if used.
-  * New macro +@ to shortcut MAPCAN.
   * Added VECTOR?.
   * EVERY much faster on lists.
   * Added DIRECTORY to get directory lists.

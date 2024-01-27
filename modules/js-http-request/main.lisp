@@ -2,7 +2,9 @@
   (string (+ 1000 (*math.floor (*math.random 8999)))))
 
 (var *multipart-boundary*
-     (base64-encode (*> #'+ (maptimes #'(() (multipart-rand)) 4))))
+     (base64-encode (*> #'+ (@n #'(()
+                                    (multipart-rand))
+                                4))))
 
 (fn multipart-formdata (key value)
   (+ "--" *multipart-boundary* *terpri*

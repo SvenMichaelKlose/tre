@@ -14,7 +14,7 @@
      (= (stream-peeked-char str) (read-char-0 str))))
 
 (fn read-chars (in num)
-  (list-string (maptimes [read-char in] num)))
+  (list-string (@n [read-char in] num)))
 
 (fn read-file (name)
   (with-open-file in-stream (open name :direction 'input)
@@ -83,10 +83,10 @@
   (write-word (>> x 16) o))
 
 (fn read-byte-string (i num)
-  (list-string (maptimes [read-byte i] num)))
+  (list-string (@n [read-byte i] num)))
 
 (fn gen-read-array (i reader num)
-  (list-array (maptimes [~> reader i] num)))
+  (list-array (@n [~> reader i] num)))
 
 (fn read-byte-array (i num)
   (gen-read-array i #'read-byte num))

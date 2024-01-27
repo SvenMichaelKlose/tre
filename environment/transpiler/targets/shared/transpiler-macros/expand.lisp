@@ -50,7 +50,7 @@
   (? (| (not x)
         (keyword? x.)
         (string? x.))
-     `(%%%make-json-object ,@x)
+     `(%%%make-object ,@x)
      `(%new ,@x)))
 
 (def-shared-transpiler-macro (bc c js php) mapcar (fun &rest lsts)
