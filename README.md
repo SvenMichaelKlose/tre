@@ -7,11 +7,13 @@ and Common Lisp (the latter mainly to compile itself).
 # Table of Contents
 
 1. [Build and install](#build-and-install)
-2. [Starting a Project](doc/starting-a-project.md)
-3. [Syntax](doc/syntax.md)
-4. [Class](doc/class.md)
-5. [Porting from PHP](doc/porting-from-php.md)
-6. [Stuff using tré](doc/stuff-using-tré.md)
+2. [Introduction to Lisp](doc/intro-to-lisp.md)
+3. [Starting a Project](doc/starting-a-project.md)
+4. [Syntax](doc/syntax.md)
+5. [Class](doc/class.md)
+6. [Porting from PHP](doc/porting-from-php.md)
+7. [Compiler](doc/compiler.md)
+8. [Stuff using tré](doc/stuff-using-tré.md)
 
 <a id="build-and-install"></a>
 # Build and install
