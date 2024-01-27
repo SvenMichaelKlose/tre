@@ -1,25 +1,26 @@
-New
-[ ] Machine-readable compiler error messages.
-
-Hot!
-[@] !!! Generic functions.
+[@] !!! LML2???: Track path to locate faulty expressions.  Allow temporary
+    error message info generators.
 [@] !!! Getters and setters.
 [@] !!. JS target: Emulate protected/private methods and members.
-[ ] !!. Packaging in user land.
-        It's a pain up main street without and about as funny to implement.
-[ ] !!. Sub-level FN and VAR forms.
-[ ] !!. CL objects compatible to JS/PHP targets.
-[ ] ... Reverse arguments of PAD to improve readability.
+[@] !.. Generic functions.
+[ ] ... Packaging in user land.  It's a pain up main street without and about
+        as funny to implement.
+[ ] ... CL objects compatible to JS/PHP targets.
+[ ] ... Sub-level FN and VAR forms.
+[ ] Case-sensitive symbols without conversion to upper case.  Will make
+    conversions to back-end identifiers obsolete and less confusing.
+[ ] Rewrite modules/http-funcall.  Remove XML and just PRINT and READ.
 
-Bugs
-[ ] ... READ-FILE: Unterminated string at file end causes stack exhaustion.
+Printer
+[ ] Machine-readable compiler error messages.
 
-Maybe later
-[ ] !.. Case-sensitive symbols without conversion to upper case.
-        Will make conversions to back-end identifiers obsolete and less
-        confusing.
-[ ] ... Rewrite modules/http-funcall.
+Reader/printer
+[ ] YAML
+[ ] Markdown
+[ ] XIT
 
-Doubtful
-[?] ... PHP: Native closures?  Need to research the implications first.
-[?] ... Replace PHP __array object by native arrays?
+Parsers
+[ ] PHP
+
+[?] Native PHP closures.  Need to research the implications first.
+[?] LML2XML compiler
