@@ -37,7 +37,7 @@
   (dump-selector              nil)
 
   ;; Dump FUNINFOs in comments before their functions.
-  (funinfo-comments?          nil)
+  (funinfo-comments?          *development?*)
 
   ;; Used for incremental compilations.  If set only this list of sections
   ;; is compiled and the rest is taken from the cache.
