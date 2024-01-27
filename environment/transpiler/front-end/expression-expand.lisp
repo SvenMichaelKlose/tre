@@ -1,3 +1,5 @@
+;;;;; TODO: Simplify further.
+
 (defstruct expex
   (argument-filter  #'identity)
   (setter-filter    #'list)

@@ -19,34 +19,31 @@
        (f 'cdr num-cdrs
           (dot-expand (make-symbol (list-string without-end)))))))
 
-(fn dot-position (x)
-  (position #\. x))
-
 (fn no-dot-notation? (x)
-  (with (sl  (string-list (symbol-name x))
-         l   (length sl))
-    (| (== 1 l)
-       (not (dot-position sl)))))
+  (with (sl (string-list (symbol-name x))
+         l  (length sl))
+    (& (| (== 1 l)
+          (not (position #\. sl)))
+       x)))
 
 (fn has-dot-notation? (x)
   (!= (symbol-name x)
     (| (eql #\. (elt ! 0))
        (eql #\. (elt ! (-- (length !)))))))
 
-(fn dot-expand-conv (x)
-  (? (no-dot-notation? x)
-     x
+(fn dot-expand-symbol (x)
+  (| (no-dot-notation? x)
      (let sl (string-list (symbol-name x))
        (? (has-dot-notation? x)
           (dot-expand-list sl)
-          (let p (dot-position sl)
+          (let p (position #\. sl)
             `(%slot-value ,(make-symbol (list-string (subseq sl 0 p)))
-                          ,(dot-expand-conv (make-symbol (list-string (subseq sl (++ p)))))))))))
+                          ,(dot-expand-symbol (make-symbol (list-string (subseq sl (++ p)))))))))))
 
 (fn dot-expand (x)
   (?
     (symbol? x)
-      (dot-expand-conv x)
+      (dot-expand-symbol x)
     (cons? x)
       (. (dot-expand x.)
          (dot-expand .x))
