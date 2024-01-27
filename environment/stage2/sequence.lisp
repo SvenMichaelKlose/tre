@@ -127,7 +127,7 @@
           (--! len)
           (= lst .lst))))))
 
-(fn %subseq-sequence (maker seq start end)
+(fn subseq-sequence (maker seq start end)
   (unless (== start end)
     (!= (length seq)
       (when (< start !)
@@ -145,5 +145,5 @@
     (pcase seq
       list?    (list-subseq seq start end)
       string?  (string-subseq seq start end)
-      array?   (%subseq-sequence #'make-array seq start end)
+      array?   (subseq-sequence #'make-array seq start end)
       (error "Type of ~A not supported." seq))))
