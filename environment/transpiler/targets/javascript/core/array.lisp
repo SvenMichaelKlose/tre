@@ -1,5 +1,5 @@
 (fn list-array (x)
-  (!= (%%native "" "[]")
+  (!= (make-array)
     (@ (i x !)
       (%%native ! ".push (" i ")"))))
 
