@@ -38,10 +38,13 @@
 
 (fn href (h k)
   (!= (%%key k)
-    (? (is_array h)
-       (& (%aref-defined? h !)
-          (%aref h !))
-       (h.g !))))
+    (?
+      (is_array h)
+        (& (%aref-defined? h !)
+           (%aref h !))
+      (hash-table? h)
+        (h.g !)
+      (error "HASH-TABLE expected."))))
 
 (fn (= href) (v h k)
   (!= (%%key k)
