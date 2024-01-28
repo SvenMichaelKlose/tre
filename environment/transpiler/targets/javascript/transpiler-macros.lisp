@@ -58,8 +58,10 @@
 
 (def-js-transpiler-macro slot-value (place slot)
   (?
-    (quote? slot)   `(%slot-value ,place ,.slot.)
-    (string? slot)  `(%slot-value ,place ,slot)
+    (quote? slot)
+      `(%slot-value ,place ,.slot.)
+    (string? slot)
+      `(%slot-value ,place ,slot)
     `(%aref ,place ,slot)))
 
 (def-js-transpiler-macro bind (fun &rest args)
@@ -71,13 +73,11 @@
 (def-js-transpiler-macro js-type-predicate (name &rest types)
   `(fn ,name (x)
      (when x
-       ,(? (< 1 (length types))
-           `(| ,@(@ [`(%%%== (%js-typeof x) ,_)]
-                    types))
-            `(%%%== (%js-typeof x) ,types.)))))
+       (| ,@(@ [`(%%%== (%js-typeof x) ,_)]
+               (ensure-list types))))))
 
-(def-js-transpiler-macro %href (hash key)
-  `(aref ,hash ,key))
+;(def-js-transpiler-macro %href (hash key)
+;  `(aref ,hash ,key))
 
 (def-js-transpiler-macro undefined? (x)
   `(%%%== "undefined" (%js-typeof ,x)))
