@@ -29,7 +29,8 @@
 (def-shared-transpiler-macro (bc c js php) defconstant (&rest x)
   `(var ,@x))
 
-(def-shared-transpiler-macro (bc c js php) defvar (name &optional (val '%%no-value-in-defvar))
+(def-shared-transpiler-macro (bc c js php) defvar
+                             (name &optional (val '%%no-value-in-defvar))
   (& (eq '%%no-value val)
      (= val `',name))
   (print-definition `(var ,name))
@@ -43,15 +44,12 @@
           `((%var ,name)))
      (%= ,name ,val)))
 
-(def-shared-transpiler-macro (bc c js php) %defvar (name &optional (val '%%no-value-in-%defvar))
+(def-shared-transpiler-macro (bc c js php) %defvar
+                             (name &optional (val '%%no-value-in-%defvar))
   `(var ,name ,val))
 
 (def-shared-transpiler-macro (js php) new (&rest x)
-  (? (| (not x)
-        (keyword? x.)
-        (string? x.))
-     `(%%%make-object ,@x)
-     `(%new ,@x)))
+  `(%new ,@x))
 
 (def-shared-transpiler-macro (bc c js php) mapcar (fun &rest lsts)
   `(,(? .lsts
@@ -62,7 +60,7 @@
 (def-shared-transpiler-macro (js php) string-concat (&rest x)
   `(%%%string+ ,@x))
 
-(def-shared-transpiler-macro (js php) eq (&rest x)   ; TODO: There's another macro to do this.
+(def-shared-transpiler-macro (js php) eq (&rest x)
   (? ..x
      `(& (eq ,x. ,.x.)
          (eq ,x. ,@..x))
