@@ -14,6 +14,8 @@ between.
 
 [^1]: Keyword "Micro-pass architecture".
 
+# Front-end
+
 The front-end is responsible for transforming its input into a format the
 middle-end can process: the meta-code which is bridging the gap between the
 high-level input and the low-level output of target code.  The meta-code is a
@@ -27,19 +29,50 @@ The front-end works in three stages: expansion, augmentation and serialization.
 During expansion all macros are processed and literal data is transformed into
 code generating it, if so required.  During augmentation every function is
 ensured to get a name and is applied a FUNINFO.  During serialization function
-body expressions are unnested, resulting in the middle-end meta-code.
+body expressions are unnested, resulting in the meta-code ready to pass on to
+the middle-end.
 
-the initial meta-code is made of a handful of expressions.  More are added in
-the back-end.
+## Expansion stage
+
+The expansion stage includes dot-notation expasion, transpiler-macro expansion,
+compiler-macro expansion quote expansion and thisification.
+Transpiler-macro expansion is a regular macro expansion where the standard
+macros are overlaid by transpiler-macros of equal names which defined within
+the compiler to handle exceptions the selected target.
+Compiler-macros transform control-flow forms like BLOCK, COND, PROGN, TAGBODY
+and so on to use only four meta-code instructions:
+
+| Control-flow meta code | Description                                 |
+|------------------------|---------------------------------------------|
+| (%TAG tag)             | Define a location to jump to.  The tag-name |
+|                        | must be an integer.                         |
+|------------------------|---------------------------------------------|
+| (%GO tag)              | Unconditional jump.                         |
+|------------------------|---------------------------------------------|
+| (%GO-NIL tag var)      | Jump if variable is NIL                     |
+| (%GO-NOT-NIL var)      | Jump if variable is not NIL.                |
+|------------------------|---------------------------------------------|
+| (%%BLOCK &rest body)   | Code block behaving like a mix of PROGN and |
+|                        | TAGBODY.                                    |
+
+%%BLOCKs are removed later during expression expansion and are implied in
+function bodies.  They are there to avoid having to unnest %%BLOCKs early.
+Also worth noting is the %%COMMENT meta-code to help development:
+
+| Meta code          | Description                                 |
+|-------------------------------------------------------------------
+| (%%COMMENT string) | Comment to insert in the final code output. |
+
+## Augmentation
+
+Augmentation includes renaming arguments, lambda expansion, FUNINFO
+initialization and expression expansion.
+
 
 (%SLOT-VALUE x slot-name)
 (%= var expr)
 (%SET-LOCAL-FUN var expr)
-%GO tag-name
-%GO-NIL tag-name var
-%GO-NOT-NIL tag-name var
-(%TAG name)
-(%%COMMENT &rest x)
+
 (FUNCTION name (args &rest body))
 (%CLOSURE name)
 (%%%MAKE-JSON-OBJECT kwlist)
