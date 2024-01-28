@@ -24,3 +24,7 @@ Parsers
 
 [?] Native PHP closures.  Need to research the implications first.
 [?] LML2XML compiler
+
+Bugs
+[ ] !.. Check TERPRI at end of DUMP-SYSTEM.
+[ ] ... READ-FILE: Unterminated string at file end causes stack exhaustion.

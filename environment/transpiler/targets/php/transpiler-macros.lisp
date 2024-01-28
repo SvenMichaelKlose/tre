@@ -16,7 +16,7 @@
 
 (def-php-transpiler-macro slot-value (place slot)
   (?
-    (quote? slot)
+    (quote? slot)   ; TODO: Shouldn't be here. (pixel)
       `(%slot-value ,place ,.slot.)
     (string? slot)
       `(%slot-value ,place ,slot)
