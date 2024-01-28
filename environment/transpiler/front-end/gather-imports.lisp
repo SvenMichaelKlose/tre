@@ -7,7 +7,8 @@
          (add-wanted-variable i)))))
 
 (metacode-walker gather-imports (x)
-  :if-setq (with-%= place value x.
-             (add-wanted-variable place)
-             (gather-imports-list (ensure-list value))
-             (list x.)))
+  :if-setq
+    (with-%= place value x.
+      (add-wanted-variable place)
+      (gather-imports-list (ensure-list value))
+      (list x.)))
