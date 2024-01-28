@@ -116,8 +116,7 @@
      '(%%native "")
      `(%%native
         ,*php-indent*
-        ,@(& dest
-             `(,(php-dollarize dest) ," = "))
+        ,@(!? dest `(,(php-dollarize !) ," = "))
         ,@(php-%=-value val)
         ,*php-separator*)))
 
@@ -135,8 +134,8 @@
 
 (def-php-codegen %set-vec (v i x)
   `(%%native ,*php-indent* ,(php-dollarize v) "->s ("
-                               ,(php-dollarize i) ", " ,(php-%=-value x)
-                           ")",*php-separator*))
+                 ,(php-dollarize i) ", " ,(php-%=-value x)
+             ")",*php-separator*))
 
 
 ;;;; NUMBERS
@@ -213,44 +212,56 @@
   `(=-href ,val ,arr ,@indexes))
 
 (fn php-literal-object-element (x)
-  `(,x. " => " ,(php-dollarize .x.)))
+  `(,(? (symbol? x.)
+        (downcase (symbol-name x.))
+        x.)
+     " => "
+     ,(php-dollarize .x.)))
 
 (fn php-literal-object-elements (x)
   (pad (@ #'php-literal-object-element
           (group x 2))
-       ")"))
+       ","))
+
+(def-php-codegen %%%make-object (&rest x)
+  `(%%native "(object)[" ,@(php-literal-object-elements x) "]"))
 
 (def-php-codegen %%%make-json-object (&rest x)
-  `(%%native "array (" ,@(php-literal-object-elements x) ")"))
+  `(%%native "[" ,@(php-literal-object-elements x) "]"))
 
 (def-php-codegen %new (&rest x)
   (? x
-     `(%%native "new " ,x. ,@(php-argument-list .x))
+     (? (| (%%string? x.)
+           (keyword? x.))
+        `(%%%make-object ,@x)
+        `(%%native "new " ,x. ,@(php-argument-list .x)))
      `(%%native "new stdClass")))
 
 (def-php-codegen delete-object (x)
   `(%%native "null; unset " ,x))
 
-(def-php-codegen %slot-value (x y)
-  `(%%native ,(php-dollarize x)
-             "->"
-             ,(?
-                (%%string? y)
-                  .y.
-                (symbol? y)
-                  (convert-identifier (make-symbol (symbol-name y) "TRE"))
-                y)))
+(def-php-codegen %slot-value (x n)
+  `(%%native
+     ,(php-dollarize x)
+     "->"
+     ,(?
+        (%%string? n)
+          .n.
+        (symbol? n)
+          (convert-identifier (make-symbol (symbol-name n) "TRE"))
+        n)))
 
 
 ;;;; CLASSES
 
 (def-php-codegen %php-class-head (cls &key (implements nil))
-  `(%%native "class " ,(class-name cls)
-             ,@(!? (class-base cls)
-                   `(" extends " ,!))
-             ,@(!? implements
-                   `(" implements " ,(pad (ensure-list !) ", ")))
-             "{"))
+  `(%%native
+     "class " ,(class-name cls)
+     ,@(!? (class-base cls)
+           `(" extends " ,!))
+     ,@(!? implements
+           `(" implements " ,(pad (ensure-list !) ", ")))
+     "{"))
 
 (def-php-codegen %php-class-tail ()
   `(%%native "}" ""))
