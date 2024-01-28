@@ -1,8 +1,9 @@
+[@] !!! Getters and setters.
 [@] !!! LML2???: Track path to locate faulty expressions.  Allow temporary
     error message info generators.
-[@] !!! Getters and setters.
-[@] !!. JS target: Emulate protected/private methods and members.
-[@] !.. Generic functions.
+[ ] !!! Access global functions inside methods of the same name.
+[ ] !!. JS target: Emulate protected/private methods and members.
+[ ] !.. Generic functions.
 [ ] ... Packaging in user land.  It's a pain up main street without and about
         as funny to implement.
 [ ] ... CL objects compatible to JS/PHP targets.
