@@ -28,29 +28,23 @@
        (not (funinfo-find fi x)
             (funinfo-global-variable? fi x)))
       x
-
     (& (stack-locals?)
        (eq x (funinfo-scope fi)))
       (place-expand-emit-stackplace fi x)
-
     (& (not (eq x (funinfo-scope fi)))
        (funinfo-scoped-var? fi x))
       `(%vec ,(place-expand-atom fi (funinfo-scope fi))
              ,(funinfo-name fi)
              ,x)
-
     (| (& (stack-locals?)
           (funinfo-var? fi x))
        (& (arguments-on-stack?)
           (funinfo-arg? fi x)))
       (place-expand-emit-stackplace fi x)
-
     (funinfo-arg-or-var? fi x)
       x
-
     (funinfo-global-variable? fi x)
       `(%global ,x)
-
     (make-scope-place fi x)))
 
 (fn place-expand-fun (x)
@@ -84,5 +78,4 @@
   (place-expand-0 (global-funinfo) x))
 
 (fn place-expand-closure-scope (fi)
-  (!= (funinfo-parent fi)
-    (place-expand-0 ! (funinfo-scope !))))
+  (place-expand-0 (funinfo-parent fi) (funinfo-scope !)))
