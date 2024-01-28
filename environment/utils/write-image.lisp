@@ -9,8 +9,7 @@
   (quit))
 
 (fn dump-system (path)
-  (print-note "Dumping environment to image '~A' ~F" path)
-  (sys-image-create path #'%load-launchfile)
-  (terpri))
+  (print-note "Dumping environment to image '~A' ~%" path)
+  (sys-image-create path #'%load-launchfile))
 
 (dump-system "image")
