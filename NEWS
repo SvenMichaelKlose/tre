@@ -1,4 +1,9 @@
 Changes relative to tre-0.20:
+  * Inside methods package "GLOBAL" now tells that a symbol should not be
+    thisified, allowing to access the symbol of the same name outside the
+    class if it's being used as a method name already.
+    E.g.: If you have a method named AREF and you want to access the global
+    AREF function, just write 'global:aref' in the function call.
   * NEW without arguments does not create a JSON object but a standard object.
     Use MAKE-JSON-OBJECT.
   * AREF does not work an strings anymore. Use CHAR.
