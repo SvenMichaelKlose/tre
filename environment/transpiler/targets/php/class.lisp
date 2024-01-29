@@ -99,9 +99,10 @@
   (!= (carlist (class-methods cls))
     (!? (class-array-methods cls)
        (| (subseq? ! +php-array-methods+)
-          (error (+ "With PHP interface 'ArrayAccess' its methods must "
-                    "be implemented.  Missing: ~A")
-                 (set-difference (print !) (print +php-array-methods+))))))
+          ; TODO: Test if derived, then break with error. (pixel)
+          (warn (+ "With PHP interface 'ArrayAccess' its methods must "
+                   "be implemented.  Missing: ~A")
+                (set-difference ! +php-array-methods+)))))
   `((%php-class-head ,cls ,@(& (class-array-methods cls)
                                '(:implements "ArrayAccess")))
     ,(!= (argument-expand-names 'php-constructor
