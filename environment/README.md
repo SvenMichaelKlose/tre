@@ -1,6 +1,16 @@
 tré environment
 ===============
 
+# Table of Contents
+
+1. [Stage 0](environment/stage0/README.md)
+2. [Stage 1](environment/stage1/README.md)
+3. [Stage 2](environment/stage2/README.md)
+4. [Stage 3](environment/stage3/README.md)
+5. [Stage 4](environment/stage4/README.md)
+6. [Stage 5](environment/stage5/README.md)
+6. [Tests](environment/tests/README.md)
+
 Here you find the general-purpose code and the transpiler.  Files of the
 name 'main.lisp' load each section using function ENV-FILE.  ENV-FILE can
 load files for particular targets only.

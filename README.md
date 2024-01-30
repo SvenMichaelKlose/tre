@@ -1,8 +1,8 @@
 The tré programming language
 ============================
 
-tré transpiles a streamlined dialect of Lisp to JavaScript, PHP7
-and Common Lisp (the latter mainly to compile itself).
+tré compiles a cross-compatible dialect of Lisp to JavaScript, PHP 7+ and
+Common Lisp.
 
 # Table of Contents
 
@@ -13,21 +13,9 @@ and Common Lisp (the latter mainly to compile itself).
 4. [Syntax](doc/syntax.md)
 5. [Class](doc/class.md)
 6. [Porting from PHP](doc/porting-from-php.md)
-7. [Environment](environment/README.md)
-7.1. [Stage 0](environment/stage0/README.md)
-7.2. [Stage 1](environment/stage1/README.md)
-7.3. [Stage 2](environment/stage2/README.md)
-7.4. [Stage 3](environment/stage3/README.md)
-7.5. [Stage 4](environment/stage4/README.md)
-7.6. [Stage 5](environment/stage5/README.md)
-7.6. [Tests](environment/tests/README.md)
-8. Modules
-8.1. [js](modules/js/README.md)
-8.1. [js-http-request](modules/js-http-request/README.md)
-8.1. [l10n](modules/l10n/README.md)
-8.1. [http-funcall](modules/http-funcall/README.md)
-8.1. [session](modules/session/README.md)
-9. [Compiler](doc/compiler.md)
+7. [Compiler](doc/compiler.md)
+8. [Environment](environment/README.md)
+9. [Modules](modules/README.md)
 10. [Stuff using tré](doc/stuff-using-tré.md)
 11. [Wishlist](WISHLIST.md)
 
