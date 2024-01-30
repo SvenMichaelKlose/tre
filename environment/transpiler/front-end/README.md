@@ -62,5 +62,5 @@ Moves functions out of %VAR expressions.
 
 ## GATHER-IMPORTS
 
-Collects functions and variable that will be imported from the host
-environment as long as FUNCTION-SOURCEs are available.
+Collects functions and variables that will be imported from the host
+environment.
