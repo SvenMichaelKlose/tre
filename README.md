@@ -57,12 +57,6 @@ directory.  It takes an optional pathname of a source file to
 compile and execute.  If no file was specified, it'll prompt
 you for expressions to execute.
 
-## History
-
-tré started as a Lisp interpreter written in C in 2005 and makes
-JS and PHP code since 2008.  2013 is has been moved to Steel Bank
-Common Lisp.  That's why you might find eerie code in some places.
-
 ## VIM syntax file
 
 While booting the environment tré generates a syntax file for VIM named
