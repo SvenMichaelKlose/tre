@@ -47,10 +47,12 @@
     (atom x)
       x
     (%thisify? x.)
-      `((let ~%this this
-          ,@(| (+ (thisify-list classes (cddr x.) (cadr x.) exclusions)
-                  (thisify .x classes exclusions))
-               '(nil))))
+      (compiler-macroexpand
+          (transpiler-macroexpand
+              `((let ~%this this
+                  ,@(| (+ (thisify-list classes (cddr x.) (cadr x.) exclusions)
+                          (thisify .x classes exclusions))
+                       '(nil))))))
     (lambda? x.)
       (. (copy-lambda x. :body (thisify (lambda-body x.)
                                         classes
