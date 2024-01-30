@@ -14,7 +14,7 @@ Common Lisp.
 6. [Class](doc/class.md)
 7. [Porting from PHP](doc/porting-from-php.md)
 8. [Compiler](doc/compiler.md)
-9. [Compiler source docs](doc/compiler.md)
+9. [Compiler source docs](environment/transpiler/README.md)
 10. [Environment](environment/README.md)
 11. [Modules](modules/README.md)
 12. [Stuff using tré](doc/stuff-using-tré.md)
