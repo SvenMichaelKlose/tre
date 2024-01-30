@@ -15,3 +15,10 @@ The middle-end connects the dots by building a tree of FUNINFO
 objects and performs tailcall and peephole optimizations.
 The back-end is left to generate the code.  Stack places are
 assigned here if required (e.g. for C, bytecode or PHP closures).
+
+# Table of Contents
+
+1. [Front-end](environment/transpiler/front-end/README.md)
+2. [Middle-end](environment/transpiler/middle-end/README.md)
+3. [Back-end](environment/transpiler/back-end/README.md)
+4. [Common LISP target](environment/transpiler/targets/common-lisp/README.md)

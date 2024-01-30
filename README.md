@@ -6,18 +6,19 @@ Common Lisp.
 
 # Table of Contents
 
-1. [Contributors] (CONTRIB.md)
-1. [Build and install](#build-and-install)
-2. [Introduction to Lisp](doc/intro-to-lisp.md)
-3. [Starting a Project](doc/starting-a-project.md)
-4. [Syntax](doc/syntax.md)
-5. [Class](doc/class.md)
-6. [Porting from PHP](doc/porting-from-php.md)
-7. [Compiler](doc/compiler.md)
-8. [Environment](environment/README.md)
-9. [Modules](modules/README.md)
-10. [Stuff using tré](doc/stuff-using-tré.md)
-11. [Wishlist](WISHLIST.md)
+1. [Contributors](CONTRIB.md)
+2. [Build and install](#build-and-install)
+3. [Introduction to Lisp](doc/intro-to-lisp.md)
+4. [Starting a Project](doc/starting-a-project.md)
+5. [Syntax](doc/syntax.md)
+6. [Class](doc/class.md)
+7. [Porting from PHP](doc/porting-from-php.md)
+8. [Compiler](doc/compiler.md)
+9. [Compiler source docs](doc/compiler.md)
+10. [Environment](environment/README.md)
+11. [Modules](modules/README.md)
+12. [Stuff using tré](doc/stuff-using-tré.md)
+13. [Wishlist](WISHLIST.md)
 
 <a id="build-and-install"></a>
 # Build and install
