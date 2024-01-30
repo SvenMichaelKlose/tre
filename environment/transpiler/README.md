@@ -18,7 +18,7 @@ assigned here if required (e.g. for C, bytecode or PHP closures).
 
 # Table of Contents
 
-1. [Front-end](environment/transpiler/front-end/README.md)
-2. [Middle-end](environment/transpiler/middle-end/README.md)
-3. [Back-end](environment/transpiler/back-end/README.md)
-4. [Common LISP target](environment/transpiler/targets/common-lisp/README.md)
+1. [Front-end](front-end/README.md)
+2. [Middle-end](middle-end/README.md)
+3. [Back-end](back-end/README.md)
+4. [Common LISP target](targets/common-lisp/README.md)
