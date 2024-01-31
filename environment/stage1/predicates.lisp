@@ -1,4 +1,4 @@
-(functional equal list? end? keyword? sole?)
+(functional equal list? end? bool? keyword? sole?)
 
 (fn equal (x y)
   (?
@@ -12,6 +12,10 @@
 
 (fn end? (x)
   (eq nil x))
+
+(fn bool? (x)
+  (| (not x)
+     (eq t x)))
 
 (fn keyword? (x)
   (& (symbol? x)
