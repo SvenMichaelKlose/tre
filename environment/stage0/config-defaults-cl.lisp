@@ -12,8 +12,13 @@
 (%defvar *development?* (getenv "TRE_DEVELOPMENT"))
 
 ;; Verbosity
-(%defvar *print-definitions?* t)
+(%defvar *print-status?*      t)
+(%defvar *print-definitions?* *development?*)
 (%defvar *print-notes?*       *development?*)
-(%defvar *print-status?*      *development?*)
 
-(%defvar *have-compiler?* nil) ; TODO: Remove.
+; TODO: Remove.
+; From the old times where the compiler was runnin on JS target
+; for doing EVALs.  Sections should be prepared before calling
+; COMPILE and that's it.  Cannot remember what was the issue
+; back then.
+(%defvar *have-compiler?* nil)
