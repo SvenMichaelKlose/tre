@@ -27,9 +27,8 @@
 
 (fn setting-ret-to-bool? (x)
   (& (%=? x)
-     (~%ret? .x.)
-     (| (not ..x.)
-        (eq t ..x.))))
+     (~%ret? (%=-place x))
+     (bool? (%=-value x))))
 
 (fn jump-to-same-jump? (x)
   (& (vm-jump? x)
