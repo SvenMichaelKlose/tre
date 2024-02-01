@@ -28,6 +28,7 @@
              x)
      t))
 
+;;; XXX Why is ATOM not enough?
 (fn constant-literal? (x)
   (| (not x)
      (eq t x)
