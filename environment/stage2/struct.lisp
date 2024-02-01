@@ -111,7 +111,7 @@
             ,,@body))
        (defmacro ,($ "DEF-" name) (name args &body body)
          `(fn ,,name ,,args
-            (with-struct ,name ,name
+            (with-struct ,name ,,args.
               ,,@body))))))
 
 (defmacro with-struct (typ strct &body body)

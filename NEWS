@@ -1,4 +1,6 @@
 Changes relative to tre-0.20:
+  * DEFSTRUCT: Generated macro DEF-name does not require the first argument
+    to be of the structs name any more.
   * Inside methods package "GLOBAL" now tells that a symbol should not be
     thisified, allowing to access the symbol of the same name outside the
     class if it's being used as a method name already.
