@@ -15,6 +15,8 @@
      (& (cons? x)
         (eq x. 'quote))))
 
+;; XXX Does not detect if global when inside a walker that is modifying
+;; *FUNINFO*. (pixel)
 (fn global-literal-function? (x)
   (& (literal-function? x)
      (not (funinfo-find *funinfo* .x.))))
