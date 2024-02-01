@@ -52,6 +52,7 @@
                               "math.lisp"
                               "milliseconds-since-1970.lisp"
                               "keys.lisp"
+                              "file.lisp"
                               "env.lisp"
                               "../../../environment/files-unsupported.lisp"))
 
@@ -63,10 +64,6 @@
 (fn js-core-stream ()
   (+ ,(js-load-core "" "break.lisp")
      ,(js-load-core "" "../../../../stage3/stream.lisp")
-     (& (not (eq :browser (configuration :platform)))
-        ,(js-load-core "" "file.lisp"))
-     (& (eq :browser (configuration :platform))
-        ,(js-load-core "" "%force-output.lisp"))
      ,(js-load-core "" "standard-stream.lisp")
      ,(js-load-core "" "../../../environment/print.lisp")))
 
