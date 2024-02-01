@@ -25,22 +25,22 @@
 (fn next-tabulator-column (column size)
   (integer (++ (* size (++ (/ (-- column) size))))))
 
-(def-stream-location %track-location (stream-location x)
+(def-stream-location %track-location (sl x)
   (when track?
     (? (string? x)
        (adosequence x
-         (%track-location stream-location !))
+         (%track-location sl !))
        (when x
          (? (== 10 (char-code x))
             (progn
-              (= (stream-location-column stream-location) 1)
-              (++! (stream-location-line stream-location)))
+              (= (stream-location-column sl) 1)
+              (++! (stream-location-line sl)))
             (?
               (== 9 (char-code x))
-                (= (stream-location-column stream-location)
+                (= (stream-location-column sl)
                    (next-tabulator-column column tabsize))
               (< 31 (char-code x))
-                (++! (stream-location-column stream-location)))))))
+                (++! (stream-location-column sl)))))))
   x)
 
 (fn stream-princ (x str)

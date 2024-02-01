@@ -48,11 +48,11 @@
   (!? (funinfo-parent fi)
       (not (funinfo-parent !))))
 
-(def-funinfo copy-funinfo (funinfo)
+(def-funinfo copy-funinfo (fi)
   (make-funinfo
       :parent       parent
       :name         name
-      :argdef        argdef
+      :argdef       argdef
       :args         (copy-list args)
       :vars         (copy-list vars)
       :vars-hash    (copy-hash-table vars-hash)

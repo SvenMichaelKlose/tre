@@ -8,7 +8,7 @@
   bits
   data-size)
 
-(def-wavinfo write-wavinfo (wavinfo size o)
+(def-wavinfo write-wavinfo (wi size o)
   (princ "RIFF" o)
   (alet (with-string-stream o
           (alet (with-string-stream o

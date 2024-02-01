@@ -193,7 +193,7 @@
      (transpiler-memorized-sources tr)      nil)
   tr)
 
-(def-transpiler copy-transpiler (transpiler)
+(def-transpiler copy-transpiler (tr)
   (aprog1
     (make-transpiler
         :name                     name
@@ -260,7 +260,7 @@
         :real-function-names      (copy-hash-table real-function-names)
         :cached-frontend-sections (copy-alist cached-frontend-sections)
         :cached-output-sections   (copy-alist cached-output-sections))
-    (copy-transpiler-macro-expander transpiler !)
+    (copy-transpiler-macro-expander tr !)
     (transpiler-make-expex !)))
 
 (defmacro transpiler-getter-not-global (name &body body)
