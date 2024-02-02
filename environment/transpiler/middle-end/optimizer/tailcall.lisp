@@ -6,7 +6,7 @@
       (%go? !)
         (!? (member .!. .x)
             (function-exits? .!))
-      (| (vm-jump? !)
+      (| (some-%go? !)
          (%=? !))
         nil
       (function-exits? .x))))
@@ -34,6 +34,7 @@
              (opt-tailcall-fun l .body front-tag))))))
 
 (metacode-walker opt-tailcall (x)
-  :if-named-function (with-compiler-tag front-tag
-                       `(,front-tag
-                         ,@(opt-tailcall-fun x. (lambda-body x.) front-tag))))
+  :if-named-function
+    (with-compiler-tag front-tag
+      `(,front-tag
+        ,@(opt-tailcall-fun x. (lambda-body x.) front-tag))))

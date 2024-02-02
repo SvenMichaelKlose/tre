@@ -3,7 +3,7 @@
      d. (atom d.)))
 
 (fn has-no-jumps-to? (x tag)
-  (notany [& (vm-jump? _)
+  (notany [& (some-%go? _)
              (== (%go-tag _) tag)]
           x))
 
@@ -56,7 +56,7 @@
          translate-tags
            #'((x)
                (optimizer translate-tags
-                 (vm-jump? a)
+                 (some-%go? a)
                    (. `(,a. ,(translate-tag .a.) ,@..a)
                       (translate-tags d))
                  (number? a)

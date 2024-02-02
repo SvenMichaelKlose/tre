@@ -97,7 +97,7 @@
                 tail  (last b))
            `(%block
               ,@head
-              ,@(? (vm-jump? tail.)
+              ,@(? (some-%go? tail.)
                    tail
                    `((%= ,*return-id* ,@tail)))
               ,end-tag

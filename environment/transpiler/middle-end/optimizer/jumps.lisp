@@ -5,7 +5,7 @@
     (funinfo-error "Jump expected instead of ~A." x)))
 
 (fn jumps-to-tag (x)
-  (count-if [& (vm-jump? _)
+  (count-if [& (some-%go? _)
                (== x (%go-tag _))]
             *body*))
 
@@ -31,7 +31,7 @@
      (bool? (%=-value x))))
 
 (fn jump-to-same-jump? (x)
-  (& (vm-jump? x)
+  (& (some-%go? x)
      (!= (cdr (tag-code (%go-tag x)))
        (? (%go-cond? x)
           (? (%go-cond? !.)

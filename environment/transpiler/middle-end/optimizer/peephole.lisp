@@ -12,7 +12,7 @@
 
 (fn jump-to-subsequent-tag? (a d)
   (& d
-     (vm-jump? a)
+     (some-%go? a)
      (eql (%go-tag a) d.)))
 
 (fn unused-atom-or-functional? (x)

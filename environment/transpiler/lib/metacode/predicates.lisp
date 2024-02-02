@@ -19,7 +19,7 @@
 (fn ~%ret? (x)
   (eq *return-id* x))
 
-(fn vm-jump? (e)
+(fn some-%go? (e)
   (& (cons? e)
      (in? e. '%go '%go-nil '%go-not-nil)))
 
@@ -42,7 +42,7 @@
      (eq name ..x..)))
 
 (fn has-return-value? (x)
-  (not (| (vm-jump? x)
+  (not (| (some-%go? x)
           (%var? x)
           (%comment? x))))
 
@@ -52,4 +52,4 @@
         (| (named-lambda? x)
            (in? x. '%= '%set-vec '%var '%function-prologue '%function-epilogue
                    '%function-return '%tag '%comment)
-           (vm-jump? x)))))
+           (some-%go? x)))))
