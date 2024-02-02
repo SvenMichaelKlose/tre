@@ -1,7 +1,7 @@
 (define-transpiler-end :backend-generate-code
     :backend-input          #'identity
     :collect-used-functions #'collect-used-functions
-    :function-names         #'translate-function-names2
+    :function-names         #'translate-function-names
     :encapsulate-strings    #'encapsulate-strings
     :count-tags             #'count-tags
     :wrap-tags              #'wrap-tags
