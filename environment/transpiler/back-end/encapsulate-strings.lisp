@@ -1,6 +1,6 @@
-(def-head-predicate %%string)
+(def-head-predicate %%string) ; TODO: Move to transpiler/lib/metacode/. (pixel)
 
-(define-tree-filter encapsulate-strings (x)
+(define-tree-filter2 encapsulate-strings (x)
   (string? x)
     `(%%string ,x)
   (| (quote? x)

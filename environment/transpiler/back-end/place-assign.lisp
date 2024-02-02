@@ -28,7 +28,7 @@
                       1)))
        (funinfo-error "Cannot assign stack argument ~A." ..x.))))
 
-(define-tree-filter place-assign (x)
+(define-tree-filter2 place-assign (x)
   (| (quote? x)
      (%%native? x))
     x
