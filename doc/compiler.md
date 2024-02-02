@@ -35,12 +35,20 @@ the middle-end.
 ## Expansion stage
 
 The expansion stage includes dot-notation expasion, transpiler-macro expansion,
-compiler-macro expansion quote expansion and thisification.
+compiler-macro expansion, quote expansion and thisification.
 Transpiler-macro expansion is a regular macro expansion where the standard
 macros are overlaid by transpiler-macros of equal names which defined within
 the compiler to handle exceptions the selected target.
 Compiler-macros transform control-flow forms like BLOCK, COND, PROGN, TAGBODY
 and so on to use only four meta-code instructions:
+
+| Meta-code                    | Description                |
+|------------------------------|----------------------------|
+| (%VAR name)                  | Global or local variable   |
+|------------------------------|----------------------------|
+| (%NEW class-name &rest args) | Inlined make object.       |
+|------------------------------|----------------------------|
+| (%SLOT-VALUE x slot-name)    | Inlined SLOT-VALUE         |
 
 | Control-flow meta code | Description                                 |
 |------------------------|---------------------------------------------|
@@ -63,26 +71,81 @@ Also worth noting is the %%COMMENT meta-code to help development:
 |-------------------------------------------------------------------
 | (%%COMMENT string) | Comment to insert in the final code output. |
 
+Quote expansion compiles all quote expressions to CONSing ones whereas
+thisification adds 'this' to objects inside methods.  (More on that later.)
+
 ## Augmentation
 
-Augmentation includes renaming arguments, lambda expansion, FUNINFO
-initialization and expression expansion.
+Augmentation includes renaming arguments, lambda expansion and FUNINFO
+initialization.  Lambda expansion makes sure that every function has a name
+and creates a FUNINFO for that name.  The FUNINFO only contain the functions'
+argument definitions and links to their parent FUNINFOs at this point.
+Functions may be inline and closures may be exported, meaning that their are
+turned into top-level functions with a scope argument.
 
+| Meta code                    | Description                       |
+|------------------------------|-----------------------------------|
+| (%SET-LOCAL-FUN var expr)    | defunct                           |
+|------------------------------|-----------------------------------|
+| (FUNCTION name (args body…)) | Named function (with FUNINFO)     |
+|------------------------------|-----------------------------------|
+| (%CLOSURE name)              | Allocates a scope record.         |
 
-(%SLOT-VALUE x slot-name)
-(%= var expr)
-(%SET-LOCAL-FUN var expr)
+## Serialization
 
-(FUNCTION name (args &rest body))
-(%CLOSURE name)
-(%%%MAKE-JSON-OBJECT kwlist)
-(%%%MAKE-OBJECT kwlist)
-(%NEW class-name &rest args)
+Expression expansion is the only pass doing serialization.  It moves function
+calls out of arguments lists and unnests %%BLOCK expressions so that all
+function bodies are pure lists of %= expressions, tags and jumps.  %%BLOCK
+expressions have been removed entirely.
+%VAR expressions are collected and the names are added to the FUNINFOs.
+
+| Secondary meta-codes   | Description                                 |
+|------------------------|---------------------------------------------|
+| (%= place value)       | Assignment to place.                        |
+| (%= place (fun [args…) |                                             |
+|------------------------|---------------------------------------------|
+| (%GLOBAL name)         | Global variable.                            |
+|------------------------|---------------------------------------------|
+| (%%BLOCK &rest body)   | **REMOVED** in front-end output!            |
+|------------------------|---------------------------------------------|
+| (%VAR name)            | Variable declaration.                       |
+
+# Middle-end
+
+* Repeated expression expansion now that all argument definitions are
+  known and need to get checked for us.
+* Unassigning named functions.
+* Accumulating top-level expressions
+* Collecting keywords
+* Meta-code validation
+* Optimizations
+ * Peeohole optimization
+ * Tail-call optimization
+ * Chained jump removal
+ * Tag removal
+ * Removing unused places
+
+# Back-end
+
+* Adding function frames.  Each function body is pre- and postfixed with an
+  %FUNCTION-PROLOGUE and %FUNCTION-EPILOGUE macro
+ * Place expansion
+ * Place assignment
+* Collecting used functions
+* Translating function names
+* String encapsulation (for codegen)
+* Counting tags
+* Wrapping tags
+* Codegen macro expansion
+* Identifier conversion
+
+(%FUNCTION-PROLOGUE name)
+(%FUNCTION-EPILOGUE name)
 
 (%VEC seq idx)
 (%SET-VEC val seq idx)
 (%STACK idx)
 (%STACKARG idx)
-(%GLOBAL)
-(%FUNCTION-PROLOGUE name)
-(%FUNCTION-EPILOGUE name)
+
+(%%%MAKE-JSON-OBJECT kwlist)
+(%%%MAKE-OBJECT kwlist)
