@@ -128,7 +128,7 @@ expressions have been removed entirely.
 # Back-end
 
 * Adding function frames.  Each function body is pre- and postfixed with an
-  %FUNCTION-PROLOGUE and %FUNCTION-EPILOGUE macro
+  %FUNCTION-PROLOGUE and %FUNCTION-EPILOGUE macro to aid the codegen pass.
  * Place expansion
  * Place assignment
 * Collecting used functions
