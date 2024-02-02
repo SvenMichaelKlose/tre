@@ -10,15 +10,15 @@
     :output-filter          #'flatten)
 
 (define-transpiler-end :backend-make-places
-    :make-framed-functions  #'make-framed-functions
     :place-expand           #'place-expand
     :place-assign           #'place-assign
     :warn-unused            #'warn-unused)
 
 (fn backend-prepare (x)
-  (? (lambda-export?)
-     (backend-make-places x)
-     (make-framed-functions x)))
+  (!= (make-framed-functions x)
+    (? (lambda-export?)
+       (backend-make-places !)
+       !)))
 
 (fn backend (x)
   (? (enabled-end? :backend)
