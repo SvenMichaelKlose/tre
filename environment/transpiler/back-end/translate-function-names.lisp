@@ -3,7 +3,7 @@
      (compiled-function-name x)
      x))
 
-(define-tree-filter2 translate-function-names (x &optional (fi (global-funinfo)))
+(define-tree-filter translate-function-names (x &optional (fi (global-funinfo)))
   (named-lambda? x)
     (copy-lambda x :body (translate-function-names (lambda-body x)
                                                    (get-lambda-funinfo x)))

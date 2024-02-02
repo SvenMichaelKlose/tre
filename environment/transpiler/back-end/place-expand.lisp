@@ -54,7 +54,7 @@
   (let p (place-expand .x. fi)
     `(%set-vec ,.p. ,..p. ,...p. ,(place-expand ..x. fi))))
 
-(define-tree-filter2 place-expand (x &optional (fi (global-funinfo)))
+(define-tree-filter place-expand (x &optional (fi (global-funinfo)))
   (atom x)
     (place-expand-atom fi x)
   (| (quote? x)

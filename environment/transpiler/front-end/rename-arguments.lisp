@@ -20,7 +20,7 @@
                     :args (rename-arguments-r (lambda-args lambda-form) !)
                     :body (rename-arguments-r (lambda-body lambda-form) !)))))
 
-(define-tree-filter2 rename-arguments-r (x &optional (replacements nil))
+(define-tree-filter rename-arguments-r (x &optional (replacements nil))
   (atom x)
     (rename-argument x replacements)
   (quote? x)

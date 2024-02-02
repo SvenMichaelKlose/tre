@@ -29,6 +29,6 @@
                 ,@(& (function-frames?)
                      `((%function-epilogue ,name)))))))
 
-(define-tree-filter2 make-framed-functions (x)
+(define-tree-filter make-framed-functions (x)
   (named-lambda? x)
     (make-framed-function x))
