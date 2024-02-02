@@ -149,27 +149,27 @@
 
 (progn
   ,@(@ [`(def-php-binary ,@_)]
-       '((%%%+        "+")
+       '((%+        "+")
          (%string+  ".")
-         (%%%-        "-")
-         (%%%*        "*")
-         (%%%/        "/")
-         (%%%mod      "%")
+         (%-        "-")
+         (%*        "*")
+         (%/        "/")
+         (%mod      "%")
 
-         (%%%==       "==")
-         (%%%<        "<")
-         (%%%>        ">")
-         (%%%<=       "<=")
-         (%%%>=       ">=")
+         (%==       "==")
+         (%<        "<")
+         (%>        ">")
+         (%<=       "<=")
+         (%>=       ">=")
 
          ; NOTE: These do not test identity.
-         (%%%===      "===")
-         (%%%!==      "!==")
+         (%===      "===")
+         (%!==      "!==")
 
-         (%%%<<       "<<")
-         (%%%>>       ">>")
-         (%%%bit-or   "|")
-         (%%%bit-and  "&"))))
+         (%<<       "<<")
+         (%>>       ">>")
+         (%bit-or   "|")
+         (%bit-and  "&"))))
 
 
 ;;;; ARRAYS
@@ -185,7 +185,7 @@
 (fn php-literal-array-elements (x)
   (pad (@ #'php-literal-array-element x) ", "))
 
-(def-php-codegen %%%make-array (&rest elements)
+(def-php-codegen %make-array (&rest elements)
   `(%native "[" ,@(php-literal-array-elements (group elements 2)) "]"))
 
 (def-php-codegen %aref (arr &rest indexes)

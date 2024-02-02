@@ -11,5 +11,5 @@
   (chr x.v))
 
 (fn char (seq idx)
-   (when (%%%< idx (strlen seq))
+   (when (%< idx (strlen seq))
      (code-char (ord (substr seq idx 1)))))

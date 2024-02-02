@@ -16,13 +16,13 @@
     x))
 
 (fn %%unkey (x)
-  (? (%%%== "~%" (substr x 0 2))
+  (? (%== "~%" (substr x 0 2))
      (!= (substr x 3)
-       (case (substr x 2 1) :test #'%%%==
+       (case (substr x 2 1) :test #'%==
          "S" (let boundary (strpos ! "~%P")
                (make-symbol (subseq ! 0 boundary)
                             (let-when p (subseq ! (+ 3 boundary))
-                              (? (%%%== p "_kw")
+                              (? (%== p "_kw")
                                  *keyword-package*
                                  (make-symbol p)))))
          "L" (%aref *conses* (substr x 3))

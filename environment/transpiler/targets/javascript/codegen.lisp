@@ -107,31 +107,31 @@
 
 (progn
   ,@(@ [`(def-js-binary ,@_)]
-       '((%%%+        "+")
+       '((%+        "+")
          (%string+  "+")
-         (%%%-        "-")
-         (%%%/        "/")
-         (%%%*        "*")
-         (%%%mod      "%")
+         (%-        "-")
+         (%/        "/")
+         (%*        "*")
+         (%mod      "%")
 
-         (%%%==       "==")
-         (%%%!=       "!=")
-         (%%%<        "<")
-         (%%%>        ">")
-         (%%%<=       "<=")
-         (%%%>=       ">=")
-         (%%%===      "===")
-         (%%%!==      "!==")
+         (%==       "==")
+         (%!=       "!=")
+         (%<        "<")
+         (%>        ">")
+         (%<=       "<=")
+         (%>=       ">=")
+         (%===      "===")
+         (%!==      "!==")
 
-         (%%%<<       "<<")
-         (%%%>>       ">>")
-         (%%%bit-or   "|")
-         (%%%bit-and  "&"))))
+         (%<<       "<<")
+         (%>>       ">>")
+         (%bit-or   "|")
+         (%bit-and  "&"))))
 
 
 ;;;; ARRAYS
 
-(def-js-codegen %%%make-array (&rest elements)
+(def-js-codegen %make-array (&rest elements)
   `(%native ,@(c-list elements :parens-type :brackets)))
 
 (def-js-codegen %aref (arr &rest idx)
@@ -214,7 +214,7 @@
 (def-js-codegen %invoke-debugger ()
   '(%native "null; debugger"))
 
-(def-js-codegen %%%eval (x)
+(def-js-codegen %eval (x)
   `((%native "window.eval (" ,x ")")))
 
 ;;; TODO: Looking like a PHP target stub. (pixel)

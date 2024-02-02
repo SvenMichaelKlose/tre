@@ -13,7 +13,7 @@
 
 (fn string== (x &rest y)
   (@ (i y t)
-    (| (%%%== x i)
+    (| (%== x i)
        (return))))
 
 (fn upcase (x)

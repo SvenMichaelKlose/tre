@@ -73,17 +73,17 @@
 (def-js-transpiler-macro js-type-predicate (name &rest types)
   `(fn ,name (x)
      (when x
-       (| ,@(@ [`(%%%== (%js-typeof x) ,_)]
+       (| ,@(@ [`(%== (%js-typeof x) ,_)]
                (ensure-list types))))))
 
 ;(def-js-transpiler-macro %href (hash key)
 ;  `(aref ,hash ,key))
 
 (def-js-transpiler-macro undefined? (x)
-  `(%%%== "undefined" (%js-typeof ,x)))
+  `(%== "undefined" (%js-typeof ,x)))
 
 (def-js-transpiler-macro defined? (x)
-  `(%%%!= "undefined" (%js-typeof ,x)))
+  `(%!= "undefined" (%js-typeof ,x)))
 
 (def-js-transpiler-macro invoke-debugger ()
  `(%= nil (%invoke-debugger)))

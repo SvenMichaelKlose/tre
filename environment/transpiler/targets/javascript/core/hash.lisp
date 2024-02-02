@@ -15,7 +15,7 @@
      x.__tre-test))
 
 (fn %%objkey ()
-  (setq *obj-id-counter* (%%%+ 1 *obj-id-counter*))
+  (setq *obj-id-counter* (%+ 1 *obj-id-counter*))
   (+ "~~O" *obj-id-counter*))
 
 (fn %%numkey (x)

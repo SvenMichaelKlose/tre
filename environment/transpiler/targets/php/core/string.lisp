@@ -1,5 +1,5 @@
 (fn string? (x)    (is_string x))
-(fn string== (x y) (%%%== x y))
+(fn string== (x y) (%== x y))
 (fn upcase (x)     (strtoupper x))
 (fn downcase (x)   (strtolower x))
 

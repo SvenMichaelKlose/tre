@@ -27,5 +27,5 @@
          ";"))))
 
 (fn eval (x)
-  (%%%eval (eval-compile x))
+  (%eval (eval-compile x))
   *native-eval-return-value*)

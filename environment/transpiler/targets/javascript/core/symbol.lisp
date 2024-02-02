@@ -10,8 +10,8 @@
   this)
 
 (defnative symbol (name pkg)
-  (unless (%%%== "NIL" name)
-    (| (%%%== "T" name)
+  (unless (%== "NIL" name)
+    (| (%== "T" name)
        (with (pkg-name
                 (? pkg
                    pkg.n

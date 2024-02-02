@@ -1,6 +1,6 @@
 (defnative symbol (name pkg)
-  (unless (%%%== "NIL" name)
-    (| (%%%== "T" name)
+  (unless (%== "NIL" name)
+    (| (%== "T" name)
        (new __symbol name pkg))))
 
 (defnative =-symbol-function (v x)

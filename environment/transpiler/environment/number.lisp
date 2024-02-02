@@ -1,11 +1,11 @@
 (fn number== (x &rest y)
-  (every [%%%== x _] y))
+  (every [%== x _] y))
 
 (defmacro def-simple-op (op)
   `(fn ,op (&rest x)
      (let n x.
        (@ (i .x n)
-         (= n (,($ '%%% op) n i))))))
+         (= n (,($ '% op) n i))))))
 
 (progn
   ,@(@ [`(def-simple-op ,_)] '(* / mod)))
@@ -13,14 +13,14 @@
 (fn number+ (&rest x)
   (let n x.
     (@ (i .x n)
-      (= n (%%%+ n i)))))
+      (= n (%+ n i)))))
 
 (defmacro define-generic-transpiler-minus ()
   (let gen-body `(? .x
                     (let n x.
                       (@ (i .x n)
-                        (= n (%%%- n i))))
-                    (%%%- x.))
+                        (= n (%- n i))))
+                    (%- x.))
     `(progn
        (fn - (&rest x)
          ,gen-body)
@@ -30,7 +30,7 @@
 (define-generic-transpiler-minus)
 
 (defmacro def-generic-transpiler-comparison (name)
-  (let op ($ '%%% name)
+  (let op ($ '% name)
     `(progn
        (fn ,name (n &rest x)
          (@ (i x t)
@@ -56,7 +56,7 @@
     (string? x)     (string-integer x)
     (number-integer x)))
 
-(fn << (a b)      (%%%<< a b))
-(fn >> (a b)      (%%%>> a b))
-(fn bit-or (a b)  (%%%bit-or a b))
-(fn bit-and (a b) (%%%bit-and a b))
+(fn << (a b)      (%<< a b))
+(fn >> (a b)      (%>> a b))
+(fn bit-or (a b)  (%bit-or a b))
+(fn bit-and (a b) (%bit-and a b))

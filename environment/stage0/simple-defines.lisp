@@ -1,8 +1,8 @@
-(%defmacro defvar (name &optional (init '%%%no-init))
+(%defmacro defvar (name &optional (init '%no-init))
   (print-definition `(var ,name))
   (? (not (symbol? name))
      (%error "Symbol expected as variable name."))
-  `(%defvar ,name ,(? (eq '%%%no-init init)
+  `(%defvar ,name ,(? (eq '%no-init init)
                       `',init
                       init)))
 

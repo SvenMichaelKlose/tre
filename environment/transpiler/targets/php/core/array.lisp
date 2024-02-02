@@ -18,7 +18,7 @@
         (%native "array_keys ($" x ") === range (0, count ($" x ") - 1)"))))
 
 (fn list-phparray (x)
-  (!= (%%%make-array)
+  (!= (%make-array)
     (@ (i x !)
       (%= (%native "$" ! "[]") i))))
 

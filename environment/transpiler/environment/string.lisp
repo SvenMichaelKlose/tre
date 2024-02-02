@@ -11,7 +11,7 @@
 (defmacro string== (x &rest y)
   (?
     .y
-       `(& (%%%== ,x ,y.)
+       `(& (%== ,x ,y.)
            (string== ,x ,.y))
      y.
-       `(%%%== ,x ,y.)))
+       `(%== ,x ,y.)))
