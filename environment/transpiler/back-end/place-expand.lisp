@@ -48,13 +48,13 @@
     (make-scope-place fi x)))
 
 (fn place-expand-fun (x)
-  (copy-lambda x :body (place-expand-0 (get-lambda-funinfo x) (lambda-body x))))
+  (copy-lambda x :body (place-expand (lambda-body x) (get-lambda-funinfo x))))
 
 (fn place-expand-setter (fi x)
-  (let p (place-expand-0 fi .x.)
-    `(%set-vec ,.p. ,..p. ,...p. ,(place-expand-0 fi ..x.))))
+  (let p (place-expand .x. fi)
+    `(%set-vec ,.p. ,..p. ,...p. ,(place-expand ..x. fi))))
 
-(define-tree-filter place-expand-0 (fi x)
+(define-tree-filter2 place-expand (x &optional (fi (global-funinfo)))
   (atom x)
     (place-expand-atom fi x)
   (| (quote? x)
@@ -66,16 +66,13 @@
   (named-lambda? x)
     (place-expand-fun x)
   (& (%=? x)
-     (%vec? (place-expand-0 fi .x.)))
+     (%vec? (place-expand .x. fi)))
     (place-expand-setter fi x)
   (& (%set-local-fun? x)
-     (%vec? (place-expand-0 fi .x.)))
+     (%vec? (place-expand .x. fi)))
     (place-expand-setter fi x)
   (%slot-value? x)
-    `(%slot-value ,(place-expand-0 fi .x.) ,..x.))
-
-(fn place-expand (x)
-  (place-expand-0 (global-funinfo) x))
+    `(%slot-value ,(place-expand .x. fi) ,..x.))
 
 (fn place-expand-closure-scope (fi)
-  (place-expand-0 (funinfo-parent fi) (funinfo-scope !)))
+  (place-expand (funinfo-scope !) (funinfo-parent fi)))
