@@ -3,8 +3,7 @@
        '(identity quote backquote quasiquote quasiquote-splice)))
 
 (fn literal-function? (x)
-  (& (cons? x)
-     (eq 'function x.)
+  (& (function-expr? x)
      (atom .x.)
      (not ..x)))
 
@@ -12,8 +11,7 @@
   (| (not x)
      (eq x t)
      (keyword? x)
-     (& (cons? x)
-        (eq x. 'quote))))
+     (quote? x)))
 
 ;; XXX Does not detect if global when inside a walker that is modifying
 ;; *FUNINFO*. (pixel)
@@ -28,8 +26,7 @@
              x)
      t))
 
-;;; XXX Why is ATOM not enough?
-(fn constant-literal? (x)
+(fn constant-literal? (x) ;;; TODO Why is ATOM not enough?
   (| (not x)
      (eq t x)
      (number? x)
