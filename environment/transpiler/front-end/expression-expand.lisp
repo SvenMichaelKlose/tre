@@ -1,5 +1,3 @@
-;;;;; TODO: Simplify further.
-
 (defstruct expex
   (argument-filter  #'identity)
   (setter-filter    #'list)
@@ -25,7 +23,7 @@
              (funinfo-find *funinfo* !.)))
        (with-%= p v x
          (expex-body (*> #'+ (frontend `(((%= ,p (*> ,v. ,(compiled-list .v)))))))))
-       (list x))))
+       (… x))))
 
 
 ;;;; GUEST CALLBACKS
@@ -76,7 +74,7 @@
          fun    (? new? .x. x.)
          args   (? new? ..x .x))
     `(,@(& new? '(%new))
-      ,@(!? fun (list !))
+      ,@(!? fun (… !))
       ,@(expand-literal-characters
           (? (defined-function fun)
              (compiled-expanded-arguments fun (expex-argdef fun) args)
@@ -130,19 +128,19 @@
 
 (fn expex-lambda (x)
   (with-lambda-funinfo x
-    (values nil (list (copy-lambda x :body (expex-body (lambda-body x)))))))
+    (values nil (… (copy-lambda x :body (expex-body (lambda-body x)))))))
 
 (fn expex-var (x)
   (funinfo-var-add *funinfo* .x.)
   (values nil nil))
 
 (fn expex-%%go-nil (x)
-  (with ((moved new-expr) (expex-move-args (list ..x.)))
+  (with ((moved new-expr) (expex-move-args (… ..x.)))
     (values moved `((%%go-nil ,.x. ,@new-expr)))))
 
 (fn expex-expr-%= (x)
   (with-%= p v x
-    (with ((moved new-expr) (expex-move-args (list v)))
+    (with ((moved new-expr) (expex-move-args (… v)))
       (values moved (make-%= p new-expr.)))))
 
 (fn expex-expr (x)
@@ -152,9 +150,9 @@
     %var?          (expex-var x)
     named-lambda?  (expex-lambda x)
     %%block?       (values nil (expex-body .x))
-    unexpex-able?  (values nil (list x))
+    unexpex-able?  (values nil (… x))
     (with ((moved new-expr) (expex-move-args (expex-argexpand x)))
-      (values moved (list new-expr)))))
+      (values moved (… new-expr)))))
 
 
 ;;;; BODY EXPANSION
@@ -177,7 +175,7 @@
 
 (fn expex-body (x &optional (s *return-id*))
   (with (ensure-%=  [| (& (metacode-statement? _)
-                          (list _))
+                          (… _))
                        (make-%= *return-id* _)])
     (expex-make-return-value s 
         (+@ [with ((moved new-expr) (expex-expr _))
