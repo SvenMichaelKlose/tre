@@ -87,7 +87,7 @@
   (with ((moved new-expr) (expex-move-args x))
     (. moved new-expr)))
 
-(fn expex-move-%%block (x)
+(fn expex-move-%block (x)
   (!? .x
       (let s (expex-add-var)
         (. (expex-body ! s) s))
@@ -105,7 +105,7 @@
 (fn unexpex-able? (x)
   (| (atom x)
      (literal-function? x)
-     (in? x. '%%go '%%go-nil '%%native '%%string 'quote '%%comment)))
+     (in? x. '%go '%go-nil '%native '%string 'quote '%comment)))
 
 (fn expex-inlinable? (x)
   (~> (expex-inline? *expex*) x))
@@ -114,7 +114,7 @@
   (pcase x
     unexpex-able?     (. nil x)
     expex-inlinable?  (expex-move-inline x)
-    %%block?          (expex-move-%%block x)
+    %block?          (expex-move-%block x)
     (expex-move-std x)))
 
 (fn expex-move-args (x)
@@ -134,9 +134,9 @@
   (funinfo-var-add *funinfo* .x.)
   (values nil nil))
 
-(fn expex-%%go-nil (x)
+(fn expex-%go-nil (x)
   (with ((moved new-expr) (expex-move-args (… ..x.)))
-    (values moved `((%%go-nil ,.x. ,@new-expr)))))
+    (values moved `((%go-nil ,.x. ,@new-expr)))))
 
 (fn expex-expr-%= (x)
   (with-%= p v x
@@ -146,10 +146,10 @@
 (fn expex-expr (x)
   (pcase x
     %=?            (expex-expr-%= x)
-    %%go-nil?      (expex-%%go-nil x)
+    %go-nil?      (expex-%go-nil x)
     %var?          (expex-var x)
     named-lambda?  (expex-lambda x)
-    %%block?       (values nil (expex-body .x))
+    %block?       (values nil (expex-body .x))
     unexpex-able?  (values nil (… x))
     (with ((moved new-expr) (expex-move-args (expex-argexpand x)))
       (values moved (… new-expr)))))

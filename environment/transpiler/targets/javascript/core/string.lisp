@@ -4,7 +4,7 @@
 
 (fn string? (x)
   (| (%string? x)
-     (instanceof x (%%native "String"))))
+     (instanceof x (%native "String"))))
 
 (fn string-concat (&rest x)
   (!= #()

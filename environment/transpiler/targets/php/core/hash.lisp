@@ -1,18 +1,18 @@
 (fn make-hash-table (&key (test #'eql) (size nil))
-  (%%native "" "new __array ()"))
+  (%native "" "new __array ()"))
 
 (fn hash-table? (x)
   (| (is_a x "__array")
-     (%%native "is_array ($" x ") && array_keys ($" x ") !== range (0, count ($" x ") - 1)")))
+     (%native "is_array ($" x ") && array_keys ($" x ") !== range (0, count ($" x ") - 1)")))
 
 (fn %%key (x)
   (?
-    (is_a x "__symbol")    (%%%string+ "~%S" x.n "~%P" (? (keyword? x)
+    (is_a x "__symbol")    (%string+ "~%S" x.n "~%P" (? (keyword? x)
                                                           "_kw"
                                                           x.p))
-    (is_a x "__cons")      (%%%string+ "~%L" x.id)
-    (is_a x "__array")     (%%%string+ "~%A" x.id)
-    (is_a x "__character") (%%%string+ "~%C" x.v)
+    (is_a x "__cons")      (%string+ "~%L" x.id)
+    (is_a x "__array")     (%string+ "~%A" x.id)
+    (is_a x "__character") (%string+ "~%C" x.v)
     x))
 
 (fn %%unkey (x)

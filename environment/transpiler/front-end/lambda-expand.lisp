@@ -1,7 +1,7 @@
 ;;;; INLINING
 
 (fn lambda-expand-make-inline-body (stack-places values body)
-  `(%%block
+  `(%block
      ,@(@ #'((stack-place init-value)
               `(%= ,stack-place ,init-value))
           stack-places

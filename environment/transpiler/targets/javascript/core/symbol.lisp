@@ -1,4 +1,4 @@
-(var *symbols* (%%%make-json-object))
+(var *symbols* (%make-json-object))
 (var *package* nil)
 
 (defnative %symbol (name pkg)
@@ -20,7 +20,7 @@
                        "NIL"))
               symbol-table
                 (| (%aref *symbols* pkg-name)
-                   (=-%aref (%%%make-json-object) *symbols* pkg-name)))
+                   (=-%aref (%make-json-object) *symbols* pkg-name)))
          (| (%aref symbol-table name)
             (=-%aref (new %symbol name pkg) symbol-table name))))))
 

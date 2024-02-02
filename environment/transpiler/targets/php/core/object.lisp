@@ -1,6 +1,6 @@
 (fn make-object (&rest x)
   (!= (*> #'make-json-object x)
-    (%%native "(object)$" !)))
+    (%native "(object)$" !)))
 
 (fn object? (x)
   (is_object x))

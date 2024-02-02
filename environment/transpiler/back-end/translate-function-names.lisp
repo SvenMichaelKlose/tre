@@ -8,7 +8,7 @@
     (copy-lambda x :body (translate-function-names (lambda-body x)
                                                    (lambda-funinfo x)))
   (| (quote? x)  ; TODO %QUOTE? instead? (pixel)
-     (%%native? x)
+     (%native? x)
      (%closure? x)
      (%function-prologue? x)
      (%function-epilogue? x)

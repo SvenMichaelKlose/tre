@@ -430,7 +430,7 @@
     (transpiler-make-expex !)
     (make-global-funinfo !)
     (@ [transpiler-add-functional ! _]
-       '(%%%+ %%%string+ %%%- %%%/ %%%* %%%mod
+       '(%%%+ %string+ %%%- %%%/ %%%* %%%mod
          %%%== %%%!= %%%< %%%> %%%<= %%%>=
          %%%=== %%%!== %%%<< %%%>> %%%bit-or %%%bit-and
          %aref %aref-defined))))

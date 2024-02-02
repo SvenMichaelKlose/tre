@@ -58,7 +58,7 @@
         ,fun ,@lsts))
 
 (def-shared-transpiler-macro (js php) string-concat (&rest x)
-  `(%%%string+ ,@x))
+  `(%string+ ,@x))
 
 (def-shared-transpiler-macro (js php) eq (&rest x)
   (? ..x

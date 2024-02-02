@@ -25,7 +25,7 @@
                (with-cons a d _
                  (?
                    (| (number? a)
-                      (%%comment? a)
+                      (%comment? a)
                       (named-lambda? a))
                      (traverse-statements d)
                    (%=? a)
@@ -34,9 +34,9 @@
                           (unless (eq v place)
                             (| (tree-find v place :test #'eq)
                                (traverse-statements d)))))
-                   (%%go? a)
+                   (%go? a)
                      (traverse-tag .a.)
-                   (%%go-cond? a)
+                   (%go-cond? a)
                      (| (eq v ..a.)
                         (traverse-tag .a.)
                         (traverse-statements d))

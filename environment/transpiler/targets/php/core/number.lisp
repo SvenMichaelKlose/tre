@@ -6,7 +6,7 @@
      (is_float x)))
 
 (fn number (x)
-  (%%native "(float)$" x))
+  (%native "(float)$" x))
 
 (fn number-integer (x)
-  (%%native "(int)$" x))
+  (%native "(int)$" x))

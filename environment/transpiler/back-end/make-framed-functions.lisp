@@ -11,7 +11,7 @@
               `((%set-vec ,scope ,! ,scope)))
         ,@(@ [`(%= ,_ ,(? (arguments-on-stack?)
                           `(%stackarg ,(funinfo-name fi) ,_)
-                          `(%%native ,_)))]
+                          `(%native ,_)))]
               (remove-if-not [funinfo-scoped-var? fi _]
                              (funinfo-args fi)))))))
 

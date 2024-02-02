@@ -16,7 +16,7 @@
      (%error "Argument definition list or printer function expected."))
   (= (href *printer-argument-definitions* name) x))
 
-(add-printer-argument-definition '%%block '(&body body))
+(add-printer-argument-definition '%block  '(&body body))
 (add-printer-argument-definition 'progn   '(&body body))
 (add-printer-argument-definition 'tagbody '(&body body))
 (add-printer-argument-definition 'block   '(name &body body))

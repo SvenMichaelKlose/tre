@@ -5,10 +5,10 @@
   (not (~> (identifier-char?) x)))
 
 (fn global-variable-notation? (x)
-  (let l (length x)
-    (& (< 2 l)
+  (!= (length x)
+    (& (< 2 !)
        (eql (elt x 0) #\*)
-       (eql (elt x (-- l)) #\*))))
+       (eql (elt x (-- !)) #\*))))
 
 (fn camel-notation (x &optional (pos 0))
   (with (bump? [& ._
@@ -70,14 +70,19 @@
 
 (fn convert-identifiers (x)
   (maptree [?
-             (string? _)         _
+             (string? _)
+               _
              (| (number? _)
-                (character? _))  (princ _ nil)
-             (symbol? _)         (| (assoc-value _ (symbol-translations)
-                                                 :test #'eq)
-                                    (convert-identifier _))
-             (%%string? _)       (~> (gen-string) ._.)
-             (%%native? _)       (convert-identifiers ._)
-             (cons? _)           _
+                (character? _))
+               (princ _ nil)
+             (symbol? _)
+               (| (assoc-value _ (symbol-translations) :test #'eq)
+                  (convert-identifier _))
+             (%string? _)
+               (~> (gen-string) ._.)
+             (%native? _)
+               (convert-identifiers ._)
+             (cons? _)
+               _
              (error "Cannot translate ~A to string." _)]
            x))

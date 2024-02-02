@@ -15,7 +15,7 @@
      (let ~%this this
        (%thisify ,class-name
          (macrolet ((super (&rest args)
-                     `((%%native "parent::__construct" ,,@args))))
+                     `((%native "parent::__construct" ,,@args))))
            ,@body)))
      this)))
 
@@ -23,7 +23,7 @@
   (generic-defmember class-name names))
 
 (fn php-members (cls)
-  (@ [`(%%native ,(? (cons? _.)
+  (@ [`(%native ,(? (cons? _.)
                      (downcase (symbol-name _..))
                      "var")
                  " $" ,(!? (cons? _.) (cadr _.) _.) ,*php-separator*)]
@@ -131,4 +131,4 @@
                class-name (class-base !)
                (cdr (class-constructor-maker !)))
        ,@(php-method-functions !)
-       (%= nil (%%native ,@(php-class !))))))
+       (%= nil (%native ,@(php-class !))))))

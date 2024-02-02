@@ -4,7 +4,7 @@
     (string? slot) `(%= (%slot-value ,obj ,slot) ,val)
     (atom slot)    `(%= (%aref ,obj ,slot) ,val)
     (with-gensym g
-      `(%%block
+      `(%block
          (%var ,g)
          (%= ,g ,slot)
          (%= (%aref ,obj ,g) ,val)

@@ -1,6 +1,6 @@
 (fn js-gen-predicate (class-name)
   `(fn ,($ class-name '?) (x)
-     (& (%%native x " instanceof " ,(compiled-function-name-string class-name))
+     (& (%native x " instanceof " ,(compiled-function-name-string class-name))
         x)))
 
 (fn js-gen-constructor (class-name base args body)
@@ -45,9 +45,9 @@
         ,(!? (@ [js-emit-method class-name _]
                 (class-methods-by-access-type cls :static))
              `(js-merge-props! ,class-name
-                               (%%%make-json-object ,@(*> #'+ (carlist !)))))
+                               (%make-json-object ,@(*> #'+ (carlist !)))))
         (js-merge-props! (slot-value ,class-name 'prototype)
-                         (%%%make-json-object ,@(*> #'+ (carlist !)))))))
+                         (%make-json-object ,@(*> #'+ (carlist !)))))))
 
 (fn js-emit-constructor (class-name x)
   (*> (car (class-constructor-maker x))

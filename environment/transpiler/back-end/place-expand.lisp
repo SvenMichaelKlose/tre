@@ -58,7 +58,7 @@
   (atom x)
     (place-expand-atom fi x)
   (| (quote? x)
-     (%%native? x)
+     (%native? x)
      (%var? x)
      (%closure? x)
      (%stackarg? x))

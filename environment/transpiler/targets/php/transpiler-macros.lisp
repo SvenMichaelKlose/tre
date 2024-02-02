@@ -5,7 +5,7 @@
 
 (def-php-transpiler-macro defun (name args &body body)
   (let fn-name (%fn-name name)
-    `(%%block
+    `(%block
        ,(shared-defun name args body)
        (%= nil ((slot-value ',fn-name 'sf) ,(compiled-function-name-string fn-name))))))
 
@@ -21,7 +21,7 @@
     (string? slot)
       `(%slot-value ,place ,slot)
     (with-gensym g
-      `(%%block
+      `(%block
          (%var ,g)
          (%= ,g ,slot)
          (%aref ,place ,g)))))

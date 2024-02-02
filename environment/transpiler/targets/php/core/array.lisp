@@ -1,11 +1,11 @@
 (fn make-array (&rest dimensions)
-  (!= (%%native "" "new __array ()")
+  (!= (%native "" "new __array ()")
     (dotimes (i dimensions. !)
       (= (aref ! i) (!? .dimensions
                         (apply #'make-array !))))))
 
 (fn list-array (x)
-  (aprog1 (%%native "" "new __array ()")
+  (aprog1 (%native "" "new __array ()")
     (@ (i x !)
       (!.p i))))
 
@@ -15,12 +15,12 @@
 (fn array? (x)
   (| (is_a x "__array")
      (& (is_array x)
-        (%%native "array_keys ($" x ") === range (0, count ($" x ") - 1)"))))
+        (%native "array_keys ($" x ") === range (0, count ($" x ") - 1)"))))
 
 (fn list-phparray (x)
   (!= (%%%make-array)
     (@ (i x !)
-      (%= (%%native "$" ! "[]") i))))
+      (%= (%native "$" ! "[]") i))))
 
 (fn aref (a k)
   (? (is_array a)
@@ -34,7 +34,7 @@
      (=-href v a k)))
 
 (fn phparray-object (x)
-  (%%native "(object)$" x))
+  (%native "(object)$" x))
 
 (fn object-phparray (x)
-  (%%native "(array)$" x))
+  (%native "(array)$" x))

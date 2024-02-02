@@ -1,7 +1,7 @@
 (fn list-array (x)
   (!= (make-array)
     (@ (i x !)
-      (%%native ! ".push (" i ")"))))
+      (%native ! ".push (" i ")"))))
 
 (fn array (&rest elms)
   (list-array elms))

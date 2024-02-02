@@ -80,7 +80,7 @@
     ,@(? (assert?)
          `((? ,p
               (error-too-many-arguments ,(symbol-name fun-name) ,(shared-defun-source adef) ,p))))
-    ((%%native ,(compiled-function-name fun-name)) ,@names)))
+    ((%native ,(compiled-function-name fun-name)) ,@names)))
 
 (fn compile-argument-expansion-function-body (fun-name adef p)
   (. 'has-argexp!

@@ -4,7 +4,7 @@
     (assert (list? l.) "Last argument is not a list. Got ~A." l)
     (!= (nconc (butlast lst) l.)
       (? (defined? fun.tre-exp)
-         (fun.tre-exp.apply nil (%%native "[" ! "]"))
+         (fun.tre-exp.apply nil (%native "[" ! "]"))
          (fun.apply nil (list-array !))))))
 
 (fn applymethod (obj fun &rest lst)

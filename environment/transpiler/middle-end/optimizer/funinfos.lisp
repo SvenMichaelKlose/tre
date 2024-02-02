@@ -7,8 +7,8 @@
                  (= (funinfo-used-vars fi) (list !)))
              (= (funinfo-places fi) nil)
              (collect-places (lambda-body _))))
-       (%%go-cond? _)
-         (funinfo-add-used-var *funinfo* (%%go-value _))
+       (%go-cond? _)
+         (funinfo-add-used-var *funinfo* (%go-value _))
        (%=? _)
          (let fi *funinfo*
            (with-%= p v _

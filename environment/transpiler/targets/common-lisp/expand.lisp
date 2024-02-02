@@ -46,5 +46,5 @@
 (def-cl-transpiler-macro ? (&body body)
   (make-? body))
 
-(def-cl-transpiler-macro %%comment (&rest x)
+(def-cl-transpiler-macro %comment (&rest x)
   (flatten (convert-identifiers x)))

@@ -5,7 +5,7 @@
 
 (defnative object-alist (hash)
   (= *object-alist-tmp* nil)
-  (%= nil (%%native
+  (%= nil (%native
               "for (var k in " hash ") "
                   "if (k != \"" ,(convert-identifier '__tre-object-id) "\""
                            " && k != \"" ,(convert-identifier '__tre-test) "\""

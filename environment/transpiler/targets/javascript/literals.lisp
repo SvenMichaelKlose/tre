@@ -3,7 +3,7 @@
     (make-compiled-symbol-identifier x)
   :init-maker
     (!= (compiled-function-name-string 'symbol)
-        `(%%native ,! " (\"" ,(symbol-name x) "\", "
+        `(%native ,! " (\"" ,(symbol-name x) "\", "
                          ,@(? (keyword? x)
                               '("KEYWORDPACKAGE")
                               `(,! "(\""

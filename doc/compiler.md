@@ -60,16 +60,16 @@ and so on to use only four meta-code instructions:
 | (%GO-NIL tag var)      | Jump if variable is NIL                     |
 | (%GO-NOT-NIL var)      | Jump if variable is not NIL.                |
 |------------------------|---------------------------------------------|
-| (%%BLOCK &rest body)   | Code block behaving like a mix of PROGN and |
+| (%BLOCK &rest body)    | Code block behaving like a mix of PROGN and |
 |                        | TAGBODY.                                    |
 
-%%BLOCKs are removed later during expression expansion and are implied in
-function bodies.  They are there to avoid having to unnest %%BLOCKs early.
-Also worth noting is the %%COMMENT meta-code to help development:
+%BLOCKs are removed later during expression expansion and are implied in
+function bodies.  They are there to avoid having to unnest %BLOCKs early.
+Also worth noting is the %COMMENT meta-code to help development:
 
-| Meta code          | Description                                 |
-|-------------------------------------------------------------------
-| (%%COMMENT string) | Comment to insert in the final code output. |
+| Meta code         | Description                                 |
+|------------------------------------------------------------------
+| (%COMMENT string) | Comment to insert in the final code output. |
 
 Quote expansion compiles all quote expressions to CONSing ones whereas
 thisification adds 'this' to objects inside methods.  (More on that later.)
@@ -94,8 +94,8 @@ turned into top-level functions with a scope argument.
 ## Serialization
 
 Expression expansion is the only pass doing serialization.  It moves function
-calls out of arguments lists and unnests %%BLOCK expressions so that all
-function bodies are pure lists of %= expressions, tags and jumps.  %%BLOCK
+calls out of arguments lists and unnests %BLOCK expressions so that all
+function bodies are pure lists of %= expressions, tags and jumps.  %BLOCK
 expressions have been removed entirely.
 %VAR expressions are collected and the names are added to the FUNINFOs.
 
@@ -106,7 +106,7 @@ expressions have been removed entirely.
 |------------------------|---------------------------------------------|
 | (%GLOBAL name)         | Global variable.                            |
 |------------------------|---------------------------------------------|
-| (%%BLOCK &rest body)   | **REMOVED** in front-end output!            |
+| (%BLOCK &rest body)    | **REMOVED** in front-end output!            |
 |------------------------|---------------------------------------------|
 | (%VAR name)            | Variable declaration.                       |
 
@@ -142,10 +142,12 @@ expressions have been removed entirely.
 (%FUNCTION-PROLOGUE name)
 (%FUNCTION-EPILOGUE name)
 
+(%AREF arr idx)
+(%=-AREF val arr idx)
 (%VEC seq idx)
 (%SET-VEC val seq idx)
 (%STACK idx)
 (%STACKARG idx)
 
-(%%%MAKE-JSON-OBJECT kwlist)
-(%%%MAKE-OBJECT kwlist)
+(%MAKE-JSON-OBJECT kwlist)
+(%MAKE-OBJECT kwlist)

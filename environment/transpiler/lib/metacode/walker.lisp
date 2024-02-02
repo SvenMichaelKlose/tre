@@ -10,14 +10,14 @@
          (when ,x
            (let ,v (car ,x)
              (+ (?
-                  (%%native? ,v)
+                  (%native? ,v)
                     (error "%%NATIVE in metacode.")
                   (atom ,v)             ,(| if-atom `(list ,v))
                   ,@(!? if-setq         `((%=? ,v) ,!))
-                  ,@(!? if-go           `((%%go? ,v) ,!))
-                  ,@(!? if-go-nil       `((%%go-nil? ,v) ,!))
-                  ,@(!? if-go-not-nil   `((%%go-not-nil? ,v) ,!))
-                  (%%comment? ,v)       (list ,v)
+                  ,@(!? if-go           `((%go? ,v) ,!))
+                  ,@(!? if-go-nil       `((%go-nil? ,v) ,!))
+                  ,@(!? if-go-not-nil   `((%go-not-nil? ,v) ,!))
+                  (%comment? ,v)       (list ,v)
                   (named-lambda? ,v)
                     (with-lambda-funinfo ,v
                       (list (copy-lambda ,v

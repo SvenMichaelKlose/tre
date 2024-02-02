@@ -30,7 +30,7 @@
 
 (define-tree-filter place-assign (x)
   (| (quote? x)
-     (%%native? x))
+     (%native? x))
     x
   (unassigned-%stackarg? x)
     `(%stack ,(place-assign-stackarg x))

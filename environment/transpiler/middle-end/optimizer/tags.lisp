@@ -4,7 +4,7 @@
 
 (fn has-no-jumps-to? (x tag)
   (notany [& (vm-jump? _)
-             (== (%%go-tag _) tag)]
+             (== (%go-tag _) tag)]
           x))
 
 (fn tags-lambda (x)
@@ -45,9 +45,9 @@
                      (add-removed-tag a d.)
                      (reduce-tags d))
                  (& (number? a)
-                    (%%go? d.))
+                    (%go? d.))
                    (progn
-                     (add-removed-tag a (%%go-tag d.))
+                     (add-removed-tag a (%go-tag d.))
                      (reduce-tags d))))
 
          translate-tag

@@ -3,7 +3,7 @@
     (?
       (not x)
         t
-      (%%go? !)
+      (%go? !)
         (!? (member .!. .x)
             (function-exits? .!))
       (| (vm-jump? !)
@@ -19,7 +19,7 @@
              `((%= ,arg ,val)))
          (funinfo-args *funinfo*)
          (cdr (caddr body.)))
-     `((%%go ,front-tag))
+     `((%go ,front-tag))
      (opt-tailcall-fun l .body front-tag)))
 
 (fn opt-tailcall-fun (l body front-tag)

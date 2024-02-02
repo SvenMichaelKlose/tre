@@ -2,7 +2,7 @@
   (!= (| (lambda-name x)
          (gensym))
     (with-gensym g
-      `(%%block
+      `(%block
          (%var ,g)
          ,(copy-lambda x :name ! :body (. 'has-argexp! (lambda-body x)))
          (= (slot-value ,! 'tre-exp) ,(compile-argument-expansion g ! (lambda-args x)))
@@ -47,7 +47,7 @@
 (def-js-transpiler-macro defun (name args &body body)
   (with (dname  (%fn-name name)
          g      '~%tfun)
-    `(%%block
+    `(%block
        (%var ,dname)
        ,@(js-early-symbol-maker g dname)
        ,(shared-defun dname args body :make-expander? nil)

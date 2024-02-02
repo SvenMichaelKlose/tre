@@ -4,8 +4,8 @@
 (progn
   ,@(@ [`(progn
            (def-js-codegen ,_. (x)
-             `(%%native ,,(js-nil? x) " ? null : " ,,x "." ,._.))
+             `(%native ,,(js-nil? x) " ? null : " ,,x "." ,._.))
            (def-js-codegen ,._. (v x)
-             `(%%native ,,x "." ,._. " = " ,,v)))]
+             `(%native ,,x "." ,._. " = " ,,v)))]
        '((tre_car _)
          (tre_cdr __))))

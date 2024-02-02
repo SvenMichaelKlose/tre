@@ -9,7 +9,7 @@
 (defmacro def-codegen-infix (tr name)
   (print-definition `(def-codegen-infix ,tr ,name))
   `(define-codegen-macro ,tr ,name (x y)
-     `(%%native ,,x " " ,(downcase (string name)) " " ,,y)))
+     `(%native ,,x " " ,(downcase (string name)) " " ,,y)))
 
 (defmacro def-codegen-binary (tr op repl-op)
   (print-definition `(def-codegen-binary ,tr ,op))
@@ -27,5 +27,5 @@
 (fn codegen-expr? (x)
   (& (cons? x)
      (| (string? x.)
-        (in? x. '%%native '%%string)
+        (in? x. '%native '%string)
         (codegen-macro? x.))))

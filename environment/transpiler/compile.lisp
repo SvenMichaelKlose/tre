@@ -66,9 +66,9 @@
     (read-file path)))
 
 (fn section-comment (section)
-  `((%%comment "Section " ,(? (symbol? section)
-                              (symbol-name section)
-                              section))))
+  `((%comment "Section " ,(? (symbol? section)
+                             (symbol-name section)
+                             section))))
 
 (fn frontend-section (section x)
   (developer-note "Frontend ~A.~%" section)

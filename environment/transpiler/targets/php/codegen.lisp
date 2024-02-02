@@ -34,20 +34,20 @@
 
 ;;;; CONTROL FLOW
 
-(def-php-codegen %%tag (tag)
-  `(%%native "_I_" ,tag ":" ,*terpri*))
+(def-php-codegen %tag (tag)
+  `(%native "_I_" ,tag ":" ,*terpri*))
 
 (fn php-jump (tag)
   `("goto _I_" ,tag))
 
-(def-php-codegen %%go (tag)
+(def-php-codegen %go (tag)
   (php-line (php-jump tag)))
 
-(def-php-codegen %%go-nil (tag val)
+(def-php-codegen %go-nil (tag val)
   (let v (php-dollarize val)
     (php-line "if (" v " === null || " v " === false) " (php-jump tag))))
 
-(def-php-codegen %%go-not-nil (tag val)
+(def-php-codegen %go-not-nil (tag val)
   (let v (php-dollarize val)
     (php-line "if (!(" v " === null || " v " === false)) " (php-jump tag))))
 
@@ -75,17 +75,17 @@
 (def-php-codegen function (&rest x)
   (? .x
      (codegen-php-function (. 'function x))
-     `(%%native (%%string ,(convert-identifier x.)))))
+     `(%native (%string ,(convert-identifier x.)))))
 
-(def-php-codegen %function-prologue (name) '(%%native ""))
-(def-php-codegen %function-epilogue (name) '(%%native ""))
-(def-php-codegen %function-return (name)   '(%%native ""))
+(def-php-codegen %function-prologue (name) '(%native ""))
+(def-php-codegen %function-epilogue (name) '(%native ""))
+(def-php-codegen %function-return (name)   '(%native ""))
 
 (def-php-codegen %closure (name)
   (with (fi            (get-funinfo name)
-         native-name  `(%%string ,(compiled-function-name-string name)))
+         native-name  `(%string ,(compiled-function-name-string name)))
     (? (funinfo-scope-arg fi)
-       `(%%native "new __closure ("
+       `(%native "new __closure ("
                       ,native-name
                       ","
                       ,(php-dollarize (funinfo-scope (funinfo-parent fi)))
@@ -103,7 +103,7 @@
     (constant-literal? val)
       (list val)
     (| (atom val)
-       (& (%%native? val)
+       (& (%native? val)
           (atom .val.)
           (not ..val)))
       (list "$" val)
@@ -113,27 +113,27 @@
 
 (def-php-codegen %= (dest val)
   (? (& (not dest) (atom val))
-     '(%%native "")
-     `(%%native
+     '(%native "")
+     `(%native
         ,*php-indent*
         ,@(!? dest `(,(php-dollarize !) ," = "))
         ,@(php-%=-value val)
         ,*php-separator*)))
 
 (def-php-codegen %set-local-fun (plc val)
-  `(%%native ,(php-dollarize plc) " = " ,(php-dollarize val)))
+  `(%native ,(php-dollarize plc) " = " ,(php-dollarize val)))
 
 
 ;;;; INTERNAL VECTORS
 
 (def-php-codegen %make-scope (&rest elements)
-  `(%%native "new __l ()" ""))
+  `(%native "new __l ()" ""))
 
 (def-php-codegen %vec (v i)
-  `(%%native ,(php-dollarize v) "->g (" ,(php-dollarize i) ")"))
+  `(%native ,(php-dollarize v) "->g (" ,(php-dollarize i) ")"))
 
 (def-php-codegen %set-vec (v i x)
-  `(%%native ,*php-indent* ,(php-dollarize v) "->s ("
+  `(%native ,*php-indent* ,(php-dollarize v) "->s ("
                  ,(php-dollarize i) ", " ,(php-%=-value x)
              ")",*php-separator*))
 
@@ -144,13 +144,13 @@
   (print-definition `(def-php-binary ,op ,replacement-op))
   `(def-expander-macro (transpiler-codegen-expander *php-transpiler*)
                        ,op (&rest args)
-     `(%%native ,,@(pad (@ #'php-dollarize args)
+     `(%native ,,@(pad (@ #'php-dollarize args)
                         ,(+ " " replacement-op " ")))))
 
 (progn
   ,@(@ [`(def-php-binary ,@_)]
        '((%%%+        "+")
-         (%%%string+  ".")
+         (%string+  ".")
          (%%%-        "-")
          (%%%*        "*")
          (%%%/        "/")
@@ -186,21 +186,21 @@
   (pad (@ #'php-literal-array-element x) ", "))
 
 (def-php-codegen %%%make-array (&rest elements)
-  `(%%native "[" ,@(php-literal-array-elements (group elements 2)) "]"))
+  `(%native "[" ,@(php-literal-array-elements (group elements 2)) "]"))
 
 (def-php-codegen %aref (arr &rest indexes)
-  `(%%native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
+  `(%native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
 
 (def-php-codegen %aref-defined? (arr &rest indexes)
-  `(%%native "isset ("
+  `(%native "isset ("
                  ,(php-dollarize arr) ,@(php-array-subscript indexes)
              ")"))
 
 (def-php-codegen =-%aref (val &rest x)
-  `(%%native (%aref ,@x) " = " ,(php-dollarize val)))
+  `(%native (%aref ,@x) " = " ,(php-dollarize val)))
 
 (def-php-codegen %unset-aref (x key)
-  `(%%native "null; unset ($" ,x "[" ,(php-dollarize key) "])"))
+  `(%native "null; unset ($" ,x "[" ,(php-dollarize key) "])"))
 
 
 ;;;; OBJECTS
@@ -223,29 +223,29 @@
           (group x 2))
        ","))
 
-(def-php-codegen %%%make-object (&rest x)
-  `(%%native "(object)[" ,@(php-literal-object-elements x) "]"))
+(def-php-codegen %make-object (&rest x)
+  `(%native "(object)[" ,@(php-literal-object-elements x) "]"))
 
-(def-php-codegen %%%make-json-object (&rest x)
-  `(%%native "[" ,@(php-literal-object-elements x) "]"))
+(def-php-codegen %make-json-object (&rest x)
+  `(%native "[" ,@(php-literal-object-elements x) "]"))
 
 (def-php-codegen %new (&rest x)
   (? x
-     (? (| (%%string? x.)
+     (? (| (%string? x.)
            (keyword? x.))
-        `(%%%make-object ,@x)
-        `(%%native "new " ,x. ,@(php-argument-list .x)))
-     `(%%native "new stdClass")))
+        `(%make-object ,@x)
+        `(%native "new " ,x. ,@(php-argument-list .x)))
+     `(%native "new stdClass")))
 
 (def-php-codegen delete-object (x)
-  `(%%native "null; unset " ,x))
+  `(%native "null; unset " ,x))
 
 (def-php-codegen %slot-value (x n)
-  `(%%native
+  `(%native
      ,(php-dollarize x)
      "->"
      ,(?
-        (%%string? n)
+        (%string? n)
           .n.
         (symbol? n)
           (convert-identifier (make-symbol (symbol-name n) "TRE"))
@@ -255,7 +255,7 @@
 ;;;; CLASSES
 
 (def-php-codegen %php-class-head (cls &key (implements nil))
-  `(%%native
+  `(%native
      "class " ,(class-name cls)
      ,@(!? (class-base cls)
            `(" extends " ,!))
@@ -264,16 +264,16 @@
      "{"))
 
 (def-php-codegen %php-class-tail ()
-  `(%%native "}" ""))
+  `(%native "}" ""))
 
 
 ;;;; GLOBAL VARIABLES
 
 (def-php-codegen %global (x)
-  `(%%native "$GLOBALS['" ,(convert-identifier x) "']"))
+  `(%native "$GLOBALS['" ,(convert-identifier x) "']"))
 
 
 ;;;; MISCELLANEOUS
 
-(def-php-codegen %%comment (&rest x)
-  `(%%native "/* " ,@x " */" ,*terpri*))
+(def-php-codegen %comment (&rest x)
+  `(%native "/* " ,@x " */" ,*terpri*))

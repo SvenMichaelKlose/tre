@@ -15,15 +15,15 @@
 
 (def-compiler-macro cond (&rest args)
   (with-compiler-tag end-tag
-    `(%%block
+    `(%block
        ,@(+@ [with-compiler-tag next
                (when _.
                  `(,@(unless (eq t _.)
                        `((%= ,*return-id* ,_.)
-                         (%%go-nil ,next ,*return-id*)))
+                         (%go-nil ,next ,*return-id*)))
                    ,@(!? (wrap-atoms ._)
-                         `((%= ,*return-id* (%%block ,@!))))
-                   (%%go ,end-tag)
+                         `((%= ,*return-id* (%block ,@!))))
+                   (%go ,end-tag)
                    ,@(unless (eq t _.)
                        (list next))))]
              args)
@@ -32,11 +32,11 @@
 
 (def-compiler-macro progn (&body body)
   (!? body
-      `(%%block
+      `(%block
          ,@(wrap-atoms !))))
 
 (def-compiler-macro setq (&rest args)
-  `(%%block
+  `(%block
      ,@(@ [`(%= ,_. ,._.)]
           (group args 2))))
 
@@ -64,7 +64,7 @@
     (@ [? (atom _)
           (acons! _ (make-compiler-tag) *tagbody-replacements*)]
        body)
-    `(%%block
+    `(%block
        ,@(@ [| (& (atom _)
                   (tag-replacement _))
                _]
@@ -73,7 +73,7 @@
 
 (def-expander-macro *tagbody-expander* go (tag)
   (!? (tag-replacement tag)
-      `(%%go ,!)
+      `(%go ,!)
       (error "Can't find tag ~A in TAGBODY." tag)))
 
 (def-expander-macro *tagbody-expander* tagbody (&body body)
@@ -95,7 +95,7 @@
          (with (b     (expander-expand *block-expander* body)
                 head  (butlast b)
                 tail  (last b))
-           `(%%block
+           `(%block
               ,@head
               ,@(? (vm-jump? tail.)
                    tail
@@ -108,9 +108,9 @@
   (| *blocks*
      (error "RETURN-FROM outside BLOCK."))
   (!? (assoc block-name *blocks* :test #'eq)
-     `(%%block
+     `(%block
         (%= ,*return-id* ,expr)
-        (%%go ,.!))
+        (%go ,.!))
      (error "RETURN-FROM unknown BLOCK ~A." block-name)))
 
 (def-expander-macro *block-expander* block (name &body body)

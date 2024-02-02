@@ -13,7 +13,7 @@
 (fn jump-to-subsequent-tag? (a d)
   (& d
      (vm-jump? a)
-     (eql (%%go-tag a) d.)))
+     (eql (%go-tag a) d.)))
 
 (fn unused-atom-or-functional? (x)
   (& (%=? x)
@@ -31,7 +31,7 @@
      (unused-atom-or-functional? a)
      (assignment-to-self? a))
     (opt-peephole d)
-  (%%go? a)
+  (%go? a)
     (. a (opt-peephole (member-if #'atom d)))
   (%=-identity? a)
     (. `(%= ,.a. ,(cadr ..a.))
