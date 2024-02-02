@@ -13,7 +13,7 @@
      replacements))
 
 (fn rename-arguments-lambda (lambda-form replacements)
-  (? (get-lambda-funinfo lambda-form)   ; TODO: Check if still required. (pixel)
+  (? (lambda-funinfo lambda-form)   ; TODO: Check if still required. (pixel)
      lambda-form
      (!= (add-argument-replacements lambda-form replacements)
        (copy-lambda lambda-form

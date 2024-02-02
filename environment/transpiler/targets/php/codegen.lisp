@@ -55,7 +55,7 @@
 ;;;; FUNCTIONS
 
 (fn codegen-php-function (x)
-  (with (fi             (get-lambda-funinfo x)
+  (with (fi             (lambda-funinfo x)
          name           (funinfo-name fi)
          num-locals     (length (funinfo-vars fi))
          compiled-name  (compiled-function-name name))

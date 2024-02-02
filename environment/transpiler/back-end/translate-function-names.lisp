@@ -6,7 +6,7 @@
 (define-tree-filter translate-function-names (x &optional (fi (global-funinfo)))
   (named-lambda? x)
     (copy-lambda x :body (translate-function-names (lambda-body x)
-                                                   (get-lambda-funinfo x)))
+                                                   (lambda-funinfo x)))
   (| (quote? x)  ; TODO %QUOTE? instead? (pixel)
      (%%native? x)
      (%closure? x)

@@ -48,7 +48,7 @@
     (make-scope-place fi x)))
 
 (fn place-expand-fun (x)
-  (copy-lambda x :body (place-expand (lambda-body x) (get-lambda-funinfo x))))
+  (copy-lambda x :body (place-expand (lambda-body x) (lambda-funinfo x))))
 
 (fn place-expand-setter (fi x)
   (let p (place-expand .x. fi)

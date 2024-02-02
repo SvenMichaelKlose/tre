@@ -1,7 +1,7 @@
 (fn count-tags (x)
   (& (named-lambda? x.)
      (!= (lambda-body x.)
-       (= (funinfo-num-tags (get-lambda-funinfo x.)) (count-if #'number? !))
+       (= (funinfo-num-tags (lambda-funinfo x.)) (count-if #'number? !))
        (count-tags !)))
   (& x (count-tags .x))
   x)

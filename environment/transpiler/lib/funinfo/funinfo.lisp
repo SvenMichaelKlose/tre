@@ -70,7 +70,7 @@
 (fn get-funinfo (name &optional (tr *transpiler*))
   (& name (href (transpiler-funinfos tr) name)))
 
-(fn get-lambda-funinfo (x)
+(fn lambda-funinfo (x)
   (when (named-lambda? x)
     (get-funinfo (lambda-name x))))
 
@@ -79,7 +79,7 @@
      ,@body))
 
 (defmacro with-lambda-funinfo (x &body body)
-  `(with-temporary *funinfo* (get-lambda-funinfo ,x)
+  `(with-temporary *funinfo* (lambda-funinfo ,x)
      ,@body))
 
 (fn create-funinfo (&key name parent args (transpiler *transpiler*))

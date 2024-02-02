@@ -16,7 +16,7 @@
                              (funinfo-args fi)))))))
 
 (fn make-framed-function (x)
-  (with (fi   (get-lambda-funinfo x)
+  (with (fi   (lambda-funinfo x)
          name (funinfo-name fi))
     (copy-lambda x
         :body `(,@(& (needs-var-declarations?)

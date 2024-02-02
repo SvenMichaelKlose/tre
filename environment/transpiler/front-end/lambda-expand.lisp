@@ -36,7 +36,7 @@
 ;;;; PASSTHROUGH
 
 (fn lambda-expand-r-unexported-lambda (x)
-  (!? (get-lambda-funinfo x)
+  (!? (lambda-funinfo x)
       (with-temporary *funinfo* !
         (copy-lambda x :body (lambda-expand-r (lambda-body x))))
       (with (name    (| (lambda-name x)
