@@ -45,7 +45,7 @@
 
 (def-gensym expex-sym e)
 
-(fn expex-add-var ()
+(fn expex-make-var ()
   (funinfo-var-add *funinfo* (expex-sym)))
 
 
@@ -89,12 +89,12 @@
 
 (fn expex-move-%block (x)
   (!? .x
-      (let s (expex-add-var)
+      (let s (expex-make-var)
         (. (expex-body ! s) s))
       (. nil nil)))
 
 (fn expex-move-std (x)
-  (with (s                 (expex-add-var)
+  (with (s                 (expex-make-var)
          (moved new-expr)  (expex-expr x))
     (. (+ moved
           (? (has-return-value? new-expr.)
