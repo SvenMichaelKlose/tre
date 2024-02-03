@@ -71,8 +71,9 @@ Also worth noting is the %COMMENT meta-code to help development:
 |------------------------------------------------------------------
 | (%COMMENT string) | Comment to insert in the final code output. |
 
-Quote expansion compiles all quote expressions to CONSing ones whereas
-thisification adds 'this' to objects inside methods.  (More on that later.)
+Quote expansion compiles all QUOTE and BACKQUOTE expressions to CONSing ones
+whereas thisification adds 'this' to objects inside methods.  (More on that
+later.)  QUOTEs must have only one argument after this point.
 
 ## Augmentation
 
@@ -112,42 +113,56 @@ expressions have been removed entirely.
 
 # Middle-end
 
-* Repeated expression expansion now that all argument definitions are
-  known and need to get checked for us.
-* Unassigning named functions.
-* Accumulating top-level expressions
-* Collecting keywords
-* Meta-code validation
+* Repeated expression expansion now that all argument definitions are known
+  and need to get checked for us.
+* Unassigning named functions and accumulating top-level expressions: functions
+  are moved to the front so they are available to all other top-level
+  expressions.
+* Collecting keywords: Symbols are only added to the compilate by the back-end
+  if they had been wrapped in a QUOTE form.
+* Meta-code validation: Make sure it's clean.
 * Optimizations
  * Peeohole optimization
- * Tail-call optimization
+ * Tail-call optimization: just working a little as variables are not traced
+   thoroughly.
  * Chained jump removal
- * Tag removal
+ * Removing unused tags
  * Removing unused places
 
 # Back-end
 
+| Meta-codes                       | Description                            |
+|----------------------------------|----------------------------------------|
+| (%STACK idx)                     | Local variable on stack.               |
+|----------------------------------|----------------------------------------|
+| (%STACKARG idx)                  | Argument on stack. (C/bytecode target) |
+|----------------------------------|----------------------------------------|
+| (%VEC seq idx stack-position)    | Scope record read.                     |
+|----------------------------------|----------------------------------------|
+| (%SET-VEC val seq idx)           | Scope record write.                    |
+|----------------------------------|----------------------------------------|
+| (%FUNCTION-PROLOGUE name)        | Head and tail of function bodies.      |
+| (%FUNCTION-EPILOGUE name)        |                                        |
+|----------------------------------|----------------------------------------|
+| (%AREF arr idx)                  | Native array accessors.                |
+| (%=-AREF val arr idx)            |                                        |
+|----------------------------------|----------------------------------------|
+| (%MAKE-OBJECT class-name kvlist) | Make CLASS object.                     |
+|----------------------------------|----------------------------------------|
+| (%MAKE-JSON-OBJECT kvlist)       | Make (native) JSON object.             |
+
 * Adding function frames.  Each function body is pre- and postfixed with an
   %FUNCTION-PROLOGUE and %FUNCTION-EPILOGUE macro to aid the codegen pass.
- * Place expansion
- * Place assignment
-* Collecting used functions
-* Translating function names
-* String encapsulation (for codegen)
-* Counting tags
-* Wrapping tags
-* Codegen macro expansion
-* Identifier conversion
-
-(%FUNCTION-PROLOGUE name)
-(%FUNCTION-EPILOGUE name)
-
-(%AREF arr idx)
-(%=-AREF val arr idx)
-(%VEC seq idx)
-(%SET-VEC val seq idx)
-(%STACK idx)
-(%STACKARG idx)
-
-(%MAKE-JSON-OBJECT kwlist)
-(%MAKE-OBJECT kwlist)
+ * Place expansion: wraps variables in %STACK, %STACKARG or %VEC/%SET-VEC
+   forms (the latter for accessing scope records).
+ * Place assignment: layouts the stack frames and scope records.
+* Collecting used functions to generate a list of unused ones.
+* Translating function names: converts function names to identifier strings
+  required by the target machine, usually in camel-case.
+* String encapsulation (for codegen): wraps literal strings in a %STRING form
+  so the can be told apart from code string during codegen macro expansion.
+* Counting tags for no real reson.
+* Wrapping tags: again to identify them during codegen macro expansion.
+* Codegen macro expansion: here al the target code is made by codegen macros.
+* Identifier conversion: converts any symbol left as well as characters and
+  literal strings into target format (e.g. escaped strings in double quotes).
