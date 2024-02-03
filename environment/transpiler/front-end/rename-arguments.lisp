@@ -1,35 +1,31 @@
 (def-gensym argument-sym a)
 
-(fn rename-argument (x replacements)
-  (& (macro? x)
-     (error "Cannot use macro name ~A as an argument name." x))
-  (| (assoc-value x replacements :test #'eq)
-     x))
-
-(fn add-argument-replacements (lambda-expr replacements)
-  (+ (@ [. _ (argument-sym)]
-        (argument-expand-names (lambda-name lambda-expr)
-                               (lambda-args lambda-expr)))
-     replacements))
-
-(fn rename-arguments-lambda (lambda-form replacements)
-  (? (lambda-funinfo lambda-form)   ; TODO: Check if still required. (pixel)
-     lambda-form
-     (!= (add-argument-replacements lambda-form replacements)
-       (copy-lambda lambda-form
-                    :args (rename-arguments-r (lambda-args lambda-form) !)
-                    :body (rename-arguments-r (lambda-body lambda-form) !)))))
-
-(define-tree-filter rename-arguments-r (x &optional (replacements nil))
-  (atom x)
-    (rename-argument x replacements)
-  (quote? x)
-    x
-  (lambda? x)
-    (rename-arguments-lambda x replacements)
-  (%slot-value? x)
-    `(%slot-value ,(rename-arguments-r .x. replacements) ,..x.))
-
-(fn rename-arguments (x)
-  (= *argument-sym-counter* 0)
-  (rename-arguments-r x))
+(fn rename-arguments (x &optional (replacements nil))
+  (with (f #'((lambda-form replacements)
+               ; TODO: Check if still required. (pixel)
+               (? (lambda-funinfo lambda-form)
+                  lambda-form
+                  (!= (+ (@ [. _ (argument-sym)]
+                            (argument-expand-names (lambda-name lambda-form)
+                                                   (lambda-args lambda-form)))
+                         replacements)
+                    (copy-lambda lambda-form
+                                 :args (r (lambda-args lambda-form) !)
+                                 :body (r (lambda-body lambda-form) !)))))
+         r #'((x replacements)
+               (?
+                 (atom x)
+                   (? (macro? x)
+                      (error "Cannot use macro name ~A as an argument name." x)
+                      (| (assoc-value x replacements :test #'eq)
+                         x))
+                 (quote? x)
+                   x
+                 (lambda? x)
+                   (f x replacements)
+                 (%slot-value? x)
+                   `(%slot-value ,(r .x. replacements) ,..x.)
+                 (. (r x. replacements)
+                    (r .x replacements)))))
+    (= *argument-sym-counter* 0)
+    (r x replacements)))
