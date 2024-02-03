@@ -78,8 +78,8 @@ Test 77, MEMBER falsely detects foureign elements
 Test 78, can handle nested functions with double argument names
 Test 79, can handle nested functions with double argument names
 Test 80, can handle closures
-Test 81, LAMBDA? works
-Test 82, LAMBDA? works with LAMBDA
+Test 81, LAMBDA? works with no LAMBDA symbol
+Test 82, LAMBDA? works with LAMBDA with no LAMBDA symbol
 Test 83, LAMBDA-CALL? works
 Test 84, $
 Test 85, REVERSE works

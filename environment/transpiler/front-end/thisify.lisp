@@ -25,7 +25,7 @@
       x
     (%slot-value? x)
       `(%slot-value ,(thisify-symbol classdef .x. exclusions) ,..x.)
-    (lambda? x)
+    (unnamed-lambda? x)
       (copy-lambda x :body (thisify-list-0 classdef
                                            (lambda-body x)
                                            (+ exclusions (lambda-args x))))
@@ -53,7 +53,7 @@
                   ,@(| (+ (thisify-list classes (cddr x.) (cadr x.) exclusions)
                           (thisify .x classes exclusions))
                        '(nil))))))
-    (lambda? x.)
+    (unnamed-lambda? x.)
       (. (copy-lambda x. :body (thisify (lambda-body x.)
                                         classes
                                         (+ exclusions (lambda-args x.))))

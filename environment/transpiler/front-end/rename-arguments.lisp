@@ -25,7 +25,7 @@
     (rename-argument x replacements)
   (quote? x)
     x
-  (any-lambda? x)
+  (lambda? x)
     (rename-arguments-lambda x replacements)
   (%slot-value? x)
     `(%slot-value ,(rename-arguments-r .x. replacements) ,..x.))

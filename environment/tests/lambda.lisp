@@ -1,9 +1,9 @@
-(deftest "LAMBDA? works"
-  ((lambda? '#'((x) x)))
+(deftest "LAMBDA? works with no LAMBDA symbol"
+  ((unnamed-lambda? '#'((x) x)))
   t)
 
-(deftest "LAMBDA? works with LAMBDA"
-  ((lambda? '#'(lambda (x) x)))
+(deftest "LAMBDA? works with LAMBDA with no LAMBDA symbol"
+  ((unnamed-lambda? '#'(lambda (x) x)))
   t)
 
 (deftest "LAMBDA-CALL? works"

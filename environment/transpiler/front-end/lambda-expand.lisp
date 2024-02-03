@@ -56,11 +56,11 @@
 
 (fn lambda-expand-expr (x)
   (pcase x
-    lambda-call?   (lambda-call-embed x)
-    lambda?        (? (lambda-export?)
-                      (lambda-export x)
-                      (lambda-expand-r-unexported-lambda x))
-    named-lambda?  (lambda-expand-r-unexported-lambda x)
+    lambda-call?    (lambda-call-embed x)
+    unnamed-lambda? (? (lambda-export?)
+                       (lambda-export x)
+                       (lambda-expand-r-unexported-lambda x))
+    named-lambda?   (lambda-expand-r-unexported-lambda x)
     (lambda-expand-r x)))
 
 (fn lambda-expand-r (x)

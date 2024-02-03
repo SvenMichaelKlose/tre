@@ -16,10 +16,10 @@
         ; Accumulate this and all following functions into a LABEL,
         ; so they can call each other.
         ; TODO: A miracle this works. Try to keep the order. (pixel)
-        (lambda? val)
+        (unnamed-lambda? val)
            (let* ((items   (group alst 2))
-                  (funs    (remove-if-not [lambda? ._.] items))
-                  (others  (remove-if [lambda? ._.] items)))
+                  (funs    (remove-if-not [unnamed-lambda? ._.] items))
+                  (others  (remove-if [unnamed-lambda? ._.] items)))
              `(labels ,(@ [`(,_. ,@(past-lambda ._.))] funs)
                 ,@(sub (*> #'append others))))
 
