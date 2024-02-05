@@ -12,9 +12,7 @@
     (= *js-eval-transpiler* tr)))
 
 (fn js-eval-transpile (tr expression)
-  (clr (transpiler-cached-frontend-sections tr)
-       (transpiler-cached-output-sections tr)
-       (transpiler-compiled-inits tr))
+  (clr (transpiler-compiled-inits tr))
   (compile expression :transpiler tr))
 
 (fn eval-compile (x)

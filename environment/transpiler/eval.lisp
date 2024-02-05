@@ -17,9 +17,7 @@
 (fn late-eval (x)
   (with-gensym tmpfun
     (!= (make-eval-transpiler)
-      (clr (transpiler-cached-frontend-sections !)
-           (transpiler-cached-output-sections !)
-           (transpiler-compiled-inits !))
+      (clr (transpiler-compiled-inits !))
       (with-mute-environment
         (load-bytecode (expr-to-code ! (compile-sections `((eval . ((fn ,tmpfun () ,x))))
                                                          :transpiler !))
