@@ -119,6 +119,10 @@ inspired by Arc (which are there as well):
 * !? instead of AIF (Arc)
 * !@ instead of ADOLIST (Arc) (See also '@'.)
 
+And last but not least:
+
+* \*> instead of APPLY
+* \~> instead of FUNCALL
 
 ## @ instead of DOLIST or FILTER
 
