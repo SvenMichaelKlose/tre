@@ -10,6 +10,7 @@
 [ ] Case-sensitive symbols without conversion to upper case.  Will make
     conversions to back-end identifiers obsolete and less confusing.
 [ ] Rewrite modules/http-funcall.  Remove XML and just PRINT and READ.
+[ ] . instead of &REST.
 
 Printer
 [ ] Machine-readable compiler error messages.
