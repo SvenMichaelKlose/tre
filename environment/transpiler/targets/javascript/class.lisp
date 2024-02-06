@@ -8,7 +8,7 @@
      (fn ,class-name ,args
        (%thisify ,class-name
          (macrolet ((super (&rest args)
-                      `((slot-value ,base 'call) this ,,@args)))
+                     `((slot-value ,base 'call) this ,,@args)))
            ,@body)
          this))
      ,(js-gen-predicate class-name)))
@@ -22,7 +22,7 @@
 (def-js-transpiler-macro defmember (class-name &rest names)
   (generic-defmember class-name names))
 
-(fn js-emit-method (class-name x)
+(fn js-method (class-name x)
   (!= ($ class-name '- x.)
     (. `(,(convert-identifier x.) #',!)
        `(fn ,! ,.x.
@@ -36,20 +36,20 @@
 (fn class-methods-by-access-type (cls typ)
   (remove-if-not [eq ..._. typ] (class-methods cls)))
 
-(fn js-emit-methods (class-name cls)
-  (!= (@ [js-emit-method class-name _]
+(fn js-methods (class-name cls)
+  (!= (@ [js-method class-name _]
          (class-methods-by-access-type cls nil))
       `(,@(cdrlist !)
         ,@(!? (class-parent cls)
               (js-gen-inherit-methods class-name (class-name !)))
-        ,(!? (@ [js-emit-method class-name _]
+        ,(!? (@ [js-method class-name _]
                 (class-methods-by-access-type cls :static))
              `(js-merge-props! ,class-name
                                (%make-json-object ,@(*> #'+ (carlist !)))))
         (js-merge-props! (slot-value ,class-name 'prototype)
                          (%make-json-object ,@(*> #'+ (carlist !)))))))
 
-(fn js-emit-constructor (class-name x)
+(fn js-constructor (class-name x)
   (*> (car (class-constructor-maker x))
       class-name (class-base x)
       (cdr (class-constructor-maker x))))
@@ -58,9 +58,10 @@
   (print-definition `(finalize-class ,class-name))
   (!? (href (defined-classes) class-name)
       `(progn
-         ,(js-emit-constructor class-name !)
-         ,@(js-emit-methods class-name !)
+         ,(js-constructor class-name !)
+         ,@(js-methods class-name !)
          (= (slot-value (slot-value ,(compiled-function-name class-name)
-                                    'prototype) 'constructor)
+                                    'prototype)
+                        'constructor)
             ,class-name))
       (error "Cannot finalize undefined class ~A." class-name)))
