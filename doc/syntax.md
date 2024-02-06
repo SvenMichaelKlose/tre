@@ -123,6 +123,9 @@ And last but not least:
 
 * \*> instead of APPLY
 * \~> instead of FUNCALL
+* $ instead of MAKE-SYMBOL but taking a list of strings and symbols whose
+  strings are then concatenated. E.g. ($ fun-name '?) to make the name of
+  predicate.  Takes no package argument.
 
 ## @ instead of DOLIST or FILTER
 
