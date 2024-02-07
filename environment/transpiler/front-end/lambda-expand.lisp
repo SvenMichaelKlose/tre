@@ -35,7 +35,7 @@
 
 ;;;; PASSTHROUGH
 
-(fn lambda-expand-r-unexported-lambda (x)
+(fn lambda-expand-lambda (x)
   (!? (lambda-funinfo x)
       (with-temporary *funinfo* !
         (copy-lambda x :body (lambda-expand-r (lambda-body x))))
@@ -56,18 +56,16 @@
 
 (fn lambda-expand-expr (x)
   (pcase x
+    atom            x
     lambda-call?    (lambda-call-embed x)
     unnamed-lambda? (? (lambda-export?)
                        (lambda-export x)
-                       (lambda-expand-r-unexported-lambda x))
-    named-lambda?   (lambda-expand-r-unexported-lambda x)
+                       (lambda-expand-lambda x))
+    named-lambda?   (lambda-expand-lambda x)
     (lambda-expand-r x)))
 
 (fn lambda-expand-r (x)
-  (? (atom x)
-     x
-     (. (lambda-expand-expr x.)
-        (lambda-expand-r .x))))
+  (@ #'lambda-expand-expr x))
 
 (fn lambda-expand (x)
   (with-global-funinfo
