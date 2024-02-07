@@ -4,7 +4,7 @@
          (with-lambda-funinfo _
            (let fi *funinfo*
              (!? (funinfo-scope fi)
-                 (= (funinfo-used-vars fi) (list !)))
+                 (= (funinfo-used-vars fi) (… !)))
              (= (funinfo-places fi) nil)
              (collect-places (lambda-body _))))
        (%go-cond? _)
@@ -14,15 +14,15 @@
            (with-%= p v _
              (funinfo-add-place fi p)
              (funinfo-add-used-var fi p)
-             (@ (i (ensure-list v))
-               (funinfo-add-used-var fi i))))]
+             (@ [funinfo-add-used-var fi _]
+                (ensure-list v))))]
      x)
   x)
 
 (fn used-vars ()
   (!= *funinfo*
     (+ (funinfo-scoped-vars !)
-       (intersect (funinfo-vars !) (funinfo-used-vars !) :test #'eq)
+       (intersect (funinfo-vars !) (funinfo-used-vars !))
        (& (copy-arguments-to-stack?)
           (funinfo-args !)))))
 
@@ -44,7 +44,7 @@
                          (? .! ! !.))
                        (human-readable-funinfo-names fi))
     (= (funinfo-scoped-vars fi) nil
-       (funinfo-scope fi) nil)))
+       (funinfo-scope fi)       nil)))
 
 (fn replace-scope-arg (fi)
   (& (funinfo-scope-arg fi)
@@ -79,8 +79,7 @@
     (remove-unused-scope-arg fi)
     ;(remove-scoped-vars fi)   ; TODO: Fix
     (replace-scope-arg fi))
-  (funinfo-vars-set fi (intersect (funinfo-vars fi) (funinfo-used-vars fi)
-                                  :test #'eq))
+  (funinfo-vars-set fi (intersect (funinfo-vars fi) (funinfo-used-vars fi)))
   (& (stack-locals?)
      (remove-argument-stackplaces fi)))
 
