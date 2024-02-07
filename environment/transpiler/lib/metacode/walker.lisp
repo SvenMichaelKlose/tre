@@ -12,18 +12,19 @@
              (+ (?
                   (%native? ,v)
                     (error "%%NATIVE in metacode.")
-                  (atom ,v)             ,(| if-atom `(list ,v))
+                  (atom ,v)             ,(| if-atom `(… ,v))
                   ,@(!? if-setq         `((%=? ,v) ,!))
                   ,@(!? if-go           `((%go? ,v) ,!))
                   ,@(!? if-go-nil       `((%go-nil? ,v) ,!))
                   ,@(!? if-go-not-nil   `((%go-not-nil? ,v) ,!))
-                  (%comment? ,v)       (list ,v)
+                  (%comment? ,v)        (… ,v)
                   (named-lambda? ,v)
                     (with-lambda-funinfo ,v
-                      (list (copy-lambda ,v
-                                :body ,(| if-named-function
-                                          `(,name (lambda-body ,v) ,@r)))))
+                      (with-temporary *body* (lambda-body ,v)
+                        (… (copy-lambda ,v
+                               :body ,(| if-named-function
+                                         `(,name (lambda-body ,v) ,@r))))))
                   (not (metacode-statement? ,v))
                     (funinfo-error "METACODE-STATEMENT? is NIL for ~A." ,v)
-                  ,(| if-cons `(list ,v)))
+                  ,(| if-cons `(… ,v)))
                 (,name (cdr ,x) ,@r))))))))

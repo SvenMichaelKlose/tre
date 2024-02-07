@@ -1,16 +1,12 @@
-;;;;; TODO: Utilize *BODY* of METACODE-WALKER? (pixel)
-
 (fn function-exits? (x)
-  (!= x.
-    (?
-      (not x) t
-      (%go? !)
-        (!? (member .!. .x)
-            (function-exits? .!))
-      (| (some-%go? !)
-         (%=? !))
-        nil
-      (function-exits? .x))))
+  (| (not x)
+     (?
+       (%go? x.)
+         (function-exits? (tag-code (%go-tag x.)))
+       (| (some-%go? x.)
+          (%=? x.))
+         nil
+       (function-exits? .x))))
 
 (fn opt-tailcall-make-restart (l body front-tag)
   (optimizer-message "Resolved tail call in ~A.~%"
