@@ -1,8 +1,9 @@
+;;;;; TODO: Utilize *BODY* of METACODE-WALKER? (pixel)
+
 (fn function-exits? (x)
   (!= x.
     (?
-      (not x)
-        t
+      (not x) t
       (%go? !)
         (!? (member .!. .x)
             (function-exits? .!))

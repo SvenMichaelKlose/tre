@@ -7,6 +7,7 @@
        (do ((,iter 0 (number+ 1 ,iter)))
            ((== ,iter ,g) ,@result)
          ,@body))))
+
 (defmacro repeat (n &body body)
   `(dotimes (,(gensym) ,n)
      ,@body))

@@ -8,15 +8,15 @@
        (unique .x :test test)
        (. x. (unique .x :test test)))))
 
-(fn adjoin (obj lst &rest args)
+(fn adjoin (x lst &rest args)
   "Add an element to a set."
-  (? (*> #'member obj lst args)
+  (? (*> #'member x lst args)
      lst
-     (. obj lst)))
+     (. x lst)))
 
-(defmacro adjoin! (obj &rest place)
-  "Destructively add an element to set in place."
-  `(= ,place. (adjoin ,obj ,@place)))
+(defmacro adjoin! (x &rest place)
+  "Destructively add an element to set at place."
+  `(= ,place. (adjoin ,x ,@place)))
 
 (macro set-op (name &rest body)
   `(fn ,name (a b &key (test #'eql))

@@ -1,4 +1,5 @@
 (fn tag-code (tag)
+  "Return expressions after tag in *BODY*."
   (| (member-if [& (number? _)
                    (== _ tag)]
                 *body*)
