@@ -1,9 +1,10 @@
 (define-transpiler-end :middleend
     :middleend-input          #'identity
     :expression-expand        #'expression-expand
+    :validate-metacode        #'validate-metacode
     :unassign-named-functions #'unassign-named-functions
     :accumulate-toplevel      #'accumulate-toplevel-expressions
     :collect-keywords         #'collect-keywords
-    :validate-metacode        #'validate-metacode
     :optimize                 #'optimize
-    :opt-tailcall             #'pass-opt-tailcall)
+    :opt-tailcall             #'pass-opt-tailcall
+    :validate-metacode        #'validate-metacode)
