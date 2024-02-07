@@ -1,14 +1,14 @@
 (fn assignment-to-self? (x)
   (& (%=? x)
-     (eq .x. ..x.)))
+     (equal .x. ..x.)))
 
 (fn reversed-assignments? (a d)
   (let n d.
     (& (%=? a)
        (%=? n)
-       .a. (atom .a.)
-       (eq .a. ..n.)
-       (eq .n. ..a.))))
+       .a. (atomic? .a.)
+       (equal .a. ..n.)
+       (equal .n. ..a.))))
 
 (fn jump-to-subsequent-tag? (a d)
   (& d
