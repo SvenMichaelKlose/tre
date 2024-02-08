@@ -1,7 +1,6 @@
 (fn collect-used-functions (x)
   (with (r [@ [?
-                (& (%=? _)
-                   (cons? .._.))
+                (%=-funcall? _)
                   (@ [& (defined-function _)
                         (not (funinfo-find *funinfo* _))
                         (add-used-function _)]
