@@ -1,3 +1,4 @@
+[@] !!! Native class expressions.  JS target is old school.
 [@] !!! Getters and setters.
 [@] !!! LML2???: Track path to locate faulty expressions.  Allow temporary
     error message info generators.
