@@ -1,19 +1,28 @@
+(defstruct %slot
+  flags ; (:static :protected :private)
+  type  ; (:method :member)
+  name
+  args
+  body)
+
+(fn %slot-flag? (slot flag)
+  (member flag (%slot-flags slot)))
+
 (defstruct class
-  (name        nil)
-  (base        nil)
-  (members     nil)
-  (methods     nil)
-  (parent      nil)
+  (name   nil)
+  (base   nil)
+  (slots  nil)
+  (parent nil)
   (constructor-maker nil))
 
-(fn class-add-method (cls name code)
-  (acons! name code (class-methods cls)))
+(fn class-slot? (cls name)
+  (member [eq name (%slot-name _)] (class-slots cls)))
 
-(fn class-change-method (cls name code)
-  (= (assoc-value name (class-methods cls)) code))
+(fn class-slots-by-type (cls type)
+  (remove-if-not [eq type (%slot-type _)] (class-slots cls)))
 
-(fn class-method (cls name)
-  (assoc-value name cls))
+(fn class-methods (cls)
+  (class-slots-by-type cls :method))
 
-(fn class-add-member (cls name)
-  (push (list name t) (class-members cls)))
+(fn class-members (cls)
+  (class-slots-by-type cls :member))

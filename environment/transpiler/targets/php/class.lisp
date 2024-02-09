@@ -22,11 +22,14 @@
 (def-php-transpiler-macro defmember (class-name &rest names)
   (generic-defmember class-name names))
 
+(fn php-access-flags (slot)
+  (*> #'+ (pad (@ [downcase (symbol-name _)]
+                     (%slot-flags slot))
+                  " ")))
+
 (fn php-members (cls)
-  (@ [`(%native ,(? (cons? _.)
-                     (downcase (symbol-name _..))
-                     "var")
-                 " $" ,(!? (cons? _.) (cadr _.) _.) ,*php-separator*)]
+  (@ [`(%native ,(| (php-access-flags _) "var")
+                 " $" ,(%slot-name _) ,*php-separator*)]
      (class-members cls)))
 
 (def-php-transpiler-macro defmethod (&rest x)
@@ -47,32 +50,31 @@
   (compiled-function-name (php-method-name cls name)))
 
 (fn php-method-function (cls x)
-  `(function ,(php-method-name cls x.) (,(. 'this .x.)
+  `(function ,(php-method-name cls (%slot-name x)) (,(. 'this (%slot-args x))
      (let ~%this this
        (%thisify ,(class-name cls)
-         ,@(| ..x. (list nil)))))))
+         ,@(| (%slot-body x) (… nil)))))))
 
 (fn php-method-flags (x)
   (flatten (list (pad (@ [downcase (symbol-name _)] x) " ")
                  " ")))
 
 (fn php-method (cls x)
-  (!= (argument-expand-names 'php-method .x.)
-    `(,@(!? ...x.
-            (list (php-method-flags !)))
-      "function " ,(php-method-name-w/o-class x.)
-                  ,(php-argument-list (? (eq x. '=-aref)
+  (!= (argument-expand-names 'php-method (%slot-args x))
+    `(,(| (php-access-flags x) "")
+      "function " ,(php-method-name-w/o-class (%slot-name x))
+                  ,(php-argument-list (? (eq (%slot-name x) '=-aref)
                                          `(("mixed $" ,.!.) ("mixed $" ,!.))
                                          !))
                 " : " ,(?
-                         (eq x. 'aref?) "bool"
-                         (in? x. '=-aref 'delete-aref) "void"
+                         (eq (%slot-name x) 'aref?) "bool"
+                         (in? (%slot-name x) '=-aref 'delete-aref) "void"
                          "mixed")
                 " " ,*terpri*
       "{" ,*terpri*
-      ,*php-indent* ,@(unless (in? x. '=-aref 'delete-aref)
+      ,*php-indent* ,@(unless (in? (%slot-name x) '=-aref 'delete-aref)
                         '("return "))
-          ,(php-compiled-method-name cls x.)
+          ,(php-compiled-method-name cls (%slot-name x))
           ,(php-argument-list (. 'this !))
           ,*php-separator*
       "}" ,*terpri*)))
@@ -86,7 +88,7 @@
       (class-methods cls)))
 
 (fn class-method-names (cls)
-  (@ #'symbol-name (carlist (class-methods cls))))
+  (@ [symbol-name (%slot-name _)] (class-methods cls)))
 
 (fn class-array-methods (cls)
   (intersect +php-array-methods+ (class-method-names cls)
@@ -96,7 +98,7 @@
   (subseq? ! +php-array-methods+ :test #'string==))
 
 (fn php-class (cls)
-  (!= (carlist (class-methods cls))
+  (!= (@ #'%slot-name (class-methods cls))
     (!? (class-array-methods cls)
        (| (subseq? ! +php-array-methods+)
           ; TODO: Test if derived, then break with error. (pixel)

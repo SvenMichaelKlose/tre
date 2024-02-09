@@ -1,8 +1,7 @@
-(fn thisify-collect-methods-and-members (clsdesc)
-  (+ (class-methods clsdesc)
-     (class-members clsdesc)
-     (!? (class-parent clsdesc)
-         (thisify-collect-methods-and-members !))))
+(fn collect-slot-names (cls)
+  (+ (class-slots cls)
+     (!? (class-parent cls)
+         (collect-slot-names !))))
 
 (fn thisify-symbol (classdef x exclusions)
   (?
@@ -12,7 +11,7 @@
       (make-symbol (symbol-name x) "TRE")
     (!? (& classdef
            (not (member x exclusions :test #'eq))
-           (assoc x classdef))
+           (member x classdef))
         `(%slot-value ~%this ,x)
         x)))
 
@@ -35,10 +34,18 @@
           (thisify-list-0 classdef x. exclusions))
        (thisify-list-0 classdef .x exclusions))))
 
-(fn thisify-list (classes x cls exclusions)
-  (thisify-list-0
-      (thisify-collect-methods-and-members
-          (href classes cls)) x exclusions))
+(fn thisify-list (classes x class-name exclusions)
+  (thisify-list-0 (@ #'%slot-name
+                     (collect-slot-names (href classes class-name)))
+                  x exclusions))
+
+(fn thisify-expr (x classes exclusions)
+  (compiler-macroexpand
+      (transpiler-macroexpand
+         `((let ~%this this
+             ,@(| (+ (thisify-list classes (cddr x.) (cadr x.) exclusions)
+                     (thisify .x classes exclusions))
+                  '(nil)))))))
 
 (def-head-predicate %thisify)
 
@@ -47,12 +54,7 @@
     (atom x)
       x
     (%thisify? x.)
-      (compiler-macroexpand
-          (transpiler-macroexpand
-              `((let ~%this this
-                  ,@(| (+ (thisify-list classes (cddr x.) (cadr x.) exclusions)
-                          (thisify .x classes exclusions))
-                       '(nil))))))
+      (thisify-expr x classes exclusions)
     (unnamed-lambda? x.)
       (. (copy-lambda x. :body (thisify (lambda-body x.)
                                         classes

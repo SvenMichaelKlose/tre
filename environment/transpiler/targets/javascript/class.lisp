@@ -23,27 +23,24 @@
   (generic-defmember class-name names))
 
 (fn js-method (class-name x)
-  (!= ($ class-name '- x.)
-    (. `(,(convert-identifier x.) #',!)
-       `(fn ,! ,.x.
+  (!= ($ class-name '- (%slot-name x))
+    (. `(,(convert-identifier (%slot-name x)) #',!)
+       `(fn ,! ,(%slot-args x)
           (%thisify ,class-name
-            ,@(| ..x. (… nil)))))))
+            ,@(| (%slot-body x) (… nil)))))))
 
 (fn js-gen-inherit-methods (class-name base-name)
   `((= (slot-value ,class-name 'prototype)
        (*object.create (slot-value ,base-name 'prototype)))))
 
-(fn class-methods-by-access-type (cls typ)
-  (remove-if-not [eq ..._. typ] (class-methods cls)))
-
 (fn js-methods (class-name cls)
   (!= (@ [js-method class-name _]
-         (class-methods-by-access-type cls nil))
+         (remove-if [%slot-flag? _ :static] (class-methods cls)))
       `(,@(cdrlist !)
         ,@(!? (class-parent cls)
               (js-gen-inherit-methods class-name (class-name !)))
         ,(!? (@ [js-method class-name _]
-                (class-methods-by-access-type cls :static))
+                (remove-if-not [%slot-flag? _ :static] (class-methods cls)))
              `(js-merge-props! ,class-name
                                (%make-json-object ,@(*> #'+ (carlist !)))))
         (js-merge-props! (slot-value ,class-name 'prototype)
