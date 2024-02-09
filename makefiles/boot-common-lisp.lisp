@@ -27,7 +27,8 @@
       (:import-from
          "CL" ,@(@ #'symbol-name
                    (+ +cl-symbol-imports+
-                      +cl-function-imports+))))
+                      +cl-function-imports+)))
+      (:import-from "SB-EXT" "*POSIX-ARGV*"))
     (defpackage "TRE"
       (:use "TRE-CORE"))))
 

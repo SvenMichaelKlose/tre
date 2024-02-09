@@ -12,3 +12,5 @@
 
 (var *quasiquote-expand* nil)
 (var *dot-expand* nil)
+
+(var *argv* *posix-argv*)

@@ -1,4 +1,5 @@
 Changes relative to tre-0.20:
+  * CL: *ARGV* has the command-line arguments.
   * DEFSTRUCT: Generated macro DEF-name does not require the first argument
     to be of the structs name any more.
   * Inside methods package "GLOBAL" now tells that a symbol should not be
