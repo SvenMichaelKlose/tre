@@ -1,7 +1,8 @@
-(fn count-tags (x)
-  (& (named-lambda? x.)
-     (!= (lambda-body x.)
-       (= (funinfo-num-tags (lambda-funinfo x.)) (count-if #'number? !))
-       (count-tags !)))
-  (& x (count-tags .x))
-  x)
+(fn count-tags-fun (x)
+  (!= (lambda-body x)
+    (= (funinfo-num-tags (lambda-funinfo x)) (count-if #'number? !))
+    (count-tags !)))
+
+(metacode-walker count-tags (x)
+  :if-named-function
+    (count-tags-fun x.))

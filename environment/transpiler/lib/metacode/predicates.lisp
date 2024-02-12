@@ -4,7 +4,7 @@
          %block %go %go-nil %go-not-nil %tag %tag
          %stack %stackarg %vec %set-vec %set-local-fun
          %string
-         %function-prologue %function-return %function-epilogue
+         %function-prologue %function-return %function-epilogue %collection
          %native %var %global %comment)))
 
 (fn atomic? (x)
@@ -51,5 +51,5 @@
      (& (cons? x)
         (| (named-lambda? x)
            (in? x. '%= '%set-vec '%var '%function-prologue '%function-epilogue
-                   '%function-return '%tag '%comment)
+                   '%function-return '%collection '%tag '%comment)
            (some-%go? x)))))

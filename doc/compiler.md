@@ -14,6 +14,11 @@ between.
 
 [^1]: Keyword "Micro-pass architecture".
 
+# Glossary
+
+* ***body***: A list of (meta-code) expressions.
+* ***collection***: An associative list of bodies.
+
 # Front-end
 
 The front-end is responsible for transforming its input into a format the
@@ -50,30 +55,34 @@ and so on to use only four meta-code instructions:
 |------------------------------|----------------------------|
 | (%SLOT-VALUE x slot-name)    | Inlined SLOT-VALUE         |
 
-| Control-flow meta code | Description                                 |
-|------------------------|---------------------------------------------|
-| (%TAG tag)             | Define a location to jump to.  The tag-name |
-|                        | must be an integer.                         |
-|------------------------|---------------------------------------------|
-| (%GO tag)              | Unconditional jump.                         |
-|------------------------|---------------------------------------------|
-| (%GO-NIL tag var)      | Jump if variable is NIL                     |
-| (%GO-NOT-NIL var)      | Jump if variable is not NIL.                |
-|------------------------|---------------------------------------------|
-| (%BLOCK &rest body)    | Code block behaving like a mix of PROGN and |
-|                        | TAGBODY.                                    |
+| Control-flow meta code     | Description                                   |
+|----------------------------|-----------------------------------------------|
+| (%TAG tag)                 | Define a location to jump to.  The tag-name   |
+|                            | must be an integer.                           |
+|----------------------------|-----------------------------------------------|
+| (%GO tag)                  | Unconditional jump.                           |
+|----------------------------|-----------------------------------------------|
+| (%GO-NIL tag var)          | Jump if variable is NIL                       |
+|----------------------------|-----------------------------------------------|
+| (%GO-NOT-NIL var)          | Jump if variable is not NIL.                  |
+|----------------------------|-----------------------------------------------|
+| (%BLOCK &rest body)        | Code block behaving like a mix of PROGN and   |
+|                            | TAGBODY.                                      |
+|----------------------------|-----------------------------------------------|
+| (%COLLECTION info &rest x) | An alist of name/body pairs.  Used to encap-  |
+|                            | sulate classes.                               |
 
 %BLOCKs are removed later during expression expansion and are implied in
-function bodies.  They are there to avoid having to unnest %BLOCKs early.
-Also worth noting is the %COMMENT meta-code to help development:
+bodies (expression lists).  They are there to avoid having to unnest %BLOCKs
+early.  Also worth noting is the %COMMENT meta-code:
 
 | Meta code         | Description                                 |
 |------------------------------------------------------------------
 | (%COMMENT string) | Comment to insert in the final code output. |
 
 Quote expansion compiles all QUOTE and BACKQUOTE expressions to CONSing ones
-whereas thisification adds 'this' to objects inside methods.  (More on that
-later.)  QUOTEs must have only one argument after this point.
+whereas thisification adds 'this' inside methods.  (More on that later.)
+QUOTEs must have only one argument after this point.
 
 ## Augmentation
 
