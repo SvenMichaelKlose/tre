@@ -56,7 +56,7 @@
 
 (fn lambda-expand-%collection (x)
   `(%collection ,x.
-     ,@(@ [. _. (lambda-expand-lambda ._)] .x)))
+     ,@(@ [. _. (lambda-expand-r ._)] .x)))
 
 (fn lambda-expand-expr (x)
   (pcase x
@@ -66,7 +66,7 @@
                        (lambda-export x)
                        (lambda-expand-lambda x))
     named-lambda?   (lambda-expand-lambda x)
-    %collection?    (lambda-expand-%collection x)
+    %collection?    (lambda-expand-%collection .x)
     (lambda-expand-r x)))
 
 (fn lambda-expand-r (x)
