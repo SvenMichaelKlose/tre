@@ -43,8 +43,8 @@
                        (!= (funinfo-scoped-vars fi)
                          (? .! ! !.))
                        (human-readable-funinfo-names fi))
-    (= (funinfo-scoped-vars fi) nil
-       (funinfo-scope fi)       nil)))
+    (= (funinfo-scoped-vars fi)  nil
+       (funinfo-scope fi)        nil)))
 
 (fn replace-scope-arg (fi)
   (& (funinfo-scope-arg fi)
