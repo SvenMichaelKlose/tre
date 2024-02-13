@@ -19,7 +19,7 @@
   (scoped-vars  nil) ; List of symbols exported to child functions.
   (scope        nil) ; Name of the array of scoped-vars.
   (scope-arg    nil) ; Name of hidden argument with an array of scoped-vars.
-  (local-function-args nil)
+  (local-function-args nil) ; TODO: Remove.  Does nothing.
   (fast-scope?  nil)
 
   (types        nil)  ; Strings of native type declarations.
@@ -39,8 +39,7 @@
 
 (fn funinfo-topmost (fi)
   (awhen (funinfo-parent fi)
-    (? (& !
-          (not (funinfo-parent !)))
+    (? (& ! (not (funinfo-parent !)))
        fi
        (funinfo-topmost !))))
 
@@ -50,29 +49,30 @@
 
 (def-funinfo copy-funinfo (fi)
   (make-funinfo
-      :parent       parent
-      :name         name
-      :argdef       argdef
-      :args         (copy-list args)
-      :vars         (copy-list vars)
-      :vars-hash    (copy-hash-table vars-hash)
-      :used-vars    (copy-list used-vars)
-      :free-vars    (copy-list free-vars)
-      :places       (copy-list places)
-      :scoped-vars  (copy-list scoped-vars)
-      :scope        scope
-      :scope-arg    scope-arg
-      :local-function-args (copy-list local-function-args)
-      :fast-scope?  fast-scope?
-      :num-tags     num-tags
-      :globals      (copy-list globals)))
+      :parent               parent
+      :name                 name
+      :argdef               argdef
+      :args                 (copy-list args)
+      :vars                 (copy-list vars)
+      :vars-hash            (copy-hash-table vars-hash)
+      :used-vars            (copy-list used-vars)
+      :free-vars            (copy-list free-vars)
+      :places               (copy-list places)
+      :scoped-vars          (copy-list scoped-vars)
+      :scope                scope
+      :scope-arg            scope-arg
+      :local-function-args  (copy-list local-function-args)
+      :fast-scope?          fast-scope?
+      :num-tags             num-tags
+      :globals              (copy-list globals)))
 
 (fn get-funinfo (name &optional (tr *transpiler*))
-  (& name (href (transpiler-funinfos tr) name)))
+  (& name
+     (href (transpiler-funinfos tr) name)))
 
 (fn lambda-funinfo (x)
-  (when (named-lambda? x)
-    (get-funinfo (lambda-name x))))
+  (& (named-lambda? x)
+     (get-funinfo (lambda-name x))))
 
 (defmacro with-global-funinfo (&body body)
   `(with-temporary *funinfo* (global-funinfo)
@@ -85,12 +85,12 @@
 (fn create-funinfo (&key name parent args (transpiler *transpiler*))
   (& (href (transpiler-funinfos transpiler) name)
      (error "FUNFINFO for ~A is already memorized." name))
-  (with (argnames (argument-expand-names 'lambda-expand args)
-         fi       (make-funinfo :name          name
-                                :argdef        args
-                                :args          argnames
-                                :parent        parent
-                                :transpiler    transpiler))
+  (with (argnames  (argument-expand-names 'lambda-expand args)
+         fi        (make-funinfo :name        name
+                                 :argdef      args
+                                 :args        argnames
+                                 :parent      parent
+                                 :transpiler  transpiler))
     (= (href (transpiler-funinfos transpiler) name) fi)
     (funinfo-var-add fi *return-id*)
     (& (transpiler-copy-arguments-to-stack? transpiler)
