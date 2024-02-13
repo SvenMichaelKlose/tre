@@ -11,4 +11,4 @@
     (with-%= place value x.
       (add-wanted-variable place)
       (gather-imports-list (ensure-list value))
-      (list x.)))
+      (… x.)))
