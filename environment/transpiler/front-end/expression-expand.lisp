@@ -144,8 +144,8 @@
       (values moved (make-%= p new-expr.)))))
 
 (fn expex-%collection (x)
-  `(%collection ,x.
-     ,@(@ [. _. (expex-body ._)] .x)))
+  `((%collection ,x.
+      ,(@ [. _. (expex-body ._)] .x))))
 
 (fn expex-expr (x)
   (pcase x
@@ -155,7 +155,7 @@
     named-lambda?  (expex-lambda x)
     %block?        (values nil (expex-body .x))
     unexpex-able?  (values nil (… x))
-    %collection?   (expex-%collection x)
+    %collection?   (values nil (expex-%collection .x))
     (with ((moved new-expr) (expex-move-args (expex-argexpand x)))
       (values moved (… new-expr)))))
 
