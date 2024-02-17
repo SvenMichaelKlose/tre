@@ -73,6 +73,3 @@
     (place-expand-setter fi x)
   (%slot-value? x)
     `(%slot-value ,(place-expand .x. fi) ,..x.))
-
-(fn place-expand-closure-scope (fi)
-  (place-expand (funinfo-scope !) (funinfo-parent fi)))
