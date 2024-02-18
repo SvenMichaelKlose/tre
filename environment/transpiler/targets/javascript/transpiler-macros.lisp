@@ -4,8 +4,11 @@
     (with-gensym g
       `(%block
          (%var ,g)
-         ,(copy-lambda x :name ! :body (. 'has-argexp! (lambda-body x)))
-         (= (slot-value ,! 'tre-exp) ,(compile-argument-expansion g ! (lambda-args x)))
+         ,(copy-lambda x :name !
+                         :body (. 'has-argexp!
+                                  (lambda-body x)))
+         (= (slot-value ,! 'tre-exp)
+            ,(compile-argument-expansion g ! (lambda-args x)))
          ,!))))
 
 (fn js-requires-expander? (x)
@@ -34,7 +37,8 @@
   (js-make-late-symbol-function-assignment name)
   `(progn
      (%var ,(%fn-name name))
-     ,(shared-defun name args (. 'has-argexp! body) :allow-source-memorizer? nil)))
+     ,(shared-defun name args (. 'has-argexp! body)
+                    :allow-source-memorizer? nil)))
 
 (fn js-early-symbol-maker (g sym)
   `(,@(unless (eq g '~%tfun)
@@ -56,6 +60,23 @@
 (def-js-transpiler-macro %fn (name args &body body)
   `(fn ,name ,args ,@body))
 
+(def-js-transpiler-macro %class-predicate (class-name)
+  `(fn ,($ class-name '?) (x)
+     (& (%native x " instanceof " ,(compiled-function-name-string class-name))
+        x)))
+
+(def-js-transpiler-macro %method-body (class-name &body body)
+  (!= (href (defined-classes) class-name)
+    `(%thisify ,class-name
+       (macrolet ((super (&rest args)
+                   `((slot-value ,(car (class-base !)) 'call) this ,,@args)))
+         ,@body))))
+
+(def-js-transpiler-macro %constructor-body (class-name base args body)
+  `(%block
+     ,@body
+     this))
+
 (def-js-transpiler-macro slot-value (place slot)
   (?
     (quote? slot)
@@ -75,9 +96,6 @@
      (when x
        (| ,@(@ [`(%== (%js-typeof x) ,_)]
                (ensure-list types))))))
-
-;(def-js-transpiler-macro %href (hash key)
-;  `(aref ,hash ,key))
 
 (def-js-transpiler-macro undefined? (x)
   `(%== "undefined" (%js-typeof ,x)))
