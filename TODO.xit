@@ -26,6 +26,7 @@ Parsers
 
 [?] Native PHP closures.  Need to research the implications first.
 [?] LML2XML compiler
+[?] Switch from Markdown to RST format.
 
 Bugs
 [ ] !.. Check TERPRI at end of DUMP-SYSTEM.

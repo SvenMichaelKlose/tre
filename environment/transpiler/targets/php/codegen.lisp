@@ -54,23 +54,22 @@
 
 ;;;; FUNCTIONS
 
+(fn codegen-php-function-0 (name fi body)
+  `(,*terpri*
+    ,(funinfo-comment fi)
+    "function " ,name ,@(php-argument-list (funinfo-args fi)) ,*terpri*
+    "{" ,*terpri*
+       ,@(!? (funinfo-globals fi)
+             (php-line "global " (pad (@ #'php-dollarize !) ", ")))
+       ,@body
+       ,(php-line "return $" *return-id*)
+    "}" ,*terpri*))
+
 (fn codegen-php-function (x)
-  (with (fi             (lambda-funinfo x)
-         name           (funinfo-name fi)
-         num-locals     (length (funinfo-vars fi))
-         compiled-name  (compiled-function-name name))
+  (with (fi    (lambda-funinfo x)
+         name  (funinfo-name fi))
     (developer-note "#'~A~%" name)
-    `(,*terpri*
-      ,(funinfo-comment fi)
-      "function " ,compiled-name
-                  ,@(php-argument-list (funinfo-args fi))
-                  ,*terpri*
-      "{" ,*terpri*
-         ,@(!? (funinfo-globals fi)
-               (php-line "global " (pad (@ #'php-dollarize !) ", ")))
-         ,@(lambda-body x)
-         ,(php-line "return $" *return-id*)
-      "}" ,*terpri*)))
+    (codegen-php-function-0 (compiled-function-name name) fi (lambda-body x))))
 
 (def-php-codegen function (&rest x)
   (? .x
@@ -266,6 +265,29 @@
 (def-php-codegen %php-class-tail ()
   `(%native "}" ""))
 
+(fn php-class-slot-flags (x)
+  (pad (@ [downcase (symbol-name _)] (%slot-flags x))))
+
+(fn php-class-slot-member (cls x)
+  (… (| (php-class-slot-flags x)
+        "var")
+     " $" (%slot-name x.)))
+
+(fn php-class-slot-method (cls x)
+  `(,@(php-class-slot-flags x) " "
+    ,@(codegen-php-function-0 (%slot-name x.) (lambda-funinfo .x.)
+                              (lambda-body .x.))))
+
+(fn php-class-slot (cls x)
+  (? (eq (%slot-type x.) :member)
+     (php-class-member cls x)
+     (php-class-method cls x)))
+
+(def-php-codegen %collection (which &rest items)
+  (!= (href (defined-classes) .which.)
+    `((%php-class-head ,.which.)
+      ,@(+@ [php-class-slot ! _] items)
+      (%php-class-tail))))
 
 ;;;; GLOBAL VARIABLES
 
