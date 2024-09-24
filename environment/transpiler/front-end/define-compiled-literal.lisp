@@ -6,7 +6,7 @@
               (aprog1 ,maker
                 (unless (funinfo-var? (global-funinfo) !)
                   (funinfo-var-add (global-funinfo) !))
-                ,@(& decl-maker
+                ,@(when decl-maker
                      `((push (~> ,decl-maker !)
                              (compiled-decls))))
                 (push `(= ,,! ,(… 'quasiquote init-maker))

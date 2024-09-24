@@ -13,10 +13,8 @@
 
 (fn queue-pop (x)
   (prog1 .x.
-    (? (not ..x)
-       (rplaca x nil))
-    (? .x
-       (rplacd x ..x))))
+    (| (rplacd x ..x)
+       (rplaca x nil))))
 
 (fn queue-list (x) .x)
 (fn queue-front (x) .x.)
