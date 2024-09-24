@@ -146,10 +146,10 @@
 (fn expex-expr (x)
   (pcase x
     %=?            (expex-expr-%= x)
-    %go-nil?      (expex-%go-nil x)
+    %go-nil?       (expex-%go-nil x)
     %var?          (expex-var x)
     named-lambda?  (expex-lambda x)
-    %block?       (values nil (expex-body .x))
+    %block?        (values nil (expex-body .x))
     unexpex-able?  (values nil (… x))
     (with ((moved new-expr) (expex-move-args (expex-argexpand x)))
       (values moved (… new-expr)))))

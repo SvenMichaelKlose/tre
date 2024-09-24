@@ -260,7 +260,7 @@
 
 (defmacro transpiler-getter-not-global (name &body body)
   `(fn ,($ 'transpiler- name) (tr x)
-       ,@body))
+     ,@body))
 
 (defmacro transpiler-getter (name &body body)
   `(progn
@@ -381,7 +381,7 @@
   (& (transpiler-disabled-pass? tr x)
      (error "Pass ~A already disabled." x))
   (& (optional-pass? x)
-     (error "Pass ~A is optional. Don't enable it instead of disabling it." x))
+     (error "Pass ~A is optional.  Enable it instead of disabling it." x))
   (= (transpiler-disabled-passes tr)
      (. (make-keyword x) (transpiler-disabled-passes tr))))
 
