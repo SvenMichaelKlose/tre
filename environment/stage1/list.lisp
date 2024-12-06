@@ -145,7 +145,7 @@
     (*> #'mapcar func lists)))
 
 (fn mapcan (func &rest lists)
-  (*> #'nconc (*> #'mapcar func lists)))
+  (*> #'append (*> #'mapcar func lists)))
 
 (fn member-if (pred &rest lsts)
   (dolist (i lsts)
