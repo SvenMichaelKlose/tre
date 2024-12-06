@@ -144,9 +144,6 @@
       (*> #'mapcar func (mapcar #'array-list lists))
     (*> #'mapcar func lists)))
 
-(fn mapcan (func &rest lists)
-  (*> #'append (*> #'mapcar func lists)))
-
 (fn member-if (pred &rest lsts)
   (dolist (i lsts)
     (do ((j i .j))
