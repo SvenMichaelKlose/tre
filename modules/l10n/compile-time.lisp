@@ -1,6 +1,7 @@
 (var *compile-time-l10ns* (make-hash-table :test #'eq))
 (var *used-l10ns* (make-hash-table :test #'eq))
 (var *l10n-package* nil)
+(var *available-languages* '(:en))
 
 (@ (i *available-languages*)
   (= (href *compile-time-l10ns* (make-keyword i))
