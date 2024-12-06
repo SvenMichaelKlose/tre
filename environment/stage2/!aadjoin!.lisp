@@ -1,4 +1,6 @@
-(macro !aadjoin! (key init new-cdr al &key (test #'equal))
-  `(!? (assoc key al :test ,test)
-       new-cdr
-       (acons! key init al)))
+(defmacro !aadjoin! (key init update al &key (test #'equal))
+  (with-gensym g-key
+    `(with (,g-key ,key)
+       (!? (assoc ,g-key ,al :test ,test)
+           ,update
+           (acons! ,g-key ,init ,al)))))
