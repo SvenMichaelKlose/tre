@@ -12,7 +12,7 @@
 (env-load "stage1/prog1.lisp")
 (env-load "stage1/let.lisp")
 (env-load "stage1/queue.lisp")
-(env-load "stage1/mapcar.lisp")
+(env-load "stage1/map.lisp")
 (env-load "stage1/do.lisp")
 (env-load "stage1/dolist.lisp")
 (env-load "stage1/anaphoric.lisp")
