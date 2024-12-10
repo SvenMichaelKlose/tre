@@ -63,5 +63,5 @@
         (lml2xml-atom s x))))
 
 (fn lml2xml (x &optional (str nil))
-  (with-default-stream s str
+  (with-default-stream s str *standard-output*
     (lml2xml-0 s x)))

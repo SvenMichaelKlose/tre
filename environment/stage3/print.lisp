@@ -255,7 +255,7 @@
       (%error "Don't know how to print object."))))
 
 (fn late-print (x &optional (str *standard-output*) &key (print-info (make-print-info)))
-  (with-default-stream s str
+  (with-default-stream s str *standard-output*
     (? (& (cons? x)
           (cons? x.))
        (%with-parens s print-info

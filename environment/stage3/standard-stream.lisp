@@ -1,7 +1,7 @@
 (fn make-standard-stream ()
   (make-stream
-      :fun-in  #'((str eof) (%read-char nil nil))
-      :fun-out #'((c str) (%princ c nil))))
+      :fun-in  #'((str eof) (%read-char *standard-input* nil))
+      :fun-out #'((c str) (%princ c *standard-output*))))
 
 (var *standard-output* (make-standard-stream))
 (var *standard-input* (make-standard-stream))

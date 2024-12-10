@@ -98,7 +98,7 @@
   (in? (char-code x) 10 13))
 
 (fn read-line (&optional (str *standard-input*) (eof nil))
-  (with-default-stream nstr str
+  (with-default-stream nstr str *standard-input*
     (with-queue q
       (while (!? (peek-char nstr eof)
                  (not (cr-or-lf? !)))
@@ -114,7 +114,7 @@
           (list-string !)))))
 
 (fn read-all-lines (&optional (str *standard-input*) (eof nil))
-  (with-default-stream nstr str
+  (with-default-stream nstr str *standard-input*
     (with-queue q
       (awhile (read-line nstr eof)
               (queue-list q)
