@@ -5,11 +5,9 @@
     x))
 
 (defmacro with-default-stream (nstr str &body body)
-  (with-gensym (g body-result)
-    `(with (,g            ,str
-            ,nstr         (default-stream ,g)
-            ,body-result  (progn
-                            ,@body))
-       (? ,g
-          ,body-result
-          (get-stream-string ,nstr)))))
+  `(with (,g     ,str
+          ,nstr  (default-stream ,g))
+     (? ,g
+        (progn
+          ,@body)
+        (get-stream-string ,nstr))))

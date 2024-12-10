@@ -1,83 +1,81 @@
-Changes relative to tre-0.20:
-  * CL: *ARGV* has the command-line arguments.
-  * DEFSTRUCT: Generated macro DEF-name does not require the first argument
-    to be of the structs name any more.
-  * Inside methods package "GLOBAL" now tells that a symbol should not be
-    thisified, allowing to access the symbol of the same name outside the
-    class if it's being used as a method name already.
-    E.g.: If you have a method named AREF and you want to access the global
-    AREF function, just write 'global:aref' in the function call.
-  * NEW without arguments does not create a JSON object but a standard object.
-    Use MAKE-JSON-OBJECT.
-  * AREF does not work an strings anymore. Use CHAR.
-  * New abbreviating macros:
-       …: LIST
-      *>: APPLY
-      ~>: FUNCALL
-      +@: MAPCAN
-      @n: MAPTIMES
-  * PHP classes: array accessors may be overloaded by members AREF, =-AREF and
-    DELETE-AREF.  PHP requires them all to be there if used.
-  * Added VECTOR?.
-  * EVERY much faster on lists.
-  * Added DIRECTORY to get directory lists.
-  * Added DUMP to CL target.
-  * Added GETENV.
-  * Added standard set functions SET-DIFFERENCE,
-    SET-EXCLUSIVE-OR and SUBSET?.
-  * New ARGUMENTS returns command-line arguments.
-  * New GETENV returns environment variables.
-  * File ~/.tre.sh is shell evaluated to update environment variables
-    before launching tré.
-  * JS class methods may be declared static.
-  * PHP class members and methods may be declared static,
-    protected or private.
-  * Return values of constructors are ignored.
-  * PHP classes may inherit.
-  * Removed obsolete JavaScript DOM features:
-    * GET-CANVAS-BY-CLASS-NAME
-    * ancestor getters
-    * FORM, IFRAME and VIDEO element utilities.
-  * TRE-ELEMENT:
-    * All event methods have been replaced by method ON, like
-      done in jQuery.
-    * Historic class, ID and name attribute methods have been
-      removed.
-    * General attribute accessors have been replaced by methods
-      ATTR, ATTR? and ATTRS.
-    * Removed opacity setter and rotation.
-    * Accessor CSS replaces all other style accessors.
-  * LOAD-STRING is now READ-FROM-STRING.
-  * CONCAT-STRINGTREE is now FLATTEN.
-  * QUASIQUOTE-SPLICE turns JavaScript objects into keyword/
-    value lists.
-  * New MAKE-JS-PROJECT and MAKE-PHP-PROJECTS compile with
-    all available modules for each target.
-  * READ-SYMBOL: Vertical bar '|' starts symbols with no
-    case conversion, also allowing special characters until
-    the next vertical bar.  '\' is the escape character.
-  * Fixed(?) base64 functions.
-  * Fixed =-REF.
-  * Set *ASSERT?* to T by default.
-  * Moved external modules back in.  Their separate
-    repositories on Github will be removed.
+# [current]
 
-Changes of tre-0.20 relative to tre-0.19:
-  * Works with PHP-8.
-  * SUBSEQ (JS/PHP): Allow strings of any length.  (Ugly
-    hack from the old days.)
-  * @, DYNAMIC-MAP return lists of arguments are arrays.
-  * PAD accepts arrays.
-  * Function definitions: single argument does not have to
-    be put in a list.
-  * REF: New functions to look up from alists, arrays, hash
-    tables and objects.
-  * ^ is now synonymous for REF.  (It was for FN.)
-  * ACCCENT-CIRCONFLEX has been removed.
-  * ENSURE-LIST: Do not put NIL into a list.
-  * ENSURE-ARRAY: New function to convert lists into arrays.
-  * =-ELT has been fixed.
-  * FORMAT supports ~X to print hexadecimals. (Not complete.)
+## Environment
+
+* END-OF-FILE?: Removed in favour of EOF arguments for reading functions.
+* DEFSTRUCT: Generated macro DEF-name does not require the first argument
+  to be of the structs name any more.
+* Inside methods package "GLOBAL" now tells that a symbol should not be
+  thisified, allowing to access the symbol of the same name outside the
+  class if it's being used as a method name already.
+  E.g.: If you have a method named AREF and you want to access the global
+  AREF function, just write 'global:aref' in the function call.
+* NEW without arguments does not create a JSON object but a standard object.
+  Use MAKE-JSON-OBJECT.
+* AREF does not work an strings anymore. Use CHAR.
+* New abbreviating macros:
+     …: LIST
+    *>: APPLY
+    ~>: FUNCALL
+    +@: MAPCAN
+    @n: MAPTIMES
+* PHP classes: array accessors may be overloaded by members AREF, =-AREF and
+  DELETE-AREF.  PHP requires them all to be there if used.
+* Added VECTOR?.
+* EVERY much faster on lists.
+* Added DIRECTORY to get directory lists.
+* Added DUMP to CL target.
+* Added standard set functions SET-DIFFERENCE,
+  SET-EXCLUSIVE-OR and SUBSET?.
+* New GETENV returns environment variables.
+* File ~/.tre.sh is shell evaluated to update environment variables
+  before launching tré.
+* JS class methods may be declared static.
+* PHP class members and methods may be declared static, protected or private.
+* Return values of constructors are ignored.
+* PHP classes may inherit.
+* Removed obsolete JavaScript DOM features:
+  * GET-CANVAS-BY-CLASS-NAME
+  * ancestor getters
+  * FORM, IFRAME and VIDEO element utilities.
+* TRE-ELEMENT:
+  * All event methods have been replaced by method ON, like done in
+    jQuery.
+  * Historic class, ID and name attribute methods have been removed.
+  * General attribute accessors have been replaced by methods ATTR,
+    ATTR? and ATTRS.
+  * Removed opacity setter and rotation.
+  * Accessor CSS replaces all other style accessors.
+* LOAD-STRING is now READ-FROM-STRING.
+* CONCAT-STRINGTREE is now FLATTEN.
+* QUASIQUOTE-SPLICE turns JavaScript objects into keyword/ value lists.
+* New MAKE-JS-PROJECT and MAKE-PHP-PROJECTS compile with all available
+  modules for each target.
+* READ-SYMBOL: Vertical bar '|' starts symbols with no
+  case conversion, also allowing special characters until
+  the next vertical bar.  '\' is the escape character.
+* Fixed(?) base64 functions.
+* Fixed =-REF.
+* Set *ASSERT?* to T by default.
+* Moved external modules back in.  Their separate
+  repositories on Github will be removed.
+* Works with PHP-8.
+* SUBSEQ (JS/PHP): Allow strings of any length.  (Ugly
+  hack from the old days.)
+* @, DYNAMIC-MAP return lists of arguments are arrays.
+* PAD accepts arrays.
+* Function definitions: single argument does not have to
+  be put in a list.
+* REF: New functions to look up from alists, arrays, hash
+  tables and objects.
+* ^ is now synonymous for REF.  (It was for FN.)
+* ACCCENT-CIRCONFLEX has been removed.
+* ENSURE-LIST: Do not put NIL into a list.
+* ENSURE-ARRAY: New function to convert lists into arrays.
+* =-ELT has been fixed.
+* FORMAT supports ~X to print hexadecimals. (Not complete.)
+* CL: *ARGV* has the command-line arguments.
+
 
 Changes of tre-0.19 relative to tre-0.18:
   * Bug-fix: jump tag optimizer translated any number.
