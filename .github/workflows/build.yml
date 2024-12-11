@@ -1,0 +1,26 @@
+name: Build and test on Ubuntu
+
+on: [push, pull_request]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+        fetch-depth: 0
+
+    - name: Update repos
+      run: sudo apt-get update -y
+
+    - name: Set up prerequisites
+      run: sudo apt-get install -y sbcl
+
+    - name: Build
+      run: sudo ./make.sh release
+
+    - name: Install
+      run: sudo ./make.sh install
