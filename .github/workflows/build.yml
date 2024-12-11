@@ -20,7 +20,7 @@ jobs:
       run: sudo apt-get install -y sbcl
 
     - name: Build
-      run: TRE_DEVELOPMENT=1 sudo ./make.sh boot
+      run: TRE_DEVELOPMENT=1 TRE_DEBUG=1 ./make.sh boot
 
     - name: Install
       run: sudo ./make.sh install
