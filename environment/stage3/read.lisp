@@ -2,72 +2,72 @@
   (prog1 (stream-peeked-char str)
     (= (stream-peeked-char str) nil)))
 
-(fn read-char-0 (str eof)
+(fn read-char-0 (str)
   (| (read-peeked-char str)
-     (= (stream-last-char str) (~> (stream-fun-in str) str eof))))
+     (= (stream-last-char str) (~> (stream-fun-in str) str))))
 
-(fn read-char (&optional (str *standard-input*) (eof nil))
-  (%track-location (stream-input-location str) (read-char-0 str eof)))
+(fn read-char (&optional (str *standard-input*))
+  (%track-location (stream-input-location str) (read-char-0 str)))
 
-(fn peek-char (&optional (str *standard-input*) (eof nil))
+(fn peek-char (&optional (str *standard-input*))
   (| (stream-peeked-char str)
-     (= (stream-peeked-char str) (read-char-0 str eof))))
+     (= (stream-peeked-char str) (read-char-0 str))))
 
-(fn read-chars (in num &optional (eof nil))
-  (list-string (@n [read-char in eof] num)))
+(fn read-chars (in num)
+  (list-string (@n [read-char in] num)))
 
-(fn read-file (name &optional (eof nil))
+(fn read-file (name)
   (with-open-file in-stream (open name :direction 'input)
-    (read-all in-stream eof)))
+    (read-all in-stream)))
 
-(fn read-hex (str &optional (eof nil))
+(fn read-hex (str)
   (with (f [!? (& (peek-char str)
-                  (!= (char-upcase (peek-char str eof))
+                  (!= (char-upcase (peek-char str))
                     (& (hex-digit? !)
                        !)))
                (progn
-                 (read-char str eof)
+                 (read-char str)
                  (f (number+ (* _ 16)
                              (- (char-code !)
                                 (? (digit? !)
                                    (char-code #\0)
                                    (- (char-code #\A) 10))))))
                _])
-    (| (hex-digit? (peek-char str eof))
+    (| (hex-digit? (peek-char str))
        (error "Illegal character '~A' at begin of hexadecimal number."
-              (peek-char str eof)))
+              (peek-char str)))
     (prog1
       (f 0)
-      (& (symbol-char? (peek-char str eof))
+      (& (symbol-char? (peek-char str))
          (error "Illegal character '~A' in hexadecimal number."
-                (peek-char str eof))))))
+                (peek-char str))))))
 
-(fn read-binary (&optional (in *standard-input*) (eof nil))
+(fn read-binary (&optional (in *standard-input*))
   (let n 0
-    (while (!? (peek-char in eof)
+    (while (!? (peek-char in)
                (in? ! #\0 #\1))
            n
-      (= n (bit-or (<< n 1) (- (read-byte in eof) (char-code #\0)))))))
+      (= n (bit-or (<< n 1) (- (read-byte in) (char-code #\0)))))))
 
-(fn peek-byte (i &optional (eof nil))
-  (!= (peek-char i eof)
+(fn peek-byte (i)
+  (!= (peek-char i)
     (& ! (char-code !))))
 
-(fn read-byte (i &optional (eof nil))
-  (!= (read-char i eof)
+(fn read-byte (i)
+  (!= (read-char i)
     (& ! (char-code !))))
 
-(fn read-word (i &optional (eof nil))   ; TODO: Flexible endianess.
-  (!= (read-byte i eof)
+(fn read-word (i)   ; TODO: Flexible endianess.
+  (!= (read-byte i)
     (+ (| ! (return))
-       (<< (| (read-byte i eof)
+       (<< (| (read-byte i)
               (return !))
            8))))
 
-(fn read-dword (i &optional (eof nil))
-  (!= (read-word i eof)
+(fn read-dword (i)
+  (!= (read-word i)
     (+ (| ! (return))
-       (<< (| (read-word i eof)
+       (<< (| (read-word i)
               (return !))
            16))))
 
@@ -82,80 +82,72 @@
   (write-word (bit-and x #xffff) o)
   (write-word (>> x 16) o))
 
-(fn read-byte-string (i num &optional (eof nil))
-  (list-string (@n [read-byte i eof] num)))
+(fn read-byte-string (i num)
+  (list-string (@n [read-byte i] num)))
 
 (fn gen-read-array (i reader num)
   (list-array (@n [~> reader i] num)))
 
-(fn read-byte-array (i num &optional (eof nil))
-  (gen-read-array i [read-byte _ eof] num))
+(fn read-byte-array (i num)
+  (gen-read-array i #'read-byte num))
 
-(fn read-word-array (i num &optional (eof nil))
-  (gen-read-array i [read-word _ eof] num))
+(fn read-word-array (i num)
+  (gen-read-array i #'read-word num))
 
 (fn cr-or-lf? (x)
   (in? (char-code x) 10 13))
 
-(fn read-line (&optional (str *standard-input*) (eof nil))
+(fn read-line (&optional (str *standard-input*))
   (with-default-stream nstr str
     (with-queue q
-      (while (!? (peek-char nstr eof)
+      (while (!? (peek-char nstr)
                  (not (cr-or-lf? !)))
-             (!? (peek-char nstr eof)
+             (!? (peek-char nstr)
                  (when (cr-or-lf? !)
-                   (enqueue q (read-char nstr eof))
-                   (let-when c (peek-char nstr eof)
+                   (enqueue q (read-char nstr))
+                   (let-when c (peek-char nstr)
                      (& (cr-or-lf? c)
                         (not (character== c !))
-                        (enqueue q (read-char nstr eof))))))
-        (enqueue q (read-char nstr eof)))
+                        (enqueue q (read-char nstr))))))
+        (enqueue q (read-char nstr)))
       (!? (queue-list q)
           (list-string !)))))
 
-(fn read-all-lines (&optional (str *standard-input*) (eof nil))
+(fn read-all-lines (&optional (str *standard-input*))
   (with-default-stream nstr str
     (with-queue q
-      (awhile (read-line nstr eof)
+      (awhile (read-line nstr)
               (queue-list q)
         (enqueue q !)))))
 
-(fn ahead? (what str)
-  (!= (peek-char str)
-    (& (? (function? what)
-          (~> what !)
-          (eql what !))
-       !)))
-
-(fn read-decimal-places-0 (str v s eof)
+(fn read-decimal-places-0 (str v s)
   (? (ahead? #'digit? str)
      (read-decimal-places-0 str
-                            (+ v (* s (digit-number (read-char str eof))))
-                            (/ s 10)
-                            eof)
+                            (+ v (* s (digit-number (read-char str))))
+                            (/ s 10))
      v))
 
-(fn read-decimal-places (&optional (str *standard-input*) (eof nil))
+(fn read-decimal-places (&optional (str *standard-input*))
   (& (ahead? #'digit? str)
-     (read-decimal-places-0 str 0 0.1 eof)))
+     (read-decimal-places-0 str 0 0.1)))
 
-(fn read-integer-0 (str v eof)
+(fn read-integer-0 (str v)
   (? (ahead? #'digit? str)
-     (read-integer-0 str (+ (* v 10) (digit-number (read-char str eof))) eof)
+     (read-integer-0 str (+ (* v 10) (digit-number (read-char str))))
      v))
 
-(fn read-integer (&optional (str *standard-input*) (eof nil))
+(fn read-integer (&optional (str *standard-input*))
   (& (ahead? #'digit? str)
-     (integer (read-integer-0 str 0 eof))))
+     (integer (read-integer-0 str 0))))
 
-(fn read-number (&optional (str *standard-input*) (eof nil))
+(fn read-number (&optional (str *standard-input*))
   (* (? (ahead? #\- str)
-        (prog1 -1 (read-char str eof))
+        (prog1 -1 (read-char str))
         1)
-     (+ (read-integer str eof)
+     (+ (read-integer str)
         (| (& (ahead? #\. str)
-              (read-char str eof)
-              (read-decimal-places str eof))
+              (read-char str)
+              (read-decimal-places str))
            0))))
 
 (fn token-is-quote? (x)
@@ -177,6 +169,13 @@
      (> (char-code x) 32)
      (not (special-char? x))))
 
+(fn ahead? (what str)
+  (!= (peek-char str)
+    (& (? (function? what)
+          (~> what !)
+          (eql what !))
+       !)))
+
 (fn skip-comment (str)
   (awhen (read-char str)
     (? (== (char-code !) 10)
@@ -190,56 +189,56 @@
     (read-char str)
     (skip-spaces str)))
 
-(fn seek-char (str eof)
+(fn seek-char (str)
   (skip-spaces str)
-  (peek-char str eof))
+  (peek-char str))
 
-(fn read-symbol (str eof)
+(fn read-symbol (str)
   (with (f [0 & (ahead? #'symbol-char? str)
-                (. (read-char str eof) (f))]
-         f2 [0 unless (| (not (peek-char str eof))
+                (. (read-char str) (f))]
+         f2 [0 unless (| (not (peek-char str))
                          (ahead? #\| str))
                  (? (ahead? #\\ str)
                     (progn
-                      (read-char str eof)
-                      (. (read-char str eof) (f2)))
-                    (. (read-char str eof) (f2)))])
+                      (read-char str)
+                      (. (read-char str) (f2)))
+                    (. (read-char str) (f2)))])
     (? (ahead? #\| str)
        (progn
-         (read-char str eof)
-         (when (whitespace? (peek-char str eof))
+         (read-char str)
+         (when (whitespace? (peek-char str))
            (return (… #\|)))
          (prog1 (f2)
            (? (ahead? #\| str)
-              (read-char str eof)
+              (read-char str)
               (error "Expected end of symbol name '|' instead of '~A'."
-                     (peek-char str eof)))))
-       (unless (special-char? (seek-char str eof))
+                     (peek-char str)))))
+       (unless (special-char? (seek-char str))
          (filter #'char-upcase (f))))))
 
-(fn read-symbol-and-package (str eof)
-  (!= (read-symbol str eof)
+(fn read-symbol-and-package (str)
+  (!= (read-symbol str)
     (? (ahead? #\: str)
        (progn
-         (read-char str eof)
+         (read-char str)
          (values (| (& ! (list-string !))
                     "KEYWORD")
-                 (read-symbol str eof)))
+                 (read-symbol str)))
        (values nil !))))
 
-(fn read-string (str eof)
-  (with (f [0 != (read-char str eof)
+(fn read-string (str)
+  (with (f [0 != (read-char str)
                (unless (eql ! #\")
                  (. (? (eql ! #\\)
-                       (read-char str eof)
+                       (read-char str)
                        !)
                     (f)))})
     (list-string (f))))
 
-(fn read-comment-block (str eof)
-  (| (& (eql #\| (read-char str eof))
+(fn read-comment-block (str)
+  (| (& (eql #\| (read-char str))
         (ahead? #\# str))
-    (read-comment-block str eof)))
+    (read-comment-block str)))
 
 (fn list-number? (x)
   (& (| (& .x
@@ -252,8 +251,8 @@
                .x)
         t)))
 
-(fn read-token (str eof)
-  (awhen (read-symbol-and-package str eof)
+(fn read-token (str)
+  (awhen (read-symbol-and-package str)
     (with ((pkg sym) !)
       (values (? (& sym
                     (not .sym)
@@ -263,7 +262,7 @@
                     (? (list-number? sym)
                        :number
                        :symbol)
-                    (case (read-char str eof)
+                    (case (read-char str)
                       #\(  :parenthesis-open
                       #\)  :parenthesis-close
                       #\[  :bracket-open
@@ -275,15 +274,15 @@
                       #\"  :dblquote
                       #\,  (? (ahead? #\@ str)
                               (progn
-                                (read-char str eof)
+                                (read-char str)
                                 :quasiquote-splice)
                               :quasiquote)
-                      #\#  (case (read-char str eof)
+                      #\#  (case (read-char str)
                              #\\  :char
                              #\x  :hexnum
                              #\'  :function
                              #\(  :array
-                             #\|  (read-comment-block str eof)
+                             #\|  (read-comment-block str)
                              (error "Reader macro #~A unsupported." !))
                       -1   :eof)))
               (| pkg *package*)
@@ -310,16 +309,16 @@
        (read-slot-value !)
        (read-make-symbol sym pkg))))
 
-(fn read-atom (str token pkg sym eof)
+(fn read-atom (str token pkg sym)
   (case token :test #'eq
-    :dblquote   (read-string str eof)
-    :char       (read-char str eof)
+    :dblquote   (read-string str)
+    :char       (read-char str)
     :number     (with-stream-string s sym
-                  (read-number s eof))
-    :hexnum     (read-hex str eof)
-    :array      (. 'array (read-cons-slot str eof))
-    :function   `(function ,(read-expr str eof))
-    :symbol     (read-symbol-or-slot-value pkg sym eof)
+                  (read-number s))
+    :hexnum     (read-hex str)
+    :array      (. 'array (read-cons-slot str))
+    :function   `(function ,(read-expr str))
+    :symbol     (read-symbol-or-slot-value pkg sym)
     (? (%read-closing-parens? token)
        (error "Unexpected closing ~A."
               (case token
@@ -328,10 +327,10 @@
                 :bracket-close      "bracket"))
        (error "Closing bracket missing."))))
 
-(fn read-quote (str token eof)
-  (… (make-symbol (symbol-name token)) (read-expr str eof)))
+(fn read-quote (str token)
+  (… (make-symbol (symbol-name token)) (read-expr str)))
 
-(fn read-cons (str eof)
+(fn read-cons (str)
   (with (err
            [!= (stream-input-location str)
              (error "~A at line ~A, column ~A in file ~A."
@@ -342,58 +341,58 @@
          f #'((token pkg sym)
                (unless (%read-closing-parens? token)
                  (. (case token
-                      :parenthesis-open  (read-cons-slot str eof)
-                      :bracket-open      (. 'brackets (read-cons-slot str eof))
-                      :brace-open        (. 'braces   (read-cons-slot str eof))
+                      :parenthesis-open  (read-cons-slot str)
+                      :bracket-open      (. 'brackets (read-cons-slot str))
+                      :brace-open        (. 'braces   (read-cons-slot str))
                       (? (token-is-quote? token)
-                         (read-quote str token eof)
-                         (read-atom str token pkg sym eof)))
-                    (!? (read-token str eof)
+                         (read-quote str token)
+                         (read-atom str token pkg sym)))
+                    (!? (read-token str)
                         (with ((token pkg sym) !)
                           (? (eq :dot token)
-                             (with (x                (read-expr str eof)
-                                    (token pkg sym)  (read-token str eof))
+                             (with (x                (read-expr str)
+                                    (token pkg sym)  (read-token str))
                                (| (%read-closing-parens? token)
                                   (err "Only one value allowed after dotted cons"))
                                x)
                              (f token pkg sym)))
                         (err "Closing bracket missing")))))
          (token pkg sym)
-           (read-token str eof))
+           (read-token str))
     (? (eq token :dot)
-       (. 'cons (read-cons str eof))
+       (. 'cons (read-cons str))
        (f token pkg sym))))
 
-(fn read-cons-slot (str eof)
-  (!= (read-cons str eof)
+(fn read-cons-slot (str)
+  (!= (read-cons str)
     (? (ahead? #\. str)
        (progn
-         (read-char str eof)
-         (with ((token pkg sym) (read-token str eof))
+         (read-char str)
+         (with ((token pkg sym) (read-token str))
            (read-slot-value (… ! sym))))
        !)))
 
-(fn read-expr (str eof)
-  (with ((token pkg sym) (read-token str eof))
+(fn read-expr (str)
+  (with ((token pkg sym) (read-token str))
     (case token
       nil                nil
       :eof               nil
-      :parenthesis-open  (read-cons-slot str eof)
-      :bracket-open      (. 'brackets (read-cons-slot str eof))
-      :brace-open        (. 'braces   (read-cons-slot str eof))
+      :parenthesis-open  (read-cons-slot str)
+      :bracket-open      (. 'brackets (read-cons-slot str))
+      :brace-open        (. 'braces   (read-cons-slot str))
       (? (token-is-quote? token)
-         (read-quote str token eof)
-         (read-atom str token pkg sym eof)))))
+         (read-quote str token)
+         (read-atom str token pkg sym)))))
 
-(fn read (&optional (str *standard-input*) (eof nil))
-  (& (seek-char str eof)
-     (read-expr str eof)))
+(fn read (&optional (str *standard-input*))
+  (& (seek-char str)
+     (read-expr str)))
 
-(fn read-all (str &optional (eof nil))
-  (& (seek-char str eof)
-     (. (read str eof)
-        (read-all str eof))))
+(fn read-all (str)
+  (& (seek-char str)
+     (. (read str)
+        (read-all str))))
 
-(fn read-from-string (x &optional (eof nil))
+(fn read-from-string (x)
   (with-stream-string s x
-    (read-all s eof)))
+    (read-all s)))

@@ -12,6 +12,7 @@
 
   fun-in
   fun-out
+  fun-eof
 
   (last-char        nil)
   (peeked-char      nil)
@@ -63,8 +64,11 @@
 
 (fn (= stream-track-input-location?) (v x)
   (= (stream-location-track? (stream-input-location x)) v))
-
 (fn fresh-line? (&optional (str *standard-output*))
   (!= (stream-output-location str)
     (& (stream-location-track? !)
        (== 1 (stream-location-column !)))))
+
+(fn end-of-file? (&optional (str *standard-input*))
+  (!? (stream-fun-eof str)
+      (~> ! str)))

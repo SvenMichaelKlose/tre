@@ -3,7 +3,8 @@
   fd-stream
   path
   flags
-  mode)
+  mode
+  (eof? nil))
 
 (fn read-flags? (flags)
   (| (string? flags)
@@ -30,6 +31,9 @@
 
 (fn %force-output (fd)
   (fs.fflush-sync (nodejs-file-fd-block fd)))
+
+(fn %feof (fd)
+  (nodejs-file-eof? fd))
 
 (fn %read-char (fd &optional (eof nil))
   (!= ((nodejs-file-fd-stream fd).read)
