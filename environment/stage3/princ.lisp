@@ -1,5 +1,5 @@
 (fn princ (x &optional (str *standard-output*))
-  (with-default-stream s str *standard-output*
+  (with-default-stream s str
     (?
       (number? x)
         (princ-number x s)

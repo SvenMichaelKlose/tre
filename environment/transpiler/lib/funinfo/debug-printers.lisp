@@ -2,7 +2,7 @@
   (reverse (butlast (funinfo-names fi))))
 
 (fn print-funinfo (fi &optional (str nil))
-  (with-default-stream s str *standard-output*
+  (with-default-stream s str
     (with (names [& _
                     (+ (*> #'+ (pad (@ #'symbol-name (ensure-list _)) " "))
                        *terpri*)])

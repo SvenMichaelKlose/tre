@@ -1,12 +1,12 @@
-(fn default-stream (x ststr)
+(fn default-stream (x)
   (case x
     nil  (make-string-stream)
-    t    stdstr
+    t    *standard-output*
     x))
 
-(defmacro with-default-stream (nstr str stdstr &body body)
+(defmacro with-default-stream (nstr str &body body)
   `(with (,g     ,str
-          ,nstr  (default-stream ,g stdstr))
+          ,nstr  (default-stream ,g))
      (? ,g
         (progn
           ,@body)

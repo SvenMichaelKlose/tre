@@ -5,7 +5,7 @@
                                        (external-stylesheets nil)
                                        (internal-stylesheet nil)
                                        (body nil))
-  (with-default-stream o out *standard-output*
+  (with-default-stream o out
     (format o "<!doctype html>~%")
     (lml2xml `(html
                 (head

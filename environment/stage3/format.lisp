@@ -1,5 +1,5 @@
 (fn format (str text &rest args)
-  (with-default-stream s str *standard-output*
+  (with-default-stream s str
     (with (processed-args 0
            err-missing
              #'(()
