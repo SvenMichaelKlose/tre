@@ -20,12 +20,10 @@
 (defbuiltin %fclose (stream)
   (CL:CLOSE stream))
 
-(let g (cl:gensym)
-  (defbuiltin %read-char (str &optional (eof nil))
-    (!= (CL:READ-BYTE (| str CL:*STANDARD-INPUT*) nil g)
-      (? (eq ! g)
-         (CL:CODE-CHAR !)
-         eof))))
+(defbuiltin %read-char (str)
+  (!= (CL:READ-BYTE (| str CL:*STANDARD-INPUT*) nil 'eof)
+    (unless (eq ! 'eof)
+      (CL:CODE-CHAR !))))
 
 (defbuiltin file-exists? (file-specifier)
   (& (CL:PROBE-FILE file-specifier)

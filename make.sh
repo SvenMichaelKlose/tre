@@ -56,7 +56,7 @@ install_it ()
 case $1 in
 core)
     echo "Booting environment…"
-    echo "(load \"boot-common.lisp\")" | $SBCL
+    $SBCL --script "boot-common.lisp"
 	;;
 
 genboot)

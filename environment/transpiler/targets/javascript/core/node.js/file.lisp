@@ -35,9 +35,10 @@
 (fn %feof (fd)
   (nodejs-file-eof? fd))
 
-(fn %read-char (fd &optional (eof nil))
+(fn %read-char (fd)
   (!= ((nodejs-file-fd-stream fd).read)
-    (? (| (not !)
-          (== 0 !.length))
-       eof
-       (aref ! 0))))
+    (when (| (not !)
+             (== 0 !.length))
+      (= (nodejs-file-eof? fd) t)
+      (return))
+    (aref ! 0)))
