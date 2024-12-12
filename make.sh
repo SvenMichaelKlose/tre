@@ -133,6 +133,7 @@ examples)
 all)
     echo "Making 'all'…"
     ./make.sh boot
+    ./make.sh install
     ./make.sh tests
     ./make.sh examples
     echo
