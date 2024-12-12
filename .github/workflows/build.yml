@@ -19,8 +19,16 @@ jobs:
     - name: Set up prerequisites
       run: sudo apt-get install -y sbcl
 
+    - name: Set up Github environment
+      id: setup_environment
+      run: |
+        SHORT_SHA=$(git rev-parse --short HEAD)
+        DATE=`date +"%Y-%m-%d"`
+        echo "TRE_DEVELOPMENT=1" >> $GITHUB_ENV
+        echo "TRE_DEBUG=1" >> $GITHUB_ENV
+
     - name: Build
-      run: TRE_DEVELOPMENT=1 TRE_DEBUG=1 ./make.sh boot
+      run: ./make.sh boot
 
     - name: Install
       run: sudo ./make.sh install
