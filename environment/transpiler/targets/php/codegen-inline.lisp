@@ -1,7 +1,9 @@
 ;(def-php-binary - "-")
 (def-php-binary / "/")
 (def-php-binary * "*")
-;(def-php-binary == "==") ; TODO: these will give us trouble with chars.
+; TODO: these will give us trouble with chars, if they haven't been
+; converted to numbers.
+;(def-php-binary == "==")
 ;(def-php-binary < "<")
 ;(def-php-binary > ">")
 (def-php-binary string== "==")
@@ -17,4 +19,5 @@
   x)
 
 (def-php-codegen tre_cons (x y)
-  `("new " ,(convert-identifier '__cons) " (" ,(php-dollarize x) ", " ,(php-dollarize y) ")"))
+  `("new " ,(convert-identifier '__cons)
+               "(" ,(php-dollarize x) ", " ,(php-dollarize y) ")"))

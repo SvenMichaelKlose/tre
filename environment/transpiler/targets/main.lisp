@@ -13,4 +13,4 @@
 (env-load "transpiler/targets/shared/transpiler-macros/defun.lisp")
 (env-load "transpiler/targets/shared/transpiler-macros/expand.lisp")
 (env-load "transpiler/targets/shared/transpiler-macros/labels.lisp")
-(env-load "transpiler/targets/shared/transpiler-macros/=-slot-value.lisp")
+(env-load "transpiler/targets/shared/transpiler-macros/slot-value.lisp")

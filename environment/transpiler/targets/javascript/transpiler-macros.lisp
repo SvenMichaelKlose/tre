@@ -56,14 +56,6 @@
 (def-js-transpiler-macro %fn (name args &body body)
   `(fn ,name ,args ,@body))
 
-(def-js-transpiler-macro slot-value (place slot)
-  (?
-    (quote? slot)
-      `(%slot-value ,place ,.slot.)
-    (string? slot)
-      `(%slot-value ,place ,slot)
-    `(%aref ,place ,slot)))
-
 (def-js-transpiler-macro bind (fun &rest args)
   `(%bind ,(? (slot-value? fun)
               .fun.

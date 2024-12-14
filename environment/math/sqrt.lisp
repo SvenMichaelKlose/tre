@@ -1,5 +1,3 @@
-; TODO: Move to math/?
-
 (fn close-enough? (x y precision)
   (> precision (abs (- x y))))
 

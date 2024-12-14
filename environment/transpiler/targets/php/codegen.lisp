@@ -251,6 +251,28 @@
           (convert-identifier (make-symbol (symbol-name n) "TRE"))
         n)))
 
+(def-php-codegen %=-slot-value (v x n)
+  `(%native
+     ,(php-dollarize x)
+     "->" ,(?
+             (%string? n)
+               .n.
+             (symbol? n)
+               (convert-identifier (make-symbol (symbol-name n) "TRE"))
+             n)
+     " = " ,(php-dollarize v)))
+
+(def-php-codegen %slot-value-var (x n)
+  `(%native
+     ,(php-dollarize x)
+     "->{" ,(php-dollarize n) "}"))
+
+(def-php-codegen %=-slot-value-var (v x n)
+  `(%native
+     ,(php-dollarize x)
+     "->{" ,(php-dollarize n) "}"
+     " = " ,(php-dollarize v)))
+
 
 ;;;; CLASSES
 

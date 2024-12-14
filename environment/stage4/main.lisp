@@ -11,6 +11,7 @@
 (env-load "stage4/hcache.lisp")
 (env-load "stage4/maptree.lisp")
 (env-load "stage4/pad.lisp")
+(env-load "stage4/reduce.lisp")
 (env-load "stage4/replace.lisp")
 (env-load "stage4/search.lisp")
 (env-load "stage4/trim.lisp")

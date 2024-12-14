@@ -1,4 +1,33 @@
-Changes relative to tre-0.20:
+# Changelog
+
+All notable changes to this project will be documented in
+this file.
+
+The format is based on
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+[Lisp manual](src/bin/lisp/doc/manual.md)
+
+
+## [v0.0.21]
+
+### Fixed
+
+  * Fixed first time install.
+  * Examples: Updated docker-compose configurations to version 3.
+  * JS/PHP: SLOT-VALUE works correctly with objects of both worlds.
+
+### Changed
+
+  * PHP: JSON-DECODE: Make stdClass objects, not arrays.
+  * HTTP-FUNCALL: Use JSON instead of XML weirdness.
+
+
+## Former NEWS entries
+
+Changes relative to tre-0.19:
   * CL: *ARGV* has the command-line arguments.
   * DEFSTRUCT: Generated macro DEF-name does not require the first argument
     to be of the structs name any more.
@@ -61,8 +90,6 @@ Changes relative to tre-0.20:
   * Set *ASSERT?* to T by default.
   * Moved external modules back in.  Their separate
     repositories on Github will be removed.
-
-Changes of tre-0.20 relative to tre-0.19:
   * Works with PHP-8.
   * SUBSEQ (JS/PHP): Allow strings of any length.  (Ugly
     hack from the old days.)
