@@ -22,6 +22,7 @@ and this project adheres to
 ### Changed
 
   * PHP: JSON-DECODE: Make stdClass objects, not arrays.
+  * HTTP-FUNCALL: Use JSON instead of XML weirdness.
 
 
 ## Former NEWS entries
