@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   app:
+    container_name: tre_examples_project_js_php
     build:
       context: ./docker/httpd
     links:
@@ -13,6 +14,7 @@ services:
       - appdata:/var/www/html:rw
 
   db:
+    container_name: tre_examples_project_js_php_db
     image: mysql:latest
     network_mode: bridge
     environment:
@@ -27,12 +29,14 @@ services:
 
 volumes:
   appdata:
+    name: tre_examples_project_js_php_appdata
     driver: local
     driver_opts:
       type: none
       o: bind
       device: ./
   dbdata:
+    name: tre_examples_project_js_php_dbdata
     driver: local
     driver_opts:
       type: none

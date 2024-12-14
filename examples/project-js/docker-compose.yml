@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   app:
+    container_name: tre_examples_project_js
     build:
       context: ./docker/httpd
     network_mode: bridge
@@ -12,6 +13,7 @@ services:
 
 volumes:
   appdata:
+    name: tre_examples_project_js_appdata
     driver: local
     driver_opts:
       type: none
