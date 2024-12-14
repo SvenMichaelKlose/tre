@@ -1,0 +1,14 @@
+compiled/
+environment/_build-date
+environment/_current-version
+environment/_git-revision
+environment/_release-date
+environment/stage5/json.lisp
+environment/transpiler/targets/common-lisp/core/builtin.lisp
+examples/project-js-php/compiled/
+examples/project-js/compiled/
+examples/project-php/compiled/
+log-make.lisp
+log-nodetests.lisp
+log-phptests.lisp
+tre.vim

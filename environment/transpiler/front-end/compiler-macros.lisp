@@ -36,9 +36,11 @@
          ,@(wrap-atoms !))))
 
 (def-compiler-macro setq (&rest args)
-  `(%block
-     ,@(@ [`(%= ,_. ,._.)]
-          (group args 2))))
+  (? ..args
+     `(%block
+        ,@(@ [`(%= ,_. ,._.)]
+             (group args 2)))
+     `(%= ,@args)))
 
 (def-compiler-macro ? (&body body)
   (with (tests (group body 2)
@@ -94,12 +96,12 @@
        (with-temporary *blocks* (. (. name end-tag) *blocks*)
          (with (b     (expander-expand *block-expander* body)
                 head  (butlast b)
-                tail  (last b))
+                tail  (car (last b)))
            `(%block
               ,@head
-              ,@(? (some-%go? tail.)
-                   tail
-                   `((%= ,*return-id* ,@tail)))
+              ,@(? (some-%go? tail)
+                   (list tail)
+                   `((%= ,*return-id* ,tail)))
               ,end-tag
               (identity ,*return-id*)))))
     `(identity nil)))

@@ -1,2 +1,3 @@
 (fn getenv (x)
-  (%aref process.env x))
+  (? (defined? process)
+     (%aref process.env x)))

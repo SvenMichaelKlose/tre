@@ -41,8 +41,8 @@
      (lml2dom-body e x doc)))
 
 (fn lml2dom-exec (parent x doc)
-  (& ...x
-     (error "%EXEC expects a single child only."))
+  (when ...x
+    (error "%EXEC expects a single child only."))
   (aprog1 (lml2dom ..x. :doc doc :parent parent)
     (~> (lml2dom-exec-function x) parent !)))
 
@@ -61,24 +61,24 @@
     (f .x)
     (=-%aref children attrs "children")
     (aprog1 (make-lml-component x. attrs)
-      (& parent
-         (parent.add !)))))
+      (when parent
+        (parent.add !)))))
 
 (fn lml2dom-expr (parent x doc)
-  (| (atom x.)
-     (lml2xml-error-tagname x))
-  (? (%exec? x)
-     (lml2dom-exec parent x doc)
-     (progn
-       (? (& (function? (symbol-function 'lml-component))
-             (lml-component-name? x.))
-          (awhen (lml2dom-expr-component parent x doc)
-            (return-from lml2dom-expr !)))
-       (let e (lml2dom-element x doc)
-         (& parent
-            (parent.add e))
-         (lml2dom-attr-or-body e .x doc)
-         e))))
+  (?
+    (cons? x.)
+      (lml2xml-error-tagname x)
+    (%exec? x)
+      (lml2dom-exec parent x doc)
+    (progn
+      (? (& (function? (symbol-function 'lml-component))
+            (lml-component-name? x.))
+         (awhen (lml2dom-expr-component parent x doc)
+           (return-from lml2dom-expr !)))
+      (aprog1 (lml2dom-element x doc)
+        (when parent
+          (parent.add !))
+        (lml2dom-attr-or-body ! .x doc)))))
 
 (fn lml2dom (x &key (parent nil) (doc document))
   (? (cons? x)

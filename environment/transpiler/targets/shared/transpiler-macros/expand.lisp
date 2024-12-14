@@ -1,4 +1,4 @@
-(defmacro def-shared-transpiler-macro (targets &rest x)
+(defmacro def-shared-transpiler-macro (targets &rest x) ; TODO: Complain if re-defined.
   `(progn
      ,@(@ [`(,($ 'def- _ '-transpiler-macro) ,@x)]
      (intersect *targets* (make-keywords targets)))))

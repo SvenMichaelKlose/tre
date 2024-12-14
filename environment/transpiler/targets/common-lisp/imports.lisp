@@ -12,7 +12,7 @@
     '(apply
       cons car cdr rplaca rplacd
       length make-string
-      mod sqrt sin cos tan asin acos atan exp round floor
+      mod sqrt sin cos tan asin acos atan exp round floor ceiling
       aref char-code
       make-package package-name find-package
       print))
@@ -47,6 +47,7 @@
       (character==  CHAR=)
       (character<   CHAR<)
       (character>   CHAR>)
+      (log          LOG)
       (pow          EXPT)))
 
 (defconstant +cl-special-forms+

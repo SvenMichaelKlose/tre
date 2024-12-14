@@ -1,9 +1,3 @@
-(def-php-transpiler-macro undefined? (x)
-  `(not (isset ,x)))
-
-(def-php-transpiler-macro defined? (x)
-  `(isset ,x))
-
 (def-php-transpiler-macro defnative (name args &body body)
   (shared-defun name args body :allow-source-memorizer? nil))
 
@@ -49,3 +43,9 @@
          (%var ,g)
          (%= ,g ,slot)
          (%aref ,place ,g)))))
+
+(def-php-transpiler-macro undefined? (x)
+  `(not (isset ,x)))
+
+(def-php-transpiler-macro defined? (x)
+  `(isset ,x))
