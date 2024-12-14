@@ -2,23 +2,11 @@
 (var *server-url* (path-append *base-url* "server.php"))
 (var *http-funcall-error* [dump "HTTP-FUNCALL error"])
 
-(fn expr2xml (x)
-  (? x
-     (!= ($$ '(div))
-       (expr2dom ! x)
-       !.inner-h-t-m-l)
-     ""))
-
-(fn xml2expr (x)
-  (unless (empty-string-or-nil? x)
-    (!= ($$ '(div))
-      (!.set-inner-h-t-m-l x)
-      (dom2expr !.first-child))))
-
 (fn send-http-funcall (data)
-  (xml2expr (http-request *server-url*
-                          (list (. "q" (expr2xml data)))
-                          :onerror #'http-request-error)))
+  (props2expr (json-decode (http-request
+      *server-url*
+      (list (. "q" (json-encode (expr2props data))))
+      :onerror #'http-request-error))))
 
 (defmacro declare-server-command (name argdef)
   (print-definition `(declare-server-command ,name ,argdef))
