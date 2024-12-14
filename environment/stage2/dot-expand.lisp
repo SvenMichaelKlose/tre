@@ -1,3 +1,6 @@
+; TODO: Holy Moly!  Perhaps replace by this one:
+; https://github.com/SvenMichaelKlose/tunix/blob/main/src/bin/lisp/dotexpand.lsp
+
 (fn dot-expand-head-length (x &optional (num 0))
   (? (eql #\. x.)
      (dot-expand-head-length .x (++ num))
