@@ -1,4 +1,4 @@
-(%%native "" "require_once 'db-config.php';")
+(%native "" "require_once 'db-config.php';")
 (session-create)
 
 (fn server-apply (fun-name &rest args)
