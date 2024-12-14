@@ -2,4 +2,4 @@
   (json_encode x))
 
 (fn json-decode (x)
-  (json_decode x t))
+  (json_decode x))

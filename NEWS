@@ -1,4 +1,5 @@
 Changes relative to tre-0.19:
+  * PHP: JSON-DECODE: Make stdClass objects, not arrays.
   * Examples: Updated docker-compose configurations to version 3.
   * Fixed first time install.
   * CL: *ARGV* has the command-line arguments.
