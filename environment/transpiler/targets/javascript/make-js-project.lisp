@@ -74,7 +74,7 @@
                          "toplevel.lisp"))
               ,(+ *modules-path* "js-http-request/main.lisp")
               ,@(list+ (+ *modules-path* "http-funcall/")
-                       '("shared/expr2dom.lisp"
+                       '("shared/expr2props.lisp"
                         "js/toplevel.lisp"))))
       ,@files)
     :transpiler transpiler

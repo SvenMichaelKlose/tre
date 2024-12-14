@@ -9,7 +9,7 @@
       (+ *modules-path* "/php-db-mysql/main.lisp")
       (+ *modules-path* "/php-http-request/main.lisp")
       ,@(list+ (+ *modules-path* "/http-funcall/")
-               '("shared/expr2dom.lisp"
+               '("shared/expr2props.lisp"
                  "php/toplevel.lisp"))
       ,@(list+ (+ *modules-path* "/session/")
                '("php/toplevel.lisp"
