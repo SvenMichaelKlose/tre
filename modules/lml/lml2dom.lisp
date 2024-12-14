@@ -67,7 +67,7 @@
 (fn lml2dom-expr (parent x doc)
   (?
     (cons? x.)
-      (lml2xml-error-tagname x))
+      (lml2xml-error-tagname x)
     (%exec? x)
       (lml2dom-exec parent x doc)
     (progn
@@ -78,7 +78,7 @@
       (aprog1 (lml2dom-element x doc)
         (when parent
           (parent.add !))
-        (lml2dom-attr-or-body ! .x doc))))
+        (lml2dom-attr-or-body ! .x doc)))))
 
 (fn lml2dom (x &key (parent nil) (doc document))
   (? (cons? x)

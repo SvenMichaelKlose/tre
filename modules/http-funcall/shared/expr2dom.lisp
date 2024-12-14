@@ -22,7 +22,7 @@
 
 (fn props2expr (x)
   (when x
-    (? (object? x)
+    (? (json-object? x)
        (case x.t :test #'string==
          "u"  x.v
          "c"  (. (props2expr x.a)

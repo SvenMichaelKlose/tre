@@ -38,6 +38,7 @@
                        "hash.lisp"
                        "array.lisp"
                        "function.lisp"
+                       "slot-value.lisp"
                        "object.lisp")
         (php-load-core "../../../environment/"
                        "not.lisp")

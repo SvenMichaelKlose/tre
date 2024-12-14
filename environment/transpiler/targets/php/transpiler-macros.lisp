@@ -14,18 +14,6 @@
   (add-defined-variable name)
   nil)
 
-(def-php-transpiler-macro slot-value (place slot)
-  (?
-    (quote? slot)   ; TODO: Shouldn't be here. (pixel)
-      `(%slot-value ,place ,.slot.)
-    (string? slot)
-      `(%slot-value ,place ,slot)
-    (with-gensym g
-      `(%block
-         (%var ,g)
-         (%= ,g ,slot)
-         (%aref ,place ,g)))))
-
 (def-php-transpiler-macro undefined? (x)
   `(not (isset ,x)))
 

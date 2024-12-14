@@ -190,6 +190,16 @@
                          (convert-identifier (make-symbol (symbol-name y) "TRE"))
                        y)))
 
+(def-js-codegen %=-slot-value (v x y)
+  `(%native ,x "." ,(?
+                       (%string? y)
+                         .y.
+                       (symbol? y)
+                         (convert-identifier (make-symbol (symbol-name y) "TRE"))
+                       y)
+            " = "
+            ,v))
+
 (def-js-codegen %try () ; TODO: Check if stale.
   '(%native "try {"))
 
