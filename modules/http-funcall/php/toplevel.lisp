@@ -3,10 +3,11 @@
 (defmacro declare-server-command (name args)
   (print-definition `(declare-server-command ,name ,args))
   (with-gensym g
-    `(progn
-       (fn ,g ,args
-         (,(compiled-function-name name) ,@(argument-expand-names 'declare-server-command-implementation args)))
-       (= (href *server-commands* ',name) #',g))))
+    (!= (argument-expand-names 'declare-server-command-implementation args)
+      `(progn
+         (fn ,g ,!
+           (,(compiled-function-name name) ,@!))
+         (= (href *server-commands* ',name) #',g)))))
 
 (fn serve-http-funcall ()
   (header "Content-Type: application/json")
