@@ -1,11 +1,19 @@
-www:
-  build: ./docker/httpd
-  volumes_from:
-    - wwwdata
-  ports:
-    - 19020:80
+version: "3.9"
 
-wwwdata:
-  image: tianon/true
-  volumes:
-    - ./:/var/www/html/
+services:
+  app:
+    build:
+      context: ./docker/httpd
+    network_mode: bridge
+    ports:
+      - "19020:80"
+    volumes:
+      - appdata:/var/www/html:rw
+
+volumes:
+  appdata:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./
