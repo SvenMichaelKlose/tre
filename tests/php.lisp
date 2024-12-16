@@ -17,4 +17,9 @@
     :transpiler  (copy-transpiler *php-transpiler*)
     :emitter     [put-file "compiled/unit-2-getter.php" _])
 
+(make-project "PHP test unit 3"
+    `("tests/unit-3-base64.lisp")
+    :transpiler  (copy-transpiler *php-transpiler*)
+    :emitter     [put-file "compiled/unit-3-base64.php" _])
+
 (quit)

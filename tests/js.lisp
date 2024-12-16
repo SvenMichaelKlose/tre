@@ -18,4 +18,9 @@
   :transpiler  (copy-transpiler *js-transpiler*)
   :emitter     [put-file "compiled/unit-2-getter.js" _])
 
+(make-project "JavaScript test unit 2"
+  `("tests/unit-3-base64.lisp")
+  :transpiler  (copy-transpiler *js-transpiler*)
+  :emitter     [put-file "compiled/unit-3-base64.js" _])
+
 (quit)
