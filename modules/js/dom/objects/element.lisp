@@ -200,4 +200,7 @@
 (defmethod tre-element on (name fun)
   (this.add-event-listener name fun))
 
+(progn
+  ,@(make-listener-methods 'tre-element))
+
 (finalize-class tre-element)

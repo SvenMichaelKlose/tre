@@ -2,6 +2,7 @@
 
 (load (+ *modules-path* "js/event/names.lisp"))
 (load (+ *modules-path* "l10n/compile-time.lisp"))
+(load (+ *modules-path* "js/event/listener-methods.lisp"))
 
 (fn make-js-project (&key outfile title files
                           (copyright nil)

@@ -35,8 +35,6 @@
     (head.add (style.add ($$ txt)))))
 
 (progn
-  ,@(@ [`(defmethod tre-html-document ,(make-symbol (upcase _)) (fun)
-           (this.add-event-listener ,_ fun))]
-       *all-events*))
+  ,@(make-listener-methods 'tre-html-document))
 
 (finalize-class tre-html-document)
