@@ -36,8 +36,7 @@
 ;;;; VARIABLES
 
 (fn funinfo-var? (fi x)
-  (& x
-     (symbol? x)
+  (& x (symbol? x)
      (!? (funinfo-vars-hash fi)
          (href ! x)
          (member x (funinfo-vars fi) :test #'eq))
@@ -136,10 +135,10 @@
   (& x
      (symbol? x)
      (unless (funinfo-place? fi x)
-        (push x (funinfo-places fi))
-        (| (funinfo-arg-or-var? fi x)
-           (!? (funinfo-parent fi)
-               (funinfo-add-place ! x))))))
+       (push x (funinfo-places fi))
+       (| (funinfo-arg-or-var? fi x)
+          (!? (funinfo-parent fi)
+              (funinfo-add-place ! x))))))
 
 
 ;;;; GLOBAL VARIABLES
