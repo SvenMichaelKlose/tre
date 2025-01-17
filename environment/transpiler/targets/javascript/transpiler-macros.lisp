@@ -5,7 +5,7 @@
       `(%block
          (%var ,g)
          ,(copy-lambda x :name ! :body (. 'has-argexp! (lambda-body x)))
-         (= (slot-value ,! 'tre-exp) ,(compile-argument-expansion g ! (lambda-args x)))
+         (= (%slot-value ,! tre-exp) ,(compile-argument-expansion g ! (lambda-args x)))
          ,!))))
 
 (fn js-requires-expander? (x)
