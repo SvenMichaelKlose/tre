@@ -48,7 +48,22 @@
   (format o (+ "(cl:in-package :tre)~%"
                "(cl:format t \"; Loading environment…\\~%\")~%"
                "(cl:setq *package* \"TRE\")~%"
-               "(env-load \"main.lisp\")~%")))
+               "(cl:setq *default-package* \"TRE\")~%"
+               "
+
+(cl:defun %env-path ()
+  (cl:or ;(cl:if (cl:fboundp 'ql:where-is-system)
+         ;       (ql:where-is-system :tre))
+         ;(cl:if (cl:fboundp 'asdf:system-source-directory)
+         ;       (asdf:system-source-directory :tre))
+         (cl:if cl:*load-truename*
+                (cl:make-pathname :defaults cl:*load-truename* :name nil :type nil))
+         cl:*default-pathname-defaults*))
+(uiop:chdir (%env-path))
+(cl:defparameter *environment-path* (cl:namestring (%env-path)))
+
+(env-load \"main.lisp\")
+(quit)")))
 
 (!= (copy-transpiler *cl-transpiler*)
   (transpiler-add-defined-variable ! '*macros*)
@@ -58,4 +73,5 @@
       (print-init-decls o print-info)
       (@ [& _ (late-print _ o :print-info print-info]) c)
       (print-env-loader o))))
+
 (quit)

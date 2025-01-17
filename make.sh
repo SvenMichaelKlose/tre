@@ -35,7 +35,7 @@ clean ()
 	rm -vf *.core environment/transpiler/targets/c/native/$COMPILED_ENV image files.lisp
     rm -vf environment/_current-revision
     rm -vf environment/_build-date
-	rm -vf log-nodetests.lisp log-phptests.lisp log-make.lisp
+	rm -vf log-jstests.lisp log-phptests.lisp log-make.lisp
     clean_example_projects
 	echo "Checking out last working core…"
     git checkout -- boot-common.lisp
@@ -87,9 +87,9 @@ phptests)
 jstests)
     echo "JavaScript target tests…"
     $TRE tests/js.lisp
-    node compiled/test.js | tee log-nodetests.lisp
+    node compiled/test.js | tee log-jstests.lisp
     #chromium-browser compiled/test.html &
-    cmp tests/js.correct-output log-nodetests.lisp || (diff tests/js.correct-output log-nodetests.lisp; exit 1)
+    cmp tests/js.correct-output log-jstests.lisp || (diff tests/js.correct-output log-jstests.lisp; exit 1)
     for i in compiled/unit*.js; do node $i; done
     echo "JavaScript target tests passed in node.js."
 	;;
