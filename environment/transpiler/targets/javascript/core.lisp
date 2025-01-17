@@ -15,6 +15,7 @@
                    "%princ.lisp"
                    "%write-char.lisp"
                    "symbol.lisp"
+                   "slot-value.lisp"
                    "object-alist.lisp"))
 
 (var *js-core-debug-print* ,(js-load-core "" "debug-print.lisp"))
@@ -44,7 +45,6 @@
                               "../../../environment/make-array.lisp"
                               "sequence.lisp"
                               "../../../environment/list-string.lisp"
-                              "slot-value.lisp"
                               "string.lisp"
                               "hash.lisp"
                               "base64.lisp"
