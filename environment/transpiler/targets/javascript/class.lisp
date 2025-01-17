@@ -8,7 +8,7 @@
      (fn ,class-name ,args
        (%thisify ,class-name
          (macrolet ((super (&rest args)
-                     `((slot-value ,base 'call) this ,,@args)))
+                     `((%slot-value ,base call) this ,,@args)))
            ,@body)
          this))
      ,(js-gen-predicate class-name)))
@@ -30,8 +30,8 @@
             ,@(| (%slot-body x) (… nil)))))))
 
 (fn js-gen-inherit-methods (class-name base-name)
-  `((= (slot-value ,class-name 'prototype)
-       (*object.create (slot-value ,base-name 'prototype)))))
+  `((= (%slot-value ,class-name prototype)
+       (%slot-value *object.create (%slot-value ,base-name prototype)))))
 
 (fn js-methods (class-name cls)
   (!= (@ [js-method class-name _]
@@ -43,7 +43,7 @@
                 (remove-if-not [%slot-flag? _ :static] (class-methods cls)))
              `(js-merge-props! ,class-name
                                (%make-json-object ,@(*> #'+ (carlist !)))))
-        (js-merge-props! (slot-value ,class-name 'prototype)
+        (js-merge-props! (%slot-value ,class-name prototype)
                          (%make-json-object ,@(*> #'+ (carlist !)))))))
 
 (fn js-constructor (class-name x)
@@ -57,8 +57,6 @@
       `(progn
          ,(js-constructor class-name !)
          ,@(js-methods class-name !)
-         (= (slot-value (slot-value ,(compiled-function-name class-name)
-                                    'prototype)
-                        'constructor)
+         (= (%slot-value (%slot-value ,(compiled-function-name class-name) prototype) constructor)
             ,class-name))
       (error "Cannot finalize undefined class ~A." class-name)))
