@@ -50,9 +50,9 @@
   (?
     (symbol? x)
       (dot-expand-conv x)
-    (cons? x)
-      (. (dot-expand x.)
-         (dot-expand .x))
-    x))
+    (atom x)
+      x
+    (. (dot-expand x.)
+       (dot-expand .x))))
 
 (= *dot-expand* #'dot-expand)
