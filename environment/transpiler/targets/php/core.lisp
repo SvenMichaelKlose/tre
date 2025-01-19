@@ -31,6 +31,7 @@
 
 (var *php-core2*
     ,(+ (php-load-core ""
+                       "slot-value.lisp"
                        "../../../environment/number-typing.lisp"
                        "print-object.lisp"
                        "%princ.lisp"
@@ -38,7 +39,6 @@
                        "hash.lisp"
                        "array.lisp"
                        "function.lisp"
-                       "slot-value.lisp"
                        "object.lisp")
         (php-load-core "../../../environment/"
                        "not.lisp")
