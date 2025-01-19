@@ -26,7 +26,7 @@ jobs:
 
     - name: Load UIOP and run tests
       run: |
-        sbcl --eval '(ql:quickload :uiop)' --quit
+        sbcl --eval '(quicklisp:quickload :uiop)' --quit
 
     - name: Set up Github environment
       id: setup_environment
