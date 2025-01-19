@@ -22,11 +22,17 @@ jobs:
     - name: Set up Quicklisp
       run: |
         curl -O https://beta.quicklisp.org/quicklisp.lisp
-        sbcl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --eval '(quicklisp:add-to-init-file)' --quit
+        sbcl --no-sysinit --no-userinit --load quicklisp.lisp \
+             --eval '(quicklisp-quickstart:install)' \
+             --eval '(quicklisp:add-to-init-file)' \
+             --quit
 
     - name: Load UIOP and run tests
       run: |
-        sbcl --eval '(quicklisp:quickload :uiop)' --quit
+        sbcl --no-sysinit --no-userinit --eval '(require :quicklisp)' \
+             --eval '(ql:quickload :uiop)' \
+             --eval '(uiop:run-program "echo UIOP loaded successfully")' \
+             --quit
 
     - name: Set up Github environment
       id: setup_environment
