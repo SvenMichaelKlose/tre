@@ -48,7 +48,6 @@
   (format o (+ "(cl:in-package :tre)~%"
                "(cl:format t \"; Loading environment…\\~%\")~%"
                "(cl:setq *package* \"TRE\")~%"
-               "(cl:setq *default-package* \"TRE\")~%"
                "
 
 (cl:defun %env-path ()
