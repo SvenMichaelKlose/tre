@@ -19,6 +19,15 @@ jobs:
     - name: Set up prerequisites
       run: sudo apt-get install -y sbcl
 
+    - name: Set up Quicklisp
+      run: |
+        curl -O https://beta.quicklisp.org/quicklisp.lisp
+        sbcl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --eval '(ql:add-to-init-file)' --quit
+
+    - name: Load UIOP and run tests
+      run: |
+        sbcl --eval '(ql:quickload :uiop)' --quit
+
     - name: Set up Github environment
       id: setup_environment
       run: |
