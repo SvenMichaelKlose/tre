@@ -104,7 +104,7 @@
   (/ (- (milliseconds-since-1970) start-time) 1000))
 
 (fn print-transpiler-stats (start-time)
-  (warn-unused-functions)
+  ;(warn-unused-functions)
   (tell-number-of-warnings)
   (print-status "~A seconds passed.~%" (integer (seconds-passed start-time))))
 
