@@ -31,7 +31,7 @@
 
 (fn js-gen-inherit-methods (class-name base-name)
   `((= (%slot-value ,class-name prototype)
-       (%slot-value *object.create (%slot-value ,base-name prototype)))))
+       ((%slot-value *object create) (%slot-value ,base-name prototype)))))
 
 (fn js-methods (class-name cls)
   (!= (@ [js-method class-name _]
