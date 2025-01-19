@@ -22,8 +22,9 @@ jobs:
     - name: Set up Quicklisp
       run: |
         curl -O https://beta.quicklisp.org/quicklisp.lisp
-        sbcl --load quicklisp.lisp \
-             --eval '(cl:add-to-init-file)' \
+        sbcl --eval '(load "quicklisp.lisp")' \
+             --eval '(quicklisp-quickstart:install)' \
+             --eval '(ql:add-to-init-file)' \
              --quit
 
     - name: Set up Github environment
