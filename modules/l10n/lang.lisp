@@ -1,5 +1,7 @@
 ,(unless (transpiler-defined-variable *transpiler* '*l10n-text-filter*)
   '(var *l10n-text-filter* #'identity))
+,(unless (transpiler-defined-variable *transpiler* '*language*)
+  '(var *language* nil))
 
 (defmacro lang (&rest args)
   (? (== 2 (length args))
