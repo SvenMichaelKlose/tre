@@ -6,8 +6,8 @@
                '("escape.lisp"
                  "json.lisp"
                  "dump.lisp"))
-      (+ *modules-path* "/php-db-mysql/main.lisp")
-      (+ *modules-path* "/php-http-request/main.lisp")
+      ,(+ *modules-path* "/php-db-mysql/main.lisp")
+      ,(+ *modules-path* "/php-http-request/main.lisp")
       ,@(list+ (+ *modules-path* "/http-funcall/")
                '("shared/expr2props.lisp"
                  "php/toplevel.lisp"))
