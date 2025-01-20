@@ -25,7 +25,6 @@
                       "not.lisp")
         (js-load-core ""
                       "macro.lisp"
-                      "eq.lisp"
                       "array.lisp"
                       "character.lisp"
                       "number.lisp"
