@@ -18,7 +18,7 @@
               (enqueue (copying-stream-info-recorded-out info) x)
               (princ x (copying-stream-info-out info))))
       :fun-eof
-        [stream-fun-eof (copying-stream-info-in (stream-user-detail str))]))
+        [stream-fun-eof (copying-stream-info-in (stream-user-detail _))]))
 
 (fn copying-stream-recorded-in (str)
   (list-string (queue-list (copying-stream-info-recorded-in

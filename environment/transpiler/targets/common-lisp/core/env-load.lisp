@@ -1,4 +1,3 @@
-(var *environment-path* ".")
 (var *environment-filenames* nil)
 
 (defbuiltin env-load (file-specifier &rest targets)

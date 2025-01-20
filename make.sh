@@ -35,9 +35,9 @@ clean ()
 	rm -vf *.core environment/transpiler/targets/c/native/$COMPILED_ENV image files.lisp
     rm -vf environment/_current-revision
     rm -vf environment/_build-date
-	rm -vf log-nodetests.lisp log-phptests.lisp log-make.lisp
+	rm -vf log-jstests.lisp log-phptests.lisp log-make.lisp
     clean_example_projects
-	echo "Checking out last working core…"
+	echo "Checking out last working 'boot-common.lisp'…"
     git checkout -- boot-common.lisp
 }
 
@@ -54,14 +54,14 @@ install_it ()
 }
 
 case $1 in
-core)
-    echo "Booting environment…"
-    $SBCL --script "boot-common.lisp"
+sbcl-image)
+    echo "Booting SBCL image with 'boot-common.lisp'…"
+    $SBCL --load boot-common.lisp --eval '(tre:dump-system "image")' --quit
 	;;
 
 genboot)
-    echo "Compiling boot code with local image…"
-    $SBCL --core image makefiles/boot-common-lisp.lisp
+    echo "Compiling new 'boot-common.lisp'…"
+    echo "(quit)" | $SBCL --core image makefiles/boot-common-lisp.lisp
 	;;
 
 reset)
@@ -71,9 +71,9 @@ reset)
 
 boot)
     ./make.sh reset
-    ./make.sh core
+    ./make.sh sbcl-image
     ./make.sh genboot
-    ./make.sh core
+    ./make.sh sbcl-image
 	;;
 
 phptests)
@@ -87,9 +87,9 @@ phptests)
 jstests)
     echo "JavaScript target tests…"
     $TRE tests/js.lisp
-    node compiled/test.js | tee log-nodetests.lisp
+    node compiled/test.js | tee log-jstests.lisp
     #chromium-browser compiled/test.html &
-    cmp tests/js.correct-output log-nodetests.lisp || (diff tests/js.correct-output log-nodetests.lisp; exit 1)
+    cmp tests/js.correct-output log-jstests.lisp || (diff tests/js.correct-output log-jstests.lisp; exit 1)
     for i in compiled/unit*.js; do node $i; done
     echo "JavaScript target tests passed in node.js."
 	;;
@@ -166,13 +166,13 @@ clean)
 	echo "Usage: make.sh [target]"
     echo ""
 	echo "Targets:"
-	echo "  genboot       Generate CL code for target 'core'."
+	echo "  genboot       Generate CL code for target 'sbcl-image'."
 	echo "  reset         Check out boot-common.lisp from repository."
 	echo "                (E.g. when 'genboot' went wrong.)"
-	echo "  core          Load environment from scratch."
-	echo "  boot          Make 'core', 'genboot' then 'core' again."
+	echo "  sbcl-image    Load environment from scratch."
+	echo "  boot          Make 'sbcl-image', 'genboot' then 'sbcl-image' again."
     echo "  install       Install executable and environment image made"
-    echo "                by 'core' or 'boot',"
+    echo "                by 'sbcl-image' or 'boot',"
     echo "  clean         Remove built files, except 'genboot'."
     echo ""
 	echo "  tests         Run tests defined in the environment."

@@ -11,6 +11,13 @@ and this project adheres to
 [Lisp manual](src/bin/lisp/doc/manual.md)
 
 
+## [current]
+
+### Fixed
+
+  * Unified SLOT-VALUE handling in JS nad PHP target.
+  * COPYING-STREAM: Fix end-of-stream detection.
+
 ## [v0.0.21]
 
 ### Fixed

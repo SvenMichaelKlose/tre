@@ -1,3 +1,5 @@
+(var *language* *fallback-language*)
+
 ,(unless (transpiler-defined-variable *transpiler* '*l10n-text-filter*)
   '(var *l10n-text-filter* #'identity))
 ,(unless (transpiler-defined-variable *transpiler* '*language*)
@@ -10,7 +12,7 @@
             default  (assoc *fallback-language* defs))
        `(~> *l10n-text-filter* (case *language* :test #'eq
                                  ,@(+@ [. (make-keyword _.) ._]
-                                      (remove default defs))
+                                       (remove default defs))
                                 ,.default.)))))
 
 (fn translate (x)
