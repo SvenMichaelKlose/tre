@@ -43,14 +43,13 @@ clean ()
 
 install_it ()
 {
-    echo "Installing 'tre' to '$BINDIR'…"
-	sudo cp tre $BINDIR
     sudo mkdir -p /usr/local/lib/tre
     echo "Installing SBCL image to '/usr/local/lib/tre/image'…"
-    sudo cp -v image /usr/local/lib/tre
+    sudo cp -v image /usr/local/lib/tre/
     echo "Installing environment to '/usr/local/lib/tre/environment/'…"
-    sudo cp -rv environment modules /usr/local/lib/tre
-    echo "Done."
+    sudo cp -rv environment modules /usr/local/lib/tre/
+    echo "Installing 'tre' to '$BINDIR'…"
+	sudo cp tre $BINDIR
 }
 
 case $1 in
@@ -78,28 +77,28 @@ boot)
 
 phptests)
     echo "PHP target tests…"
-    $TRE tests/php.lisp
+    echo "(compile-tests *php-transpiler*)" | $TRE tests/toplevel.lisp
     php compiled/test.php | tee log-phptests.lisp
     cmp tests/php.correct-output log-phptests.lisp || (diff tests/php.correct-output log-phptests.lisp; exit 1)
     for i in compiled/unit*.php; do php $i; done
 	;;
 
 jstests)
-    echo "JavaScript target tests…"
-    $TRE tests/js.lisp
+    echo "JS target tests…"
+    echo "(compile-tests *js-transpiler*)" | $TRE tests/toplevel.lisp
     node compiled/test.js | tee log-jstests.lisp
-    #chromium-browser compiled/test.html &
+    #$BROWSER compiled/test.html
     cmp tests/js.correct-output log-jstests.lisp || (diff tests/js.correct-output log-jstests.lisp; exit 1)
     for i in compiled/unit*.js; do node $i; done
-    echo "JavaScript target tests passed in node.js."
+    echo "JS target tests passed in node.js."
 	;;
 
 updatetests)
-    $TRE tests/php.lisp
-    $TRE tests/js.lisp
+    echo "(compile-tests *php-transpiler*)" | $TRE tests/toplevel.lisp
+    echo "(compile-tests *js-transpiler*)" | $TRE tests/toplevel.lisp
     echo "Updating PHP target test data…"
     php compiled/test.php >tests/php.correct-output
-    echo "Updating JavaScript target test data (node.js only)…"
+    echo "Updating JS target test data (node.js only)…"
     node compiled/test.js >tests/js.correct-output || node compiled/test.js >tests/js.correct-output
     ;;
 
