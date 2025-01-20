@@ -1,5 +1,5 @@
 (defclass record ()
-  (= _data {"fnord": t}))
+  (= _data {"fnord" t}))
 
 (defmember record _data)
 

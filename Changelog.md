@@ -18,6 +18,7 @@ and this project adheres to
   * Unified SLOT-VALUE handling in JS nad PHP target.
   * COPYING-STREAM: Fix end-of-stream detection.
   * MAKE-PHP-PROJECT: Load php-db-mysql and http-funcall.
+  * %PRINT-OBJECT: Same for all targets.
 
 ## [v0.0.21]
 

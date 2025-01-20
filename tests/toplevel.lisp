@@ -15,7 +15,9 @@
     (!= i.
       (make-project (format nil "Unit ~A: ~A" n .!.)
         (format nil "tests/unit-~A-~A.lisp" n !.)
-        :transpiler  (copy-transpiler tr)
+        :transpiler  (aprog1 (copy-transpiler tr)
+                       (when (== n 5)
+                         (= (transpiler-dump-passes? tr) t)))
         :emitter     [put-file (format nil "compiled/unit-~A-~A.~A"
                                        n !. (transpiler-file-postfix tr))
                                _]))))
@@ -24,7 +26,8 @@
   (unix-sh-mkdir "compiled" :parents t)
   (compile-env-tests tr)
   (compile-unit-tests tr
-    '(("smoke-test"  "Smoke test")
-      ("getter"      "Something with getters")
-      ("base64"      "BASE64-ENCODE, BASE64-DECODE")
-      ("slot-value"  "SLOT-VALUE as function"))))
+    '(("smoke-test"    "Smoke test")
+      ("getter"        "Something with getters")
+      ("base64"        "BASE64-ENCODE, BASE64-DECODE")
+      ("slot-value"    "SLOT-VALUE as function")
+      ("literal-json"  "Literal JSON object"))))

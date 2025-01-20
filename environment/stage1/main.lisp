@@ -40,3 +40,4 @@
 (env-load "stage1/with-gensym.lisp")
 (env-load "stage1/define-filter.lisp")
 (env-load "stage1/char.lisp")
+;(env-load "stage1/slot-value.lisp" :cl)

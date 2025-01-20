@@ -6,4 +6,5 @@
   (is_object x))
 
 (fn json-object? (x)
-  (is_a x "stdClass"))
+  (| (is_array x)
+     (is_a x "stdClass")))

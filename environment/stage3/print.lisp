@@ -58,6 +58,13 @@
      (princ ")" ,str)
      (pop (print-info-columns ,info))))
 
+(fn %print-object (x str info)
+  (princ "{" str)
+  (dolist (i (props-alist x))
+    (late-print i. str :print-info info)
+    (late-print .i str :print-info info))
+  (princ "}" str))
+
 (fn pretty-print-lambda (x str info)
   (%with-parens str info
     (++! (car (print-info-columns info)))
@@ -252,6 +259,7 @@
       array?      (%print-array x str info)
       function?   (%print-function x str info)
       object?     (%print-object x str info)
+      json-object? (%print-object x str info)
       (%error "Don't know how to print object."))))
 
 (fn late-print (x &optional (str *standard-output*) &key (print-info (make-print-info)))
