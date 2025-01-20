@@ -61,6 +61,7 @@
 (fn make-javascript-transpiler ()
   (aprog1 (create-transpiler
             :name                     :js
+            :file-postfix             "js"
             :prologue-gen             #'js-prologue
             :epilogue-gen             #'js-epilogue
             :sections-before-import   #'js-sections-before-import

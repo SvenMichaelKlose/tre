@@ -14,6 +14,7 @@
 (fn make-cl-transpiler ()
   (create-transpiler
       :name                    :common-lisp
+      :file-postfix            "lisp"
       :output-passes           '((:frontend . :transpiler-macroexpand))
       :disabled-passes         '(:expand-literal-characters)
       :disabled-ends           '(:middleend :backend)

@@ -17,6 +17,7 @@
 (defstruct transpiler
   (:global *transpiler*)
   (name                       nil :not-global)
+  (file-postfix               nil)
 
   ;;;
   ;;; For users.

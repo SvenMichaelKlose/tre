@@ -31,6 +31,7 @@
 (fn %make-php-transpiler-0 ()
   (create-transpiler
       :name                     :php
+      :file-postfix             "php"
       :frontend-init            #'php-frontend-init
       :prologue-gen             #'php-prologue
       :epilogue-gen             #'php-epilogue
