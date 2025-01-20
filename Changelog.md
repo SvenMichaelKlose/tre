@@ -20,6 +20,11 @@ and this project adheres to
   * MAKE-PHP-PROJECT: Load php-db-mysql and http-funcall.
   * %PRINT-OBJECT: Same for all targets.
 
+### Changed
+
+  * In literal JSON objects, translate keywords to C identifier
+    name strings, like Lisp symbol names to C/JS/PHP names.
+
 ## [v0.0.21]
 
 ### Fixed
