@@ -13,7 +13,7 @@
        (… 'setq p val))
      (? (& (slot-value? p)
            (atom ..p.))
-        (… 'setq p val)
+        (… 'setf p val)
         (let* ((fun     p.)
                (args    .p)
                (setter  (=-make-symbol fun)))
