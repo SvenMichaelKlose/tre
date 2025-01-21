@@ -71,7 +71,7 @@
                          "i18n.lisp"
                          "autoform.lisp"
                          "widgets.lisp"
-                         ; "widgets-editable.lisp"
+                         "widgets-editable.lisp"
                          "toplevel.lisp"))
               ,(+ *modules-path* "js-http-request/main.lisp")
               ,@(list+ (+ *modules-path* "http-funcall/")
