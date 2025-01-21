@@ -6,9 +6,7 @@
          *autoform-widgets*))
 
 (defmacro def-editable-autoform-widget (args predicate &body body)
-  `(push {:predicate ,predicate
-          :maker     #'(,args ,@body)}
-         *autoform-widgets*))
+  `(def-autoform-widget ,args ,predicate ,@body))
 
 (macro autoform-fn (name (schema data &optional key) &rest body)
   `(progn
@@ -55,15 +53,11 @@
                               :widgets  ,widgets)]
           data)))
 
-(fn autoform-i18n (x)
-  (? (json-object? x)
-     x.en
-     x))
-
 (autoform-fn autoform-property (schema data)
   (!= (aref schema.properties props.key)
     `(label :class "autoform-property"
-       (span ,(| (autoform-i18n !.title) props.key))
+       (span ,(| (i18n !.title)
+                 props.key))
        (autoform-field :key      ,props.key
                        :schema   ,!
                        :data     ,data
