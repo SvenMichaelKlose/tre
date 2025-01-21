@@ -38,14 +38,6 @@
 (declare-lml-component autoform-field)
 
 
-(autoform-fn autoform-preview-object (schema data)
-  `(tr
-     ,@(@ [`(td (autoform-field :key      ,_
-                                :schema   ,(aref schema.properties _)
-                                :data     ,(aref data _)
-                                :widgets  ,widgets))]
-          props.fields)))
-
 (autoform-fn autoform-array (schema data)
   `(table :class "autoform-array"
      ,@(@ [`(autoform-preview :schema   ,schema.items
