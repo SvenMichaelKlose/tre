@@ -125,6 +125,7 @@
 
 
 ;;;; INTERNAL VECTORS
+; Implements lexical scope since PHP-5.
 
 (def-php-codegen %make-scope (&rest elements)
   `(%native "new __l ()" ""))
@@ -133,9 +134,8 @@
   `(%native ,(php-dollarize v) "->g (" ,(php-dollarize i) ")"))
 
 (def-php-codegen %set-vec (v i x)
-  `(%native ,*php-indent* ,(php-dollarize v) "->s ("
-                 ,(php-dollarize i) ", " ,(php-%=-value x)
-             ")",*php-separator*))
+  `(%native ,*php-indent*
+     ,(php-dollarize v) "->s (" ,(php-dollarize i) ", " ,(php-%=-value x) ")" ,*php-separator*))
 
 
 ;;;; NUMBERS
@@ -178,9 +178,7 @@
   (@ [`("[" ,(php-dollarize _) "]")] indexes))
 
 (fn php-literal-array-element (x)
-  (list (compiled-function-name '%%key) " ("
-            (php-dollarize x.)
-        ") => " (php-dollarize .x.)))
+  (list (compiled-function-name '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
 
 (fn php-literal-array-elements (x)
   (pad (@ #'php-literal-array-element x) ", "))
