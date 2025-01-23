@@ -8,11 +8,11 @@
 (defmacro def-editable-autoform-widget (args predicate &body body)
   `(def-autoform-widget ,args ,predicate ,@body))
 
-(macro autoform-fn (name (schema data &optional key) &rest body)
+(macro autoform-fn (name (schema store &optional key) &rest body)
   `(progn
      (fn ,name (props)
        (with (,schema   props.schema
-              ,data     props.data
+              ,store    props.store
               ,key      props.key
               widgets   props.widgets)
          ,@body))
@@ -26,48 +26,48 @@
   (!= props
     (?
       (function? !.key)
-        (~> !.key !.data)
+        (~> !.key !.store)
       (@ (widget !.widgets)
         (when (~> widget.predicate !.schema)
           (return (~> widget.maker
-                      !.data !.key !.schema
-                      (when !.data
-                        (aref !.data !.key)))))))))
+                      !.store !.key !.schema
+                      (when !.store
+                        (!.store.value !.key)))))))))
 
 (finalize-class autoform-field)
 (declare-lml-component autoform-field)
 
 
-(autoform-fn autoform-array (schema data)
+(autoform-fn autoform-array (schema store)
   `(table :class "autoform-array"
      ,@(@ [`(autoform-preview :schema   ,schema.items
-                              :data     ,_
+                              :store    ,_
                               :widgets  ,widgets)]
-          data)))
+          store.data)))
 
-(autoform-fn autoform-property (schema data)
+(autoform-fn autoform-property (schema store)
   (!= (aref schema.properties props.key)
     `(label :class "autoform-property"
        (span ,(| (i18n !.title)
                  props.key))
        (autoform-field :key      ,props.key
                        :schema   ,!
-                       :data     ,data
+                       :store    ,store
                        :widgets  ,widgets))))
 
-(autoform-fn autoform-object (schema data)
+(autoform-fn autoform-object (schema store)
   `(div :class "autoform-object"
      ,@(@ [`(autoform-property :key      ,_
                                :schema   ,schema
-                               :data     ,data
+                               :store    ,store
                                :widgets  ,widgets)]
           (keys schema.properties))))
 
-(autoform-fn autoform (schema data)
+(autoform-fn autoform (schema store)
   "Dispatch to 'AUTOFORM-<basic JSON type>'."
   `(,(? (in? (schema-type schema) "array" "object")
         ($ 'autoform- (upcase (schema-type schema)))
         'autoform-field)
      :schema   ,schema
-     :data     ,data
+     :store    ,store
      :widgets  ,(| widgets *autoform-widgets*)))

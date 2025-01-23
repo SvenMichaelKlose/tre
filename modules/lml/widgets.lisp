@@ -1,7 +1,7 @@
 (fn autoform-value (schema v)
   (| v
-     (awhen schema
-       !.default)
+     (!? schema
+         !.default)
      ""))
 
 (def-autoform-widget (store name schema v)

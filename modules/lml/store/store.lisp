@@ -1,6 +1,6 @@
-(defclass store (&optional (init-data (new)))
-  (= data       init-data
-     _children  (new)))
+(defclass store (&optional (init-data))
+  (= data       (| init-data {})
+     _children  {}))
 
 (defmember store
     data
@@ -62,7 +62,7 @@
     _parent)
 
 (defmethod child-store _update-parent ()
-  (_parent.write (make-json-object _name data)))
+  (_parent.write {_name data}))
 
 (defmethod child-store write (new-data)
   (prog1 (_store-write new-data)
