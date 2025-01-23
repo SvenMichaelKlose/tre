@@ -39,6 +39,7 @@
                        "hash.lisp"
                        "array.lisp"
                        "function.lisp"
+                       "make-json-object.lisp"
                        "object.lisp")
         (php-load-core "../../../environment/"
                        "not.lisp")

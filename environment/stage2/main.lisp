@@ -19,5 +19,5 @@
 (env-load "stage2/sort.lisp")
 (env-load "stage2/split.lisp" :cl)
 (env-load "stage2/braces.lisp")
-(env-load "stage2/make-json-object.lisp")
+(env-load "stage2/make-json-object.lisp" :cl)
 (env-load "stage2/property.lisp")
