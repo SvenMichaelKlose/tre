@@ -84,3 +84,10 @@ function tre_phphashHashkeys ($x)
         $h[] = $k;
     return $h;
 }
+
+function is_assoc_array ($arr) : bool
+{
+    if (!is_array ($arr))
+        return false;
+    return array_keys ($arr) !== range (0, count ($arr) - 1);
+}
