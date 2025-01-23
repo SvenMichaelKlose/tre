@@ -1,5 +1,5 @@
 (defmacro braces (&rest x)
-  `(%make-json-object
+  `(make-json-object
      ,@(+@ [… (? (keyword? _.)
                  (convert-identifier-r _.)
                  _.)
