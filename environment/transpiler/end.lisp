@@ -27,38 +27,48 @@
   (| (dump-pass? pass x)
      (dump-pass? end x)))
 
-(fn dump-pass-head (end pass)
-  (when (dump-pass-or-end? end pass nil)
+(fn dump-pass-head (end pass x)
+  (when (dump-pass-or-end? end pass x)
     (format t "; >>>> Dump of ~A/~A:~%"
             (symbol-name end)
-            (symbol-name pass))))
+            (symbol-name pass))
+    (cl:in-package :tre)
+    (print x)))
 
 (fn dump-pass-tail (end pass x)
   (when (dump-pass-or-end? end pass x)
+    (cl:in-package :tre)
     (? (equal x (last-pass-result))
-       (format t ";      …no difference to previous dump.~%" pass)
+       (format t "; Nothing changed.~%" pass)
        (print x))
     (format t "~F; <<<< End of ~A/~A.~%"
             (symbol-name end)
             (symbol-name pass))))
 
-(fn transpiler-pass (pass-fun list-of-exprs)
-  (with-global-funinfo (~> pass-fun list-of-exprs)))
+(fn transpiler-pass (pass-fun x)
+  (with-global-funinfo (~> pass-fun x)))
 
-(fn transpiler-end (end passes list-of-exprs)
+(fn transpiler-end (end passes x)
   (unless (enabled-end? end)
-     (return list-of-exprs))
-  (when list-of-exprs
-    (with (outpass  (cdr (assoc end (output-passes)))
-           out      nil)
-      (@ (pass passes (? outpass out list-of-exprs))
+    (return x))
+  (when x
+    ; Keep result of dedicated output pass.  More passes may
+    ; follow just for user-friendly, early bug detection.
+    ; If there's no dedicated output pass, the last one gives
+    ; the result.
+    (with (outpass         (cdr (assoc end (output-passes)))
+           outpass-result  nil)
+      (@ (pass passes)
         (when (enabled-pass? pass.)
-          (dump-pass-head end pass.)
-          (!= (= list-of-exprs (transpiler-pass .pass list-of-exprs))
-            (dump-pass-tail end pass. !))
-          (= (last-pass-result) list-of-exprs)
+          (dump-pass-head end pass. x)
+          (= x (transpiler-pass .pass x))
+          (dump-pass-tail end pass. x)
+          (= (last-pass-result) x)
           (& (eq pass. outpass)
-             (= out list-of-exprs)))))))
+             (= outpass-result x))))
+      (? outpass
+         outpass-result
+         x))))
 
 (defmacro define-transpiler-end (end &rest name-function-pairs)
   (!= (group name-function-pairs 2)
