@@ -2,7 +2,7 @@
   (@ (i x)
     (? (cons? i)
        (gather-imports-list i)
-       (progn
+       (when (symbol? i)
          (add-wanted-function i)
          (add-wanted-variable i)))))
 

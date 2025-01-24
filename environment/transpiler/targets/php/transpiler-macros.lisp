@@ -19,3 +19,24 @@
 
 (def-php-transpiler-macro defined? (x)
   `(isset ,x))
+
+;;;;;;;;;;;;;
+;;; CLASS ;;;
+;;;;;;;;;;;;;
+
+(def-php-transpiler-macro %class-predicate (class-name)
+ `(fn ,($ class-name '?) (x)
+    (& (object? x)
+       (is_a x ,(convert-identifier class-name))
+       x)))
+
+(def-php-transpiler-macro %method-body (class-name &body body)
+  `(let ~%this this
+     (%thisify ,class-name
+       (macrolet ((super (&rest args)
+                   `((%native "parent::__construct" ,,@args))))
+         ,@body))))
+
+(def-php-transpiler-macro %constructor-body (class-name &rest body)
+  `(%block
+     ,@body))

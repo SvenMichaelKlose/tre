@@ -143,6 +143,13 @@
     (with ((moved new-expr) (expex-move-args (… v)))
       (values moved (make-%= p new-expr.)))))
 
+(fn expex-%collection (x)
+  `((%collection ,.x.
+      ,@(@ [. _. (? ._
+                    (with ((dummy expr) (expex-lambda ._))
+                      expr))]
+           ..x))))
+
 (fn expex-expr (x)
   (pcase x
     %=?            (expex-expr-%= x)
@@ -151,6 +158,7 @@
     named-lambda?  (expex-lambda x)
     %block?        (values nil (expex-body .x))
     unexpex-able?  (values nil (… x))
+    %collection?   (values nil (expex-%collection x))
     (with ((moved new-expr) (expex-move-args (expex-argexpand x)))
       (values moved (… new-expr)))))
 
@@ -160,10 +168,10 @@
 (fn expex-make-return-value (s x)
   (with (l                     (car (last x))
          wanted-return-value?  #'(()
-                                   (eq s .l.))
+                                   (eq s (%=-place l)))
          make-return-value     #'(()
                                    `(,l
-                                     ,@(make-%= s .l.))))
+                                     ,@(make-%= s (%=-place l)))))
     (? (has-return-value? l)
        (+ (butlast x)
           (? (%=? l)

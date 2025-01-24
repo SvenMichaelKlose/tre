@@ -1,8 +1,6 @@
 (defmacro optimizer-pass (x)
-  `[(dump-pass-head 'middleend ',x)
-    (!= (,x _)
-      (when (dump-pass-or-end? 'middleend ',x !)
-        (print !))
+  `[(dump-pass-head 'middleend ',x _)
+    (aprog1 (,x _)
       (dump-pass-tail 'middleend ',x !))])
 
 (fn optimizer-passes ()

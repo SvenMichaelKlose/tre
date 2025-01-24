@@ -19,6 +19,7 @@ and this project adheres to
   * COPYING-STREAM: Fix end-of-stream detection.
   * MAKE-PHP-PROJECT: Load php-db-mysql and http-funcall.
   * %PRINT-OBJECT: Same for all targets.
+  * When dumping compiler passes, print headers before calling the passes.
 
 ### Changed
 

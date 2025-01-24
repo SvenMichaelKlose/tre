@@ -54,23 +54,22 @@
 
 ;;;; FUNCTIONS
 
+(fn codegen-php-function-0 (name fi body)
+  `(,*terpri*
+    ,(funinfo-comment fi)
+    "function " ,name ,@(php-argument-list (funinfo-args fi)) ,*terpri*
+    "{" ,*terpri*
+       ,@(!? (funinfo-globals fi)
+             (php-line "global " (pad (@ #'php-dollarize !) ", ")))
+       ,@body
+       ,(php-line "return $" *return-id*)
+    "}" ,*terpri*))
+
 (fn codegen-php-function (x)
-  (with (fi             (lambda-funinfo x)
-         name           (funinfo-name fi)
-         num-locals     (length (funinfo-vars fi))
-         compiled-name  (compiled-function-name name))
+  (with (fi    (lambda-funinfo x)
+         name  (funinfo-name fi))
     (developer-note "#'~A~%" name)
-    `(,*terpri*
-      ,(funinfo-comment fi)
-      "function " ,compiled-name
-                  ,@(php-argument-list (funinfo-args fi))
-                  ,*terpri*
-      "{" ,*terpri*
-         ,@(!? (funinfo-globals fi)
-               (php-line "global " (pad (@ #'php-dollarize !) ", ")))
-         ,@(lambda-body x)
-         ,(php-line "return $" *return-id*)
-      "}" ,*terpri*)))
+    (codegen-php-function-0 (compiled-function-name name) fi (lambda-body x))))
 
 (def-php-codegen function (&rest x)
   (? .x
@@ -285,6 +284,35 @@
 
 (def-php-codegen %php-class-tail ()
   `(%native "}" ""))
+
+(fn php-class-slot-flags (slot)
+  (pad (@ [downcase (symbol-name _)]
+          (%slot-flags slot))
+       " "))
+
+(fn php-class-member (cls slot)
+  (… (| (php-class-slot-flags slot)
+        "var")
+     " $" (%slot-name slot)
+     *php-separator*))
+
+(fn php-class-method (cls slot x)
+  `(,@(php-class-slot-flags slot) " "
+    ,@(codegen-php-function-0 x.
+                              (lambda-funinfo .x.)
+                              (lambda-body .x.))))
+
+(fn php-class-slot (cls x)
+  (let slot (class-slot-by-name cls x.)
+    (? (eq :member (%slot-type slot))
+       (php-class-member cls slot)
+       (php-class-method cls slot x))))
+
+(def-php-codegen %collection (which &rest items)
+  (!= (href (defined-classes) which)
+    `((%php-class-head ,!)
+      ,@(+@ [php-class-slot ! _] items)
+      (%php-class-tail))))
 
 
 ;;;; GLOBAL VARIABLES

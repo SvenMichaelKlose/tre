@@ -1,19 +1,9 @@
-(defmacro with-lambda-call ((args vals body x) &body exec-body)
-  (with-gensym (tmp fun)
-    `(with (,tmp ,x
-            ,fun (cadar ,tmp)
-            ,args (lambda-args ,fun)
-            ,vals (cdr ,tmp)
-            ,body (lambda-body ,fun))
-       ,@exec-body)))
-
-(defmacro with-lambda (name args body x &body macro-body)
-  (with-gensym g
-    `(with (,g    ,x
-            ,name (lambda-name ,g)
-            ,args (lambda-args ,g)
-            ,body (lambda-body ,g))
-       ,@macro-body)))
+(fn make-lambda (&key (name nil) args body)
+  `(function
+     ,@(!? name
+           (list !))
+     (,args
+      ,@body)))
 
 (fn copy-lambda (x &key (name nil) (args 'no-args) (body 'no-body))
   `(function
@@ -25,3 +15,20 @@
       ,@(? (eq 'no-body body)
            (lambda-body x)
            body))))
+
+(defmacro with-lambda (name args body x &body macro-body)
+  (with-gensym g
+    `(with (,g     ,x
+            ,name  (lambda-name ,g)
+            ,args  (lambda-args ,g)
+            ,body  (lambda-body ,g))
+       ,@macro-body)))
+
+(defmacro with-lambda-call ((args vals body x) &body exec-body)
+  (with-gensym (tmp fun)
+    `(with (,tmp   ,x
+            ,fun   (cadar ,tmp)
+            ,vals  (cdr ,tmp)
+            ,args  (lambda-args ,fun)
+            ,body  (lambda-body ,fun))
+       ,@exec-body)))

@@ -231,6 +231,48 @@
 (def-js-codegen %global (x)
   x)
 
+;;;; CLASSES
+
+(def-js-codegen %js-class-head (cls &key (implements nil))
+  `(%native
+     "class " ,(class-name cls)
+     ,@(!? (class-base cls)
+           `(" extends " ,!))
+     ,@(!? implements
+           `(" implements " ,(pad (ensure-list !) ", ")))
+     "{"))
+
+(def-js-codegen %js-class-tail ()
+  `(%native "}" ""))
+
+(fn js-class-slot-flags (slot)
+  (pad (@ [downcase (symbol-name _)]
+          (%slot-flags slot))
+       " "))
+
+(fn js-class-slot-member (cls slot)
+  (… (| (php-class-slot-flags slot)
+        "var")
+     " $" (%slot-name slot)))
+
+(fn js-class-slot-method (cls slot x)
+  `(,@(php-class-slot-flags x) " "
+    ,@(codegen-php-function-0 (%slot-name slot)
+                              (lambda-funinfo x)
+                              (lambda-body x))))
+
+(fn js-class-slot (cls x)
+  (let slot (class-slot-by-name cls x.)
+    (? (eq :member (%slot-type slot))
+       (js-class-member cls slot)
+       (js-class-method cls slot .x))))
+
+(def-js-codegen %collection (which &rest items)
+  (!= (href (defined-classes) which)
+    `((%js-class-head ,which)
+      ,@(+@ [js-class-slot ! _] items)
+      (%js-class-tail))))
+
 
 ;;;; MISCELLANEOUS
 

@@ -1,11 +1,20 @@
+; These function expression formats are supported:
+;
+; 1. (LAMBDA args . body) or #'(args . body)
+; 2. (FUNCTION args . body) or #'(args . body)
+; 3. (FUNCTION name) – Essentially a literal SYMBOL-FUNCTION.
+; 4. (FUNCTION name args . body) or #'(name args . body)
+;
+; TODO: It shouldn't matter if the keyword is LAMBDA or FUNCTION.
+
 (fn lambda-name (x)
-  "Get name of FUNCTION form."
+  "Get name in (FUNCTION [name] (args . body))."
   (? (eq x. 'function)
      (? ..x
         .x.)))
 
 (fn past-function (x)
-  "Get LAMBDA expression of FUNCTION form."
+  "Get args and body of (FUNCTION [name] (args . body))."
   (? (eq x. 'function)
      (? ..x
         ..x.
@@ -13,7 +22,7 @@
      x))
 
 (fn past-lambda (x)
-  "Get LAMBDA expression of FUNCTION form without LAMBDA symbol."
+  "Get rest of LAMBDA expression."
   (!= (past-function x)
     (? (eq !. 'lambda)
        .!

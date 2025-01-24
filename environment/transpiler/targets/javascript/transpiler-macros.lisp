@@ -62,6 +62,11 @@
               (error "Function must be a SLOT-VALUE, got ~A." fun))
           ,fun))
 
+(def-js-transpiler-macro %class-predicate (class-name)
+  `(fn ,($ class-name '?) (x)
+     (& (%native x " instanceof " ,(compiled-function-name-string class-name))
+        x)))
+
 (def-js-transpiler-macro js-type-predicate (name &rest types)
   `(fn ,name (x)
      (when x

@@ -40,7 +40,10 @@
     (cl:in-package :tre)
     (? (equal x (last-pass-result))
        (format t "; Nothing changed.~%" pass)
-       (print x))
+       (progn
+         (format t "; Out:~%")
+         (print x)))
+    (fresh-line)
     (format t "~F; <<<< End of ~A/~A.~%"
             (symbol-name end)
             (symbol-name pass))))

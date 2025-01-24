@@ -1,6 +1,9 @@
-# Class
+tré compiler class system
+=========================
 
-Only for JS and PHP target.
+These constructs are solely to join JS and PHP's object system, so code can be
+exchanged freely between these platforms.  The Common Lisp target has been
+largely ignored – it wasn't essential for app building at the time of writing.
 
 # DEFCLASS
 
@@ -14,7 +17,7 @@ Defines a new class together with its constructor
 # DEFMETHOD
 
 ~~~lisp
-(DEFMETHOD class-name (:access-type… method-name args &body body))
+(DEFMETHOD class-name [:access-type] method-name args &body body))
 ~~~
 
 Access tyoes may be :STATIC, :PROTECTED and :PRIVATE.  The JS target ignores
@@ -27,8 +30,8 @@ Access tyoes may be :STATIC, :PROTECTED and :PRIVATE.  The JS target ignores
 # DEFMEMBER
 
 ~~~lisp
-(DEFMEMBER class-name member-names…
-(DEFMEMBER class-name (:access-types… member-name)…
+(DEFMEMBER class-name member-names)
+(DEFMEMBER class-name [:access-types…] member-name)
 ~~~
 
 # FINALIZE-CLASS
@@ -37,4 +40,4 @@ Access tyoes may be :STATIC, :PROTECTED and :PRIVATE.  The JS target ignores
 (FINALIZE-CLASS class-name)
 ~~~
 
-Performs final code transformations and compiles the class.
+Generates the actual class from all gathered information.

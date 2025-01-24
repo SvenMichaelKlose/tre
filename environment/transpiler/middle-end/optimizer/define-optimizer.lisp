@@ -1,3 +1,5 @@
+; This could as well be a METACODE-WALKER and this had me as soon as I
+; forgot about it.  It's gotta go.
 (defmacro optimizer (name &body body)
   `(when x
      (with-cons a d x
@@ -8,8 +10,9 @@
                                        (,name *body*))))
               (,name d))
          (%collection? a)
-           `(%collection ,,.a.
-              ,,@(@+ [. _. (,name (… ._))] ,,..a))
+           (. (append (list '%collection .a.)
+                      (@ [. _. (car (,name (list ._)))] ..a))
+              (,name d))
          ,@body
          (. a (,name d))))))
 

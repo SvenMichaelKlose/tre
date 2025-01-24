@@ -36,6 +36,8 @@
 ;;;; PASSTHROUGH
 
 (fn lambda-expand-lambda (x)
+  "Ensure that function expression X has a FUNINFO."
+  "Creates a name for the function if missing."
   (!? (lambda-funinfo x)
       (with-temporary *funinfo* !
         (copy-lambda x :body (lambda-expand-r (lambda-body x))))
@@ -54,6 +56,10 @@
 
 ;;;; TOPLEVEL
 
+(fn lambda-expand-%collection (x)
+  `(%collection ,.x.
+     ,@(@ [. _. (lambda-expand-expr ._)] ..x)))
+
 (fn lambda-expand-expr (x)
   (pcase x
     atom            x
@@ -62,6 +68,7 @@
                        (lambda-export x)
                        (lambda-expand-lambda x))
     named-lambda?   (lambda-expand-lambda x)
+    %collection?    (lambda-expand-%collection x)
     (lambda-expand-r x)))
 
 (fn lambda-expand-r (x)
