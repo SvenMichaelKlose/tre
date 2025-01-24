@@ -54,22 +54,30 @@
 
 ;;;; FUNCTIONS
 
-(fn codegen-php-function-0 (name fi body)
+(fn codegen-php-function-0 (&key name fi args body (return-type nil))
   `(,*terpri*
     ,(funinfo-comment fi)
-    "function " ,name ,@(php-argument-list (funinfo-args fi)) ,*terpri*
+    "function " ,name ,@(php-argument-list args)
+    ,@(!? return-type
+          `(" : " ,!))
+    ,*terpri*
     "{" ,*terpri*
        ,@(!? (funinfo-globals fi)
              (php-line "global " (pad (@ #'php-dollarize !) ", ")))
        ,@body
-       ,(php-line "return $" *return-id*)
+       ,@(unless (equal "void" return-type)
+           (list (php-line "return $" *return-id*)))
     "}" ,*terpri*))
 
 (fn codegen-php-function (x)
   (with (fi    (lambda-funinfo x)
          name  (funinfo-name fi))
     (developer-note "#'~A~%" name)
-    (codegen-php-function-0 (compiled-function-name name) fi (lambda-body x))))
+    (codegen-php-function-0
+        :name  (compiled-function-name name)
+        :fi    fi
+        :args  (funinfo-args fi)
+        :body  (lambda-body x))))
 
 (def-php-codegen function (&rest x)
   (? .x
@@ -111,7 +119,7 @@
     `((,val. " " ,@(c-list (@ #'php-dollarize .val))))))
 
 (def-php-codegen %= (dest val)
-  (? (& (not dest) (atom val))
+  (? (& (not dest) (atom val))  ; TODO: remove (pixel)
      '(%native "")
      `(%native
         ,*php-indent*
@@ -274,6 +282,9 @@
 ;;;; CLASSES
 
 (def-php-codegen %php-class-head (cls &key (implements nil))
+  (when (member-if [member _ '(aref =-aref delete-aref)]
+                   (class-slot-names cls))
+    (push "ArrayAccess" implements))
   `(%native
      "class " ,(class-name cls)
      ,@(!? (class-base cls)
@@ -298,9 +309,30 @@
 
 (fn php-class-method (cls slot x)
   `(,@(php-class-slot-flags slot) " "
-    ,@(codegen-php-function-0 x.
-                              (lambda-funinfo .x.)
-                              (lambda-body .x.))))
+    ,@(? (eq '=-aref x.)
+         (codegen-php-function-0
+             :name  'offset-set
+             :return-type
+                    "void"
+             :fi    (lambda-funinfo .x.)
+             :args  (!= (lambda-args .x.)
+                      (list .!. !.))
+             :body  (lambda-body .x.))
+         (codegen-php-function-0
+             :name  (case x.
+                      '__constructor  '__construct
+                      'aref           'offset-get
+                      'aref?          'offset-exists
+                      'delete-aref    'offset-unset
+                      x.)
+             :return-type
+                    (case x.
+                      'aref         "mixed"
+                      'aref?        "bool"
+                      'delete-aref  "void")
+             :fi    (lambda-funinfo .x.)
+             :args  (lambda-args .x.)
+             :body  (lambda-body .x.)))))
 
 (fn php-class-slot (cls x)
   (let slot (class-slot-by-name cls x.)

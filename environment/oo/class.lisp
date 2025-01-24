@@ -19,6 +19,9 @@
   (member [eq name (%slot-name _)]
           (class-slots cls)))
 
+(fn class-slot-names (cls)
+  (@ #'%slot-name (class-slots cls)))
+
 (fn class-slot-by-name (cls name)
   (aprog1 (find-if [eq name (%slot-name _)]
                    (class-slots cls))
