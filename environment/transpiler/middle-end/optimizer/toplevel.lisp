@@ -1,5 +1,9 @@
 (defmacro optimizer-pass (x)
-  `[dump-pass 'middleend ',x (,x _)])
+  `[(dump-pass-head 'middleend ',x)
+    (!= (,x _)
+      (when (dump-pass-or-end? 'middleend ',x !)
+        (print !))
+      (dump-pass-tail 'middleend ',x !))])
 
 (fn optimizer-passes ()
   (compose (optimizer-pass optimize-jumps)

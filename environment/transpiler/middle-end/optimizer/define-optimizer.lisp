@@ -7,6 +7,9 @@
                                      (with-lambda-funinfo a
                                        (,name *body*))))
               (,name d))
+         (%collection? a)
+           `(%collection ,,.a.
+              ,,@(@+ [. _. (,name (… ._))] ,,..a))
          ,@body
          (. a (,name d))))))
 
