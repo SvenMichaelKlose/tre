@@ -29,35 +29,36 @@
 
 (fn dump-pass-head (end pass)
   (when (dump-pass-or-end? end pass nil)
-    (format t "; >>>> Dump of pass ~A:~%" (symbol-name pass))))
+    (format t "; >>>> Dump of ~A/~A:~%"
+            (symbol-name end)
+            (symbol-name pass))))
 
 (fn dump-pass-tail (end pass x)
   (when (dump-pass-or-end? end pass x)
     (? (equal x (last-pass-result))
        (format t ";      …no difference to previous dump.~%" pass)
        (print x))
-    (format t "~L; <<<< End of pass ~A.~%" (symbol-name pass))))
+    (format t "~F; <<<< End of ~A/~A.~%"
+            (symbol-name end)
+            (symbol-name pass))))
 
 (fn transpiler-pass (pass-fun list-of-exprs)
   (with-global-funinfo (~> pass-fun list-of-exprs)))
 
 (fn transpiler-end (end passes list-of-exprs)
-  (| (enabled-end? end)
+  (unless (enabled-end? end)
      (return list-of-exprs))
-  (& (dump-pass? end list-of-exprs)
-     (format t "~%; ######## Compiler end ~A~%" (symbol-name end)))
-  (& list-of-exprs
-     (with (outpass  (cdr (assoc end (output-passes)))
-            out      nil)
-       (@ (pass passes (? outpass out list-of-exprs))
-         (? (enabled-pass? pass.)
-            (progn
-              (dump-pass-head end pass.)
-              (!= (= list-of-exprs (transpiler-pass .pass list-of-exprs))
-                (dump-pass-tail end pass. !))
-              (= (last-pass-result) list-of-exprs)
-              (& (eq pass. outpass)
-                 (= out list-of-exprs))))))))
+  (when list-of-exprs
+    (with (outpass  (cdr (assoc end (output-passes)))
+           out      nil)
+      (@ (pass passes (? outpass out list-of-exprs))
+        (when (enabled-pass? pass.)
+          (dump-pass-head end pass.)
+          (!= (= list-of-exprs (transpiler-pass .pass list-of-exprs))
+            (dump-pass-tail end pass. !))
+          (= (last-pass-result) list-of-exprs)
+          (& (eq pass. outpass)
+             (= out list-of-exprs)))))))
 
 (defmacro define-transpiler-end (end &rest name-function-pairs)
   (!= (group name-function-pairs 2)
