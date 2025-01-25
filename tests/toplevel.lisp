@@ -1,20 +1,20 @@
 (fn compile-env-tests (tr)
   (make-project
-    :name
-      (format nil "~A environment test" (transpiler-name tr))
-    :transpiler
-      (aprog1 (copy-transpiler tr)
-        (= (transpiler-dump-passes? tr) nil))
-    :emitter
-      [put-file (format nil "compiled/test.~A"
-                            (transpiler-file-postfix tr))
-                _]
-    :sections
-         ; TODO: Let me guess: this has something to do with the
-         ; upcoming type system.  Remove. (pixel)
-      (… "environment/stage3/type.lisp"
-         (. 'tests     (make-environment-tests))
-         (. 'toplevel  '((environment-tests))))))
+      :name
+        (format nil "~A environment test" (transpiler-name tr))
+      :transpiler
+        (aprog1 (copy-transpiler tr)
+          (= (transpiler-dump-passes? tr) nil))
+      :emitter
+        [put-file (format nil "compiled/test.~A"
+                          (transpiler-file-postfix tr))
+                  _]
+      :sections
+           ; TODO: Let me guess: this has something to do with the
+           ; upcoming type system.  Remove. (pixel)
+        (… "environment/stage3/type.lisp"
+           (. 'tests     (make-environment-tests))
+           (. 'toplevel  '((environment-tests))))))
 
 (fn compile-unit-tests (tr lst)
   (do ((n 1 (++ n))
@@ -32,7 +32,7 @@
               (= (transpiler-dump-passes? tr) t)))
         :emitter
           [put-file (format nil "compiled/unit-~A-~A.~A"
-                                n !. (transpiler-file-postfix tr))
+                            n !. (transpiler-file-postfix tr))
                     _]))))
 
 (fn compile-tests (tr)

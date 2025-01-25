@@ -38,7 +38,7 @@
                (compiled-function-name-string name)
                name)
            " = function "
-               ,@(c-list (argument-expand-names nil (lambda-args !)))
+               ,@(c-list (argument-expand-names name (lambda-args !)))
                ,*terpri*
            "{" ,*terpri*
                ,@(lambda-body !)
@@ -49,10 +49,10 @@
 
 (def-js-codegen %function-prologue (name)
   `(%native ""
-       ,@(& (< 0 (funinfo-num-tags (get-funinfo name)))
-            `(,*js-indent* "var _I_ = 0" ,*js-separator*
-              ,*js-indent* "while (1) {" ,*js-separator*
-              ,*js-indent* "switch (_I_) { case 0:" ,*js-separator*))))
+     ,@(& (< 0 (funinfo-num-tags (get-funinfo name)))
+          `(,*js-indent* "var _I_ = 0" ,*js-separator*
+            ,*js-indent* "while (1) {" ,*js-separator*
+            ,*js-indent* "switch (_I_) { case 0:" ,*js-separator*))))
 
 (def-js-codegen %function-return (name)
   (& (funinfo-var? (get-funinfo name) *return-id*)
@@ -233,13 +233,11 @@
 
 ;;;; CLASSES
 
-(def-js-codegen %js-class-head (cls &key (implements nil))
+(def-js-codegen %js-class-head (cls)
   `(%native
      "class " ,(class-name cls)
      ,@(!? (class-base cls)
            `(" extends " ,!))
-     ,@(!? implements
-           `(" implements " ,(pad (ensure-list !) ", ")))
      "{"))
 
 (def-js-codegen %js-class-tail ()
@@ -250,27 +248,35 @@
           (%slot-flags slot))
        " "))
 
-(fn js-class-slot-member (cls slot)
-  (… (| (php-class-slot-flags slot)
-        "var")
-     " $" (%slot-name slot)))
+(fn js-class-member (cls slot)
+  (… (| (js-class-slot-flags slot)
+        "")
+     (%slot-name slot)
+     *js-separator*))
 
-(fn js-class-slot-method (cls slot x)
-  `(,@(php-class-slot-flags x) " "
-    ,@(codegen-php-function-0 (%slot-name slot)
-                              (lambda-funinfo x)
-                              (lambda-body x))))
+(fn js-class-method (cls slot x)
+  (with-temporary *funinfo* (lambda-funinfo .x.)
+    `(,@(js-class-slot-flags slot) " "
+      ,(funinfo-comment *funinfo*)
+      ,(case x.
+         '__constructor  'constructor
+         x.)
+      ,@(c-list (argument-expand-names (lambda-name .x.)
+                                       (lambda-args .x.))) ,*terpri*
+      "{" ,*terpri*
+          ,@(lambda-body .x.)
+      "}" ,*terpri*)))
 
 (fn js-class-slot (cls x)
   (let slot (class-slot-by-name cls x.)
     (? (eq :member (%slot-type slot))
        (js-class-member cls slot)
-       (js-class-method cls slot .x))))
+       (js-class-method cls slot x))))
 
-(def-js-codegen %collection (which &rest items)
-  (!= (href (defined-classes) which)
-    `((%js-class-head ,which)
-      ,@(+@ [js-class-slot ! _] items)
+(def-js-codegen %collection (class-name &rest pairs)
+  (!= (href (defined-classes) class-name)
+    `((%js-class-head ,!)
+      ,@(+@ [js-class-slot ! _] pairs)
       (%js-class-tail))))
 
 
