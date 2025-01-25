@@ -279,19 +279,19 @@
 
 (transpiler-getter add-defined-variable
   (& (transpiler-defined-variable tr x)
-     (error "Variable ~A is already defined." x))
+     (error "Variable ~A is already defined" x))
   (= (href (transpiler-defined-variables tr) x) t)
   x)
 
 (transpiler-getter add-defined-package
   (& (transpiler-defined-package tr x)
-     (error "Package ~A is already defined." x))
+     (error "Package ~A is already defined" x))
   (= (href (transpiler-defined-packages tr) x) t)
   x)
 
 (fn transpiler-add-defined-function (tr name args body)
   (& (transpiler-defined-function tr name)
-     (error "Function ~A is already defined." name))
+     (error "Function ~A is already defined" name))
   (= (href (transpiler-defined-functions tr) name) (. args body))
   name)
 
@@ -352,21 +352,21 @@
 
 (fn transpiler-enable-pass (tr x)
   (| (symbol? x)
-     (error "Pass name must be a symbol, got ~A." x))
+     (error "Pass name must be a symbol, got ~A" x))
   (& (transpiler-enabled-pass? tr x)
-     (error "Pass ~A already enabled." x))
+     (error "Pass ~A already enabled" x))
   (| (optional-pass? x)
-     (error "Pass ~A is not optional or doesn't exist." x))
+     (error "Pass ~A is not optional or doesn't exist" x))
   (= (transpiler-enabled-passes tr)
      (. (make-keyword x) (transpiler-enabled-passes tr))))
 
 (fn transpiler-disable-pass (tr x)
   (| (symbol? x)
-     (error "Pass name must be a symbol, got ~A." x))
+     (error "Pass name must be a symbol, got ~A" x))
   (& (transpiler-disabled-pass? tr x)
-     (error "Pass ~A already disabled." x))
+     (error "Pass ~A already disabled" x))
   (& (optional-pass? x)
-     (error "Pass ~A is optional.  Enable it instead of disabling it." x))
+     (error "Pass ~A is optional.  Enable it instead" x))
   (= (transpiler-disabled-passes tr)
      (. (make-keyword x) (transpiler-disabled-passes tr))))
 
@@ -374,7 +374,7 @@
   (!= (transpiler-configurations tr)
     (| (assoc x ! :test #'eq)
        (error (+ "Transpiler ~A has no configuration item ~A."
-                 " Available items are ~A.")
+                 " Available items: ~A")
               (transpiler-name tr) x (carlist !)))))
 
 (fn transpiler-configuration (tr x)
