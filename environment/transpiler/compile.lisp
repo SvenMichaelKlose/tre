@@ -1,9 +1,8 @@
-(fn map-section (fun x)
-  (with-cons section data x
-    (. section (~> fun section data))))
+(fn quick-compile (x)
+  (backend (middleend (frontend x))))
 
 (fn map-sections (fun sections)
-  (@ [map-section fun _] sections))
+  (@ [. _. (~> fun _. ._)] sections))
 
 (fn codegen-section (section data)
   (developer-note "Codegen ~A…~%" section)
@@ -12,39 +11,33 @@
 (fn codegen-sections (sections)
   (*> #'+ (cdrlist (map-sections #'codegen-section sections))))
 
-(fn quick-compile (x)
-  (backend (middleend (frontend x))))
-
 (fn quick-compile-sections (x)
   (codegen-sections (frontend-sections x)))
 
-(fn gen-toplevel-function ()
-  `((fn accumulated-toplevel ()
-      ,@(reverse (accumulated-toplevel-expressions)))))
-
 (fn codegen-accumulated-toplevels ()
-  (& (enabled-pass? :accumulate-toplevel)
-     (accumulated-toplevel-expressions)
-     (with-temporaries ((sections-to-update) '(:accumulated-toplevel)
-                        (disabled-passes)    (. :accumulate-toplevel
-                                                (disabled-passes)))
-       (developer-note "Making top–level expressions…~%")
-       (quick-compile-sections
-           (… (. :accumulated-toplevel
-                 #'gen-toplevel-function))))))
+  (awhen (& (enabled-pass? :accumulate-toplevel)
+            (accumulated-toplevel-expressions))
+    (developer-note "Compiling accumulated top–level expressions…~%")
+    (with-temporaries ((sections-to-update) '(:accumulated-toplevel)
+                       (disabled-passes)    (. :accumulate-toplevel
+                                               (disabled-passes)))
+      (quick-compile-sections
+          (… (. :accumulated-toplevel
+                (reverse !)))))))
 
 (fn compile-delayed-exprs ()
-  (developer-note "Making delayed expressions…~%")
+  (developer-note "Compiling delayed expressions…~%")
   (with-temporary (sections-to-update) '(:delayed-exprs)
     (quick-compile-sections
         (… (. :delayed-exprs
               (delayed-exprs))))))
 
 (fn compile-imports (imports)
-  (developer-note "Making imports…~%")
+  (developer-note "Compiling imports…~%")
   (backend (middleend imports)))
 
 (fn compile-inits ()
+  (developer-note "Compiling inits…~%")
   (quick-compile-sections
       (… (. :compiled-inits
             (reverse (compiled-inits))))))
@@ -55,11 +48,10 @@
   (with (before-imports
            (codegen-sections before-import)
          imports-and-rest
-           (progn
-             (+ (compile-imports imports)
-                (compile-delayed-exprs)
-                (codegen-sections after-import)
-                (codegen-accumulated-toplevels))))
+           (+ (compile-imports imports)
+              (compile-delayed-exprs)
+              (codegen-sections after-import)
+              (codegen-accumulated-toplevels)))
     (~> (postprocessor)
         (+ (… (~> (prologue-gen)))
            before-imports
@@ -109,11 +101,10 @@
         _]
      sections))
 
-(fn compile-sections (sections &key (transpiler nil))
+(fn compile-sections (sections &key (transpiler *default-transpiler*))
   (let start-time (milliseconds-since-1970)
     (= *warnings* nil)
-    (with-temporaries (*transpiler*  (| transpiler
-                                        (copy-transpiler *default-transpiler*))
+    (with-temporaries (*transpiler*  transpiler
                        *assert?*     (| *assert?* (assert?)))
       (= (host-functions) (make-host-functions))
       (= (host-variables) (make-host-variables))
@@ -131,6 +122,6 @@
         (print-transpiler-stats start-time)
         (print-status "Phew!~%")))))
 
-(fn compile (expression &key (transpiler nil))
-  (compile-sections `((t ,expression))
+(fn compile (expression &key (transpiler *default-transpiler*))
+  (compile-sections :sections   `((t ,expression))
                     :transpiler transpiler))
