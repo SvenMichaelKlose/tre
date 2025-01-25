@@ -47,6 +47,7 @@
              new-fi  (create-funinfo :name    name
                                      :args    args
                                      :parent  *funinfo*))
+        (format t ";;; Created FUNINFO ~A.~%" name)
         (funinfo-var-add *funinfo* name)
         (with-temporary *funinfo* new-fi
           (copy-lambda x :name  name

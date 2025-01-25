@@ -144,15 +144,15 @@
   ;; Defined CLASSes.
   (defined-classes          (make-hash-table :test #'eq))
 
-  (host-functions           nil)
-  (host-variables           nil)
-  (functionals              nil)
+  (host-functions           (make-host-functions))
+  (host-variables           (make-host-variables))
+  (functionals              (make-functionals))
 
   ;; Functions and variables we want to import.  Imports take place after
   ;; running everything through the front end.
-  (wanted-functions nil)
+  (wanted-functions         nil)
   (wanted-functions-hash    (make-hash-table :test #'eq))
-  (wanted-variables nil)
+  (wanted-variables         nil)
   (wanted-variables-hash    (make-hash-table :test #'eq))
 
   ;; List of used functions to warn about unused functions
@@ -173,24 +173,6 @@
   (real-function-names      (make-hash-table :test #'eq))
 
   (last-pass-result         nil))
-
-(fn transpiler-reset (tr)
-  (= (transpiler-defined-classes tr)        (make-hash-table :test #'eq)
-     (transpiler-wanted-functions tr)       nil
-     (transpiler-wanted-functions-hash tr)  (make-hash-table :test #'eq)
-     (transpiler-wanted-variables tr)       nil
-     (transpiler-wanted-variables-hash tr)  (make-hash-table :test #'eq)
-     (transpiler-defined-functions tr)      (make-hash-table :test #'eq)
-     (transpiler-host-functions tr)         (make-host-functions)
-     (transpiler-host-variables tr)         (make-host-variables)
-     (transpiler-functionals tr)            (make-functionals)
-     (transpiler-identifiers tr)            (make-hash-table :test #'eq)
-     (transpiler-converted-identifiers tr)  (make-hash-table :test #'eq)
-     (transpiler-real-function-names tr)    (make-hash-table :test #'eq)
-     (transpiler-closures tr)               nil
-     (transpiler-delayed-exprs tr)          nil
-     (transpiler-memorized-sources tr)      nil)
-  tr)
 
 (def-transpiler copy-transpiler (tr)
   (aprog1
@@ -419,7 +401,6 @@
 
 (fn create-transpiler (&rest args)
   (aprog1 (*> #'make-transpiler args)
-    (transpiler-reset !)
     (= (transpiler-assert? !) *assert?*)
     (= (transpiler-transpiler-macro-expander !) (make-transpiler-macro-expander !))
     (make-transpiler-codegen-expander !)

@@ -3,7 +3,6 @@
 (fn make-eval-transpiler ()
   (cache *eval-transpiler*
          (!= (copy-transpiler *bc-transpiler*)
-           (transpiler-reset !)
            (clr (transpiler-import-from-host? !)
                 (transpiler-dump-passes? !))
            (= *eval-transpiler* !))))
