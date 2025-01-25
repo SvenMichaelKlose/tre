@@ -5,7 +5,7 @@
   (@ [. _. (~> fun _. ._)] sections))
 
 (fn codegen-section (section data)
-  (developer-note "Codegen ~A…~%" section)
+  (developer-note "Compiling ~A…~%" section)
   (backend (middleend data)))
 
 (fn codegen-sections (sections)
