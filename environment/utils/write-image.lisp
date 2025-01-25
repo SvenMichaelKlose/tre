@@ -1,4 +1,5 @@
 (fn %load-launchfile ()
+  (cl:in-package :tre)
   (%start-core)
   (!= (getenv "TRE_PATH")
     (= *tre-path* !))
