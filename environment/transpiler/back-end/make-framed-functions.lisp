@@ -29,6 +29,7 @@
                 ,@(& (function-frames?)
                      `((%function-epilogue ,name)))))))
 
+; TODO: Use METACODE-WALKER instead. (pixel)
 (define-tree-filter make-framed-functions (x)
   (named-lambda? x)
     (make-framed-function x))
