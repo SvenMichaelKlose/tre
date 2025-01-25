@@ -74,7 +74,7 @@
              (with-temporary *load* section
                (format t "; Loading \"~A\"…~%" section)
                (read-file section))
-           (error "Alien section ~A" section)))))
+           (error "Alien section")))))
 
 (fn frontend-sections (sections)
   (with-temporary *package* *package*
