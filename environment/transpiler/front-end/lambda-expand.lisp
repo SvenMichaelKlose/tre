@@ -37,7 +37,7 @@
 
 (fn lambda-expand-lambda (x)
   "Ensure that function expression X has a FUNINFO."
-  "Creates a name for the function if missing."
+  "Creates name for anonymous function."
   (!? (lambda-funinfo x)
       (with-temporary *funinfo* !
         (copy-lambda x :body (lambda-expand-r (lambda-body x))))
@@ -56,7 +56,7 @@
 
 ;;;; TOPLEVEL
 
-(fn lambda-expand-%collection (x)
+(fn lambda-expand-collection (x)
   `(%collection ,.x.
      ,@(@ [. _. (lambda-expand-expr ._)] ..x)))
 
@@ -68,7 +68,7 @@
                        (lambda-export x)
                        (lambda-expand-lambda x))
     named-lambda?   (lambda-expand-lambda x)
-    %collection?    (lambda-expand-%collection x)
+    %collection?    (lambda-expand-collection x)
     (lambda-expand-r x)))
 
 (fn lambda-expand-r (x)
