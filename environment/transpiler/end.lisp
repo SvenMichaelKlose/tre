@@ -41,6 +41,7 @@
     (? (equal x (last-pass-result))
        (format t "; Nothing changed.~%" pass)
        (progn
+         (fresh-line)
          (format t "; Out:~%")
          (print x)))
     (fresh-line)
