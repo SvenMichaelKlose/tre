@@ -24,7 +24,9 @@
       :sections-before-import  #'cl-sections-before-import
       :frontend-init           #'cl-frontend-init
       :postprocessor           #'make-lambdas
-      :configurations          (+ (default-configurations)
-                                  '((:exclude-core? . nil)))))
+      :configurations          '((:save-sources?)
+                                 (:save-argument-defs-only?)
+                                 (:exclude-core?)
+                                 (:memorize-sources? . t))))
 
 (var *cl-transpiler* (make-cl-transpiler))

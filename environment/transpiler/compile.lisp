@@ -44,6 +44,7 @@
 
 (fn generic-codegen (&key before-import after-import imports)
   (print-status "Let me think. Hmm…~F")
+  (~> (callback-after-frontend))
   (~> (middleend-init))
   (with (before-imports
            (codegen-sections before-import)

@@ -67,8 +67,9 @@
   (enabled-passes          nil)
   (output-passes           '((:frontend . :lambda-expand)))
 
-  (frontend-init           #'(()))
-  (middleend-init          #'(()))
+  (frontend-init             #'(()))
+  (callback-after-frontend   #'(()))
+  (middleend-init            #'(()))
 
   (identifier-char?        [_ (identity t)])
   (gen-string              #'literal-string)
@@ -210,6 +211,7 @@
         :enabled-passes           (copy-list (ensure-list enabled-passes))
         :output-passes            (copy-alist output-passes)
         :frontend-init            frontend-init
+        :callback-after-frontend  callback-after-frontend
         :middleend-init           middleend-init
         :identifier-char?         identifier-char?
         :gen-string               gen-string
@@ -408,14 +410,12 @@
 (fn configuration (x)
   (transpiler-configuration *transpiler* x))
 
+(fn callback-after-frontend ()
+  (transpiler-callback-after-frontend *transpiler*))
+
 (fn transpiler-make-expex (tr)
   (~> (transpiler-expex-initializer tr)
       (= (transpiler-expex tr) (make-expex))))
-
-(fn default-configurations ()
-  '((:save-sources?)
-    (:save-argument-defs-only?)
-    (:memorize-sources? . t)))
 
 (fn create-transpiler (&rest args)
   (aprog1 (*> #'make-transpiler args)
@@ -425,7 +425,7 @@
     (make-transpiler-codegen-expander !)
     (transpiler-make-expex !)
     (make-global-funinfo !)
-    (@ [transpiler-add-functional ! _]
+    (@ [transpiler-add-functional ! _] ; TODO: Remove. (pixel)
        '(%+ %string+ %- %/ %* %mod
          %== %!= %< %> %<= %>=
          %=== %!== %<< %>> %bit-or %bit-and
