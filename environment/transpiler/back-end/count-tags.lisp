@@ -3,5 +3,7 @@
      (!= (lambda-body x.)
        (= (funinfo-num-tags (lambda-funinfo x.)) (count-if #'number? !))
        (count-tags !)))
+  (& (%collection? x.)
+     (@ #'count-tags (cdrlist (cddr x.))))
   (& x (count-tags .x))
   x)
