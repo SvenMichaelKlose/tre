@@ -1,32 +1,17 @@
-[@] !!! Native class expressions.  JS target is old school.
-[@] !!! Getters and setters.
-[@] !!! LML2???: Track path to locate faulty expressions.  Allow temporary
-    error message info generators.
-[ ] !!. JS target: Emulate protected/private methods and members.
-[ ] !.. Generic functions.
-[ ] ... Packaging in user land.  It's a pain up main street without and about
-        as funny to implement.
-[ ] ... CL objects compatible to JS/PHP targets.
-[ ] ... Sub-level FN and VAR forms.
-[ ] Case-sensitive symbols without conversion to upper case.  Will make
-    conversions to back-end identifiers obsolete and less confusing.
-[ ] Rewrite modules/http-funcall.  Remove XML and just PRINT and READ.
-[ ] . instead of &REST.
+[@] !!! Unified CLASS handling for JS and PHP target
+[@] !!! Public/protected/private methods and members
+[@] !!! Array access for objects
+[ ] !!! Generic functions
+[ ] !!. TUNIX Lisp style objects for CL target
+    Using DEFSTRUCT was a mistake.  The simple ALIST-based approach combined with dot notation
+    of SLOT-VALUEs will clean things up well.
+[ ] !.. Use METACODE-WALKER in DEF-OPTIMIZER, MAKE-FRAMED-FUNCTIONS and TRANSLATE-FUNCTION-NAMES
+[ ] !.. Make METACODE-WALKER a single expression thing
+[ ] !.. [args) body…] notation for anonymous functions
+[ ] !.. Remove [0 body…] notation for anonymous functions with no arguments
+[ ] ... Packages
+[ ] ... Sub-level FN and VAR forms as an alternative to WITH
+[ ] ... Case-sensitive symbols with no case conversion
+[ ] ... Argument definitions: . as alternative of &REST
 
-Printer
-[ ] Machine-readable compiler error messages.
-
-Reader/printer
-[ ] YAML
-[ ] Markdown
-[ ] XIT
-
-Parsers
-[ ] PHP
-
-[?] Native PHP closures.  Need to research the implications first.
-[?] LML2XML compiler
-
-Bugs
-[ ] !.. Check TERPRI at end of DUMP-SYSTEM.
-[ ] ... READ-FILE: Unterminated string at file end causes stack exhaustion.
+[?] ... Native PHP closures (lexicals).
