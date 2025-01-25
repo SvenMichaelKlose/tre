@@ -40,6 +40,10 @@
         (… (. :delayed-exprs
               (delayed-exprs))))))
 
+(fn compile-imports (imports)
+  (developer-note "Making imports…~%")
+  (backend (middleend imports)))
+
 (fn compile-inits ()
   (quick-compile-sections
       (… (. :compiled-inits
@@ -52,8 +56,7 @@
            (codegen-sections before-import)
          imports-and-rest
            (progn
-             (developer-note "Making imports…~%")
-             (+ (backend (middleend imports))
+             (+ (compile-imports imports)
                 (compile-delayed-exprs)
                 (codegen-sections after-import)
                 (codegen-accumulated-toplevels))))
@@ -64,25 +67,21 @@
            imports-and-rest
            (… (~> (epilogue-gen)))))))
 
-(fn frontend-section-load (path)
-  (format t "; Loading \"~A\"…~%" path)
-  (with-temporary *load* path
-    (read-file path)))
-
-(fn section-comment (section)
-  `((%comment "Section " ,(? (symbol? section)
-                             (symbol-name section)
-                             section))))
-
 (fn frontend-section (section x)
   (developer-note "Frontend ~A~%" section)
   (+@ [frontend (… _)]
-      (+ (section-comment section)
+      (+ `((%comment "Section " ,(? (symbol? section)
+                                    (symbol-name section)
+                                    section)))
          (pcase section
-           symbol?  (? (function? x)
-                       (~> x)
-                       x)
-           string?  (frontend-section-load section)
+           symbol?
+             (? (function? x)
+                (~> x)
+                x)
+           string?
+             (with-temporary *load* section
+               (format t "; Loading \"~A\"…~%" section)
+               (read-file section))
            (error "Alien section ~A" section)))))
 
 (fn frontend-sections (sections)
