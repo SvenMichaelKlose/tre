@@ -2,7 +2,7 @@
   (when (funinfo-parent fi)
     (@ (i (funinfo-vars fi))
       (| (funinfo-used-var? fi i)
-         (warn "Unused symbol ~A in ~A.~%"
+         (warn "Unused symbol ~A in ~A"
                (symbol-name i)
                (human-readable-funinfo-names fi)
                (!? (butlast (funinfo-names fi))
