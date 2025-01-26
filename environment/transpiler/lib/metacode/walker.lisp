@@ -5,6 +5,7 @@
                            &key (if-atom nil)
                                 (if-cons nil)
                                 (if-%= nil)
+                                (if-%tag nil)
                                 (if-%go nil)
                                 (if-%go-nil nil)
                                 (if-%go-not-nil nil)
@@ -20,6 +21,8 @@
                 (atom ,v)            ,(| if-atom `(… ,v))
                 ,@(!? if-%=
                       `((%=? ,v) ,!))
+                ,@(!? if-%tag
+                      `((%tag? ,v) ,!))
                 ,@(!? if-%go
                       `((%go? ,v) ,!))
                 ,@(!? if-%go-nil

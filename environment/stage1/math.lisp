@@ -9,11 +9,11 @@
 (defmacro --! (place &optional (n 1))
   `(= ,place (- ,place ,n)))
 
-(defmacro +! (place &rest vals)
-  `(= ,place (+ ,place ,@vals)))
+(defmacro +! (place val &rest vals)
+  `(= ,place (+ ,place ,val ,@vals)))
 
-(defmacro -! (place &rest vals)
-  `(= ,place (+ ,place ,@vals)))
+(defmacro -! (place val &rest vals)
+  `(= ,place (+ ,place ,val ,@vals)))
 
 (fn even? (x)
   (== 0 (mod x 2)))

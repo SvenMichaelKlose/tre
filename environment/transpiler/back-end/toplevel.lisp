@@ -3,8 +3,8 @@
     :collect-used-functions #'collect-used-functions
     :function-names         #'translate-function-names
     :encapsulate-strings    #'encapsulate-strings
-    :count-tags             #'count-tags
     :wrap-tags              #'wrap-tags
+    :count-tags             #'count-tags
     :codegen-expand         #'codegen-expand
     :convert-identifiers    #'convert-identifiers
     :output-filter          #'flatten)

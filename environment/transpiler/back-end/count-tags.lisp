@@ -1,9 +1,5 @@
-(fn count-tags (x)
-  (& (named-lambda? x.)
-     (!= (lambda-body x.)
-       (= (funinfo-num-tags (lambda-funinfo x.)) (count-if #'number? !))
-       (count-tags !)))
-  (& (%collection? x.)
-     (@ #'count-tags (cdrlist (cddr x.))))
-  (& x (count-tags .x))
-  x)
+(metacode-walker count-tags (x)
+    :if-%tag
+      (progn
+        (++! (funinfo-num-tags *funinfo*))
+        (… x.)))

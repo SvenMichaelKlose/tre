@@ -25,7 +25,7 @@
   (types        nil)  ; Strings of native type declarations.
 
   ; Number of jump tags in body.
-  (num-tags     nil)
+  (num-tags     0)
   
   (globals      nil))
 

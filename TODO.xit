@@ -5,7 +5,7 @@
 [ ] !!. TUNIX Lisp style objects for CL target
     Using DEFSTRUCT was a mistake.  The simple ALIST-based approach combined with dot notation
     of SLOT-VALUEs will clean things up well.
-[ ] !.. Use METACODE-WALKER in DEF-OPTIMIZER, TRANSLATE-FUNCTION-NAMES and COUNT-TAGS
+[ ] !.. Use METACODE-WALKER in TRANSLATE-FUNCTION-NAMES
 [ ] !.. Make METACODE-WALKER a single expression thing
 [ ] !.. [args) body…] notation for anonymous functions
 [ ] !.. Remove [0 body…] notation for anonymous functions with no arguments
