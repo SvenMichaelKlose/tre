@@ -28,8 +28,7 @@
           (format nil "tests/unit-~A-~A.lisp" n !.)
         :transpiler
           (aprog1 (copy-transpiler tr)
-            (when (== n 0)
-              (= (transpiler-dump-passes? tr) t)))
+            (= (transpiler-dump-passes? tr) nil))
         :emitter
           [put-file (format nil "compiled/unit-~A-~A.~A"
                             n !. (transpiler-file-postfix tr))
