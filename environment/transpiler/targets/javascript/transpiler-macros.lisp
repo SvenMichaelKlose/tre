@@ -86,3 +86,24 @@
  `(%= nil (%invoke-debugger)))
 
 (def-js-transpiler-macro deftest (&rest x))
+
+;;;;;;;;;;;;;
+;;; CLASS ;;;
+;;;;;;;;;;;;;
+
+(def-js-transpiler-macro %class-predicate (class-name)
+ `(fn ,($ class-name '?) (x)
+    (& (object? x)
+       (is_a x ,(convert-identifier class-name))
+       x)))
+
+(def-js-transpiler-macro %method-body (class-name &body body)
+  `(let ~%this this
+     (%thisify ,class-name
+       (macrolet ((super (&rest args)
+                   `((%native "parent::__construct" ,,@args))))
+         ,@body))))
+
+(def-js-transpiler-macro %constructor-body (class-name &rest body)
+  `(%block
+     ,@body))

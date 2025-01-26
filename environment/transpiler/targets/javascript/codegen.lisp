@@ -244,13 +244,17 @@
   `(%native "}" ""))
 
 (fn js-class-slot-flags (slot)
-  (pad (@ [downcase (symbol-name _)]
+  (pad (@ [?
+            (in? _ :protected :public)
+              ""
+            (eq _ :private)
+              (+ "#" (downcase (symbol-name _)))
+            (downcase (symbol-name _))]
           (%slot-flags slot))
        " "))
 
 (fn js-class-member (cls slot)
-  (… (| (js-class-slot-flags slot)
-        "")
+  (… (| (js-class-slot-flags slot) "") " "
      (%slot-name slot)
      *js-separator*))
 

@@ -8,6 +8,7 @@
 (finalize-class a)
 
 (defclass (b a) ())
+
 (finalize-class b)
 
 (| (eq 'a ((new b).bla))
