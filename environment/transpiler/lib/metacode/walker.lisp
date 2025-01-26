@@ -16,7 +16,7 @@
          (let ,v (car ,x)
            (+ (?
                 (%native? ,v)
-                  (error "%%NATIVE in metacode.")
+                  (error "%NATIVE in metacode.")
                 (atom ,v)            ,(| if-atom `(… ,v))
                 ,@(!? if-setq        `((%=? ,v) ,!))
                 ,@(!? if-go          `((%go? ,v) ,!))
@@ -35,6 +35,6 @@
                                 (@ [. _. (,name ._)]
                                    (cddr ,v))))
                 (not (metacode-statement? ,v))
-                  (funinfo-error "METACODE-STATEMENT? is NIL for ~A." ,v)
+                  (funinfo-error "Not a metacode statement: ~A" ,v)
                 ,(| if-cons `(list ,v)))
               (,name (cdr ,x) ,@r)))))))
