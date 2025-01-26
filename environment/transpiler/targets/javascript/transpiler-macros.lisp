@@ -101,7 +101,7 @@
   `(let ~%this this
      (%thisify ,class-name
        (macrolet ((super (&rest args)
-                   `((%native "parent::__construct" ,,@args))))
+                   `((%native "super" ,,@args))))
          ,@body))))
 
 (def-js-transpiler-macro %constructor-body (class-name &rest body)
