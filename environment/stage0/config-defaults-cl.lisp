@@ -4,13 +4,13 @@
 ;; :php    PHP
 (%defvar *targets* '(:cl :js :php))
 
+;; Developer mode with various effects.
+(%defvar *development?* (getenv "TRE_DEVELOPMENT"))
+
 ;; Enable run-time type checks,
 (%defvar *assert?* (| (getenv "TRE_ASSERT_CL")
                       (getenv "TRE_ASSERT")
-                      (getenv "TRE_DEVELOPMENT")))
-
-;; Developer mode with various effects.
-(%defvar *development?* (getenv "TRE_DEVELOPMENT"))
+                      *development?*))
 
 ;; Verbosity
 (%defvar *print-status?*      t)
