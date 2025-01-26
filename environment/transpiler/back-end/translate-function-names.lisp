@@ -23,3 +23,8 @@
      (| (not (funinfo-parent fi))
         (not (funinfo-arg-or-var? fi x))))
     (translate-function-name x))
+
+; TODO: This one is messing up %CLOSUREs.
+;(metacode-walker translate-function-names (x)
+;  :if-cons
+;      (list (translate-function-names-in-tree x.)))
