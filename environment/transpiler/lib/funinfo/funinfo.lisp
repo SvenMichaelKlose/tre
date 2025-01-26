@@ -1,25 +1,51 @@
-(var *funinfo*)
+(var *funinfo*) ; Updated when walking LAMBDAs.
 
 (def-gensym funinfo-sym ~f)
 
+; Function information
+; A global FUNINFO encompasses all the input code.
 (defstruct funinfo
   (transpiler   nil)
   (parent       nil)
+
+  ; Name of the function.
+  ; Required past LAMBDA-EXPAND.
   (name         nil)
 
   (argdef       nil) ; Argument definition.
   (args         nil) ; Expanded argument definition.
 
-  (vars         nil)
-  (vars-hash    nil)
+  ; Variables of the function.
+  (vars         nil) ; To keep the order.
+  (vars-hash    nil) ; To speed things up.  The top-level FUNINFO
+                     ; can become rather huge.
+
+  ; Variables that are actually being used.  For warnings.
   (used-vars    nil)
+
+  ; Variables used which haven't been defined.  E.g. native target
+  ; variables.
   (free-vars    nil)
+
+  ; Variables that are being modified.
   (places       nil)
 
-  (scoped-vars  nil) ; List of symbols exported to child functions.
-  (scope        nil) ; Name of the array of scoped-vars.
-  (scope-arg    nil) ; Name of hidden argument with an array of scoped-vars.
+  ; Variables that are passed on to closures inside the function.
+  ; Effectively layouting the environment vector passed to
+  ; closures by shadow env argument.
+  (scoped-vars  nil)
+
+  ; Local variable containing the environment vector for closures
+  ; inside this function.
+  (scope        nil)
+
+  ; If this is a closure, this is the name of the shadow env argument.
+  (scope-arg    nil)
+
+  ; Name of hidden argument with an array of scoped-vars.
   (local-function-args nil)
+
+  ; Tells if the env vector is modified.
   (fast-scope?  nil)
 
   (types        nil)  ; Strings of native type declarations.
@@ -27,6 +53,8 @@
   ; Number of jump tags in body.
   (num-tags     0)
   
+  ; Global variables used by the function.  Used by the PHP target
+  ; to generate 'global' statements.
   (globals      nil))
 
 (fn funinfo-framesize (fi)
@@ -36,13 +64,6 @@
           (? (transpiler-arguments-on-stack? !)
              (length (funinfo-args fi))
              0)))))
-
-(fn funinfo-topmost (fi)
-  (awhen (funinfo-parent fi)
-    (? (& !
-          (not (funinfo-parent !)))
-       fi
-       (funinfo-topmost !))))
 
 (fn funinfo-toplevel? (fi)
   (!? (funinfo-parent fi)
@@ -68,9 +89,11 @@
       :globals      (copy-list globals)))
 
 (fn get-funinfo (name &optional (tr *transpiler*))
+  "Get FUNINFO by name."
   (& name (href (transpiler-funinfos tr) name)))
 
 (fn lambda-funinfo (x)
+  "Get FUNINFO of named LAMBDA expression."
   (when (named-lambda? x)
     (get-funinfo (lambda-name x))))
 
@@ -85,12 +108,12 @@
 (fn create-funinfo (&key name parent args (transpiler *transpiler*))
   (& (href (transpiler-funinfos transpiler) name)
      (error "FUNFINFO for ~A is already memorized." name))
-  (with (argnames (argument-expand-names 'lambda-expand args)
-         fi       (make-funinfo :name          name
-                                :argdef        args
-                                :args          argnames
-                                :parent        parent
-                                :transpiler    transpiler))
+  (with (argnames  (argument-expand-names name args)
+         fi        (make-funinfo :name          name
+                                 :argdef        args
+                                 :args          argnames
+                                 :parent        parent
+                                 :transpiler    transpiler))
     (= (href (transpiler-funinfos transpiler) name) fi)
     (funinfo-var-add fi *return-id*)
     (& (transpiler-copy-arguments-to-stack? transpiler)
