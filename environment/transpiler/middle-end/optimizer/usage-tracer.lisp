@@ -35,7 +35,7 @@
                                (traverse-statements d)))))
                    (%go? a)
                      (traverse-tag .a.)
-                   (%go-cond? a)
+                   (conditional-%go? a)
                      (| (eq v ..a.)
                         (traverse-tag .a.)
                         (traverse-statements d))

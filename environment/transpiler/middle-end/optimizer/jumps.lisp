@@ -33,8 +33,8 @@
 (fn jump-to-same-jump? (x)
   (& (some-%go? x)
      (!= (cdr (tag-code (%go-tag x)))
-       (? (%go-cond? x)
-          (? (%go-cond? !.)
+       (? (conditional-%go? x)
+          (? (conditional-%go? !.)
              (eq x. !..)
              (%go? !.))
           (%go? !.)))))
@@ -51,7 +51,7 @@
         (%go-not-nil? d.))))
 
 (fn inverting-cond-over-jump? (a d)
-  (& (%go-cond? a)
+  (& (conditional-%go? a)
      (%go? d.)
      (number? .d.)
      (== (%go-tag a) .d.)))
@@ -59,7 +59,7 @@
 (define-optimizer optimize-jumps
   (jump-to-same-jump? a)
     (. `(,a. ,(%go-tag (cadr (tag-code (%go-tag a))))
-             ,@(? (%go-cond? a)
+             ,@(? (conditional-%go? a)
                   (… (%go-value a))))
        (optimize-jumps d))
   (fnord? a d)

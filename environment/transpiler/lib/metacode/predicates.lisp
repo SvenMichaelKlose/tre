@@ -23,7 +23,7 @@
   (& (cons? e)
      (in? e. '%go '%go-nil '%go-not-nil)))
 
-(fn %go-cond? (x)
+(fn conditional-%go? (x)
   (| (%go-nil? x)
      (%go-not-nil? x)))
 
