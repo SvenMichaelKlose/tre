@@ -15,21 +15,15 @@
               (remove-if-not [funinfo-scoped-var? fi _]
                              (funinfo-args fi)))))))
 
-(fn make-framed-function (x)
-  (with (fi   (lambda-funinfo x)
-         name (funinfo-name fi))
-    (copy-lambda x
-        :body `(,@(& (needs-var-declarations?)
-                     (funinfo-var-declarations fi))
-                ,@(& (function-frames?)
-                     `((%function-prologue ,name)))
-                ,@(& (lambda-export?)
-                     (funinfo-copiers-to-scoped-vars fi))
-                ,@(make-framed-functions (lambda-body x))
-                ,@(& (function-frames?)
-                     `((%function-epilogue ,name)))))))
-
-; TODO: Use METACODE-WALKER instead. (pixel)
-(define-tree-filter make-framed-functions (x)
-  (named-lambda? x)
-    (make-framed-function x))
+(metacode-walker make-framed-functions (x)
+  :if-named-function
+      (let name (lambda-name x.)
+        `(,@(& (needs-var-declarations?)
+               (funinfo-var-declarations *funinfo*))
+          ,@(& (function-frames?)
+               `((%function-prologue ,name)))
+          ,@(& (lambda-export?)
+               (funinfo-copiers-to-scoped-vars *funinfo*))
+          ,@(make-framed-functions (lambda-body x.))
+          ,@(& (function-frames?)
+               `((%function-epilogue ,name))))))
