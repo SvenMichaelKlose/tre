@@ -15,3 +15,5 @@
 [ ] ... Argument definitions: . as alternative of &REST
 
 [?] ... Native PHP closures (lexicals).
+
+[ ] ... Rename 'scope' to 'env' in FUNINFO-related code
