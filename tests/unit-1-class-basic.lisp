@@ -7,7 +7,8 @@
 
 (finalize-class a)
 
-(defclass (b a) ())
+(defclass (b a) ()
+  (super))
 
 (finalize-class b)
 

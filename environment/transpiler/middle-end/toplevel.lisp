@@ -7,4 +7,6 @@
     :collect-keywords         #'collect-keywords
     :optimize                 #'optimize
     :opt-tailcall             #'pass-opt-tailcall
+    :optimize                 #'optimize
+    :delay-statements         #'delay-statements
     :validate-metacode        #'validate-metacode)

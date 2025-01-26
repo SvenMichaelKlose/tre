@@ -7,7 +7,8 @@
   (compose (optimizer-pass optimize-jumps)
            (optimizer-pass optimize-places)
            (optimizer-pass opt-peephole)
-           (optimizer-pass optimize-tags)))
+           (optimizer-pass optimize-tags)
+           (optimizer-pass remove-spare-tags)))
 
 (fn optimize (statements)
   (with-global-funinfo
