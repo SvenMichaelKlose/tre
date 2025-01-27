@@ -11,7 +11,7 @@
               (,name d))
          (%collection? a)
            (. (append (list '%collection .a.)
-                      (@ [. _. (car (,name (list ._)))] ..a))
+                      (@ [. _. (,name ._)] ..a))
               (,name d))
          ,@body
          (. a (,name d))))))
