@@ -13,6 +13,10 @@ largely ignored – it wasn't essential for app building at the time of writing.
 ~~~
 
 Defines a new class together with its constructor
+If the class has been derived, (SUPER) must be call first before the object
+can access itself.[^es6]
+
+[^es6]: [ECMAScript® 2015 Language Specification](https://262.ecma-international.org/6.0/)
 
 # DEFMETHOD
 
