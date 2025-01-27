@@ -1,11 +1,14 @@
-(fn has-no-jumps-to? (x tag)
-  (notany [& (some-%go? _)
-             (== (%go-tag _) tag)]
-          x))
+(fn body-has-jumps-to? (x tag)
+  (some [& (some-%go? _)
+           (== tag (%go-tag _))]
+        x))
+
+(fn body-tags (x)
+  (remove-if-not #'number? x))
 
 (fn tags-lambda (body)
-  (!= (remove-if-not [has-no-jumps-to? body _]
-                     (remove-if-not #'number? body))
+  (!= (remove-if [body-has-jumps-to? body _]
+                 (body-tags body))
     (remove-if [member _ !] body)))
 
 (define-optimizer remove-spare-tags
