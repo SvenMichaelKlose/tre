@@ -9,7 +9,7 @@
      (progn
        (? (& (atom p)
              (member p *constants* :test #'eq))
-          (error "Cannot set constant ~A." p))
+          (error "Cannot set constant ~A" p))
        (… 'setq p val))
      (let* ((fun     p.)
             (args    .p)
@@ -17,13 +17,16 @@
        (? (| (eq 'slot-value fun)
              (~> *=-function?* setter))
           (? (member args. *constants* :test #'eq)
-             (error "Cannot set constant ~A." args.)
+             (error "Cannot set constant ~A" args.)
              `(,setter ,val ,@args))
-          (error "Place ~A isn't settable." p)))))
+          (error (? (fbound? p)
+                    "Place ~A isn't settable"
+                    "Undefined place ~A")
+                 p)))))
 
 (fn =-0 (args)
   (? (not .args)
-     (error "Pair expected instead of single ~A." args.)
+     (error "Pair expected instead of single ~A" args.)
      (. (=-complement args. .args.)
         (? ..args
            (=-0 ..args)))))
@@ -33,4 +36,4 @@
      (? .args
         `(progn ,@(=-0 args))
         `(= ,args.))
-     (error "Arguments expected.")))
+     (error "Arguments expected")))
