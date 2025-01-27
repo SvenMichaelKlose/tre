@@ -25,6 +25,8 @@ and this project adheres to
 
   * In literal JSON objects, translate keywords to C identifier
     name strings, like Lisp symbol names to C/JS/PHP names.
+  * JS/PHP: Unified class handling in the frontend.
+  * JS: Generates native 'class' statements.
 
 ## [v0.0.21]
 
