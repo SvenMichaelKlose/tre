@@ -1,3 +1,7 @@
+(fn two-subsequent-tags? (a d)
+  (& a (atom a)
+     d. (atom d.)))
+
 (fn optimize-tags (statements)
   (with (removed-tags nil
          replace-tag
