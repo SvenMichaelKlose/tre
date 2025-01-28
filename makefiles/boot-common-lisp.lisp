@@ -1,4 +1,5 @@
-(var *cl-debug?* (getenv "TRE_DEBUG"))
+(var *cl-debug?* (| (getenv "TRE_DEBUG")
+                    (getenv "TRE_DEVELOPMENT")))
 
 (load "environment/stage0/config-defaults-cl.lisp")
 
