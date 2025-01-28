@@ -75,14 +75,15 @@
   (!= (href (defined-classes) class-name)
     `(%block
        (%collection ,class-name
-         ,@(@ [. (%slot-name _)
-                 nil] ;(%slot-body _)]
+         ,@(@ [. '%inhibit-macroexpansion
+                 (. (%slot-name _) nil)] ;(%slot-body _)]
               (class-members !))
-         ,@(@ [. (%slot-name _)
-                 (make-lambda
-                     :name  ($ class-name '- (%slot-name _))
-                     :args  (%slot-args _)
-                     :body  `((%method-body ,class-name
-                                ,@(%slot-body _))))]
+         ,@(@ [. '%inhibit-macroexpansion
+                 (. (%slot-name _)
+                    (make-lambda
+                        :name  ($ class-name '- (%slot-name _))
+                        :args  (%slot-args _)
+                        :body  `((%method-body ,class-name
+                                   ,@(%slot-body _)))))]
               (class-methods !)))
        (%class-predicate ,class-name))))

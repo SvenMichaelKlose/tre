@@ -145,9 +145,11 @@
 
 (fn expex-%collection (x)
   `((%collection ,.x.
-      ,@(@ [. _. (? ._
-                    (with ((dummy expr) (expex-lambda ._))
-                      expr))]
+      ,@(@ [. '%inhibit-macro-expansion
+              (. ._.
+                 (? .._
+                    (with ((dummy expr) (expex-lambda .._))
+                      expr)))]
            ..x))))
 
 (fn expex-expr (x)

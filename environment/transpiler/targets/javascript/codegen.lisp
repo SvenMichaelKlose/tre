@@ -280,7 +280,7 @@
 (def-js-codegen %collection (class-name &rest pairs)
   (!= (href (defined-classes) class-name)
     `((%js-class-head ,!)
-      ,@(+@ [js-class-slot ! _] pairs)
+      ,@(+@ [js-class-slot ! ._] pairs)
       (%js-class-tail))))
 
 

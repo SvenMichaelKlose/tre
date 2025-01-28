@@ -58,7 +58,7 @@
 
 (fn lambda-expand-collection (x)
   `(%collection ,.x.
-     ,@(@ [. _. (lambda-expand-expr ._)] ..x)))
+     ,@(@ [. '%inhibit-macro-expansion (. ._. (lambda-expand-expr .._))] ..x)))
 
 (fn lambda-expand-expr (x)
   (pcase x

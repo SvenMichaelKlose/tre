@@ -11,7 +11,9 @@
               (,name d))
          (%collection? a)
            (. (append (list '%collection .a.)
-                      (@ [. _. (,name ._)] ..a))
+                      (@ [. '%inhibit-macro-expansion
+                            (. ._. (,name .._))]
+                         ..a))
               (,name d))
          ,@body
          (. a (,name d))))))

@@ -343,7 +343,7 @@
 (def-php-codegen %collection (which &rest items)
   (!= (href (defined-classes) which)
     `((%php-class-head ,!)
-      ,@(+@ [php-class-slot ! _] items)
+      ,@(+@ [php-class-slot ! ._] items)
       (%php-class-tail))))
 
 

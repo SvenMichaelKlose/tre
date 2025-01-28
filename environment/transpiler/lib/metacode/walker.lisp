@@ -1,7 +1,6 @@
 (var *body*)
 
-(defmacro metacode-walker (name
-                           (x &rest r)
+(defmacro metacode-walker (name (x &rest r)
                            &key (if-atom nil)
                                 (if-cons nil)
                                 (if-%= nil)
@@ -18,7 +17,8 @@
            (+ (?
                 (%native? ,v)
                   (error "%NATIVE in metacode.")
-                (atom ,v)            ,(| if-atom `(… ,v))
+                (atom ,v)
+                  ,(| if-atom `(… ,v))
                 ,@(!? if-%=
                       `((%=? ,v) ,!))
                 ,@(!? if-%tag
@@ -31,7 +31,8 @@
                       `((%go-not-nil? ,v) ,!))
                 ,@(!? if-conditional-%go
                       `((conditional-%go? ,v) ,!))
-                (%comment? ,v)       (list ,v)
+                (%comment? ,v)
+                  (list ,v)
                 (named-lambda? ,v)
                   (with-lambda-funinfo ,v
                     (with-temporary *body* (lambda-body ,v)
@@ -40,7 +41,7 @@
                                           `(,name (lambda-body ,v) ,@r))))))
                 (%collection? ,v)
                   (list (append (list '%collection (cadr ,v))
-                                (@ [. _. (,name ._)]
+                                (@ [. '%inhibit-macro-expansion (. ._.  (,name .._))]
                                    (cddr ,v))))
                 (not (metacode-statement? ,v))
                   (funinfo-error "Not a metacode statement: ~A" ,v)
