@@ -23,10 +23,10 @@
     (c-identifier-char? x)))
 
 (fn php-expex-initializer (ex)
-  (= (expex-inline? ex)          #'%slot-value?
-     (expex-setter-filter ex)    (compose [@ #'php-setter-filter _]
-                                          #'expex-compiled-funcall)
-     (expex-argument-filter ex)  #'php-argument-filter))
+  (= (expex-inline? ex)            #'%slot-value?
+     (expex-argument-filter ex)    #'php-argument-filter
+     (expex-assignment-filter ex)  (compose [@ #'php-assignment-filter _]
+                                            #'expex-compiled-funcall)))
 
 (fn %make-php-transpiler-0 ()
   (create-transpiler

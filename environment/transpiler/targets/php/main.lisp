@@ -1,7 +1,7 @@
 (env-load "transpiler/targets/php/core.lisp")
 (env-load "transpiler/targets/php/literals.lisp")
 (env-load "transpiler/targets/php/argument-filter.lisp")
-(env-load "transpiler/targets/php/setter-filter.lisp")
+(env-load "transpiler/targets/php/assignment-filter.lisp")
 (env-load "transpiler/targets/php/toplevel.lisp")
 (env-load "transpiler/targets/php/transpiler-macros.lisp")
 (env-load "transpiler/targets/php/codegen.lisp")

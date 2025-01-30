@@ -1,8 +1,8 @@
 (defstruct expex
-  (argument-filter  #'identity)
-  (setter-filter    #'list)
-  (inline?          [])
-  (warnings?        t))
+  (argument-filter    #'identity)
+  (assignment-filter  #'list)
+  (inline?            [])
+  (warnings?          t))
 
 (var *expex* nil)
 
@@ -14,7 +14,7 @@
      x))
 
 
-;;;; SHARED SETTER FILTER
+;;;; SHARED ASSIGNMENT FILTER
 
 (fn expex-compiled-funcall (x)
   (!= ..x.
@@ -28,8 +28,8 @@
 
 ;;;; GUEST CALLBACKS
 
-(fn expex-guest-filter-setter (x)
-  (~> (expex-setter-filter *expex*) x))
+(fn expex-guest-filter-assignment (x)
+  (~> (expex-assignment-filter *expex*) x))
 
 (fn expex-guest-filter-arguments (x)
   (@ [~> (expex-argument-filter *expex*) _] x))
@@ -38,7 +38,7 @@
 ;;;; UTILS
 
 (fn make-%= (p v)
-  (expex-guest-filter-setter
+  (expex-guest-filter-assignment
       `(%= ,p ,(? (atom v)
                   (~> (expex-argument-filter *expex*) v)
                   v))))
@@ -76,9 +76,9 @@
     `(,@(& new? '(%new))
       ,@(!? fun (… !))
       ,@(expand-literal-characters
-          (? (defined-function fun)
-             (compiled-expanded-arguments fun (expex-argdef fun) args)
-             args)))))
+           (? (defined-function fun)
+              (compiled-expanded-arguments fun (expex-argdef fun) args)
+              args)))))
 
 
 ;;;;; MOVING ARGUMENTS
@@ -178,7 +178,7 @@
        (+ (butlast x)
           (? (%=? l)
              (? (wanted-return-value?)
-                (expex-guest-filter-setter l)
+                (expex-guest-filter-assignment l)
                 (make-return-value))
              (make-%= s l)))
        x)))

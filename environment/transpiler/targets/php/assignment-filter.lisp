@@ -1,4 +1,4 @@
-(fn php-setter-filter (x)
+(fn php-assignment-filter (x)
   `(%= ,(php-argument-filter .x.)
        ,(!= ..x.
           (? (& (cons? !)
