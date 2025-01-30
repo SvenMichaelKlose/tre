@@ -2,7 +2,7 @@
   (filter [. _ (slot-value x _)]
           (keys x)))
 
-(fn props-klist (x)
+(fn props-keywords (x)
   (+@ [list (make-keyword (upcase _)) (slot-value x _)]
       (keys x)))
 

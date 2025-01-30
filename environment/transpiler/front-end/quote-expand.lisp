@@ -26,7 +26,7 @@
                 (compiler-macroexpand
                     `(#'((,g)
                           (append (? (json-object? ,g)
-                                     (props-klist ,g)
+                                     (props-keywords ,g)
                                      ,g)
                           ,(backq ._)))
                          ,(cadr _.))))]
