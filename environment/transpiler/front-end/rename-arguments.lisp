@@ -2,7 +2,6 @@
 
 (fn rename-arguments (x &optional (replacements nil))
   (with (f #'((lambda-form replacements)
-               ; TODO: Check if still required. (pixel)
                (? (lambda-funinfo lambda-form)
                   lambda-form
                   (!= (+ (@ [. _ (argument-sym)]
