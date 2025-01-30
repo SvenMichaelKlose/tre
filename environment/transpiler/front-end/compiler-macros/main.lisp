@@ -1,0 +1,7 @@
+(env-load "transpiler/front-end/compiler-macros/def-compiler-macro.lisp")
+(env-load "transpiler/front-end/compiler-macros/block.lisp")
+(env-load "transpiler/front-end/compiler-macros/cond.lisp")
+(env-load "transpiler/front-end/compiler-macros/if.lisp")
+(env-load "transpiler/front-end/compiler-macros/progn.lisp")
+(env-load "transpiler/front-end/compiler-macros/setq.lisp")
+(env-load "transpiler/front-end/compiler-macros/tagbody.lisp")
