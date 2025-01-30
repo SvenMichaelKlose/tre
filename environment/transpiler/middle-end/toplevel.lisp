@@ -6,7 +6,6 @@
     :accumulate-toplevel      #'accumulate-toplevel-expressions
     :collect-keywords         #'collect-keywords
     :optimize                 #'optimize
-    :opt-tailcall             #'pass-opt-tailcall
-    :optimize                 #'optimize
+    :opt-tailcall             #'opt-tailcall
     :delay-statements         #'delay-statements
     :validate-metacode        #'validate-metacode)

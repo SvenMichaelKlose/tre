@@ -30,8 +30,14 @@
                 body.)
              (opt-tailcall-fun l .body front-tag))))))
 
-(metacode-walker opt-tailcall (x)
+(metacode-walker opt-tailcall-body (x)
   :if-named-function
     (with-compiler-tag front-tag
       `(,front-tag
         ,@(opt-tailcall-fun x. (lambda-body x.) front-tag))))
+
+(fn opt-tailcall (x)
+  (!= (opt-tailcall-body x)
+    (? (equal ! x)
+       !
+       (optimize !))))

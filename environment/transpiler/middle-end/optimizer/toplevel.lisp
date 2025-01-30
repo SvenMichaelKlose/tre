@@ -14,9 +14,3 @@
   (with-global-funinfo
     (with-temporary *body* statements
       (optimize-funinfos (refine (optimizer-passes) statements)))))
-
-(fn pass-opt-tailcall (x)
-  (!= (opt-tailcall x)
-    (? (equal ! x)
-       !
-       (optimize !))))
