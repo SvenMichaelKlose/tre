@@ -9,8 +9,7 @@
 
 (fn compiled-list (x) ; TODO: Look better in a more general section.
   (? (cons? x)
-     `(. ,x.
-         ,(compiled-list .x))
+     `(. ,x. ,(compiled-list .x))
      x))
 
 
@@ -83,16 +82,6 @@
 
 ;;;;; MOVING ARGUMENTS
 
-(fn expex-move-inline (x)
-  (with ((moved new-expr) (expex-move-args x))
-    (. moved new-expr)))
-
-(fn expex-move-%block (x)
-  (!? .x
-      (let s (expex-make-var)
-        (. (expex-body ! s) s))
-      (. nil nil)))
-
 (fn expex-move-std (x)
   (with (s                 (expex-make-var)
          (moved new-expr)  (expex-expr x))
@@ -112,9 +101,16 @@
 
 (fn expex-move (x)
   (pcase x
-    unexpex-able?     (. nil x)
-    expex-inlinable?  (expex-move-inline x)
-    %block?          (expex-move-%block x)
+    unexpex-able?
+      (. nil x)
+    expex-inlinable?
+      (with ((moved new-expr) (expex-move-args x))
+        (. moved new-expr))
+    %block?
+      (!? .x
+          (let s (expex-make-var)
+            (. (expex-body ! s) s))
+            (. nil nil))
     (expex-move-std x)))
 
 (fn expex-move-args (x)
@@ -130,37 +126,32 @@
   (with-lambda-funinfo x
     (values nil (… (copy-lambda x :body (expex-body (lambda-body x)))))))
 
-(fn expex-var (x)
-  (funinfo-var-add *funinfo* .x.)
-  (values nil nil))
-
-(fn expex-%go-nil (x)
-  (with ((moved new-expr) (expex-move-args (… ..x.)))
-    (values moved `((%go-nil ,.x. ,@new-expr)))))
-
-(fn expex-expr-%= (x)
-  (with-%= p v x
-    (with ((moved new-expr) (expex-move-args (… v)))
-      (values moved (make-%= p new-expr.)))))
-
-(fn expex-%collection (x)
-  `((%collection ,.x.
-      ,@(@ [. '%inhibit-macro-expansion
-              (. ._.
-                 (? .._
-                    (with ((dummy expr) (expex-lambda .._))
-                      expr)))]
-           ..x))))
-
 (fn expex-expr (x)
   (pcase x
-    %=?            (expex-expr-%= x)
-    %go-nil?       (expex-%go-nil x)
-    %var?          (expex-var x)
-    named-lambda?  (expex-lambda x)
+    %=?
+      (with-%= p v x
+        (with ((moved new-expr) (expex-move-args (… v)))
+          (values moved (make-%= p new-expr.))))
+    %go-nil?
+      (with ((moved new-expr) (expex-move-args (… ..x.)))
+        (values moved `((%go-nil ,.x. ,@new-expr))))
+    %var?
+      (progn
+        (funinfo-var-add *funinfo* .x.)
+        (values nil nil))
+    named-lambda?
+      (expex-lambda x)
     %block?        (values nil (expex-body .x))
     unexpex-able?  (values nil (… x))
-    %collection?   (values nil (expex-%collection x))
+    %collection?
+      (values nil
+              `((%collection ,.x.
+                  ,@(@ [. '%inhibit-macro-expansion
+                          (. ._.
+                             (? .._
+                                (with ((dummy expr) (expex-lambda .._))
+                                  expr)))]
+                       ..x))))
     (with ((moved new-expr) (expex-move-args (expex-argexpand x)))
       (values moved (… new-expr)))))
 
@@ -168,18 +159,14 @@
 ;;;; BODY EXPANSION
 
 (fn expex-make-return-value (s x)
-  (with (l                     (car (last x))
-         wanted-return-value?  #'(()
-                                   (eq s (%=-place l)))
-         make-return-value     #'(()
-                                   `(,l
-                                     ,@(make-%= s (%=-place l)))))
+  (with (l (car (last x)))
     (? (has-return-value? l)
        (+ (butlast x)
           (? (%=? l)
-             (? (wanted-return-value?)
+             (? (eq s (%=-place l))
                 (expex-guest-filter-assignment l)
-                (make-return-value))
+                `(,l
+                  ,@(make-%= s (%=-place l))))
              (make-%= s l)))
        x)))
 
