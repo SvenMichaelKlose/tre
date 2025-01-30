@@ -1,8 +1,3 @@
-(fn collect-slot-names (cls)
-  (+ (class-slots cls)
-     (!? (class-parent cls)
-         (collect-slot-names !))))
-
 (fn thisify-symbol (classdef x exclusions)
   (?
     (eq 'this x)
@@ -36,7 +31,7 @@
 
 (fn thisify-list (classes x class-name exclusions)
   (thisify-list-0 (@ #'%slot-name
-                     (collect-slot-names (href classes class-name)))
+                     (class-and-parent-slot-names (href classes class-name)))
                   x exclusions))
 
 (fn thisify-expr (x classes exclusions)

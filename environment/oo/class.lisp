@@ -22,6 +22,11 @@
 (fn class-slot-names (cls)
   (@ #'%slot-name (class-slots cls)))
 
+(fn class-and-parent-slot-names (cls)
+  (+ (class-slots cls)
+     (!? (class-parent cls)
+         (class-and-parent-slot-names !))))
+
 (fn class-slot-by-name (cls name)
   (aprog1 (find-if [eq name (%slot-name _)]
                    (class-slots cls))
