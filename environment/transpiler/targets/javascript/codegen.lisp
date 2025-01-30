@@ -65,7 +65,7 @@
       ""))
 
 
-;;;; ASSIGNMENT
+;;;; ASSIGNMENTS
 
 (def-js-codegen %= (dest val)
   (? (& (not dest) (atom val))
@@ -177,22 +177,10 @@
   (js-compiled-symbol x))
 
 (def-js-codegen %slot-value (x y)
-  `(%native ,x "." ,(?
-                       (%string? y)
-                         .y.
-                       (symbol? y)
-                         (convert-identifier (make-symbol (symbol-name y) "TRE"))
-                       y)))
+  `(%native ,x "." ,(compiled-slot-name y)))
 
 (def-js-codegen %=-slot-value (v x y)
-  `(%native ,x "." ,(?
-                       (%string? y)
-                         .y.
-                       (symbol? y)
-                         (convert-identifier (make-symbol (symbol-name y) "TRE"))
-                       y)
-            " = "
-            ,v))
+  `(%native ,x "." ,(compiled-slot-name y) " = " ,v))
 
 (def-js-codegen %try () ; TODO: Check if stale.
   '(%native "try {"))
@@ -219,7 +207,7 @@
   '(%native "null; debugger"))
 
 (def-js-codegen %eval (x)
-  `((%native "window.eval (" ,x ")")))
+  `(%native "window.eval (" ,x ")"))
 
 ;;; TODO: Looking like a PHP target stub. (pixel)
 (def-js-codegen %global (x)
@@ -248,7 +236,8 @@
        " "))
 
 (fn js-class-member (cls slot)
-  (… (| (js-class-slot-flags slot) "") " "
+  (… (| (js-class-slot-flags slot) "")
+     " "
      (%slot-name slot)
      *js-separator*))
 

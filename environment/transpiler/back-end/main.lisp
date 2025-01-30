@@ -1,3 +1,4 @@
+(env-load "transpiler/back-end/slot-name.lisp")
 (env-load "transpiler/back-end/convert-identifiers.lisp")
 (env-load "transpiler/back-end/codegen-macros.lisp")
 (env-load "transpiler/back-end/collect-used-functions.lisp")

@@ -181,8 +181,8 @@
 
 ;;;; ARRAYS
 
-(fn php-array-subscript (indexes)
-  (@ [`("[" ,(php-dollarize _) "]")] indexes))
+(define-filter php-array-subscript (x)
+  `("[" ,(php-dollarize x) "]"))
 
 (fn php-literal-array-element (x)
   (list (compiled-function-name '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
@@ -246,37 +246,18 @@
   `(%native "null; unset " ,x))
 
 (def-php-codegen %slot-value (x n)
-  `(%native
-     ,(php-dollarize x)
-     "->"
-     ,(?
-        (%string? n)
-          .n.
-        (symbol? n)
-          (convert-identifier (make-symbol (symbol-name n) "TRE"))
-        n)))
+  `(%native ,(php-dollarize x) "->" ,(compiled-slot-name n)))
 
 (def-php-codegen %=-slot-value (v x n)
-  `(%native
-     ,(php-dollarize x)
-     "->" ,(?
-             (%string? n)
-               .n.
-             (symbol? n)
-               (convert-identifier (make-symbol (symbol-name n) "TRE"))
-             n)
-     " = " ,(php-dollarize v)))
+  `(%native ,(php-dollarize x) "->" ,(compiled-slot-name n)
+            " = " ,(php-dollarize v)))
 
 (def-php-codegen %slot-value-var (x n)
-  `(%native
-     ,(php-dollarize x)
-     "->{" ,(php-dollarize n) "}"))
+  `(%native ,(php-dollarize x) "->{" ,(php-dollarize n) "}"))
 
 (def-php-codegen %=-slot-value-var (v x n)
-  `(%native
-     ,(php-dollarize x)
-     "->{" ,(php-dollarize n) "}"
-     " = " ,(php-dollarize v)))
+  `(%native ,(php-dollarize x) "->{" ,(php-dollarize n) "}"
+            " = " ,(php-dollarize v)))
 
 
 ;;;; CLASSES
