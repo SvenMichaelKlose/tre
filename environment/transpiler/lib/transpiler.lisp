@@ -161,9 +161,14 @@
 
   (accumulated-toplevel-expressions nil)
 
+  ;; Set by DEFINE-COMPILED-LITERAL to configure code generation.
+  ;; Machine-level targets woudld also need COMPILED-NUMBERS for example.
+  ;; Other types than symbols have been removed with C and bytecode target
+  ;; gone.  TODO: Revive bytecode backend to also keep machine-level
+  ;; targeting alive.
+  (compiled-decls           nil) ; top-level declarations
+  (compiled-inits           nil) ; top-level initializers
   (compiled-symbols         (make-hash-table :test #'eq))
-  (compiled-decls           nil)
-  (compiled-inits           nil)
 
   ;; Identifier conversions.
   (identifiers              (make-hash-table :test #'eq))
@@ -172,6 +177,7 @@
   (converted-identifiers    (make-hash-table :test #'eq))
   (real-function-names      (make-hash-table :test #'eq))
 
+  ;; Diagnostics.
   (last-pass-result         nil))
 
 (def-transpiler copy-transpiler (tr)

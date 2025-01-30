@@ -173,12 +173,6 @@
 
 ;;;; METACODES
 
-(fn make-compiled-symbol-identifier (x)
-  ($ (!? (symbol-package x)
-         (+ (abbreviated-package-name (symbol-name !)) "_p_")
-         "")
-     x))
-
 (def-js-codegen quote (x)
   (js-compiled-symbol x))
 

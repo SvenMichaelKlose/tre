@@ -1,11 +1,9 @@
 (define-compiled-literal php-compiled-symbol (x symbol)
-  :maker
-      ($ 'symbol_ (? (keyword? x) '_ "") x)
-  :init-maker
+  :maker (make-symbol-identifier x)
+  :initializer
       `(%native "new __symbol ("
-                     (%string ,(symbol-name x))
-                     ","
-                     ,(? (keyword? x)
-                         "$KEYWORDPACKAGE"
-                         "NULL")
-                 ")"))
+                    (%string ,(symbol-name x)) ","
+                    ,(? (keyword? x)
+                        "$KEYWORDPACKAGE"
+                        "NULL")
+                ")"))
