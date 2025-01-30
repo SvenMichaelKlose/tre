@@ -140,7 +140,7 @@
 (def-php-codegen %vec (v i)
   `(%native ,(php-dollarize v) "->g (" ,(php-dollarize i) ")"))
 
-(def-php-codegen %set-vec (v i x)
+(def-php-codegen %=-vec (v i x)
   `(%native ,*php-indent*
      ,(php-dollarize v) "->s (" ,(php-dollarize i) ", " ,(php-%=-value x) ")" ,*php-separator*))
 

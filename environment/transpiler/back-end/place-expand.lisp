@@ -65,6 +65,6 @@
         (%set-local-fun? x))
      (%vec? (place-expand .x. fi)))
     (let p (place-expand .x. fi)
-      `(%set-vec ,.p. ,..p. ,...p. ,(place-expand ..x. fi)))
+      `(%=-vec ,.p. ,..p. ,...p. ,(place-expand ..x. fi)))
   (%slot-value? x)
     `(%slot-value ,(place-expand .x. fi) ,..x.))

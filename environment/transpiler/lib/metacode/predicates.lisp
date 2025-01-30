@@ -2,7 +2,7 @@
   ,@(@ [`(def-head-predicate ,_)]
        '(%= quote %new %closure
          %block %go %go-nil %go-not-nil %tag %tag
-         %stack %stackarg %vec %set-vec %set-local-fun
+         %stack %stackarg %vec %=-vec %set-local-fun
          %string
          %function-prologue %function-return %function-epilogue %collection
          %native %var %global %comment)))
@@ -50,7 +50,7 @@
   (| (number? x)
      (& (cons? x)
         (| (named-lambda? x)
-           (in? x. '%= '%set-vec '%var '%function-prologue '%function-epilogue
+           (in? x. '%= '%=-vec '%var '%function-prologue '%function-epilogue
                    '%function-return '%collection '%tag '%comment)
            (some-%go? x)))))
 

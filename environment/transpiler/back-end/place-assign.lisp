@@ -10,8 +10,8 @@
   (& (%vec? x)
      ...x))
 
-(fn unassigned-%set-vec? (x)
-  (& (%set-vec? x)
+(fn unassigned-%=-vec? (x)
+  (& (%=-vec? x)
      ....x))
 
 (fn place-assign-error (x v)
@@ -41,8 +41,8 @@
     `(%vec ,(place-assign .x.)
            ,(| (funinfoname-scoped-var-index ..x. ...x.)
                (place-assign-error x ...x.)))
-  (unassigned-%set-vec? x)
-    `(%set-vec ,(place-assign .x.)
+  (unassigned-%=-vec? x)
+    `(%=-vec ,(place-assign .x.)
                ,(| (funinfoname-scoped-var-index ..x. ...x.)
                    (place-assign-error x ...x.))
                ,(place-assign ....x.))

@@ -8,7 +8,7 @@
     (let scope (funinfo-scope fi)
       `((%= ,scope (%make-scope ,(length scoped-vars)))
         ,@(!? (funinfo-scoped-var? fi scope)
-              `((%set-vec ,scope ,! ,scope)))
+              `((%=-vec ,scope ,! ,scope)))
         ,@(@ [`(%= ,_ ,(? (arguments-on-stack?)
                           `(%stackarg ,(funinfo-name fi) ,_)
                           `(%native ,_)))]

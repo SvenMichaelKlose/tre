@@ -209,7 +209,7 @@
 (def-js-codegen %vec (v i)
   `(%native ,v "[" ,i "]"))
 
-(def-js-codegen %set-vec (v i x)
+(def-js-codegen %=-vec (v i x)
   `(%native (%aref ,v ,i) "=" ,x ,*js-separator*))
 
 (def-js-codegen %js-typeof (x)
