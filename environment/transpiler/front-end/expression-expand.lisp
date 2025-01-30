@@ -31,8 +31,8 @@
 (fn expex-guest-filter-assignment (x)
   (~> (expex-assignment-filter *expex*) x))
 
-(fn expex-guest-filter-arguments (x)
-  (@ [~> (expex-argument-filter *expex*) _] x))
+(define-filter expex-guest-filter-arguments (x)
+  (~> (expex-argument-filter *expex*) x))
 
 
 ;;;; UTILS
@@ -183,14 +183,16 @@
              (make-%= s l)))
        x)))
 
+(fn ensure-%= (x)
+  (| (& (metacode-statement? x)
+        (… x))
+     (make-%= *return-id* x)))
+
 (fn expex-body (x &optional (s *return-id*))
-  (with (ensure-%=  [| (& (metacode-statement? _)
-                          (… _))
-                       (make-%= *return-id* _)])
-    (expex-make-return-value s 
-        (+@ [with ((moved new-expr) (expex-expr _))
-              (+ moved (+@ #'ensure-%= new-expr))]
-            (wrap-atoms (remove 'no-args x))))))
+  (expex-make-return-value s
+      (+@ [with ((moved new-expr) (expex-expr _))
+            (+ moved (+@ #'ensure-%= new-expr))]
+          (wrap-atoms (remove 'no-args x)))))
 
 
 ;;;; TOPLEVEL

@@ -71,8 +71,8 @@
     %collection?    (lambda-expand-collection x)
     (lambda-expand-r x)))
 
-(fn lambda-expand-r (x)
-  (@ #'lambda-expand-expr x))
+(define-filter lambda-expand-r (x)
+  (lambda-expand-expr x))
 
 (fn lambda-expand (x)
   (with-global-funinfo

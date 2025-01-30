@@ -96,11 +96,10 @@
   (print-status "~A seconds passed.~%"
                 (integer (seconds-passed start-time))))
 
-(fn expand-sections (sections)
-  (@ [? (string? _)
-        (… _)
-        _]
-     sections))
+(define-filter expand-sections (section)
+  (? (string? section)
+     (… section)
+     section))
 
 (fn compile-sections (sections &key (transpiler *default-transpiler*))
   (let start-time (milliseconds-since-1970)
