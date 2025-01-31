@@ -1,3 +1,4 @@
+(env-load "transpiler/front-end/compile-list.lisp")
 (env-load "transpiler/front-end/wrap-atoms.lisp")
 (env-load "transpiler/front-end/gather-imports.lisp")
 (env-load "transpiler/front-end/expression-expand.lisp")

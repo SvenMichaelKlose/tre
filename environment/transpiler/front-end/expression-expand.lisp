@@ -6,22 +6,21 @@
 
 (var *expex* nil)
 
-
-(fn compiled-list (x) ; TODO: Look better in a more general section.
+(fn compile-list (x) ; TODO: Look better in a more general section.
   (? (cons? x)
-     `(. ,x. ,(compiled-list .x))
+     `(. ,x. ,(compile-list .x))
      x))
 
 
 ;;;; SHARED ASSIGNMENT FILTER
 
-(fn expex-compiled-funcall (x)
+(fn expex-compile-funcall (x)
   (!= ..x.
     (? (& (cons? !)
           (| (function-expr? !.)
              (funinfo-find *funinfo* !.)))
        (with-%= p v x
-         (expex-body (*> #'+ (frontend `(((%= ,p (*> ,v. ,(compiled-list .v)))))))))
+         (expex-body (*> #'+ (frontend `(((%= ,p (*> ,v. ,(compile-list .v)))))))))
        (… x))))
 
 
@@ -53,7 +52,7 @@
 (fn compiled-expanded-argument (x)
   (?
     (%rest-or-%body? x)
-      (compiled-list .x)
+      (compile-list .x)
     (%key? x)
       .x
     x))

@@ -26,7 +26,7 @@
   (= (expex-inline? ex)            #'%slot-value?
      (expex-argument-filter ex)    #'php-argument-filter
      (expex-assignment-filter ex)  (compose [@ #'php-assignment-filter _]
-                                            #'expex-compiled-funcall)))
+                                            #'expex-compile-funcall)))
 
 (fn %make-php-transpiler-0 ()
   (create-transpiler
