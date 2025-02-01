@@ -65,7 +65,7 @@
 
 (fn unexpex-able? (x)
   (| (atom x)
-     (literal-symbol-function? x)
+     (sharp-quote? x)
      (in? x. '%go '%go-nil '%native '%string 'quote '%comment)))
 
 (fn expex-move-arg (x)

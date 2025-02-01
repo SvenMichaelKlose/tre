@@ -2,7 +2,7 @@
   ,@(@ [`(def-head-predicate ,_)]
        '(identity quote backquote quasiquote quasiquote-splice)))
 
-(fn literal-symbol-function? (x)
+(fn sharp-quote? (x)
   (& (function-expr? x)
      (atom .x.)
      (not ..x)))
@@ -14,7 +14,7 @@
              x)
      t))
 
-(fn constant-literal? (x) ;;; TODO Why is ATOM not enough?
+(fn constant-literal? (x)
   (| (bool? x)
      (number? x)
      (character? x)
