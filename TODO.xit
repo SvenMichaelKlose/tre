@@ -9,6 +9,7 @@
 [ ] !.. Make METACODE-WALKER a single expression thing
 [ ] !.. [args) body…] notation for anonymous functions
 [ ] !.. Remove [0 body…] notation for anonymous functions with no arguments
+[ ] ... QUASIQUOTE -> UNQUOTE, BACKQUOTE -> QUASIQUOTE
 [ ] ... Packages
 [ ] ... Sub-level FN and VAR forms as an alternative to WITH
 [ ] ... Case-sensitive symbols with no case conversion
