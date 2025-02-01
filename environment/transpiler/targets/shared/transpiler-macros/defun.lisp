@@ -37,17 +37,25 @@
                               (shared-defun-backtrace name !)
                               !))))
       ,@(when (& keep-source? (configuration :keep-source?))
-          (shared-defun-source-setter name args (remove 'no-args body))))))
+          (!= (remove 'no-args body)
+            (? (configuration :keep-source?)
+               (progn
+                 (acons! name (. args !) (memorized-sources))
+                 nil)
+               (shared-defun-source-setter name args !)))))))
 
 (fn shared-defun (name args body
                   &key (make-expander? t)
                        (keep-source? t))
-  (= args (& args (ensure-list args)))
+  (? args
+     (= args (? (cons? args)
+                args
+                (list args))))
   (let fun-name (%fn-name name)
     `(progn
        ,@(shared-defun-without-expander fun-name args body
-                                        :keep-source? keep-source?
-                                        :backtrace?   t)
+             :keep-source? keep-source?
+             :backtrace? t)
        ,@(& make-expander?
             (| (always-expand-arguments?)
                (not (simple-argument-list? args)))
@@ -55,4 +63,4 @@
               (shared-defun-without-expander
                   (c-expander-name fun-name)
                   (list expander-arg)
-                  (compile-argument-expansion-body fun-name args expander-arg)))))))
+                  (compile-argument-expansion-function-body fun-name args expander-arg)))))))
