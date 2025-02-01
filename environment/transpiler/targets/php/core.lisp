@@ -57,7 +57,6 @@
                        "standard-stream.lisp"
                        "file.lisp"
                        "../../../environment/print.lisp"
-                       "../../../environment/list-string.lisp"
                        "string.lisp"
                        "keys.lisp"
                        "base64.lisp"

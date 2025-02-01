@@ -7,3 +7,6 @@
     function?   "[FUNCTION]"
     not         "NIL"
     (error "Don't know how to convert A to string.")))
+
+(fn list-string (x)
+  (*> #'string-concat (@ #'string x)))

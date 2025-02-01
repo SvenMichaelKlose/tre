@@ -43,7 +43,6 @@
                               "late-symbol.lisp"
                               "../../../environment/make-array.lisp"
                               "sequence.lisp"
-                              "../../../environment/list-string.lisp"
                               "string.lisp"
                               "hash.lisp"
                               "base64.lisp"
