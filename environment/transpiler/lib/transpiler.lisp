@@ -88,9 +88,9 @@
   codegen-expander
 
   ;; Initialising EXPEX in TRANSPILER-EXPEX.
-  (argument-filter         #'identity)
-  (assignment-filter       #'list)
-  (inline?                 [])
+  (argument-filter         #'identity :not-global)
+  (assignment-filter       #'list     :not-global)
+  (inline?                 []         :not-global)
 
   ;; Turn closures into top-level functions.
   (lambda-export?           nil)
@@ -419,7 +419,8 @@
     (= (transpiler-transpiler-macro-expander !) (make-transpiler-macro-expander !))
     (make-transpiler-codegen-expander !)
     (make-global-funinfo !)
-    (@ [transpiler-add-functional ! _] ; TODO: Remove. (pixel)
+    ; TODO: Being functional should be implicit. (pixel)
+    (@ [transpiler-add-functional ! _]
        '(%+ %string+ %- %/ %* %mod
          %== %!= %< %> %<= %>=
          %=== %!== %<< %>> %bit-or %bit-and
