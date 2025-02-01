@@ -107,7 +107,7 @@
     (& (cons? val)
        (eq 'tre_cons val.))
       `("new __cons (" ,(php-dollarize .val.) ", " ,(php-dollarize ..val.) ")")
-    (constant-literal? val)
+    (literal? val)
       (list val)
     (| (atom val)
        (& (%native? val)

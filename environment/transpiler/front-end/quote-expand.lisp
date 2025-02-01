@@ -4,7 +4,7 @@
 
 (fn quote-expand (x)
   (with (atomic
-           [? (constant-literal? _)
+           [? (literal? _)
               _
               `(quote ,_)]
          static

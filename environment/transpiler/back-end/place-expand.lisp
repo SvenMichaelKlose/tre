@@ -24,7 +24,7 @@
 
 (fn place-expand-atom (fi x)
   (?
-    (| (constant-literal? x)
+    (| (literal? x)
        (not (funinfo-find fi x)
             (funinfo-global-var? fi x)))
       x
