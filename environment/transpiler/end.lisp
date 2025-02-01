@@ -50,9 +50,9 @@
             (symbol-name pass))))
 
 (fn transpiler-pass (pass-fun x)
-  (with-global-funinfo
-    (with-temporary *body* x
-      (~> pass-fun x))))
+  (with-temporaries (*funinfo* (global-funinfo)
+                     *body*    x)
+    (~> pass-fun x)))
 
 (fn transpiler-end (end passes x)
   (unless (enabled-end? end)

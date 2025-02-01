@@ -97,10 +97,6 @@
   (when (named-lambda? x)
     (get-funinfo (lambda-name x))))
 
-(defmacro with-global-funinfo (&body body)
-  `(with-temporary *funinfo* (global-funinfo)
-     ,@body))
-
 (defmacro with-lambda-funinfo (x &body body)
   `(with-temporary *funinfo* (lambda-funinfo ,x)
      ,@body))
