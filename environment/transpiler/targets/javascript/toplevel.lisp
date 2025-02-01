@@ -71,7 +71,6 @@
             :argument-filter          #'js-argument-filter
             :configurations           '((:platform            . :browser)
                                         (:nodejs-requirements . nil)
-                                        (:rplac-breakpoints   . nil)
                                         (:exclude-core?       . nil)
                                         (:memorize-sources?   . nil)
                                         (:keep-source?        . nil)
