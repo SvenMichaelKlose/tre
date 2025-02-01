@@ -29,8 +29,7 @@
 (def-shared-transpiler-macro (bc c js php) defconstant (&rest x)
   `(var ,@x))
 
-(def-shared-transpiler-macro (bc c js php) defvar
-                             (name &optional (val '%%no-value-in-defvar))
+(def-shared-transpiler-macro (bc c js php) defvar (name &optional (val '%%no-value-in-defvar))
   (& (eq '%%no-value val)
      (= val `',name))
   (print-definition `(var ,name))

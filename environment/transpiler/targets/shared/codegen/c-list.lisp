@@ -1,15 +1,16 @@
 (fn c-list (x &key (parens-type :parens))
-  (with (err #'(() (error "Expected :PARENS, :BRACES, :BRACKETS or NIL in PARENS-TYPE instead of ~A." parens-type)))
+  (with (err #'(() (error "PARENS-TYPE ~A not :PARENS, :BRACES, :BRACKETS or NIL"
+                          parens-type)))
     `(" "
       ,@(case parens-type
-          :parens    '("(")
-          :braces    '("{")
-          :brackets  '("[")
-          nil        nil
+          :parens   '("(")
+          :braces   '("{")
+          :brackets '("[")
+          nil       nil
           (err))
       ,@(pad x ", ")
       ,@(case parens-type
-          :parens    '(")")
-          :braces    '("}")
-          :brackets  '("]")
+          :parens   '(")")
+          :braces   '("}")
+          :brackets '("]")
           nil))))
