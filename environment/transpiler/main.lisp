@@ -14,10 +14,9 @@
 (env-load "transpiler/tag.lisp")
 (env-load "transpiler/compile-argument-expansion.lisp")
 
-(env-load "transpiler/metacode/places.lisp")
+(env-load "transpiler/metacode/assignment.lisp")
 (env-load "transpiler/metacode/predicates.lisp")
 (env-load "transpiler/metacode/walker.lisp")
-(env-load "transpiler/metacode/with-%=.lisp")
 
 (env-load "transpiler/end.lisp")
 (env-load "transpiler/back-end/main.lisp")

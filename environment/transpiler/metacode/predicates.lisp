@@ -30,17 +30,6 @@
 (fn %go-tag (x)
   .x.)
 
-(fn %go-value (x)
-  ..x.)
-
-(fn %=-funcall? (x)
-  (? (%=? x)
-     (cons? ..x.)))
-
-(fn %=-funcall-of? (x name)
-  (& (%=-funcall? x)
-     (eq name ..x..)))
-
 (fn has-return-value? (x)
   (not (| (some-%go? x)
           (%var? x)
