@@ -13,7 +13,7 @@
     (with (l (argument-expand 'lambda-call-embed args vals)
            a (carlist l)
            v (cdrlist l))
-      (@ [funinfo-add-var *funinfo* _] a)
+      (funinfo-add-var *funinfo* a)
       (lambda-expand (lambda-expand-make-inline-body a v body)))))
 
 

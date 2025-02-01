@@ -71,22 +71,22 @@
 
 (def-funinfo copy-funinfo (fi)
   (make-funinfo
-      :parent       parent
-      :name         name
-      :argdef       argdef
-      :args         (copy-list args)
-      :vars         (copy-list vars)
-      :vars-hash    (copy-hash-table vars-hash)
-      :used-vars    (copy-list used-vars)
-      :free-vars    (copy-list free-vars)
-      :places       (copy-list places)
-      :scoped-vars  (copy-list scoped-vars)
-      :scope        scope
-      :scope-arg    scope-arg
+      :parent              parent
+      :name                name
+      :argdef              argdef
+      :args                (copy-list args)
+      :vars                (copy-list vars)
+      :vars-hash           (copy-hash-table vars-hash)
+      :used-vars           (copy-list used-vars)
+      :free-vars           (copy-list free-vars)
+      :places              (copy-list places)
+      :scoped-vars         (copy-list scoped-vars)
+      :scope               scope
+      :scope-arg           scope-arg
       :local-function-args (copy-list local-function-args)
-      :fast-scope?  fast-scope?
-      :num-tags     num-tags
-      :globals      (copy-list globals)))
+      :fast-scope?         fast-scope?
+      :num-tags            num-tags
+      :globals             (copy-list globals)))
 
 (fn get-funinfo (name &optional (tr *transpiler*))
   "Get FUNINFO by name."
@@ -104,16 +104,16 @@
 (fn create-funinfo (&key name parent args (transpiler *transpiler*))
   (& (href (transpiler-funinfos transpiler) name)
      (error "FUNFINFO for ~A is already memorized." name))
-  (with (argnames  (argument-expand-names name args)
-         fi        (make-funinfo :name          name
-                                 :argdef        args
-                                 :args          argnames
-                                 :parent        parent
-                                 :transpiler    transpiler))
+  (with (argnames (argument-expand-names name args)
+         fi       (make-funinfo :name       name
+                                :argdef     args
+                                :args       argnames
+                                :parent     parent
+                                :transpiler transpiler))
     (= (href (transpiler-funinfos transpiler) name) fi)
     (funinfo-add-var fi *return-symbol*)
     (& (transpiler-copy-arguments-to-stack? transpiler)
-       (@ [funinfo-add-var fi _] argnames))
+       (funinfo-add-var fi argnames))
     fi))
 
 (fn funinfo-closure-without-free-vars? (fi)

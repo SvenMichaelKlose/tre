@@ -55,16 +55,16 @@
   (funinfo-var-pos (get-funinfo name) x))
 
 (fn funinfo-add-var (fi x)
-  (assert (atom x) (error "Atom expected instead of ~A."))
-  (unless (funinfo-var? fi x)
-    (? (funinfo-parent fi)
-       (+! (funinfo-vars fi) (list x))
-       (push x (funinfo-vars fi)))
-    (unless (funinfo-parent fi)
-      (= (href (| (funinfo-vars-hash fi)
-                  (= (funinfo-vars-hash fi) (make-hash-table :test #'eq)))
-               x)
-         t)))
+  (@ (v (ensure-list x))
+    (unless (funinfo-var? fi v)
+      (? (funinfo-parent fi)
+         (+! (funinfo-vars fi) (… v))
+         (push x (funinfo-vars fi)))
+      (unless (funinfo-parent fi)
+        (= (href (| (funinfo-vars-hash fi)
+                    (= (funinfo-vars-hash fi) (make-hash-table :test #'eq)))
+                 v)
+           t))))
   x)
 
 (fn funinfo-vars-reset (fi)
@@ -74,7 +74,7 @@
 
 (fn funinfo-vars-set (fi x)
   (funinfo-vars-reset fi)
-  (@ [funinfo-add-var fi _] x))
+  (funinfo-add-var fi x))
 
 
 ;;;; LEXICALS
