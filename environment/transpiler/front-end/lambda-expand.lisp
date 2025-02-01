@@ -10,11 +10,11 @@
 
 (fn lambda-call-embed (lambda-call)
   (with-lambda-call (args vals body lambda-call)
-    (with (l  (argument-expand 'lambda-call-embed args vals)
-           a  (carlist l)
-           v  (cdrlist l))
+    (with (l (argument-expand 'lambda-call-embed args vals)
+           a (carlist l)
+           v (cdrlist l))
       (@ [funinfo-var-add *funinfo* _] a)
-      (lambda-expand-r (lambda-expand-make-inline-body a v body)))))
+      (lambda-expand (lambda-expand-make-inline-body a v body)))))
 
 
 ;;;; EXPORT
@@ -22,12 +22,12 @@
 (def-gensym closure-name ~closure-)
 
 (fn lambda-export (x)
-  (with (name    (closure-name)
-         args    (lambda-args x)
-         body    (lambda-body x)
-         new-fi  (create-funinfo :name    name
-                                 :args    args
-                                 :parent  *funinfo*))
+  (with (name   (closure-name)
+         args   (lambda-args x)
+         body   (lambda-body x)
+         new-fi (create-funinfo :name   name
+                                :args   args
+                                :parent *funinfo*))
     (funinfo-make-scope-arg new-fi)
     (transpiler-add-closure *transpiler* `((fn ,name ,args ,@body)))
     `(%closure ,name)))
@@ -40,18 +40,18 @@
   "Creates name for anonymous function."
   (!? (lambda-funinfo x)
       (with-temporary *funinfo* !
-        (copy-lambda x :body (lambda-expand-r (lambda-body x))))
-      (with (name    (| (lambda-name x)
-                        (funinfo-sym))
-             args    (lambda-args x)
-             new-fi  (create-funinfo :name    name
-                                     :args    args
-                                     :parent  *funinfo*))
+        (copy-lambda x :body (lambda-expand (lambda-body x))))
+      (with (name   (| (lambda-name x)
+                       (funinfo-sym))
+             args   (lambda-args x)
+             new-fi (create-funinfo :name   name
+                                    :args   args
+                                    :parent *funinfo*))
         (funinfo-var-add *funinfo* name)
         (with-temporary *funinfo* new-fi
-          (copy-lambda x :name  name
-                         :args  args
-                         :body  (lambda-expand-r (lambda-body x)))))))
+          (copy-lambda x :name name
+                         :args args
+                         :body (lambda-expand (lambda-body x)))))))
 
 
 ;;;; TOPLEVEL
@@ -69,11 +69,6 @@
                        (lambda-expand-lambda x))
     named-lambda?   (lambda-expand-lambda x)
     %collection?    (lambda-expand-collection x)
-    (lambda-expand-r x)))
+    (lambda-expand x)))
 
-(define-filter lambda-expand-r (x)
-  (lambda-expand-expr x))
-
-(fn lambda-expand (x)
-  (with-global-funinfo
-    (lambda-expand-r x)))
+(define-filter lambda-expand #'lambda-expand-expr)

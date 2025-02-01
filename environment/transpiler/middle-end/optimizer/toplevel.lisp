@@ -11,6 +11,5 @@
            (optimizer-pass remove-spare-tags)))
 
 (fn optimize (statements)
-  (with-global-funinfo
-    (with-temporary *body* statements
-      (optimize-funinfos (refine (optimizer-passes) statements)))))
+  (with-temporary *body* statements
+    (optimize-funinfos (refine (optimizer-passes) statements))))

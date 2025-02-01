@@ -1,14 +1,10 @@
-(fn collect-used-functions (x)
-  (with (r [@ [?
-                (%=-funcall? _)
-                  (@ [& (defined-function _)
-                        (not (funinfo-find *funinfo* _))
-                        (add-used-function _)]
-                     .._.)
-                (named-lambda? _)
-                  (with-lambda-funinfo _
-                    (r (lambda-body _)))]
-              _])
-    (with-global-funinfo
-      (r x)))
-  x)
+(define-filter collect-used-functions (x)
+  (?
+    (%=-funcall? x)
+      (@ [& (defined-function x)
+            (not (funinfo-find *funinfo* x))
+            (add-used-function x)]
+         ..x.)
+    (named-lambda? x)
+      (with-lambda-funinfo x
+        (collect-used-functions (lambda-body x)))))
