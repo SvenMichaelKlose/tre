@@ -6,9 +6,9 @@
      replacements))
 
 (define-tree-filter rename-arguments-0 (x &optional (replacements nil))
-  (atom x)          (| (assoc-value x replacements) x)
-  (quote? x)        x
-  (%slot-value? x)  `(%slot-value ,(rename-arguments-0 .x. replacements) ,..x.)
+  (atom x)         (| (assoc-value x replacements) x)
+  (quote? x)       x
+  (%slot-value? x) `(%slot-value ,(rename-arguments-0 .x. replacements) ,..x.)
   (lambda? x)
     (? (lambda-funinfo x)
        x ; Already renamed – new names would collide.
