@@ -88,7 +88,9 @@
   codegen-expander
 
   ;; Initialising EXPEX in TRANSPILER-EXPEX.
-  (expex-initializer       #'identity)
+  (argument-filter         #'identity)
+  (assignment-filter       #'list)
+  (inline?                 [])
 
   ;; Turn closures into top-level functions.
   (lambda-export?           nil)
@@ -209,7 +211,9 @@
         :sections-before-import   sections-before-import
         :sections-after-import    sections-after-import
         :codegen-expander         codegen-expander
-        :expex-initializer        expex-initializer
+        :argument-filter          argument-filter
+        :assignment-filter        assignment-filter
+        :inline?                  inline?
         :lambda-export?           lambda-export?
         :function-frames?         function-frames?
         :needs-var-declarations?  needs-var-declarations?
@@ -246,8 +250,7 @@
         :identifiers              (copy-hash-table identifiers)
         :converted-identifiers    (copy-hash-table converted-identifiers)
         :real-function-names      (copy-hash-table real-function-names))
-    (copy-transpiler-macro-expander tr !)
-    (transpiler-make-expex !)))
+    (copy-transpiler-macro-expander tr !)))
 
 (defmacro transpiler-getter-not-global (name &body body)
   `(fn ,($ 'transpiler- name) (tr x)
@@ -335,6 +338,15 @@
 (fn transpiler-functional? (tr x)
   (href (transpiler-functionals tr) x))
 
+(fn argument-filter (x)
+  (~> (transpiler-argument-filter *transpiler*) x))
+
+(fn assignment-filter (x)
+  (~> (transpiler-assignment-filter *transpiler*) x))
+
+(fn inline? (x)
+  (~> (transpiler-inline? *transpiler*) x))
+
 (fn add-used-function (x)
   (= (href (used-functions) x) t)
   x)
@@ -401,16 +413,11 @@
 (fn callback-after-frontend ()
   (transpiler-callback-after-frontend *transpiler*))
 
-(fn transpiler-make-expex (tr)
-  (~> (transpiler-expex-initializer tr)
-      (= (transpiler-expex tr) (make-expex))))
-
 (fn create-transpiler (&rest args)
   (aprog1 (*> #'make-transpiler args)
     (= (transpiler-assert? !) *assert?*)
     (= (transpiler-transpiler-macro-expander !) (make-transpiler-macro-expander !))
     (make-transpiler-codegen-expander !)
-    (transpiler-make-expex !)
     (make-global-funinfo !)
     (@ [transpiler-add-functional ! _] ; TODO: Remove. (pixel)
        '(%+ %string+ %- %/ %* %mod

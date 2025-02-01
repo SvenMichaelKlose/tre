@@ -54,10 +54,6 @@
      (& *have-compiler?*
         (js-sections-compiler))))
 
-(fn js-expex-initializer (ex)
-  (= (expex-inline? ex)          #'%slot-value?
-     (expex-argument-filter ex)  #'js-argument-filter))
-
 (fn make-javascript-transpiler ()
   (aprog1 (create-transpiler
             :name                     :js
@@ -71,7 +67,8 @@
             :needs-var-declarations?  t
             :enabled-passes           '(:count-tags)
             :identifier-char?         #'c-identifier-char?
-            :expex-initializer        #'js-expex-initializer
+            :inline?                  #'%slot-value?
+            :argument-filter          #'js-argument-filter
             :configurations           '((:platform                 . :browser)
                                         (:nodejs-requirements      . nil)
                                         (:rplac-breakpoints        . nil)

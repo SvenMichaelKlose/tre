@@ -22,12 +22,6 @@
   (unless (eql #\$ x)
     (c-identifier-char? x)))
 
-(fn php-expex-initializer (ex)
-  (= (expex-inline? ex)            #'%slot-value?
-     (expex-argument-filter ex)    #'php-argument-filter
-     (expex-assignment-filter ex)  (compose [@ #'php-assignment-filter _]
-                                            #'expex-compile-funcall)))
-
 (fn %make-php-transpiler-0 ()
   (create-transpiler
       :name                     :php
@@ -41,7 +35,10 @@
       :stack-locals?            nil
       :gen-string               [literal-string _ #\" '(#\$)]
       :identifier-char?         #'php-identifier-char?
-      :expex-initializer        #'php-expex-initializer
+      :inline?                  #'%slot-value?
+      :argument-filter          #'php-argument-filter
+      :assignment-filter        (compose [@ #'php-assignment-filter _]
+                                         #'expex-compile-funcall)
       :configurations           '((:exclude-core?            . nil)
                                   (:save-sources?            . nil)
                                   (:save-argument-defs-only? . nil)
