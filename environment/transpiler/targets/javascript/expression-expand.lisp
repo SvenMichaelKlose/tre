@@ -1,4 +1,5 @@
 (fn js-argument-filter (x)
-  (? (global-literal-function? x)
+  (?  (& (literal-symbol-function? x)
+         (global-funinfo-var *funinfo* .x.))
      .x.
      x))

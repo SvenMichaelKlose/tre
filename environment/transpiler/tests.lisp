@@ -19,4 +19,4 @@
            *tests*)
       (fn environment-tests ()
         ,@(@ #'list (reverse names))
-        (%princ "Tests done.")))))
+        (format t "Environment tests passed.~%")))))
