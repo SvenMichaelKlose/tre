@@ -15,8 +15,7 @@
      t))
 
 (fn constant-literal? (x) ;;; TODO Why is ATOM not enough?
-  (| (not x)
-     (eq t x)
+  (| (bool? x)
      (number? x)
      (character? x)
      (string? x)
