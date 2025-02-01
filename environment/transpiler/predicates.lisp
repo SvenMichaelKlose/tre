@@ -7,12 +7,6 @@
      (atom .x.)
      (not ..x)))
 
-(fn literal-symbol? (x)
-  (| (not x)
-     (eq x t)
-     (keyword? x)
-     (quote? x)))
-
 (fn simple-argument-list? (x)
   (? x
      (notany [| (cons? _)
