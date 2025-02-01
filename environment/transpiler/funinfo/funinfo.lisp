@@ -115,7 +115,7 @@
                                  :parent        parent
                                  :transpiler    transpiler))
     (= (href (transpiler-funinfos transpiler) name) fi)
-    (funinfo-var-add fi *return-id*)
+    (funinfo-var-add fi *return-symbol*)
     (& (transpiler-copy-arguments-to-stack? transpiler)
        (@ [funinfo-var-add fi _] argnames))
     fi))

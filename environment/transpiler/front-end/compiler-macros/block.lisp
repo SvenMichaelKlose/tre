@@ -12,9 +12,9 @@
               ,@head
               ,@(? (some-%go? tail)
                    (list tail)
-                   `((%= ,*return-id* ,tail)))
+                   `((%= ,*return-symbol* ,tail)))
               ,end-tag
-              (identity ,*return-id*)))))
+              (identity ,*return-symbol*)))))
     `(identity nil)))
 
 (def-expander-macro *block-expander* return-from (block-name expr)
@@ -22,7 +22,7 @@
      (error "RETURN-FROM outside BLOCK."))
   (!? (assoc block-name *blocks* :test #'eq)
      `(%block
-        (%= ,*return-id* ,expr)
+        (%= ,*return-symbol* ,expr)
         (%go ,.!))
      (error "RETURN-FROM unknown BLOCK ~A." block-name)))
 

@@ -1,1 +1,1 @@
-(var ,*return-id* nil) ; Keeps return values of expressions.
+(var ,*return-symbol* nil) ; Keeps return values of expressions.

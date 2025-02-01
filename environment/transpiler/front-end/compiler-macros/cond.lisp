@@ -4,13 +4,13 @@
        ,@(+@ [with-compiler-tag next
                (when _.
                  `(,@(unless (eq t _.)
-                       `((%= ,*return-id* ,_.)
-                         (%go-nil ,next ,*return-id*)))
+                       `((%= ,*return-symbol* ,_.)
+                         (%go-nil ,next ,*return-symbol*)))
                    ,@(!? (wrap-atoms ._)
-                         `((%= ,*return-id* (%block ,@!))))
+                         `((%= ,*return-symbol* (%block ,@!))))
                    (%go ,end-tag)
                    ,@(unless (eq t _.)
                        (list next))))]
              args)
        ,end-tag
-       (identity ,*return-id*))))
+       (identity ,*return-symbol*))))

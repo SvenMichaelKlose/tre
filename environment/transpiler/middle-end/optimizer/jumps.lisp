@@ -27,7 +27,7 @@
 
 (fn setting-ret-to-bool? (x)
   (& (%=? x)
-     (~%ret? (%=-place x))
+     (eq (%=-place x) *return-symbol*)
      (bool? (%=-value x))))
 
 (fn jump-to-same-jump? (x)
@@ -42,7 +42,7 @@
 (fn fnord? (a d)
   (& (setting-ret-to-bool? a)
      (!? (target-tag d ..a.)
-         (not (will-be-used-again? (member ! *body*) *return-id*)))))
+         (not (will-be-used-again? (member ! *body*) *return-symbol*)))))
 
 (fn before-static-cond? (a d)
   (& (setting-ret-to-bool? a)

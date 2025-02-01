@@ -66,7 +66,7 @@
              (php-line "global " (pad (@ #'php-dollarize !) ", ")))
        ,@body
        ,@(unless (equal "void" return-type)
-           (list (php-line "return $" *return-id*)))
+           (list (php-line "return $" *return-symbol*)))
     "}" ,*terpri*))
 
 (fn codegen-php-function (x)

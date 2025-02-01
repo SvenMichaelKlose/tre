@@ -16,9 +16,6 @@
      (& (cons? x)
         (transpiler-functional? *transpiler* x.))))
 
-(fn ~%ret? (x)
-  (eq *return-id* x))
-
 (fn some-%go? (e)
   (& (cons? e)
      (in? e. '%go '%go-nil '%go-not-nil)))

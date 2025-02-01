@@ -20,7 +20,7 @@
           traverse-statements
             [? (not _)
                (& (funinfo-parent *funinfo*)
-                  (~%ret? v))
+                  (eq v *return-symbol*))
                (with-cons a d _
                  (?
                    (| (number? a)

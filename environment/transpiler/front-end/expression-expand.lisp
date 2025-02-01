@@ -136,9 +136,9 @@
 (fn ensure-%= (x)
   (| (& (metacode-statement? x)
         (… x))
-     (make-%= *return-id* x)))
+     (make-%= *return-symbol* x)))
 
-(fn expex-body (x &optional (s *return-id*))
+(fn expex-body (x &optional (s *return-symbol*))
   (expex-make-return-value s
       (+@ [!= (expex-expr _)
             (+ !. (+@ #'ensure-%= .!))]

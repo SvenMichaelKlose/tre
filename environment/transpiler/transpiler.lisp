@@ -1,7 +1,7 @@
 (var *transpiler* nil)
 (var *transpiler-log* nil)
 (var *default-transpiler* nil)
-(var *return-id* '_r)
+(var *return-symbol* '_r)
 
 (const *optional-passes* '(:accumulate-toplevel))
 
