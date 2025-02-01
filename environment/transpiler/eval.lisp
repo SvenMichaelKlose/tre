@@ -1,11 +1,13 @@
+; TODO: Revive bytecode target to get this back.
+
 (var *eval-transpiler* nil)
 
 (fn make-eval-transpiler ()
   (cache *eval-transpiler*
          (!= (copy-transpiler *bc-transpiler*)
-           (clr (transpiler-import-from-host? !)
-                (transpiler-dump-passes? !))
-           (= *eval-transpiler* !))))
+           (= (transpiler-import-from-host? !) nil
+              (transpiler-dump-passes? !)      nil)
+              *eval-transpiler*                !)))
 
 (defmacro with-mute-environment (&body x)
   `(with-temporaries (*print-definitions?*  nil
