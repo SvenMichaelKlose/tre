@@ -32,7 +32,7 @@
 
 (metacode-walker opt-tailcall-body (x)
   :if-named-function
-    (with-compiler-tag front-tag
+    (with-metacode-tag front-tag
       `(,front-tag
         ,@(opt-tailcall-fun x. (lambda-body x.) front-tag))))
 

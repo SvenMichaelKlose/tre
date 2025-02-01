@@ -1,7 +1,7 @@
 (def-compiler-macro cond (&rest args)
-  (with-compiler-tag end-tag
+  (with-metacode-tag end-tag
     `(%block
-       ,@(+@ [with-compiler-tag next
+       ,@(+@ [with-metacode-tag next
                (when _.
                  `(,@(unless (eq t _.)
                        `((%= ,*return-symbol* ,_.)

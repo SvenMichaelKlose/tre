@@ -3,7 +3,7 @@
 
 (fn blockexpand (name body)
   (? body
-     (with-compiler-tag end-tag
+     (with-metacode-tag end-tag
        (with-temporary *blocks* (. (. name end-tag) *blocks*)
          (with (b     (expander-expand *block-expander* body)
                 head  (butlast b)
