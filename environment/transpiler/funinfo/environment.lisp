@@ -153,7 +153,7 @@
          (funinfo-toplevel-var? ! x))
       (funinfo-var? fi x)))
 
-(fn funinfo-global-variable? (fi x)
+(fn funinfo-global-var? (fi x)
   (& (not (funinfo-find fi x))
      (| (defined-variable x)
         (host-variable? x))))

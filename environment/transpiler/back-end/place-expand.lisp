@@ -26,7 +26,7 @@
   (?
     (| (constant-literal? x)
        (not (funinfo-find fi x)
-            (funinfo-global-variable? fi x)))
+            (funinfo-global-var? fi x)))
       x
     (& (stack-locals?)
        (eq x (funinfo-scope fi)))
@@ -43,7 +43,7 @@
       (place-expand-emit-stackplace fi x)
     (funinfo-arg-or-var? fi x)
       x
-    (funinfo-global-variable? fi x)
+    (funinfo-global-var? fi x)
       `(%global ,x)
     (make-scope-place fi x)))
 
