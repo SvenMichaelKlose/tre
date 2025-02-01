@@ -9,9 +9,9 @@
            value  (%=-value a)
            pos    (position-if [| (atom _)
                                   (some-%go? _)
-                                  (modifies? _ value)
-                                  (modifies? _ place)
-                                  (uses? _ place)]
+                                  (%=-modifies? _ value)
+                                  (%=-modifies? _ place)
+                                  (%=-uses? _ place)]
                                d))
       (? pos
          (!= `(,@(subseq d 0 pos)

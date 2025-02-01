@@ -34,10 +34,3 @@
            (in? x. '%= '%=-vec '%var '%function-prologue '%function-epilogue
                    '%function-return '%collection '%tag '%comment)
            (some-%go? x)))))
-
-(fn modifies? (x place)
-  (& (%=? x)
-     (eq place (%=-place x))))
-
-(fn uses? (x value)
-  (tree-find value (%=-value x) :test #'equal))

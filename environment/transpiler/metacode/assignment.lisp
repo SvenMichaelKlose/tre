@@ -24,3 +24,10 @@
 (fn %=-funcall-of? (x name)
   (& (%=-funcall? x)
      (eq name ..x..)))
+
+(fn %=-modifies? (x place)
+  (& (%=? x)
+     (eq place (%=-place x))))
+
+(fn %=-uses? (x value)
+  (tree-find value (%=-value x) :test #'equal))
