@@ -104,8 +104,8 @@ updatetests)
 
 tests)
     echo "Making tests…"
-	./make.sh phptests
 	./make.sh jstests
+	./make.sh phptests
 	;;
 
 nodeconsole)
