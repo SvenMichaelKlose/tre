@@ -1,4 +1,24 @@
-(env-load "transpiler/lib/main.lisp")
+(env-load "transpiler/print.lisp")
+
+(env-load "transpiler/transpiler.lisp")
+
+(env-load "transpiler/funinfo/funinfo.lisp")
+(env-load "transpiler/funinfo/environment.lisp")
+(env-load "transpiler/funinfo/lexical.lisp")
+(env-load "transpiler/funinfo/local-function-args.lisp")
+(env-load "transpiler/funinfo/types.lisp")
+(env-load "transpiler/funinfo/debug-printers.lisp")
+
+(env-load "transpiler/lambda.lisp")
+(env-load "transpiler/predicates.lisp")
+(env-load "transpiler/tag.lisp")
+(env-load "transpiler/compile-argument-expansion.lisp")
+
+(env-load "transpiler/metacode/places.lisp")
+(env-load "transpiler/metacode/predicates.lisp")
+(env-load "transpiler/metacode/walker.lisp")
+(env-load "transpiler/metacode/with-%=.lisp")
+
 (env-load "transpiler/end.lisp")
 (env-load "transpiler/back-end/main.lisp")
 (env-load "transpiler/middle-end/main.lisp")

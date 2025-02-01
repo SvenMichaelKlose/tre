@@ -143,6 +143,10 @@
 
 ;;;; GLOBAL VARIABLES
 
+(fn funinfo-add-global (fi x)
+  (funinfo-var-add fi x)
+  (adjoin! x (funinfo-globals fi)))
+
 (fn funinfo-toplevel-var? (fi x)
   (!? (funinfo-parent fi)
       (& (not (funinfo-arg-or-var? fi x))
