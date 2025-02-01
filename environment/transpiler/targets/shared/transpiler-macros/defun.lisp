@@ -9,7 +9,7 @@
 (fn shared-defun-source-setter (name args body)
   `((%= (slot-value ,name '__source)
         (. ,(shared-defun-source args)
-           ,(unless (configuration :save-argument-defs-only?)
+           ,(unless (configuration :keep-argdef-only?)
               (shared-defun-source body))))))
 
 (fn shared-defun-backtrace (name body)

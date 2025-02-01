@@ -25,7 +25,7 @@
       :frontend-init           #'cl-frontend-init
       :postprocessor           #'make-lambdas
       :configurations          '((:keep-source?)
-                                 (:save-argument-defs-only?)
+                                 (:keep-argdef-only?)
                                  (:exclude-core?)
                                  (:memorize-sources? . t))))
 

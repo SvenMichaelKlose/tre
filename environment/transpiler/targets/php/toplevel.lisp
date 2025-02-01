@@ -39,10 +39,10 @@
       :argument-filter          #'php-argument-filter
       :assignment-filter        (compose [@ #'php-assignment-filter _]
                                          #'expex-compile-funcall)
-      :configurations           '((:exclude-core?            . nil)
-                                  (:keep-source?             . nil)
-                                  (:save-argument-defs-only? . nil)
-                                  (:native-code              . nil))))
+      :configurations           '((:exclude-core?      . nil)
+                                  (:keep-source?       . nil)
+                                  (:keep-argdef-only? .  nil)
+                                  (:native-code        . nil))))
 
 (fn make-php-transpiler ()
   (aprog1 (%make-php-transpiler-0)

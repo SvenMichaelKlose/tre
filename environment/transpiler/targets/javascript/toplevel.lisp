@@ -69,13 +69,13 @@
             :identifier-char?         #'c-identifier-char?
             :inline?                  #'%slot-value?
             :argument-filter          #'js-argument-filter
-            :configurations           '((:platform                 . :browser)
-                                        (:nodejs-requirements      . nil)
-                                        (:rplac-breakpoints        . nil)
-                                        (:exclude-core?            . nil)
-                                        (:memorize-sources?        . nil)
-                                        (:keep-source?             . nil)
-                                        (:save-argument-defs-only? . nil)))
+            :configurations           '((:platform            . :browser)
+                                        (:nodejs-requirements . nil)
+                                        (:rplac-breakpoints   . nil)
+                                        (:exclude-core?       . nil)
+                                        (:memorize-sources?   . nil)
+                                        (:keep-source?        . nil)
+                                        (:keep-argdef-only?   . nil)))
     (transpiler-add-functional ! '%js-typeof)))
 
 (var *js-transpiler* (make-javascript-transpiler))

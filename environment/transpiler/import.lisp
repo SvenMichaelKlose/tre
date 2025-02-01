@@ -67,7 +67,7 @@
 
 (fn import-from-host ()
   (when (import-from-host?)
-    (with-temporary (configuration :save-argument-defs-only?) nil
+    (with-temporary (configuration :keep-argdef-only?) nil
       (with (funs      (import-wanted-functions)
              closures  (import-closures)
              vars      (import-wanted-variables))

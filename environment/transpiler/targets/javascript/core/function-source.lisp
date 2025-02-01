@@ -4,7 +4,7 @@
      x))
 
 ,(? (| (configuration :keep-source?)
-       (configuration :save-argument-defs-only?))
+       (configuration :keep-argdef-only?))
     '(fn function-arguments (x)
        (!? (function|symbol-function x)
            (!? !.__source
