@@ -72,6 +72,7 @@
             :configurations           '((:platform            . :browser)
                                         (:nodejs-requirements . nil)
                                         (:exclude-core?       . nil)
+                                        (:memorize-sources?   . nil)
                                         (:keep-source?        . nil)
                                         (:keep-argdef-only?   . nil)))
     (transpiler-add-functional ! '%js-typeof)))

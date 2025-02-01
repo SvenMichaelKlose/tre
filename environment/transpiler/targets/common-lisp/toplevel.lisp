@@ -26,6 +26,7 @@
       :postprocessor           #'make-lambdas
       :configurations          '((:keep-source?)
                                  (:keep-argdef-only?)
-                                 (:exclude-core?))))
+                                 (:exclude-core?)
+                                 (:memorize-sources? . t))))
 
 (var *cl-transpiler* (make-cl-transpiler))
