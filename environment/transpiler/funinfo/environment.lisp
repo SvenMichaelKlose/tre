@@ -7,17 +7,15 @@
 ;;;; FUNCTION NAME
 
 (fn funinfo-names (fi)
-  (& fi
-     (. (funinfo-name fi)
-        (funinfo-names (funinfo-parent fi)))))
+  (when fi
+    (. (funinfo-name fi)
+       (funinfo-names (funinfo-parent fi)))))
 
 
 ;;;; ARGUMENTS
 
 (fn funinfo-arg? (fi x)
-  (& (symbol? x)
-     (member x (funinfo-args fi) :test #'eq)
-     fi))
+  (member x (funinfo-args fi) :test #'eq))
 
 (fn funinfo-arg-pos (fi x)
   (position x (funinfo-args fi) :test #'eq))
@@ -36,11 +34,11 @@
 ;;;; VARIABLES
 
 (fn funinfo-var? (fi x)
-  (& x (symbol? x)
+  (& x
+     (symbol? x)
      (!? (funinfo-vars-hash fi)
          (href ! x)
-         (member x (funinfo-vars fi) :test #'eq))
-     fi))
+         (member x (funinfo-vars fi) :test #'eq))))
 
 (fn funinfo-parent-var? (fi x)
   (!? (funinfo-parent fi)
