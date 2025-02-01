@@ -9,11 +9,12 @@
 (env-load "transpiler/funinfo/types.lisp")
 (env-load "transpiler/funinfo/debug-printers.lisp")
 
-(env-load "transpiler/simple-argument-list-p.lisp")
 (env-load "transpiler/lambda.lisp")
 (env-load "transpiler/quote.lisp")
 (env-load "transpiler/tag.lisp")
-(env-load "transpiler/compile-argument-expansion.lisp")
+
+(env-load "transpiler/simple-argument-list-p.lisp")
+(env-load "transpiler/argument-expander.lisp")
 
 (env-load "transpiler/metacode/assignment.lisp")
 (env-load "transpiler/metacode/predicates.lisp")

@@ -63,4 +63,4 @@
               (shared-defun-without-expander
                   (c-expander-name fun-name)
                   (list expander-arg)
-                  (compile-argument-expansion-function-body fun-name args expander-arg)))))))
+                  (make-argument-expander-function-body fun-name args expander-arg)))))))
