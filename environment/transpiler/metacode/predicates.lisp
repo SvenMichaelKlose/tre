@@ -1,11 +1,10 @@
 (progn
   ,@(@ [`(def-head-predicate ,_)]
-       '(%= %new %closure
-         %block %go %go-nil %go-not-nil %tag %tag
-         %stack %stackarg %vec %=-vec %set-local-fun
-         %string
-         %function-prologue %function-return %function-epilogue %collection
-         %native %var %global %comment)))
+       '(%string %global %stack %stackarg
+         %vec %=-vec %set-local-fun %closure %native %new
+         %block %go %go-nil %go-not-nil %tag
+         %= %collection %var %comment
+         %function-prologue %function-return %function-epilogue)))
 
 (fn atomic? (x)
   (| (atom x)
