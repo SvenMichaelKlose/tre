@@ -3,7 +3,7 @@
      (symbol-function x)
      x))
 
-,(? (| (configuration :save-sources?)
+,(? (| (configuration :keep-source?)
        (configuration :save-argument-defs-only?))
     '(fn function-arguments (x)
        (!? (function|symbol-function x)
@@ -15,7 +15,7 @@
     '(fn function-arguments (x)
        '(&rest unknown-args)))
 
-,(? (configuration :save-sources?)
+,(? (configuration :keep-source?)
     '(fn function-body (x)
        (!= (function|symbol-function x)
          (!? !.__source

@@ -40,7 +40,7 @@
       :assignment-filter        (compose [@ #'php-assignment-filter _]
                                          #'expex-compile-funcall)
       :configurations           '((:exclude-core?            . nil)
-                                  (:save-sources?            . nil)
+                                  (:keep-source?             . nil)
                                   (:save-argument-defs-only? . nil)
                                   (:native-code              . nil))))
 

@@ -34,7 +34,7 @@
   (js-make-late-symbol-function-assignment name)
   `(progn
      (%var ,(%fn-name name))
-     ,(shared-defun name args (. 'has-argexp! body) :allow-source-memorizer? nil)))
+     ,(shared-defun name args (. 'has-argexp! body) :keep-source? nil)))
 
 (fn js-early-symbol-maker (g sym)
   `(,@(unless (eq g '~%tfun)

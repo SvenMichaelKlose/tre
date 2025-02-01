@@ -1,5 +1,5 @@
 (def-php-transpiler-macro defnative (name args &body body)
-  (shared-defun name args body :allow-source-memorizer? nil))
+  (shared-defun name args body :keep-source? nil))
 
 (def-php-transpiler-macro %defmacro (name args &body body))
 

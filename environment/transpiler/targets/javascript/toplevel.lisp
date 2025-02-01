@@ -74,7 +74,7 @@
                                         (:rplac-breakpoints        . nil)
                                         (:exclude-core?            . nil)
                                         (:memorize-sources?        . nil)
-                                        (:save-sources?            . nil)
+                                        (:keep-source?             . nil)
                                         (:save-argument-defs-only? . nil)))
     (transpiler-add-functional ! '%js-typeof)))
 

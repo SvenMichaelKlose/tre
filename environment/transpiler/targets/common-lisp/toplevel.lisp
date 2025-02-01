@@ -24,7 +24,7 @@
       :sections-before-import  #'cl-sections-before-import
       :frontend-init           #'cl-frontend-init
       :postprocessor           #'make-lambdas
-      :configurations          '((:save-sources?)
+      :configurations          '((:keep-source?)
                                  (:save-argument-defs-only?)
                                  (:exclude-core?)
                                  (:memorize-sources? . t))))
