@@ -62,7 +62,7 @@
           (funinfo-fast-scope? fi)  t))))
 
 (fn remove-argument-stackplaces (fi)
-  (funinfo-vars-set fi (remove-if [& (funinfo-arg? fi _)
+  (funinfo-set-vars fi (remove-if [& (funinfo-arg? fi _)
                                      (not (funinfo-scoped-var? fi _)
                                           (funinfo-place? fi _))]
                                   (funinfo-vars fi))))
@@ -79,7 +79,7 @@
     (remove-unused-scope-arg fi)
     ;(remove-scoped-vars fi)   ; TODO: Fix
     (replace-scope-arg fi))
-  (funinfo-vars-set fi (intersect (funinfo-vars fi) (funinfo-used-vars fi)))
+  (funinfo-set-vars fi (intersect (funinfo-vars fi) (funinfo-used-vars fi)))
   (& (stack-locals?)
      (remove-argument-stackplaces fi)))
 

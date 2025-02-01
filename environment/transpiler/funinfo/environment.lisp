@@ -67,13 +67,13 @@
            t))))
   x)
 
-(fn funinfo-vars-reset (fi)
+(fn funinfo-reset-vars (fi)
   (= (funinfo-vars fi) nil)
   (unless (funinfo-parent fi)
     (= (funinfo-vars-hash fi) (make-hash-table :test #'eq))))
 
-(fn funinfo-vars-set (fi x)
-  (funinfo-vars-reset fi)
+(fn funinfo-set-vars (fi x)
+  (funinfo-reset-vars fi)
   (funinfo-add-var fi x))
 
 
