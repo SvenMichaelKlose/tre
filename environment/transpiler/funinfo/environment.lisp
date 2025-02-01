@@ -51,9 +51,6 @@
   (& (funinfo-parent fi)
      (position x (funinfo-vars fi) :test #'eq)))
 
-(fn funinfoname-var-pos (name x)
-  (funinfo-var-pos (get-funinfo name) x))
-
 (fn funinfo-add-var (fi x)
   (@ (v (ensure-list x))
     (unless (funinfo-var? fi v)
@@ -81,9 +78,6 @@
 
 (fn funinfo-scoped-var-index (fi x)
   (position x (funinfo-scoped-vars fi) :test #'eq))
-
-(fn funinfoname-scoped-var-index (name x)
-  (funinfo-scoped-var-index (get-funinfo name) x))
 
 (fn funinfo-add-scoped-var (fi name)
   (adjoin! name (funinfo-scoped-vars fi)))
