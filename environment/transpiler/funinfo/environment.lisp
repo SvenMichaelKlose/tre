@@ -54,7 +54,7 @@
 (fn funinfoname-var-pos (name x)
   (funinfo-var-pos (get-funinfo name) x))
 
-(fn funinfo-var-add (fi x)
+(fn funinfo-add-var (fi x)
   (assert (atom x) (error "Atom expected instead of ~A."))
   (unless (funinfo-var? fi x)
     (? (funinfo-parent fi)
@@ -74,7 +74,7 @@
 
 (fn funinfo-vars-set (fi x)
   (funinfo-vars-reset fi)
-  (@ [funinfo-var-add fi _] x))
+  (@ [funinfo-add-var fi _] x))
 
 
 ;;;; LEXICALS
@@ -144,7 +144,7 @@
 ;;;; GLOBAL VARIABLES
 
 (fn funinfo-add-global (fi x)
-  (funinfo-var-add fi x)
+  (funinfo-add-var fi x)
   (adjoin! x (funinfo-globals fi)))
 
 (fn funinfo-toplevel-var? (fi x)

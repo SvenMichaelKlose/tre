@@ -5,7 +5,7 @@
   (unless (funinfo-scope fi)
     (with-gensym scope
       (= (funinfo-scope fi) scope)
-      (funinfo-var-add fi scope))))
+      (funinfo-add-var fi scope))))
 
 (fn funinfo-make-scope-arg (fi)
   (unless (funinfo-scope-arg fi)

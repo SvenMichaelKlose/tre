@@ -13,7 +13,7 @@
     (with (l (argument-expand 'lambda-call-embed args vals)
            a (carlist l)
            v (cdrlist l))
-      (@ [funinfo-var-add *funinfo* _] a)
+      (@ [funinfo-add-var *funinfo* _] a)
       (lambda-expand (lambda-expand-make-inline-body a v body)))))
 
 
@@ -47,7 +47,7 @@
              new-fi (create-funinfo :name   name
                                     :args   args
                                     :parent *funinfo*))
-        (funinfo-var-add *funinfo* name)
+        (funinfo-add-var *funinfo* name)
         (with-temporary *funinfo* new-fi
           (copy-lambda x :name name
                          :args args

@@ -13,7 +13,7 @@
        (cache (href ,transpiler-slot ,x)
               (aprog1 ,maker
                 (unless (funinfo-var? (global-funinfo) !)
-                  (funinfo-var-add (global-funinfo) !))
+                  (funinfo-add-var (global-funinfo) !))
                 ,@(when declaration
                      `((push (~> ,declaration !)
                              (compiled-decls))))

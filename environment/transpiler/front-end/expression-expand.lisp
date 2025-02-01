@@ -20,7 +20,7 @@
 (def-gensym expex-sym e)
 
 (fn expex-make-var ()
-  (funinfo-var-add *funinfo* (expex-sym)))
+  (funinfo-add-var *funinfo* (expex-sym)))
 
 
 ;;;; ARGUMENT EXPANSION
@@ -106,7 +106,7 @@
         (. !. `((%go-nil ,.x. ,@.!))))
     %var?
       (progn
-        (funinfo-var-add *funinfo* .x.)
+        (funinfo-add-var *funinfo* .x.)
         (. nil nil))
     named-lambda?
       (expex-lambda x)
