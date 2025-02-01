@@ -54,6 +54,11 @@
 
 ;;;;; MOVING ARGUMENTS
 
+(fn has-return-value? (x)
+  (not (| (some-%go? x)
+          (%var? x)
+          (%comment? x))))
+
 (fn expex-move-std (x)
   (with (s  (expex-make-var)
          !  (expex-expr x))

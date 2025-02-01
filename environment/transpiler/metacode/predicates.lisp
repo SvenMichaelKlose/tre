@@ -27,11 +27,6 @@
 (fn %go-tag (x)
   .x.)
 
-(fn has-return-value? (x)
-  (not (| (some-%go? x)
-          (%var? x)
-          (%comment? x))))
-
 (fn metacode-statement? (x)
   (| (number? x)
      (& (cons? x)
