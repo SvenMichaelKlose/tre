@@ -80,7 +80,7 @@ phptests)
     echo "(compile-tests *php-transpiler*)" | $TRE tests/toplevel.lisp
     php compiled/test.php | tee log-phptests.lisp
     cmp tests/php.correct-output log-phptests.lisp || (diff tests/php.correct-output log-phptests.lisp; exit 1)
-    for i in compiled/unit*.php; do php $i; done
+    for i in compiled/unit*.php; do printf "Running PHP unit test $i\n"; php $i; done
 	;;
 
 jstests)
@@ -89,7 +89,7 @@ jstests)
     node compiled/test.js | tee log-jstests.lisp
     #$BROWSER compiled/test.html
     cmp tests/js.correct-output log-jstests.lisp || (diff tests/js.correct-output log-jstests.lisp; exit 1)
-    for i in compiled/unit*.js; do node $i; done
+    for i in compiled/unit*.js; do printf "Running JS unit test $i\n"; node $i; done
     echo "JS target tests passed in node.js."
 	;;
 
