@@ -8,7 +8,7 @@
 
 (fn atomic? (x)
   (| (atom x)
-     (in? x. '%stack '%vec '%slot-value 'quote '%global '%string)))
+     (in? x. 'quote '%stack '%vec '%slot-value '%global '%string)))
 
 (fn atomic-or-functional? (x)
   (| (atomic? x)
