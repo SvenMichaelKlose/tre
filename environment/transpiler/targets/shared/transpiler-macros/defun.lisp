@@ -38,7 +38,7 @@
                               !))))
       ,@(when (& keep-source? (configuration :keep-source?))
           (!= (remove 'no-args body)
-            (? (configuration :memorize-sources?)
+            (? (configuration :keep-source?)
                (progn
                  (acons! name (. args !) (memorized-sources))
                  nil)
