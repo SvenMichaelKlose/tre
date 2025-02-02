@@ -101,7 +101,7 @@
      (… section)
      section))
 
-(fn compile-sections (sections &key (transpiler *default-transpiler*))
+(fn compile-sections (&key sections (transpiler *default-transpiler*))
   (let start-time (milliseconds-since-1970)
     (= *warnings* nil)
     (with-temporaries (*transpiler*  transpiler

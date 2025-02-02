@@ -20,7 +20,7 @@
     (!= (make-eval-transpiler)
       (clr (transpiler-compiled-inits !))
       (with-mute-environment
-        (load-bytecode (expr-to-code ! (compile-sections `((eval . ((fn ,tmpfun () ,x))))
+        (load-bytecode (expr-to-code ! (compile-sections :sections   `((eval . ((fn ,tmpfun () ,x))))
                                                          :transpiler !))
                        :temporary? t))
       (~> (symbol-function tmpfun)))))

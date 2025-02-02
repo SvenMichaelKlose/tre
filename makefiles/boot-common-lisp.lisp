@@ -67,7 +67,8 @@
 
 (!= (copy-transpiler *cl-transpiler*)
   (transpiler-add-defined-variable ! '*macros*)
-  (with (c           (compile-sections (list (. 'dummy nil)) :transpiler !)
+  (with (c           (compile-sections :sections   (… (. 'dummy nil))
+                                       :transpiler !)
          print-info  (make-print-info :pretty-print? nil))
     (with-output-file o "boot-common.lisp"
       (print-init-decls o print-info)
