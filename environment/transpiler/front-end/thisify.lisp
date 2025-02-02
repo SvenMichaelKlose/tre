@@ -10,30 +10,28 @@
         `(%slot-value ~%this ,x)
         x)))
 
-(fn thisify-list-0 (slots x exclusions)
-  (?
-    (& x (symbol? x))
-      (thisify-symbol slots x exclusions)
-    (| (atom x)
-       (quote? x))
-      x
-    (%slot-value? x)
-      `(%slot-value ,(thisify-symbol slots .x. exclusions) ,..x.)
-    (unnamed-lambda? x)
-      (copy-lambda x :body (thisify-list-0 slots
-                                           (lambda-body x)
-                                           (+ exclusions (lambda-args x))))
-    (. (? (%slot-value? x.)
-          `(%slot-value ,(thisify-list-0 slots (cadr x.) exclusions)
-                        ,(caddr x.))
-          (thisify-list-0 slots x. exclusions))
-       (thisify-list-0 slots .x exclusions))))
-
 (fn thisify-list (x class-name exclusions)
-  (thisify-list-0
-      (@ #'%slot-name
-         (class-and-parent-slot-names (href (defined-classes) class-name)))
-      x exclusions))
+  (fn rec (slots x exclusions)
+    (?
+      (& x (symbol? x))
+        (thisify-symbol slots x exclusions)
+      (| (atom x)
+         (quote? x))
+        x
+      (%slot-value? x)
+        `(%slot-value ,(thisify-symbol slots .x. exclusions) ,..x.)
+      (unnamed-lambda? x)
+        (copy-lambda x :body (rec slots
+                                  (lambda-body x)
+                                  (+ exclusions (lambda-args x))))
+      (. (? (%slot-value? x.)
+            `(%slot-value ,(rec slots (cadr x.) exclusions)
+                          ,(caddr x.))
+            (rec slots x. exclusions))
+         (rec slots .x exclusions))))
+  (rec (@ #'%slot-name
+          (class-and-parent-slot-names (href (defined-classes) class-name)))
+       x exclusions))
 
 (fn thisify-expr (x exclusions)
   (compiler-macroexpand

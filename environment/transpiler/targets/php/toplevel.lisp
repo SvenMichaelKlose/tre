@@ -22,29 +22,28 @@
   (unless (eql #\$ x)
     (c-identifier-char? x)))
 
-(fn %make-php-transpiler-0 ()
-  (create-transpiler
-      :name                   :php
-      :file-postfix           "php"
-      :frontend-init          #'php-frontend-init
-      :prologue-gen           #'php-prologue
-      :epilogue-gen           #'php-epilogue
-      :sections-before-import #'php-sections-before-import
-      :sections-after-import  #'php-sections-after-import
-      :lambda-export?         t
-      :gen-string             [literal-string _ :quote-char #\']
-      :identifier-char?       #'php-identifier-char?
-      :inline?                #'%slot-value?
-      :argument-filter        #'php-argument-filter
-      :assignment-filter      (compose [@ #'php-assignment-filter _]
-                                       #'expex-compile-funcall)
-      :configurations         '((:exclude-core?     . nil)
-                                (:keep-source?      . nil)
-                                (:keep-argdef-only? .  nil)
-                                (:native-code       . nil))))
-
 (fn make-php-transpiler ()
-  (aprog1 (%make-php-transpiler-0)
+  (fn make ()
+    (create-transpiler
+        :name                   :php
+        :file-postfix           "php"
+        :frontend-init          #'php-frontend-init
+        :prologue-gen           #'php-prologue
+        :epilogue-gen           #'php-epilogue
+        :sections-before-import #'php-sections-before-import
+        :sections-after-import  #'php-sections-after-import
+        :lambda-export?         t
+        :gen-string             [literal-string _ :quote-char #\']
+        :identifier-char?       #'php-identifier-char?
+        :inline?                #'%slot-value?
+        :argument-filter        #'php-argument-filter
+        :assignment-filter      (compose [@ #'php-assignment-filter _]
+                                         #'expex-compile-funcall)
+        :configurations         '((:exclude-core?     . nil)
+                                  (:keep-source?      . nil)
+                                  (:keep-argdef-only? .  nil)
+                                  (:native-code       . nil))))
+  (aprog1 (make)
     (transpiler-add-defined-function ! '%cons '(a d) nil)
     (transpiler-add-defined-function ! 'phphash-hash-table '(x) nil)
     (transpiler-add-defined-function ! 'phphash-hashkeys '(x) nil)))
