@@ -42,4 +42,5 @@
       ("getter"        "Something with getters")
       ("base64"        "BASE64-ENCODE, BASE64-DECODE")
       ("slot-value"    "SLOT-VALUE as function")
-      ("literal-json"  "Literal JSON object"))))
+      ("literal-json"  "Literal JSON object")
+      ("nested-fn"     "Nested FN macros"))))
