@@ -53,7 +53,7 @@ install_it ()
 }
 
 case $1 in
-sbcl-image)
+image)
     echo "Booting SBCL image with 'boot-common.lisp'…"
     $SBCL --load boot-common.lisp --eval '(tre:dump-system "image")' --quit
 	;;
@@ -70,9 +70,9 @@ reset)
 
 boot)
     ./make.sh reset
-    ./make.sh sbcl-image
+    ./make.sh image
     ./make.sh genboot
-    ./make.sh sbcl-image
+    ./make.sh image
 	;;
 
 phptests)
@@ -165,13 +165,12 @@ clean)
 	echo "Usage: make.sh [target]"
     echo ""
 	echo "Targets:"
-	echo "  genboot       Generate CL code for target 'sbcl-image'."
-	echo "  reset         Check out boot-common.lisp from repository."
-	echo "                (E.g. when 'genboot' went wrong.)"
-	echo "  sbcl-image    Load environment from scratch."
-	echo "  boot          Make 'sbcl-image', 'genboot' then 'sbcl-image' again."
+	echo "  genboot       Compile 'boot-common.lisp'."
+	echo "  reset         Check out 'boot-common.lisp' from repository."
+	echo "  image         Run 'boot-common.lisp' to create image from environment."
+	echo "  boot          Make 'image', 'genboot' then 'image' again."
     echo "  install       Install executable and environment image made"
-    echo "                by 'sbcl-image' or 'boot',"
+    echo "                by 'mage' or 'boot',"
     echo "  clean         Remove built files, except 'genboot'."
     echo ""
 	echo "  tests         Run tests defined in the environment."
