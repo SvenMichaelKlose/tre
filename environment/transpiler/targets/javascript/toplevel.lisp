@@ -56,25 +56,23 @@
 
 (fn make-javascript-transpiler ()
   (aprog1 (create-transpiler
-            :name                     :js
-            :file-postfix             "js"
-            :prologue-gen             #'js-prologue
-            :epilogue-gen             #'js-epilogue
-            :sections-before-import   #'js-sections-before-import
-            :sections-after-import    #'js-sections-after-import
-            :lambda-export?           nil
-            :stack-locals?            nil
-            :needs-var-declarations?  t
-            :enabled-passes           '(:count-tags)
-            :identifier-char?         #'c-identifier-char?
-            :inline?                  #'%slot-value?
-            :argument-filter          #'js-argument-filter
-            :configurations           '((:platform            . :browser)
-                                        (:nodejs-requirements . nil)
-                                        (:exclude-core?       . nil)
-                                        (:memorize-sources?   . nil)
-                                        (:keep-source?        . nil)
-                                        (:keep-argdef-only?   . nil)))
+            :name                    :js
+            :file-postfix            "js"
+            :prologue-gen            #'js-prologue
+            :epilogue-gen            #'js-epilogue
+            :sections-before-import  #'js-sections-before-import
+            :sections-after-import   #'js-sections-after-import
+            :needs-var-declarations? t
+            :enabled-passes          '(:count-tags)
+            :identifier-char?        #'c-identifier-char?
+            :inline?                 #'%slot-value?
+            :argument-filter         #'js-argument-filter
+            :configurations          '((:platform            . :browser)
+                                       (:nodejs-requirements . nil)
+                                       (:exclude-core?       . nil)
+                                       (:memorize-sources?   . nil)
+                                       (:keep-source?        . nil)
+                                       (:keep-argdef-only?   . nil)))
     (transpiler-add-functional ! '%js-typeof)))
 
 (var *js-transpiler* (make-javascript-transpiler))

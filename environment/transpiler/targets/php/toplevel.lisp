@@ -32,7 +32,6 @@
       :sections-before-import #'php-sections-before-import
       :sections-after-import  #'php-sections-after-import
       :lambda-export?         t
-      :stack-locals?          nil
       :gen-string             [literal-string _ :quote-char #\']
       :identifier-char?       #'php-identifier-char?
       :inline?                #'%slot-value?
