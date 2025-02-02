@@ -44,20 +44,31 @@
                  nil)
                (shared-defun-source-setter name args !)))))))
 
+(fn fn? (x)
+  (& (cons? x)
+     (in? x. 'fn 'defun)))
+
+(fn compile-nested-fns (body)
+  (!? (remove-if-not #'fn? body)
+      `((with ,(+@ [`(,._. #',.._)] !)
+         ,@(remove-if #'fn? body)))
+      body))
+
 (fn shared-defun (name args body
                   &key (make-expander? t)
                        (keep-source?   t))
+  (= name (%fn-name name))
   (= args (& args (ensure-list args)))
-  (let fun-name (%fn-name name)
-    `(progn
-       ,@(shared-defun-without-expander fun-name args body
-             :keep-source? keep-source?
-             :backtrace? t)
-       ,@(& make-expander?
-            (| (always-expand-arguments?)
-               (not (simple-argument-list? args)))
-            (with-gensym expander-arg
-              (shared-defun-without-expander
-                  (c-expander-name fun-name)
-                  (… expander-arg)
-                  (make-argument-expander-function-body fun-name args expander-arg)))))))
+  (= body (compile-nested-fns body))
+  `(progn
+     ,@(shared-defun-without-expander name args body
+                                      :keep-source? keep-source?
+                                      :backtrace? t)
+     ,@(& make-expander?
+          (| (always-expand-arguments?)
+             (not (simple-argument-list? args)))
+          (with-gensym expander-arg
+            (shared-defun-without-expander
+                (c-expander-name name)
+                (… expander-arg)
+                (make-argument-expander-function-body name args expander-arg))))))

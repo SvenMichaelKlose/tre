@@ -13,6 +13,10 @@ and this project adheres to
 
 ## [current]
 
+### Added
+
+  * FNs can be nested.
+
 ### Fixed
 
   * Unified SLOT-VALUE handling in JS nad PHP target.
@@ -23,9 +27,8 @@ and this project adheres to
 
 ### Changed
 
-  * In literal JSON objects, translate keywords to C identifier
-    name strings, like Lisp symbol names to C/JS/PHP names.
-  * JS/PHP: Unified class handling in the frontend.
+  * In literal JSON objects, translate keyword symbols to C-style identifiers.
+  * JS/PHP: Unified CLASS in frontend.
   * JS: Generates native 'class' statements.
 
 ## [v0.0.21]
