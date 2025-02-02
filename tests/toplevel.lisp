@@ -21,18 +21,16 @@
        (i lst .i))
       ((not i))
     (!= i.
-      (make-project
-        :name
-          (format nil "Unit ~A: ~A" n .!.)
-        :sections
-          (format nil "tests/unit-~A-~A.lisp" n !.)
-        :transpiler
-          (aprog1 (copy-transpiler tr)
-            (= (transpiler-dump-passes? tr) nil))
-        :emitter
-          [put-file (format nil "compiled/unit-~A-~A.~A"
-                            n !. (transpiler-file-postfix tr))
-                    _]))))
+      (let tr (copy-transpiler tr)
+        (= (transpiler-dump-passes? tr) nil)
+        (make-project
+            :transpiler tr
+            :name       (format nil "Unit ~A: ~A" n .!.)
+            :sections   (format nil "tests/unit-~A-~A.lisp" n !.)
+            :emitter
+              [put-file (format nil "compiled/unit-~A-~A.~A"
+                                n !. (transpiler-file-postfix tr))
+                        _])))))
 
 (fn compile-tests (tr)
   (unix-sh-mkdir "compiled" :parents t)
