@@ -18,7 +18,7 @@
   (!= (funinfo-parent fi)
     (| ! (error "Couldn't find ~A in environment" x))
     (when (lambda-export?)
-      (funinfo-make-scope (funinfo-parent fi))
+      (funinfo-make-scope !)
       (funinfo-make-scope-arg fi))
     (? (funinfo-arg-or-var? ! x)
        (funinfo-add-scoped-var ! x)
