@@ -33,7 +33,7 @@
       :sections-after-import  #'php-sections-after-import
       :lambda-export?         t
       :stack-locals?          nil
-      :gen-string             [literal-string _ :chars-to-escape '(#\$)]
+      :gen-string             [literal-string _ :quote-char #\']
       :identifier-char?       #'php-identifier-char?
       :inline?                #'%slot-value?
       :argument-filter        #'php-argument-filter
