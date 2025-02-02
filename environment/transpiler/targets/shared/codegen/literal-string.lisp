@@ -4,8 +4,8 @@
                       `(,_)]
                    (string-list x))))
 
-(fn literal-string (x &optional (quote-char #\")
-                                (chars-to-escape #\"))
+(fn literal-string (x &key (quote-char #\")
+                           (chars-to-escape #\"))
   (string-concat (string quote-char)
                  (make-c-newlines (escape-string x quote-char chars-to-escape))
                  (string quote-char)))
