@@ -1,5 +1,5 @@
-tré metamorphic Lisp compiler
-=============================
+tré Lisp compiler
+=================
 
 tré compiles a Common Lisp-inspired dialect of the Lisp programming language
 to either JS, PHP or Common Lisp to build itself to run on top of [Steel Bank
