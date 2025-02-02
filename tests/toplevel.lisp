@@ -1,20 +1,20 @@
 (fn compile-env-tests (tr)
-  (make-project
+  (!= (copy-transpiler tr)
+    (= (transpiler-dump-passes? !) nil)
+    (make-project
       :name
-        (format nil "~A environment test" (transpiler-name tr))
-      :transpiler
-        (aprog1 (copy-transpiler tr)
-          (= (transpiler-dump-passes? tr) nil))
+        (format nil "~A environment test" (transpiler-name !))
+      :transpiler !
       :emitter
         [put-file (format nil "compiled/test.~A"
-                          (transpiler-file-postfix tr))
+                          (transpiler-file-postfix !))
                   _]
       :sections
            ; TODO: Let me guess: this has something to do with the
            ; upcoming type system.  Remove. (pixel)
         (… "environment/stage3/type.lisp"
            (. 'tests     (make-environment-tests))
-           (. 'toplevel  '((environment-tests))))))
+           (. 'toplevel  '((environment-tests)))))))
 
 (fn compile-unit-tests (tr lst)
   (do ((n 1 (++ n))
