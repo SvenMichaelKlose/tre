@@ -2,7 +2,7 @@
   ,@(@ [`(def-head-predicate ,_)]
        '(identity quote backquote quasiquote quasiquote-splice)))
 
-(fn sharp-quote? (x)
+(fn sharp-quote-symbol? (x)
   (& (function-expr? x)
      (atom .x.)
      (not ..x)))
