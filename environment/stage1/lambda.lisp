@@ -36,11 +36,6 @@
   "Get body of function form."
   (cdr (past-lambda x)))
 
-(fn lambda-args-and-body (x)
-  "Get arguments of body of function form as VALUES."
-  (values (lambda-args x)
-          (lambda-body x)))
-
 (fn function-expr? (x)
   "Test if expression starts with symbol FUNCTION."
   (& (cons? x)
