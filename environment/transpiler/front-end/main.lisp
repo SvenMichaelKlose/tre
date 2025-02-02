@@ -5,7 +5,7 @@
 (env-load "transpiler/front-end/thisify.lisp")
 (env-load "transpiler/front-end/rename-arguments.lisp")
 (env-load "transpiler/front-end/expand-literal-characters.lisp")
-(env-load "transpiler/front-end/define-compiled-literal.lisp")
+(env-load "transpiler/front-end/define-literal.lisp")
 (env-load "transpiler/front-end/quote-expand.lisp")
 (env-load "transpiler/front-end/compiler-macros/main.lisp")
 (env-load "transpiler/front-end/transpiler-macros.lisp")

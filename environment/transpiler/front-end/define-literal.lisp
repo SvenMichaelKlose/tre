@@ -4,7 +4,7 @@
          "")
      x))
 
-(defmacro define-compiled-literal (name (x table)
+(defmacro define-literal (name (x table)
                                    &key maker
                                         initializer
                                         (declaration nil))

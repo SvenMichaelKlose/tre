@@ -1,4 +1,4 @@
-(define-compiled-literal js-compiled-symbol (x symbol)
+(define-literal js-compiled-symbol (x symbol)
   :maker (make-symbol-identifier x)
   :initializer
     (!= (compiled-function-name-string 'symbol)

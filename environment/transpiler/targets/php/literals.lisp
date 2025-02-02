@@ -1,4 +1,4 @@
-(define-compiled-literal php-compiled-symbol (x symbol)
+(define-literal php-compiled-symbol (x symbol)
   :maker (make-symbol-identifier x)
   :initializer
       `(%native "new __symbol ("
