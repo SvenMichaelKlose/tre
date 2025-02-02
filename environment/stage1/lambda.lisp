@@ -50,7 +50,7 @@
   "Test if an unnamed FUNCTION form with a list argument."
   (& (function-expr? x)
      (cons? .x)
-     (cons? .x.)))  ; Name would be a symbol here.
+     (cons? .x.)))
 
 (fn unnamed-lambda? (x)
   "Test if an unnamed FUNCTION form with a argument definition."
@@ -62,8 +62,7 @@
 (fn named-lambda? (x)
   "Test if a named FUNCTION form."
   (& (function-expr? x)
-     ..x
-     x))
+     ..x))
 
 (fn lambda? (x)
   "Test if FUNCTION form."
