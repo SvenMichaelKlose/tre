@@ -14,9 +14,9 @@
 (fn quick-compile-sections (x)
   (codegen-sections (frontend-sections x)))
 
-(fn codegen-accumulated-toplevels ()
+(fn codegen-accumulated-toplevel ()
   (awhen (& (enabled-pass? :accumulate-toplevel)
-            (accumulated-toplevel-expressions))
+            (toplevel-expressions))
     (developer-note "Compiling accumulated top–level expressions…~%")
     (with-temporaries ((sections-to-update) '(:accumulated-toplevel)
                        (disabled-passes)    (. :accumulate-toplevel
@@ -52,7 +52,7 @@
            (+ (compile-imports imports)
               (compile-delayed-exprs)
               (codegen-sections after-import)
-              (codegen-accumulated-toplevels)))
+              (codegen-accumulated-toplevel)))
     (~> (postprocessor)
         (+ (… (~> (prologue-gen)))
            before-imports

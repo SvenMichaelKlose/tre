@@ -16,81 +16,81 @@
 
 (defstruct transpiler
   (:global *transpiler*)
-  (name                       nil :not-global)
-  (file-postfix               nil)
+  (name                    nil :not-global)
+  (file-postfix            nil)
 
   ;;;
   ;;; For users.
   ;;;
 
   ;; Import functions from host if missing.
-  (import-from-host?          t)
+  (import-from-host?        t)
 
   ;; Import global variables from host if missing.
-  (import-variables?          t)
+  (import-variables?        t)
 
   ;; Dump outputs of all passes if T.  Might also be a pass name or a list
   ;; of names.  See alse DEFINE-TRANSPILER-END.
-  (dump-passes?               nil)
+  (dump-passes?             nil)
 
   ;; Dump outputs of passes in which an EQUAL expression is found.
   ;; '(FUNCTION BUTLAST) would dump every pass result containing symbol BUTLAST.
-  (dump-selector              nil)
+  (dump-selector            nil)
 
   ;; Dump FUNINFOs in comments before their functions.
-  (funinfo-comments?          *development?*)
+  (funinfo-comments?        *development?*)
 
   ;; Used for incremental compilations.  If set only this list of sections
   ;; is compiled and the rest is taken from the cache.
-  (sections-to-update         nil)
+  (sections-to-update       nil)
 
   ;; Include assertions.
-  (assert?                    *assert?*)
+  (assert?                  *assert?*)
 
   ;; Also generate argument expanders for functions with simple argument
   ;; lists to validate all calls at run-time.
   ;; TODO: Revive.  Seems to be hanging up on functionals.
-  (always-expand-arguments?   nil) ; *assert?*)
+  (always-expand-arguments? nil) ; *assert?*)
 
   ;; Trace call stack at run-time.
-  (backtrace?                 nil)
+  (backtrace?               nil)
 
   ;; Associative list of target-dependent configurations.
-  (configurations             nil)
+  (configurations           nil)
 
   ;;;
   ;;; For targets.
   ;;;
 
-  (disabled-ends           nil)
-  (disabled-passes         nil)
-  (enabled-passes          nil)
-  (output-passes           '((:frontend . :lambda-expand)))
+  (disabled-ends            nil)
+  (disabled-passes          nil)
+  (enabled-passes           nil)
+  (output-passes            '((:frontend . :lambda-expand)))
 
-  (frontend-init             #'(()))
-  (callback-after-frontend   #'(()))
-  (middleend-init            #'(()))
+  (frontend-init            #'(()))
+  (callback-after-frontend  #'(()))
+  (middleend-init           #'(()))
 
-  (identifier-char?        [_ (identity t)])
-  (gen-string              #'literal-string)
+  (identifier-char?         [_ (identity t)])
+  (gen-string               #'literal-string)
 
   ;; The very last pass.
-  (postprocessor           #'flatten)
+  (postprocessor            #'flatten)
 
   ;; Prologue/epilogue of generated source.
-  (prologue-gen            #'(()))
-  (epilogue-gen            #'(()))
+  (prologue-gen             #'(()))
+  (epilogue-gen             #'(()))
 
-  (sections-before-import  #'(()))
-  (sections-after-import   #'(()))
+  (sections-before-import   #'(()))
+  (sections-after-import    #'(()))
 
   transpiler-macro-expander
   codegen-expander
 
   ;; Initialising EXPEX in TRANSPILER-EXPEX.
-  (argument-filter         #'identity :not-global)
-  (assignment-filter       #'list     :not-global)
-  (inline?                 []         :not-global)
+  (argument-filter          #'identity :not-global)
+  (assignment-filter        #'list     :not-global)
+  (inline?                  []         :not-global)
 
   ;; Turn closures into top-level functions.
   (lambda-export?           nil)
@@ -161,7 +161,7 @@
   ;; at the end of COMPILE.
   (used-functions           (make-hash-table :test #'eq))
 
-  (accumulated-toplevel-expressions nil)
+  (toplevel-expressions     nil)
 
   ;; Set by DEFINE-COMPILED-LITERAL to configure code generation.
   ;; Machine-level targets woudld also need COMPILED-NUMBERS for example.
@@ -241,8 +241,8 @@
         :wanted-variables         (copy-list wanted-variables)
         :wanted-variables-hash    (copy-hash-table wanted-variables-hash)
 
-        :accumulated-toplevel-expressions
-                                  (copy-list accumulated-toplevel-expressions)
+        :toplevel-expressions
+                                  (copy-list toplevel-expressions)
 
         :compiled-symbols         (copy-hash-table compiled-symbols)
         :compiled-decls           (copy-list compiled-decls)
@@ -323,7 +323,7 @@
   nil)
 
 (fn add-toplevel-expression (x)
-  (push x (accumulated-toplevel-expressions)))
+  (push x (toplevel-expressions)))
 
 (fn make-global-funinfo (tr)
   (= (transpiler-global-funinfo tr)
