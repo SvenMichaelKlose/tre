@@ -1,8 +1,7 @@
 (fn c-list (x &key (parens-type :parens))
   (with (err #'(() (error "PARENS-TYPE ~A not :PARENS, :BRACES, :BRACKETS or NIL"
                           parens-type)))
-    `(" "
-      ,@(case parens-type
+    `(,@(case parens-type
           :parens   '("(")
           :braces   '("{")
           :brackets '("[")
