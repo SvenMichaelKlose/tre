@@ -46,11 +46,8 @@
 
 (fn shared-defun (name args body
                   &key (make-expander? t)
-                       (keep-source? t))
-  (? args
-     (= args (? (cons? args)
-                args
-                (list args))))
+                       (keep-source?   t))
+  (= args (& args (ensure-list args)))
   (let fun-name (%fn-name name)
     `(progn
        ,@(shared-defun-without-expander fun-name args body
@@ -62,5 +59,5 @@
             (with-gensym expander-arg
               (shared-defun-without-expander
                   (c-expander-name fun-name)
-                  (list expander-arg)
+                  (… expander-arg)
                   (make-argument-expander-function-body fun-name args expander-arg)))))))

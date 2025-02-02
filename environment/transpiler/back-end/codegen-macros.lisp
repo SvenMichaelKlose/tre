@@ -16,7 +16,7 @@
   `(define-codegen-macro ,tr ,op (&rest x)
      (? .x
         (pad x ,repl-op)
-        (list ,repl-op x.))))
+        (… ,repl-op x.))))
 
 (fn codegen-expand (x)
   (expander-expand (codegen-expander) x))

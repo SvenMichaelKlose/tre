@@ -8,6 +8,6 @@
     (!? (+@ [!= (symbol-name _)
               (& (not (tail? ! "_TREEXP")
                       (head? ! "~"))
-                 (list !))]
+                 (_ !))]
            (hashkeys !))
       (warn "Unused functions: ~A." (late-print ! nil)))))

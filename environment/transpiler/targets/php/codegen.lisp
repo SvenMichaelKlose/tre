@@ -66,7 +66,7 @@
              (php-line "global " (pad (@ #'php-dollarize !) ", ")))
        ,@body
        ,@(unless (equal "void" return-type)
-           (list (php-line "return $" *return-symbol*)))
+           (… (php-line "return $" *return-symbol*)))
     "}" ,*terpri*))
 
 (fn codegen-php-function (x)
@@ -108,14 +108,14 @@
        (eq 'tre_cons val.))
       `("new __cons (" ,(php-dollarize .val.) ", " ,(php-dollarize ..val.) ")")
     (literal? val)
-      (list val)
+      (… val)
     (| (atom val)
        (& (%native? val)
           (atom .val.)
           (not ..val)))
-      (list "$" val)
+      (… "$" val)
     (codegen-expr? val)
-      (list val)
+      (… val)
     `((,val. " " ,@(c-list (@ #'php-dollarize .val))))))
 
 (def-php-codegen %= (dest val)
@@ -185,7 +185,7 @@
   `("[" ,(php-dollarize x) "]"))
 
 (fn php-literal-array-element (x)
-  (list (compiled-function-name '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
+  (… (compiled-function-name '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
 
 (fn php-literal-array-elements (x)
   (pad (@ #'php-literal-array-element x) ", "))
@@ -297,7 +297,7 @@
                     "void"
              :fi    (lambda-funinfo .x.)
              :args  (!= (lambda-args .x.)
-                      (list .!. !.))
+                      (… .!. !.))
              :body  (lambda-body .x.))
          (codegen-php-function-0
              :name  (case x.

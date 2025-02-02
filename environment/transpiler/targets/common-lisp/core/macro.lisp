@@ -19,7 +19,7 @@
 
 (defbuiltin macroexpand-1 (x)
   (!? (symbol-value (tre-symbol '*macroexpand*))
-      (*> ! (list x))
+      (*> ! (… x))
       x))
 
 (defbuiltin macroexpand (x)

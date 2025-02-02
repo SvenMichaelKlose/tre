@@ -41,7 +41,7 @@
     `(CL:COND
        ,@(? .end
             tests
-            (+ (butlast tests) (list (. t end)))))))
+            (+ (butlast tests) (… (. t end)))))))
 
 (def-cl-transpiler-macro ? (&body body)
   (make-? body))

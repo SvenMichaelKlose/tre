@@ -20,7 +20,7 @@
       (+ (js-eval-transpile ! x)
          (convert-identifier '*native-eval-return-value*)
          " = "
-         (convert-identifier ,(list 'quote *return-symbol*))
+         (convert-identifier ,(… 'quote *return-symbol*))
          ";"))))
 
 (fn eval (x)

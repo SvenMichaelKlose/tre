@@ -105,10 +105,10 @@
   ;; (%STACK stack-index).
   (stack-locals?            nil)
 
-  ;; Have arguments on GC stack. (Was C core.)
+  ;; Have arguments on GC stack. (Was C target.)
   (arguments-on-stack?      nil)
 
-  ;; Copy arguments to GC stack. (Was C core.)
+  ;; Copy arguments to GC stack. (Was C target.)
   (copy-arguments-to-stack? nil)
 
   (function-name-prefix     "tre_")
