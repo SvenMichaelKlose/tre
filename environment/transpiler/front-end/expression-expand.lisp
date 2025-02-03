@@ -75,13 +75,10 @@
 
 (fn expex-move-arg (x)
   (pcase x
-    unexpex-able?
-      (. nil x)
-    inline?
-      (expex-move-args x)
-    %block?
-      (!= (expex-make-var)
-        (. (expex-body .x !) !))
+    unexpex-able? (. nil x)
+    inline?       (expex-move-args x)
+    %block?       (!= (expex-make-var)
+                    (. (expex-body .x !) !))
     (expex-move-std x)))
 
 (fn expex-move-args (x)
