@@ -16,6 +16,6 @@
          (copy-lambda x :args (rename-arguments-0 (lambda-args x) !)
                         :body (rename-arguments-0 (lambda-body x) !)))))
 
-(fn rename-arguments (x &optional (replacements nil))
+(fn rename-arguments (x)
   (= *argument-sym-counter* 0)
-  (rename-arguments-0 x replacements))
+  (rename-arguments-0 x nil))
