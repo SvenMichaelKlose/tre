@@ -25,7 +25,6 @@
 
 (fn transpiler-macroexpand (x)
   (with-temporary *=-function?* [| (defined-function _)
-                                   (can-import-function? _)
                                    (%=-function? _)]
     (expander-expand (transpiler-macro-expander) x)))
 
