@@ -64,7 +64,7 @@
   (| (unnamed-lambda? x)
      (named-lambda? x)))
 
-(fn lambda-call? (x)
+(fn binding-lambda? (x)
   "Test if expression has a FUNCTION form as the first element."
   (& (cons? x)
      .x

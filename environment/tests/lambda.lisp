@@ -7,5 +7,5 @@
   t)
 
 (deftest "LAMBDA-CALL? works"
-  ((lambda-call? '(#'((x) x) nil)))
+  ((binding-lambda? '(#'((x) x) nil)))
   t)

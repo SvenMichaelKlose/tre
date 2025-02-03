@@ -8,9 +8,9 @@
           values)
      ,@body))
 
-(fn lambda-call-embed (lambda-call)
-  (with-lambda-call (args vals body lambda-call)
-    (with (l (argument-expand 'lambda-call-embed args vals)
+(fn inline-binding-lambda (binding-lambda)
+  (with-binding-lambda (args vals body binding-lambda)
+    (with (l (argument-expand 'inline-binding-lambda args vals)
            a (carlist l)
            v (cdrlist l))
       (funinfo-add-var *funinfo* a)
@@ -63,7 +63,7 @@
 (fn lambda-expand-expr (x)
   (pcase x
     atom            x
-    lambda-call?    (lambda-call-embed x)
+    binding-lambda? (inline-binding-lambda x)
     unnamed-lambda? (? (lambda-export?)
                        (lambda-export x)
                        (lambda-expand-lambda x))

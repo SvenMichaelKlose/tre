@@ -24,7 +24,7 @@
             ,body  (lambda-body ,g))
        ,@macro-body)))
 
-(defmacro with-lambda-call ((args vals body x) &body exec-body)
+(defmacro with-binding-lambda ((args vals body x) &body exec-body)
   (with-gensym (tmp fun)
     `(with (,tmp   ,x
             ,fun   (cadar ,tmp)
