@@ -46,10 +46,10 @@
          args   (? new? ..x .x))
     `(,@(& new? '(%new))
       ,@(!? fun (… !))
-      ,@(expand-literal-characters
-           (? (defined-function fun)
-              (compiled-expanded-arguments fun (expex-argdef fun) args)
-              args)))))
+          ,@(expand-literal-characters
+               (? (defined-function fun)
+                  (compiled-expanded-arguments fun (expex-argdef fun) args)
+                  args)))))
 
 
 ;;;;; MOVING ARGUMENTS
