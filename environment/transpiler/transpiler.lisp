@@ -133,6 +133,9 @@
   ;; DEFUN function sources.
   (memorized-sources        nil)
 
+  ;; Top-level expressions that aren't native target function definitions.
+  (toplevel-expressions     nil)
+
   ;; FUNINFOs by function name.
   (funinfos                 (make-hash-table :test #'eq))
 
@@ -160,8 +163,6 @@
   ;; List of used functions to warn about unused functions
   ;; at the end of COMPILE.
   (used-functions           (make-hash-table :test #'eq))
-
-  (toplevel-expressions     nil)
 
   ;; Set by DEFINE-COMPILED-LITERAL to configure code generation.
   ;; Machine-level targets woudld also need COMPILED-NUMBERS for example.
@@ -227,6 +228,8 @@
         :closures                 (copy-list closures)
         :delayed-exprs            (copy-list delayed-exprs)
         :memorized-sources        (copy-list memorized-sources)
+        :toplevel-expressions     (copy-list toplevel-expressions)
+
         :funinfos                 (copy-hash-table funinfos)
         :global-funinfo           (& global-funinfo
                                      (copy-funinfo global-funinfo))
@@ -240,9 +243,6 @@
         :wanted-functions-hash    (copy-hash-table wanted-functions-hash)
         :wanted-variables         (copy-list wanted-variables)
         :wanted-variables-hash    (copy-hash-table wanted-variables-hash)
-
-        :toplevel-expressions
-                                  (copy-list toplevel-expressions)
 
         :compiled-symbols         (copy-hash-table compiled-symbols)
         :compiled-decls           (copy-list compiled-decls)
