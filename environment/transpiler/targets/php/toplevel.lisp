@@ -36,8 +36,7 @@
         :identifier-char?       #'php-identifier-char?
         :inline?                #'%slot-value?
         :argument-filter        #'php-argument-filter
-        :assignment-filter      (compose [@ #'php-assignment-filter _]
-                                         #'expex-compile-funcall)
+        :assignment-filter      #'expex-compile-funcall
         :configurations         '((:exclude-core?     . nil)
                                   (:keep-source?      . nil)
                                   (:keep-argdef-only? . nil)
