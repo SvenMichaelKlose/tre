@@ -30,17 +30,18 @@
   `(var ,@x))
 
 (def-shared-transpiler-macro (bc c js php) defvar (name &optional (val '%%no-value-in-defvar))
-  (& (eq '%%no-value val)
-     (= val `',name))
+  (when (eq '%%no-value val)
+    (= val `',name))
   (print-definition `(var ,name))
-  (& (defined-variable name)
-     (warn "Redefinition of variable ~A." name))
+  (when (defined-variable name)
+    (warn "Redefinition of variable ~A." name))
   (add-defined-variable name)
-  (& *have-compiler?*
-     (add-delayed-expr `((= *variables* (. (. ',name ',val) *variables*)))))
+  (when *have-compiler?*
+    (+! (delayed-exprs)
+        (frontend `((= *variables* (. (. ',name ',val) *variables*))))))
   `(progn
-     ,@(& (needs-var-declarations?)
-          `((%var ,name)))
+     ,@(when (needs-var-declarations?)
+         `((%var ,name)))
      (%= ,name ,val)))
 
 (def-shared-transpiler-macro (bc c js php) %defvar

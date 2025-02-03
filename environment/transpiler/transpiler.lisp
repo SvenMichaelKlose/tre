@@ -318,10 +318,6 @@
 (fn transpiler-add-closure (tr x)
   (push x (transpiler-closures tr)))
 
-(fn add-delayed-expr (x)
-  (+! (delayed-exprs) (frontend x))
-  nil)
-
 (fn add-toplevel-expression (x)
   (push x (toplevel-expressions)))
 
