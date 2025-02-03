@@ -19,7 +19,7 @@
     (… (section-from-string 'core-2 *php-core2*))))
 
 (fn php-identifier-char? (x)
-  (unless (eql #\$ x)
+  (unless (eql x #\$)
     (c-identifier-char? x)))
 
 (fn make-php-transpiler ()
@@ -41,7 +41,7 @@
                                          #'expex-compile-funcall)
         :configurations         '((:exclude-core?     . nil)
                                   (:keep-source?      . nil)
-                                  (:keep-argdef-only? .  nil)
+                                  (:keep-argdef-only? . nil)
                                   (:native-code       . nil))))
   (aprog1 (make)
     (transpiler-add-defined-function ! '%cons '(a d) nil)
