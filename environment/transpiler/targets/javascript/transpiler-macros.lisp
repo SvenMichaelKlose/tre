@@ -23,15 +23,9 @@
 
 (var *late-symbol-function-assignments* nil)
 
-(fn js-make-late-symbol-function-assignment (name)
+(def-js-transpiler-macro defnative (name args &body body)
   (push `(= (%slot-value ,name f) ,(compiled-function-name name))
         *late-symbol-function-assignments*))
-
-(fn emit-late-symbol-function-assignments ()
-  (reverse *late-symbol-function-assignments*))
-
-(def-js-transpiler-macro defnative (name args &body body)
-  (js-make-late-symbol-function-assignment name)
   `(progn
      (%var ,(%fn-name name))
      ,(shared-defun name args (. 'has-argexp! body) :keep-source? nil)))

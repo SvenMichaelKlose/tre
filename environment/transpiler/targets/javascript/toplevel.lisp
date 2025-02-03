@@ -16,7 +16,7 @@
   (@ [`(push ',_ *functions*)] (memorized-sources)))
 
 (fn js-emit-memorized-sources ()
-  (clr (configuration :memorize-sources?))
+  (= (configuration :memorize-sources?) nil)
   (@ [`(%= (slot-value ,_. '__source) (. ,(shared-defun-source _.) (shared-defun-source ._)))]
      (memorized-sources)))
 
@@ -48,7 +48,7 @@
 
 (fn js-sections-after-import ()
   (+ (… (. 'emit-late-symbol-function-assignments
-           #'emit-late-symbol-function-assignments)
+           (reverse *late-symbol-function-assignments*))
         (. 'js-emit-memorized-sources
            #'js-emit-memorized-sources))
      (?
