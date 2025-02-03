@@ -12,30 +12,16 @@
            ,(unless (configuration :keep-argdef-only?)
               (shared-defun-source body))))))
 
-(fn shared-defun-backtrace (name body)
-  (? (& (backtrace?)
-        (not (in? name '%cons '__cons)))
-     `((setq nil (%backtrace-push ',name))
-       (prog1 (progn
-                ,@body)
-         (%backtrace-pop)))
-     body))
-
-(fn shared-defun-without-expander (name args body
-                                   &key (keep-source? nil)
-                                        (backtrace? nil))
+(fn shared-defun-without-expander (name args body &key (keep-source? nil))
   (print-definition `(fn ,name ,args))
-  (let body-with-block `((block ,name
+  (let body-in-blocks `((block ,name
                            (block nil
                              ,@(remove 'no-args body))))
-    (add-defined-function name args body-with-block)
+    (add-defined-function name args body-in-blocks)
     `((function ,name (,args
                        ,@(& (eq 'no-args body.)
                             '(no-args))
-                       ,@(!= body-with-block
-                           (? backtrace?
-                              (shared-defun-backtrace name !)
-                              !))))
+                       ,@body-in-blocks))
       ,@(when (& keep-source? (configuration :keep-source?))
           (!= (remove 'no-args body)
             (? (configuration :keep-source?)
@@ -62,8 +48,7 @@
   (= body (compile-nested-fns body))
   `(progn
      ,@(shared-defun-without-expander name args body
-                                      :keep-source? keep-source?
-                                      :backtrace? t)
+                                      :keep-source? keep-source?)
      ,@(& make-expander?
           (| (always-expand-arguments?)
              (not (simple-argument-list? args)))
