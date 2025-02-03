@@ -13,12 +13,12 @@
   (format nil "}break;}~%"))
 
 (fn js-emit-early-defined-functions ()
-  (@ [`(push ',_ *functions*)] (memorized-sources)))
+  (@ [`(push ',_ *functions*)] (original-sources)))
 
-(fn js-emit-memorized-sources ()
+(fn js-emit-original-sources ()
   (= (configuration :memorize-sources?) nil)
   (@ [`(%= (slot-value ,_. '__source) (. ,(shared-defun-source _.) (shared-defun-source ._)))]
-     (memorized-sources)))
+     (original-sources)))
 
 (fn js-sections-before-import ()
   (. (section-from-string '*js-core-return-value* *js-core-return-value*)
@@ -43,8 +43,8 @@
 (fn js-sections-after-import ()
   (+ (… (. 'emit-late-symbol-function-assignments
            (reverse *late-symbol-function-assignments*))
-        (. 'js-emit-memorized-sources
-           #'js-emit-memorized-sources))
+        (. 'js-emit-original-sources
+           #'js-emit-original-sources))
      (?
        *have-compiler?*
          (js-sections-compiler)

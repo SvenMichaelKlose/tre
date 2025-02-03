@@ -131,7 +131,7 @@
   (delayed-exprs            nil)
 
   ;; DEFUN function sources.
-  (memorized-sources        nil)
+  (original-sources         nil)
 
   ;; Top-level expressions that aren't native target function definitions.
   (toplevel-expressions     nil)
@@ -227,7 +227,7 @@
         :defined-classes          (copy-hash-table defined-classes)
         :closures                 (copy-list closures)
         :delayed-exprs            (copy-list delayed-exprs)
-        :memorized-sources        (copy-list memorized-sources)
+        :original-sources         (copy-list original-sources)
         :toplevel-expressions     (copy-list toplevel-expressions)
 
         :funinfos                 (copy-hash-table funinfos)

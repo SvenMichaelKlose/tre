@@ -40,7 +40,7 @@
           (!= (remove 'no-args body)
             (? (configuration :keep-source?)
                (progn
-                 (acons! name (. args !) (memorized-sources))
+                 (acons! name (. args !) (original-sources))
                  nil)
                (shared-defun-source-setter name args !)))))))
 
