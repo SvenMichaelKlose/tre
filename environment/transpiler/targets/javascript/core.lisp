@@ -7,16 +7,16 @@
                (fetch-file !)]
              files)))
 
-(var *js-core0* ,(js-load-core "" "return-value.lisp"))
-(var *js-core*
-    ,(js-load-core ""
-                   "cons.lisp"
-                   "defined-functions.lisp"
-                   "%princ.lisp"
-                   "%write-char.lisp"
-                   "symbol.lisp"
-                   "slot-value.lisp"
-                   "object-alist.lisp"))
+(var *js-core-return-value* ,(js-load-core "" "return-value.lisp"))
+
+(var *js-core0* ,(js-load-core ""
+                               "cons.lisp"
+                               "defined-functions.lisp"
+                               "%princ.lisp"
+                               "%write-char.lisp"
+                               "symbol.lisp"
+                               "slot-value.lisp"
+                               "object-alist.lisp"))
 
 (var *js-core-debug-print* ,(js-load-core "" "debug-print.lisp"))
 
@@ -33,31 +33,28 @@
                       "apply.lisp"
                       "atom.lisp")
         (js-load-core "../../../environment/"
-                      "string.lisp")))
-
-(+! *js-core1* ,(js-load-core ""
-                              "bind.lisp"
-                              "../../../environment/eq.lisp"
-                              "../../../environment/equality.lisp"
-                              "late-cons.lisp"
-                              "late-symbol.lisp"
-                              "../../../environment/make-array.lisp"
-                              "sequence.lisp"
-                              "string.lisp"
-                              "hash.lisp"
-                              "base64.lisp"
-                              "function-source.lisp"
-                              "dot-expand.lisp"
-                              "math.lisp"
-                              "milliseconds-since-1970.lisp"
-                              "keys.lisp"
-                              "file.lisp"
-                              "env.lisp"
-                              "../../../environment/files-unsupported.lisp"))
-
+                      "string.lisp")
+        (js-load-core ""
+                      "bind.lisp"
+                      "../../../environment/eq.lisp"
+                      "../../../environment/equality.lisp"
+                      "late-cons.lisp"
+                      "late-symbol.lisp"
+                      "../../../environment/make-array.lisp"
+                      "sequence.lisp"
+                      "string.lisp"
+                      "hash.lisp"
+                      "base64.lisp"
+                      "function-source.lisp"
+                      "dot-expand.lisp"
+                      "math.lisp"
+                      "milliseconds-since-1970.lisp"
+                      "keys.lisp"
+                      "file.lisp"
+                      "env.lisp"
+                      "../../../environment/files-unsupported.lisp")))
 (when *have-compiler?*
   (+! *js-core1* ,(js-load-core "" "native-eval.lisp")))
-
 (+! *js-core1* ,(js-load-core "" "../../../environment/setf-function-p.lisp"))
 
 (fn js-core-stream ()

@@ -19,17 +19,14 @@
                     (fetch-file !)]
                   files))))
 
-(var *php-core0*
+(var *php-core-before-import*
     ,(php-load-core ""
                     "assert.lisp"
-                    "return-value.lisp"))
-
-(var *php-core*
-    ,(php-load-core ""
+                    "return-value.lisp"
                     "cons.lisp"
                     "symbol.lisp"))
 
-(var *php-core2*
+(var *php-core-after-import*
     ,(+ (php-load-core ""
                        "slot-value.lisp"
                        "../../../environment/number-typing.lisp"

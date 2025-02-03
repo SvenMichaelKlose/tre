@@ -13,13 +13,14 @@
 (def-cl-transpiler-macro defvar (name &optional (init nil))
   (print-definition `(var ,name))
   (add-defined-variable name)
-  (add-delayed-expr `((CL:SETQ ,name ,init)))
+  (+! (delayed-exprs) (frontend `((CL:SETQ ,name ,init))))
   `(CL:DEFVAR ,name))
 
 (def-cl-transpiler-macro defconstant (name &optional (init nil))
   (print-definition `(const ,name))
   (add-defined-variable name)
-  (add-delayed-expr `((CL:DEFCONSTANT ,name ,init))))
+  (+! (delayed-exprs) (frontend `((CL:DEFCONSTANT ,name ,init))))
+  nil)
 
 (def-cl-transpiler-macro defmacro (name args &body body)
   (print-definition `(defmacro ,name ,args))
@@ -27,11 +28,12 @@
 
 (def-cl-transpiler-macro defspecial (name args &body body)
   (print-definition `(defspecial ,name ,args))
-  (add-delayed-expr `((CL:PUSH (. (tre-symbol ',name)
-                                  (. ',args
-                                     #'(,(argument-expand-names 'defspecial args)
-                                        ,@body)))
-                               *special-forms*))))
+  (+! (delayed-exprs) (frontend `((CL:PUSH (. (tre-symbol ',name)
+                                              (. ',args
+                                                 #'(,(argument-expand-names 'defspecial args)
+                                                     ,@body)))
+                                           *special-forms*))))
+  nil)
 
 (fn make-? (body)
   (with (tests (group body 2)

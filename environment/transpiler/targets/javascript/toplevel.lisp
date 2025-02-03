@@ -21,9 +21,9 @@
      (memorized-sources)))
 
 (fn js-sections-before-import ()
-  (. (section-from-string '*js-core0* *js-core0*)
+  (. (section-from-string '*js-core-return-value* *js-core-return-value*)
      (& (not (configuration :exclude-core?))
-        (+ (… (section-from-string '*js-core* *js-core*))
+        (+ (… (section-from-string '*js-core0* *js-core0*))
            (& (assert?)
               (… (section-from-string '*js-core-debug-print* *js-core-debug-print*)))
            (… (section-from-string '*js-core1* *js-core1*)

@@ -11,12 +11,11 @@
 
 (fn php-sections-before-import ()
   (unless (configuration :exclude-core?)
-    (+ (… (section-from-string 'core-0 *php-core0*))
-       (… (section-from-string 'core *php-core*)))))
+    (… (section-from-string 'core-before-import *php-core-before-import*))))
 
 (fn php-sections-after-import ()
   (unless (configuration :exclude-core?)
-    (… (section-from-string 'core-2 *php-core2*))))
+    (… (section-from-string 'core-after-import *php-core-after-import*))))
 
 (fn php-identifier-char? (x)
   (unless (eql x #\$)
