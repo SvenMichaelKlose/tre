@@ -13,6 +13,7 @@
 (env-load "utils/lml-utils.lisp")
 (env-load "utils/lml2xml.lisp")
 (env-load "utils/print-html-script.lisp")
+(env-load "utils/environment-pathnames.lisp")
 (env-load "tests/main.lisp")
 (env-load "todo.lisp" :cl)
 (env-load "config-after-reload.lisp" :cl)

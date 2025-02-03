@@ -31,18 +31,12 @@
            (& (eq :nodejs (configuration :platform))
               (… (section-from-string 'js-core-nodejs (js-core-nodejs))))))))
 
-(fn js-environment-files ()
-  (+@ [& (| (not ._)
-            (member :js ._))
-         `((,(+ "environment/" _.)))]
-      (reverse *environment-filenames*)))
-
 (fn js-sections-compiler ()
   (!= *js-core-path*
     (+ (… (. 'js-emit-early-defined-functions
              #'js-emit-early-defined-functions)
           (… (+ ! "env-load-stub.lisp")))
-       (js-environment-files)
+       (environment-files :js)
        (… (… (+ ! "late-macro.lisp"))
           (… (+ ! "eval.lisp"))))))
 

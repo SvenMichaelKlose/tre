@@ -25,7 +25,7 @@
 
 (def-js-transpiler-macro defnative (name args &body body)
   (push `(= (%slot-value ,name f) ,(compiled-function-name name))
-        *late-symbol-function-assignments*))
+        *late-symbol-function-assignments*)
   `(progn
      (%var ,(%fn-name name))
      ,(shared-defun name args (. 'has-argexp! body) :keep-source? nil)))
