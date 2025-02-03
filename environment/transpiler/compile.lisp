@@ -87,40 +87,28 @@
               (? (== 0 !) "No" !)
               (? (== 1 !) "" "s"))))
 
-(fn seconds-passed (start-time)
-  (/ (- (milliseconds-since-1970) start-time) 1000))
-
-(fn print-transpiler-stats (start-time)
-  ;(warn-unused-functions)
-  (tell-number-of-warnings)
-  (print-status "~A seconds passed.~%"
-                (integer (seconds-passed start-time))))
-
 (define-filter expand-sections (section)
   (? (string? section)
      (… section)
      section))
 
 (fn compile-sections (&key sections (transpiler *default-transpiler*))
-  (let start-time (milliseconds-since-1970)
     (= *warnings* nil)
     (with-temporaries (*transpiler*  transpiler
                        *assert?*     (| *assert?* (assert?)))
       (= (host-functions) (make-host-functions))
       (= (host-variables) (make-host-variables))
       (~> (frontend-init))
-      (prog1 (generic-codegen
-                 :before-import
-                   (frontend-sections (~> (sections-before-import)))
-                 :after-import
-                   (+ (frontend-sections (~> (sections-after-import)))
-                      (frontend-sections (expand-sections sections)))
-                 :imports
-                   (+ (… "Section imports")
-                      (with-temporary *package* *package*
-                        (import-from-host))))
-        (print-transpiler-stats start-time)
-        (print-status "Phew!~%")))))
+      (generic-codegen
+           :before-import
+             (frontend-sections (~> (sections-before-import)))
+           :after-import
+             (+ (frontend-sections (~> (sections-after-import)))
+                (frontend-sections (expand-sections sections)))
+           :imports
+             (+ (… "Section imports")
+                (with-temporary *package* *package*
+                  (import-from-host))))))
 
 (fn compile (expression &key (transpiler *default-transpiler*))
   (compile-sections :sections   `((t ,expression))
