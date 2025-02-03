@@ -51,8 +51,11 @@
            #'emit-late-symbol-function-assignments)
         (. 'js-emit-memorized-sources
            #'js-emit-memorized-sources))
-     (& *have-compiler?*
-        (js-sections-compiler))))
+     (?
+       *have-compiler?*
+         (js-sections-compiler)
+       (configuration :include-environment?)
+         (js-environment-files))))
 
 (fn make-javascript-transpiler ()
   (aprog1 (create-transpiler
@@ -67,12 +70,13 @@
             :identifier-char?        #'c-identifier-char?
             :inline?                 #'%slot-value?
             :argument-filter         #'js-argument-filter
-            :configurations          '((:platform            . :browser)
-                                       (:nodejs-requirements . nil)
-                                       (:exclude-core?       . nil)
-                                       (:memorize-sources?   . nil)
-                                       (:keep-source?        . nil)
-                                       (:keep-argdef-only?   . nil)))
+            :configurations          '((:platform             . :browser)
+                                       (:nodejs-requirements  . nil)
+                                       (:exclude-core?        . nil)
+                                       (:include-environment? . nil)
+                                       (:memorize-sources?    . nil)
+                                       (:keep-source?         . nil)
+                                       (:keep-argdef-only?    . nil)))
     (transpiler-add-functional ! '%js-typeof)))
 
 (var *js-transpiler* (make-javascript-transpiler))

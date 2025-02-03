@@ -404,11 +404,11 @@
 (fn configuration-item (x)
   (transpiler-configuration-item *transpiler* x))
 
-(fn (= configuration) (value x)
-  (= (transpiler-configuration *transpiler* x) value))
-
 (fn configuration (x)
   (transpiler-configuration *transpiler* x))
+
+(fn (= configuration) (value x)
+  (= (transpiler-configuration *transpiler* x) value))
 
 (fn callback-after-frontend ()
   (transpiler-callback-after-frontend *transpiler*))
