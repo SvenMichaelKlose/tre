@@ -52,9 +52,6 @@
   ;; TODO: Revive.  Seems to be hanging up on functionals.
   (always-expand-arguments? nil) ; *assert?*)
 
-  ;; Trace call stack at run-time.
-  (backtrace?               nil)
-
   ;; Associative list of target-dependent configurations.
   (configurations           nil)
 
@@ -188,7 +185,6 @@
     (make-transpiler
         :name                     name
         :assert?                  assert?
-        :backtrace?               backtrace?
         :always-expand-arguments? always-expand-arguments?
         :import-from-host?        import-from-host?
         :import-variables?        import-variables?
