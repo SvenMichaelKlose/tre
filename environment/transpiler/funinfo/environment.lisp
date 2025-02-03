@@ -1,4 +1,5 @@
 (fn funinfo-find (fi x)
+  "Find non-global FUNINFO containg arg or var X."
   (!? (funinfo-parent fi)
       (| (funinfo-arg-or-var? fi x)
          (funinfo-find ! x))))
@@ -7,6 +8,7 @@
 ;;;; FUNCTION NAME
 
 (fn funinfo-names (fi)
+  "List of FUNFINFO's and its parents names."
   (when fi
     (. (funinfo-name fi)
        (funinfo-names (funinfo-parent fi)))))
@@ -15,41 +17,31 @@
 ;;;; ARGUMENTS
 
 (fn funinfo-arg? (fi x)
+  "Test if X is an argument."
   (member x (funinfo-args fi) :test #'eq))
 
 (fn funinfo-arg-pos (fi x)
+  "Posiiton of X in argument list."
   (position x (funinfo-args fi) :test #'eq))
-
-(fn funinfo-local-args (fi)
-  (remove-if [funinfo-scoped-var? fi _] (funinfo-args fi)))
-
-
-;;;; ARGUMENTS & VARIABLES
-
-(fn funinfo-arg-or-var? (fi x)
-  (| (funinfo-arg? fi x)
-     (funinfo-var? fi x)))
 
 
 ;;;; VARIABLES
 
 (fn funinfo-var? (fi x)
+  "Test if X is a local variable."
   (& x
      (symbol? x)
      (!? (funinfo-vars-hash fi)
          (href ! x)
          (member x (funinfo-vars fi) :test #'eq))))
 
-(fn funinfo-parent-var? (fi x)
-  (!? (funinfo-parent fi)
-      (| (funinfo-arg-or-var? ! x)
-         (funinfo-parent-var? ! x))))
-
 (fn funinfo-var-pos (fi x)
+  "Posiiton of X in list of local variables."
   (& (funinfo-parent fi)
      (position x (funinfo-vars fi) :test #'eq)))
 
 (fn funinfo-add-var (fi x)
+  "Add local variable(s).  Ignored if already added."
   (@ (v (ensure-list x))
     (unless (funinfo-var? fi v)
       (? (funinfo-parent fi)
@@ -62,14 +54,20 @@
            t))))
   x)
 
-(fn funinfo-reset-vars (fi)
+(fn funinfo-set-vars (fi x)
+  "Replace list of local variables."
   (= (funinfo-vars fi) nil)
   (unless (funinfo-parent fi)
-    (= (funinfo-vars-hash fi) (make-hash-table :test #'eq))))
-
-(fn funinfo-set-vars (fi x)
-  (funinfo-reset-vars fi)
+    (= (funinfo-vars-hash fi) (make-hash-table :test #'eq)))
   (funinfo-add-var fi x))
+
+
+;;;; ARGUMENTS & VARIABLES
+
+(fn funinfo-arg-or-var? (fi x)
+  "Test if X is an argument or local variable."
+  (| (funinfo-arg? fi x)
+     (funinfo-var? fi x)))
 
 
 ;;;; LEXICALS
@@ -138,12 +136,6 @@
 (fn funinfo-add-global (fi x)
   (funinfo-add-var fi x)
   (adjoin! x (funinfo-globals fi)))
-
-(fn funinfo-toplevel-var? (fi x)
-  (!? (funinfo-parent fi)
-      (& (not (funinfo-arg-or-var? fi x))
-         (funinfo-toplevel-var? ! x))
-      (funinfo-var? fi x)))
 
 (fn funinfo-global-var? (fi x)
   (& (not (funinfo-find fi x))
