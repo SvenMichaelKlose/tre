@@ -11,7 +11,7 @@
     (= *js-eval-transpiler* tr)))
 
 (fn js-eval-transpile (tr expression)
-  (clr (transpiler-compiled-inits tr))
+  (clr (transpiler-global-inits tr))
   (compile expression :transpiler tr))
 
 (fn eval-compile (x)

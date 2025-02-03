@@ -169,8 +169,8 @@
   ;; Other types than symbols have been removed with C and bytecode target
   ;; gone.  TODO: Revive bytecode backend to also keep machine-level
   ;; targeting alive.
-  (compiled-decls           nil) ; top-level declarations
-  (compiled-inits           nil) ; top-level initializers
+  (global-decls             nil)
+  (global-inits             nil)
   (compiled-symbols         (make-hash-table :test #'eq))
 
   ;; Identifier conversions.
@@ -245,8 +245,8 @@
         :wanted-variables-hash    (copy-hash-table wanted-variables-hash)
 
         :compiled-symbols         (copy-hash-table compiled-symbols)
-        :compiled-decls           (copy-list compiled-decls)
-        :compiled-inits           (copy-list compiled-inits)
+        :global-decls             (copy-list global-decls)
+        :global-inits             (copy-list global-inits)
         :identifiers              (copy-hash-table identifiers)
         :converted-identifiers    (copy-hash-table converted-identifiers)
         :real-function-names      (copy-hash-table real-function-names))

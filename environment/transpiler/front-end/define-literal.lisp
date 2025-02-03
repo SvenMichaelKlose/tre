@@ -16,6 +16,6 @@
                   (funinfo-add-var (global-funinfo) !))
                 ,@(when declaration
                      `((push (~> ,declaration !)
-                             (compiled-decls))))
+                             (global-decls))))
                 (push `(= ,,! ,(… 'quasiquote initializer))
-                      (compiled-inits)))))))
+                      (global-inits)))))))

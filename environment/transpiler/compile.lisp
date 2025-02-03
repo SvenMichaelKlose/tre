@@ -33,7 +33,7 @@
     (full-compile-section :delayed-exprs (delayed-exprs))))
 
 (fn compile-inits ()
-  (full-compile-section :compiled-inits (reverse (compiled-inits))))
+  (full-compile-section :global-inits (reverse (global-inits))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
