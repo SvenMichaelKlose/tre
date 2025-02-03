@@ -1,4 +1,4 @@
-(fn quick-compile (x)
+(fn full-compile (x)
   (backend (middleend (frontend x))))
 
 (fn map-sections (fun sections)
@@ -11,36 +11,34 @@
 (fn codegen-sections (sections)
   (*> #'+ (cdrlist (map-sections #'codegen-section sections))))
 
-(fn quick-compile-sections (x)
-  (codegen-sections (frontend-sections x)))
+(fn full-compile-section (section x)
+  (codegen-sections (frontend-sections (… (. section x)))))
 
-(fn codegen-accumulated-toplevel ()
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; DEDICATED SECTIONS ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(fn compile-toplevel-expressions ()
   (awhen (& (enabled-pass? :accumulate-toplevel)
             (toplevel-expressions))
-    (developer-note "Compiling accumulated top–level expressions…~%")
-    (with-temporaries ((sections-to-update) '(:accumulated-toplevel)
-                       (disabled-passes)    (. :accumulate-toplevel
-                                               (disabled-passes)))
-      (quick-compile-sections
-          (… (. :accumulated-toplevel
-                (reverse !)))))))
+    (with-temporaries ((sections-to-update)
+                         '(:accumulated-toplevel)
+                       (disabled-passes)
+                         (. :accumulate-toplevel (disabled-passes)))
+      (full-compile-section :accumulated-toplevel (reverse !)))))
 
 (fn compile-delayed-exprs ()
-  (developer-note "Compiling delayed expressions…~%")
   (with-temporary (sections-to-update) '(:delayed-exprs)
-    (quick-compile-sections
-        (… (. :delayed-exprs
-              (delayed-exprs))))))
-
-(fn compile-imports (imports)
-  (developer-note "Compiling imports…~%")
-  (backend (middleend imports)))
+    (full-compile-section :delayed-exprs (delayed-exprs))))
 
 (fn compile-inits ()
-  (developer-note "Compiling inits…~%")
-  (quick-compile-sections
-      (… (. :compiled-inits
-            (reverse (compiled-inits))))))
+  (full-compile-section :compiled-inits (reverse (compiled-inits))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; SECTION ORCHESTRATION ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (fn generic-codegen (&key before-import after-import imports)
   (print-status "Let me think. Hmm…~F")
@@ -49,10 +47,10 @@
   (with (before-imports
            (codegen-sections before-import)
          imports-and-rest
-           (+ (compile-imports imports)
+           (+ (codegen-section :imports imports)
               (compile-delayed-exprs)
               (codegen-sections after-import)
-              (codegen-accumulated-toplevel)))
+              (compile-toplevel-expressions)))
     (~> (postprocessor)
         (+ (… (~> (prologue-gen)))
            before-imports
@@ -78,14 +76,11 @@
            (error "Alien section")))))
 
 (fn frontend-sections (sections)
-  (with-temporary *package* *package*
-    (map-sections #'frontend-section sections)))
+  (map-sections #'frontend-section sections))
 
-(fn tell-number-of-warnings ()
-  (!= (length *warnings*)
-    (format t "~L; ~A warning~A.~%"
-              (? (== 0 !) "No" !)
-              (? (== 1 !) "" "s"))))
+;;;;;;;;;;;;;;;
+;;; TOPLEVEL;;;
+;;;;;;;;;;;;;;;
 
 (define-filter expand-sections (section)
   (? (string? section)
@@ -107,8 +102,7 @@
                 (frontend-sections (expand-sections sections)))
            :imports
              (+ (… "Section imports")
-                (with-temporary *package* *package*
-                  (import-from-host))))))
+                (import-from-host)))))
 
 (fn compile (expression &key (transpiler *default-transpiler*))
   (compile-sections :sections   `((t ,expression))
