@@ -78,8 +78,8 @@
   (postprocessor            #'flatten)
 
   ;; Prologue/epilogue of generated source.
-  (prologue-gen             #'(()))
-  (epilogue-gen             #'(()))
+  (prologue                 #'(()))
+  (epilogue                 #'(()))
 
   (sections-before-import   #'(()))
   (sections-after-import    #'(()))
@@ -207,8 +207,8 @@
         :identifier-char?         identifier-char?
         :gen-string               gen-string
         :postprocessor            postprocessor
-        :prologue-gen             prologue-gen
-        :epilogue-gen             epilogue-gen
+        :prologue                 prologue
+        :epilogue                 epilogue
         :sections-before-import   sections-before-import
         :sections-after-import    sections-after-import
         :codegen-expander         codegen-expander

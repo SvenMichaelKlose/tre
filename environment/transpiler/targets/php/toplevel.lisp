@@ -28,8 +28,8 @@
         :name                   :php
         :file-postfix           "php"
         :frontend-init          #'php-frontend-init
-        :prologue-gen           #'php-prologue
-        :epilogue-gen           #'php-epilogue
+        :prologue               #'php-prologue
+        :epilogue               #'php-epilogue
         :sections-before-import #'php-sections-before-import
         :sections-after-import  #'php-sections-after-import
         :lambda-export?         t

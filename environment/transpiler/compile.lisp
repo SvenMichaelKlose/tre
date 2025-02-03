@@ -52,11 +52,11 @@
               (codegen-sections after-import)
               (compile-toplevel-expressions)))
     (~> (postprocessor)
-        (+ (… (~> (prologue-gen)))
+        (+ (… (~> (prologue)))
            before-imports
            (compile-inits)
            imports-and-rest
-           (… (~> (epilogue-gen)))))))
+           (… (~> (epilogue)))))))
 
 (fn frontend-section (section x)
   (developer-note "Frontend ~A~%" section)
