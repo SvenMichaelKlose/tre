@@ -15,9 +15,9 @@
   (create-transpiler
       :name                    :common-lisp
       :file-postfix            "lisp"
-      :output-passes           '((:frontend . :transpiler-macroexpand))
-      :disabled-passes         '(:expand-literal-characters)
       :disabled-ends           '(:middleend :backend)
+      :disabled-passes         '(:expand-literal-characters)
+      :output-passes           '((:frontend . :transpiler-macroexpand))
       :import-variables?       t
       :lambda-export?          nil
       :stack-locals?           nil
