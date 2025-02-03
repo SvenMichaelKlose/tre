@@ -9,7 +9,5 @@
     :thisify                    #'thisify
     :rename-arguments           #'rename-arguments
     :lambda-expand              #'lambda-expand
-    :initialize-funinfos        [(place-expand _)
-                                 _]
     :expression-expand          #'expression-expand
     :gather-imports             #'gather-imports)
