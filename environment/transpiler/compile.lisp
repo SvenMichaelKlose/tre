@@ -89,8 +89,8 @@
 
 (fn compile-sections (&key sections (transpiler *default-transpiler*))
     (= *warnings* nil)
-    (with-temporaries (*transpiler*  transpiler
-                       *assert?*     (| *assert?* (assert?)))
+    (with-temporaries (*transpiler* transpiler
+                       *assert?*    (| *assert?* (assert?)))
       (= (host-functions) (make-host-functions))
       (= (host-variables) (make-host-variables))
       (~> (frontend-init))
@@ -105,5 +105,5 @@
                 (import-from-host)))))
 
 (fn compile (expression &key (transpiler *default-transpiler*))
-  (compile-sections :sections   `((t ,expression))
+  (compile-sections :sections   `((:compile ,expression))
                     :transpiler transpiler))

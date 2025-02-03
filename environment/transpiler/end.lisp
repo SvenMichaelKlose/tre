@@ -18,7 +18,7 @@
 
 (fn dump-pass? (pass-or-end x)
    (| (!? (dump-passes?)
-          (| (eq t !)
+          (| (eq ! t)
              (member pass-or-end (ensure-list !))))
       (!? (dump-selector)
           (sloppy-tree-equal x !))))
@@ -62,8 +62,8 @@
     ; follow just for user-friendly, early bug detection.
     ; If there's no dedicated output pass, the last one gives
     ; the result.
-    (with (outpass         (cdr (assoc end (output-passes)))
-           outpass-result  nil)
+    (with (outpass        (cdr (assoc end (output-passes)))
+           outpass-result nil)
       (@ (pass passes)
         (when (enabled-pass? pass.)
           (dump-pass-head end pass. x)
