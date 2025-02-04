@@ -1,19 +1,3 @@
-(fn unassigned-%stackarg? (x)
-  (& (%stackarg? x)
-     ..x))
-
-(fn unassigned-%stack? (x)
-  (& (%stack? x)
-     ..x))
-
-(fn unassigned-%vec? (x)
-  (& (%vec? x)
-     ...x))
-
-(fn unassigned-%=-vec? (x)
-  (& (%=-vec? x)
-     ....x))
-
 (fn place-assign-error (x v)
   (funinfo-error (+ "Can't assign place because the index in scoped vars for"
                     " ~A is missing in ~A.")
@@ -32,16 +16,16 @@
   (| (quote? x)
      (%native? x))
     x
-  (unassigned-%stackarg? x)
+  (& (%stackarg? x) ..x)
     `(%stack ,(place-assign-stackarg x))
-  (unassigned-%stack? x)
+  (& (%stack? x) ..x)
     `(%stack ,(| (funinfo-var-pos (get-funinfo .x.) ..x.)
                  (place-assign-stackarg x)))
-  (unassigned-%vec? x)
+  (& (%vec? x) ...x)
     `(%vec ,(place-assign .x.)
            ,(| (funinfo-scoped-var-index (get-funinfo ..x.) ...x.)
                (place-assign-error x ...x.)))
-  (unassigned-%=-vec? x)
+  (& (%=-vec? x) ....x)
     `(%=-vec ,(place-assign .x.)
                ,(| (funinfo-scoped-var-index (get-funinfo ..x.) ...x.)
                    (place-assign-error x ...x.))
