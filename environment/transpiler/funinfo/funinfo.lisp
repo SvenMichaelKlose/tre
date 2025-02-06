@@ -92,15 +92,6 @@
   "Get FUNINFO by name."
   (& name (href (transpiler-funinfos tr) name)))
 
-(fn lambda-funinfo (x)
-  "Get FUNINFO of named LAMBDA expression."
-  (when (named-lambda? x)
-    (get-funinfo (lambda-name x))))
-
-(defmacro with-lambda-funinfo (x &body body)
-  `(with-temporary *funinfo* (lambda-funinfo ,x)
-     ,@body))
-
 (fn create-funinfo (&key name parent args (transpiler *transpiler*))
   (& (href (transpiler-funinfos transpiler) name)
      (error "FUNFINFO for ~A is already memorized." name))

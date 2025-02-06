@@ -34,11 +34,10 @@
                 (%comment? ,v)
                   (list ,v)
                 (named-lambda? ,v)
-                  (with-lambda-funinfo ,v
                     (with-temporary *body* (lambda-body ,v)
-                      (list (copy-lambda ,v
+                      (list (do-lambda ,v
                                 :body ,(| if-named-function
-                                          `(,name (lambda-body ,v) ,@r))))))
+                                          `(,name (lambda-body ,v) ,@r)))))
                 (%collection? ,v)
                   (list (append (list '%collection (cadr ,v))
                                 (@ [. '%inhibit-macro-expansion (. ._.  (,name .._))]

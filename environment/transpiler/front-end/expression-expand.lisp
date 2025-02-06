@@ -90,8 +90,7 @@
 ;;;; EXPRESSION EXPANSION
 
 (fn expex-lambda (x)
-  (with-lambda-funinfo x
-    (. nil (… (copy-lambda x :body (expex-body (lambda-body x)))))))
+  (. nil (… (do-lambda x :body (expex-body (lambda-body x))))))
 
 (fn expex-expr (x)
   (pcase x

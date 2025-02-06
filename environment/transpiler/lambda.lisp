@@ -24,6 +24,14 @@
             ,body  (lambda-body ,g))
        ,@macro-body)))
 
+(fn lambda-funinfo (x)
+  (when (named-lambda? x)
+    (get-funinfo (lambda-name x))))
+
+(defmacro with-lambda-funinfo (x &body body)
+  `(with-temporary *funinfo* (lambda-funinfo ,x)
+     ,@body))
+
 (defmacro with-binding-lambda ((args vals body x) &body exec-body)
   (with-gensym (tmp fun)
     `(with (,tmp   ,x
@@ -32,3 +40,9 @@
             ,args  (lambda-args ,fun)
             ,body  (lambda-body ,fun))
        ,@exec-body)))
+
+(defmacro do-lambda (x &key (name nil) (args 'no-args) (body 'no-body))
+  (with-gensym g
+    `(with (,g ,x)
+       (with-lambda-funinfo ,g
+         (copy-lambda ,g :name ,name :args ,args :body ,body)))))
