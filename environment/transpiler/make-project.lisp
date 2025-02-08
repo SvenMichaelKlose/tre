@@ -24,6 +24,7 @@
     (print-passed-seconds start-time)
     (print-status "Phew!~%")
     code)))
+
 (fn warn-unused-functions ()
   (!= (defined-functions)
     (@ [hremove ! _]
