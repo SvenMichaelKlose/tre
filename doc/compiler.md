@@ -25,7 +25,12 @@ giving each function a name and doing a look-up of a FUNINFO record with it.
 That way the code tree can still be processed with standard functions, notably
 PRINT for debugging.
 
-The front-end works in three stages: expansion, augmentation and serialization.
+The front-end works in three stages:
+
+* expansion,
+* augmentation, and
+* serialization.
+
 During expansion all macros are processed and literal data is transformed into
 code generating it, if so required.  During augmentation every function is
 ensured to get a name and is applied a FUNINFO.  During serialization function
@@ -34,13 +39,19 @@ the middle-end.
 
 ## Expansion stage
 
-The expansion stage includes dot-notation expasion, transpiler-macro expansion,
-compiler-macro expansion, quote expansion and thisification.
+The expansion stage includes
+
+* dot-notation expasion
+* transpiler-macro expansion,
+* compiler-macro expansion
+* quote expansion and
+* thisification.
+
 Transpiler-macro expansion is a regular macro expansion where the standard
 macros are overlaid by transpiler-macros of equal names which defined within
-the compiler to handle exceptions the selected target.
-Compiler-macros transform control-flow forms like BLOCK, COND, PROGN, TAGBODY
-and so on to use only four meta-code instructions:
+the compiler to handle exceptions the selected target.  Compiler-macros
+transform control-flow forms like BLOCK, COND, PROGN, TAGBODY and so on to use
+only four meta-code instructions:
 
 | Meta-code                    | Description                |
 |------------------------------|----------------------------|
@@ -77,12 +88,16 @@ later.)  QUOTEs must have only one argument after this point.
 
 ## Augmentation
 
-Augmentation includes renaming arguments, lambda expansion and FUNINFO
-initialization.  Lambda expansion makes sure that every function has a name
-and creates a FUNINFO for that name.  The FUNINFO only contain the functions'
-argument definitions and links to their parent FUNINFOs at this point.
-Functions may be inline and closures may be exported, meaning that their are
-turned into top-level functions with a scope argument.
+Augmentation includes
+
+* renaming arguments,
+* lambda expansion and FUNINFO initialization.
+
+Lambda expansion makes sure that every function has a name and creates a
+FUNINFO for that name.  The FUNINFO only contain the functions' argument
+definitions and links to their parent FUNINFOs at this point.  Functions may be
+inline and closures may be exported, meaning that their are turned into
+top-level functions with a scope argument.
 
 | Meta code                    | Description                       |
 |------------------------------|-----------------------------------|
@@ -97,8 +112,21 @@ turned into top-level functions with a scope argument.
 Expression expansion is the only pass doing serialization.  It moves function
 calls out of arguments lists and unnests %BLOCK expressions so that all
 function bodies are pure lists of %= expressions, tags and jumps.  %BLOCK
-expressions have been removed entirely.
-%VAR expressions are collected and the names are added to the FUNINFOs.
+expressions have been removed entirely.  %VAR expressions are collected and
+the names are added to the FUNINFOs.  Also, literals are handled in this pass.
+
+That's for too much for a single pass within a micro-pass architecture.  It'll
+be split up into:
+
+1. **Literal expasions**: Literals must be collected and registered.
+1. **Call expasions**: Arguments are expanded and rest arguments are made
+   consing.
+2. **Expression expansion**: To _single statement assignments_: All arguments
+   of function calls are assigned to temporary variables.
+3. **Block folding**: Collapses nested %BLOCKs.
+3. **Collecting %VARs**: Moves %VAR declarations to their FUNINFOs.
+4. **Assigment compaction**: Removes %= from assignments' heads.
+5. **Tag compaction**: Replaces %TAGs by numbers.
 
 | Secondary meta-codes   | Description                                 |
 |------------------------|---------------------------------------------|
@@ -118,16 +146,16 @@ expressions have been removed entirely.
 * Unassigning named functions and accumulating top-level expressions: functions
   are moved to the front so they are available to all other top-level
   expressions.
-* Collecting keywords: Symbols are only added to the compilate by the back-end
-  if they had been wrapped in a QUOTE form.
+* Collecting keywords: Needs to be done by a new _literal expansion pass_ in the
+  frontend.
 * Meta-code validation: Make sure it's clean.
 * Optimizations
- * Peeohole optimization
- * Tail-call optimization: just working a little as variables are not traced
-   thoroughly.
- * Chained jump removal
- * Removing unused tags
- * Removing unused places
+* Peeohole optimization
+* Tail-call optimization: just working a little as variables are not traced
+  thoroughly.
+* Chained jump removal
+* Removing unused tags
+* Removing unused places
 
 # Back-end
 
@@ -153,9 +181,9 @@ expressions have been removed entirely.
 
 * Adding function frames.  Each function body is pre- and postfixed with an
   %FUNCTION-PROLOGUE and %FUNCTION-EPILOGUE macro to aid the codegen pass.
- * Place expansion: wraps variables in %STACK, %STACKARG or %VEC/%SET-VEC
-   forms (the latter for accessing scope records).
- * Place assignment: layouts the stack frames and scope records.
+* Place expansion: wraps variables in %STACK, %STACKARG or %VEC/%SET-VEC
+  forms (the latter for accessing scoped variables).
+* Place assignment: layouts the stack frames and scope records.
 * Collecting used functions to generate a list of unused ones.
 * Translating function names: converts function names to identifier strings
   required by the target machine, usually in camel-case.
