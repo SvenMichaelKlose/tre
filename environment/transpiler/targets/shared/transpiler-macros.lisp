@@ -44,6 +44,7 @@
          `((%var ,name)))
      (%= ,name ,val)))
 
+; TODO: What? (pixel)
 (def-shared-transpiler-macro (bc c js php) %defvar
                              (name &optional (val '%%no-value-in-%defvar))
   `(var ,name ,val))
@@ -61,6 +62,7 @@
   `(%string+ ,@x))
 
 (def-shared-transpiler-macro (js php) eq (&rest x)
+  ; TODO: Should expand to %EQs. (pixel)
   (? ..x
      `(& (eq ,x. ,.x.)
          (eq ,x. ,@..x))
@@ -75,3 +77,24 @@
   (print-definition `(in-package ,name))
   (= *package* (symbol-name name))
   nil)
+
+(def-shared-transpiler-macro (bc c js php) labels (fdefs &body body)
+  `(#'(,(carlist fdefs)
+        ,@(@ [`(%set-local-fun ,_. 
+                   #'(,._.
+                       (block ,_.
+                         (block nil
+                           ,@.._))))]
+             fdefs)
+      ,@body)
+    ,@(@ [] fdefs)))
+
+(def-shared-transpiler-macro (js php) slot-value (obj slot)
+  (? (quote? slot)
+     `(%slot-value ,obj ,.slot.)
+     `(slot-value ,obj ,slot)))
+
+(def-shared-transpiler-macro (js php) =-slot-value (val obj slot)
+  (? (quote? slot)
+     `(%=-slot-value ,val ,obj ,.slot.)
+     `(=-slot-value ,val ,obj ,slot)))
