@@ -13,11 +13,10 @@
               `(. ,(static _.)
                   ,(static ._))]
          qq
-           [? (any-quasiquote? (cadr _.))
-              `(. ,(backq (cadr _.))
-                  ,(backq ._))
-              `(. ,(cadr _.)
-                  ,(backq ._))]
+           [`(. ,(? (any-quasiquote? (cadr _.))
+                    (backq (cadr _.))
+                    (cadr _.))
+                ,(backq ._))]
          qqs
            [? (any-quasiquote? (cadr _.))
               (error "Illegal ~A as argument to ,@" (cadr _.))
