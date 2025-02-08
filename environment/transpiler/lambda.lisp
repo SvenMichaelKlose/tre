@@ -25,8 +25,7 @@
        ,@macro-body)))
 
 (fn lambda-funinfo (x)
-  (when (named-lambda? x)
-    (get-funinfo (lambda-name x))))
+  (get-funinfo (lambda-name x)))
 
 (defmacro with-lambda-funinfo (x &body body)
   `(with-temporary *funinfo* (lambda-funinfo ,x)
