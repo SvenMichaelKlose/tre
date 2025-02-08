@@ -24,9 +24,12 @@
                (with-cons a d _
                  (?
                    (| (number? a)
-                      (%comment? a)
-                      (named-lambda? a))
+                      (%comment? a))
                      (traverse-statements d)
+                   (named-lambda? a)
+                     (| (with-lambda-funinfo a
+                          (traverse-statements (lambda-body a)))
+                        (traverse-statements d))
                    (%=? a)
                      (with-%= place value a
                        (| (tree-find v value :test #'eq)
