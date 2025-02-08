@@ -96,8 +96,8 @@
 
 ;;;; SYMBOL REPLACEMENTS
 
-(transpiler-translate-symbol *js-transpiler* nil "null")
-(transpiler-translate-symbol *js-transpiler* t   "true")
+(add-symbol-translation *js-transpiler* nil "null")
+(add-symbol-translation *js-transpiler* t   "true")
 
 
 ;;;; NUMBERS, ARITHMETIC AND COMPARISON

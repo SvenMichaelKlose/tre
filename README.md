@@ -9,27 +9,23 @@ required to unleash the super-powers of Lisp macro expansion.  It is a
 compiler, perfectly able to generate C, bytecode and assembly with only few
 extra lines of code.
 
-After a Corona break, tré's development is being continued alongside
-[TUNIX Lisp](https://github.com/SvenMichaelKlose/tunix/) for small systems.
-The focus is on **integrating JSON data**, a new kind of **Object Relation Mapper**
+tré's development is taking place alongside the
+[TUNIX Lisp](https://github.com/SvenMichaelKlose/tunix/) compiler for small
+systems.
+
+# Roadmap
+
+The focus now is on **integrating JSON data**, a new kind of **Object Relation
+Mapper** like
+[PHP Object Relation Mapper (PORM)](https://github.com/SvenMichaelKlose/PORM/)
 to get around the pains of SQL database programming, a **unified object system**,
 a completed **Lisp Markup Language** implementation, and **type inference**.
 
-Within 18 months computational power doubles in general.  What once took tré
-ten minutes to compile now takes ten seconds, so tré is not designed for raging
-performance.  tré is a micro-pass compiler that is rather easy to maintain but
-still could use a lot of cleaning up.  Feel free to join to make it simpler.
+# Documentation
 
-Please be aware that debugging generated JS and PHP code can be a major pain in
-the backplate.  A PHP debugger setup is highly recommended unless you're
-made to debug with wits exclusively.  Developers who are into _Test Driven
-Development_ though should be pretty comfortable and also find value in tré.
-
-# Table of Contents
-
-1. [Contributors](CONTRIB.md)
 2. [Build and install](#build-and-install)
 3. [FAQ – Frequently Asked Questions](doc/FAQ.md)
+1. [Contributors](CONTRIB.md)
 4. [Introduction to Lisp](doc/intro-to-lisp.md)
 5. [Starting a Project](doc/starting-a-project.md)
 6. [Syntax](doc/syntax.md)
@@ -42,29 +38,9 @@ Development_ though should be pretty comfortable and also find value in tré.
 13. [Stuff using tré](doc/stuff-using-tré.md)
 14. [Wishlist](WISHLIST.md)
 
-<a id="build-and-install"></a>
 # Build and install
 
-## Prerequisites
-
-tré requires SBCL and Git.  You require basic knowledge of Common LISP, PHP and
-JavaScript.
-
-To install the required packages on Ubuntu or derivates run:
-
-~~~sh
-sudo apt install sbcl git -y
-~~~
-
-## Running 'make.sh'
-
-Shell script "make.sh" is the makefile for tre with several actions you can
-list by specifying target "help".
-
-~~~sh
-./make.sh help
-~~~
-
+tré needs packages 'sbcl' and 'git', available on every modern unixoid.
 To build and install just do:
 
 ~~~sh
@@ -77,6 +53,12 @@ files to /usr/local/.  TODO: environment var "PREFIX" to change the destination
 directory.  It takes an optional pathname of a source file to compile and
 execute.  If no file was specified, it'll prompt you for expressions to
 execute.
+
+If you're curious about other actions run:
+
+~~~sh
+./make.sh help
+~~~
 
 ## VIM syntax file
 

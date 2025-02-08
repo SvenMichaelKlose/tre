@@ -5,9 +5,9 @@
 
 (fn php-dollarize (x)
   (?
-    (not x)      "NULL"
-    (eq t x)     "TRUE"
-    (symbol? x)  `("$" ,x)
+    (not x)     "NULL"
+    (eq t x)    "TRUE"
+    (symbol? x) `("$" ,x)
     x))
 
 (fn php-argument-list (x)
@@ -22,8 +22,8 @@
 
 ;;;; TRUTH
 
-(transpiler-translate-symbol *php-transpiler* nil "NULL")
-(transpiler-translate-symbol *php-transpiler* t "TRUE")
+(add-symbol-translation *php-transpiler* nil "NULL")
+(add-symbol-translation *php-transpiler* t "TRUE")
 
 
 ;;;; LITERAL SYMBOLS
@@ -65,19 +65,19 @@
        ,@(!? (funinfo-globals fi)
              (php-line "global " (pad (@ #'php-dollarize !) ", ")))
        ,@body
-       ,@(unless (equal "void" return-type)
+       ,@(unless (equal return-type "void")
            (… (php-line "return $" *return-symbol*)))
     "}" ,*terpri*))
 
 (fn codegen-php-function (x)
-  (with (fi    (lambda-funinfo x)
-         name  (funinfo-name fi))
+  (with (fi   (lambda-funinfo x)
+         name (funinfo-name fi))
     (developer-note "#'~A~%" name)
     (codegen-php-function-0
-        :name  (compiled-function-name name)
-        :fi    fi
-        :args  (funinfo-args fi)
-        :body  (lambda-body x))))
+        :name (compiled-function-name name)
+        :fi   fi
+        :args (funinfo-args fi)
+        :body (lambda-body x))))
 
 (def-php-codegen function (&rest x)
   (? .x
@@ -89,8 +89,8 @@
 (def-php-codegen %function-return (name)   '(%native ""))
 
 (def-php-codegen %closure (name)
-  (with (fi            (get-funinfo name)
-         native-name  `(%string ,(compiled-function-name-string name)))
+  (with (fi          (get-funinfo name)
+         native-name `(%string ,(compiled-function-name-string name)))
     (? (funinfo-scope-arg fi)
        `(%native "new __closure ("
                       ,native-name

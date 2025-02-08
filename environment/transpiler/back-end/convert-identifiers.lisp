@@ -1,4 +1,4 @@
-(fn transpiler-translate-symbol (tr from to)
+(fn add-symbol-translation (tr from to)
   (acons! from to (transpiler-symbol-translations tr)))
 
 (fn transpiler-special-char? (x)
