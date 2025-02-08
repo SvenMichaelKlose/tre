@@ -10,8 +10,7 @@
 (def-shared-transpiler-macro (js php) functional (&rest x)
   (print-definition `(functional ,@x))
   (@ (i x)
-    (| (transpiler-functional? *transpiler* i)
-       (transpiler-add-functional *transpiler* i)))
+    (transpiler-add-functional *transpiler* i))
   nil)
 
 (def-shared-transpiler-macro (c js php) not (&rest x)
@@ -44,7 +43,7 @@
          `((%var ,name)))
      (%= ,name ,val)))
 
-; TODO: What? (pixel)
+; TODO: Remove. (pixel)
 (def-shared-transpiler-macro (bc c js php) %defvar
                              (name &optional (val '%%no-value-in-%defvar))
   `(var ,name ,val))
