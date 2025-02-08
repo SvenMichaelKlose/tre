@@ -1,6 +1,6 @@
 (progn
   ,@(@ [`(def-head-predicate ,_)]
-       '(%string %global %stack %stackarg
+       '(%string %global %stack %stackarg %string
          %vec %=-vec %set-local-fun %closure %native %new
          %block %go %go-nil %go-not-nil %tag
          %= %collection %var %comment
