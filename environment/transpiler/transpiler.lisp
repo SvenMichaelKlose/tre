@@ -1,5 +1,4 @@
 (var *transpiler* nil)
-(var *transpiler-log* nil)
 (var *default-transpiler* nil)
 (var *return-symbol* '_r)
 
@@ -16,7 +15,7 @@
 
 (defstruct transpiler
   (:global *transpiler*)
-  (name                    nil :not-global)
+  (name                    nil :const :not-global)
   (file-postfix            nil)
 
   ;;;
