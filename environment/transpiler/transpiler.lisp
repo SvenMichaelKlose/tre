@@ -183,6 +183,7 @@
   (aprog1
     (make-transpiler
         :name                     name
+        :file-postfix             file-postfix
         :assert?                  assert?
         :always-expand-arguments? always-expand-arguments?
         :import-from-host?        import-from-host?
