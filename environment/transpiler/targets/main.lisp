@@ -10,8 +10,6 @@
 (? (has-target? :php)
    (env-load "transpiler/targets/php/main.lisp"))
 
-(env-load "transpiler/targets/shared/transpiler-macros/defun.lisp")
-(env-load "transpiler/targets/shared/transpiler-macros/def-shared-transpiler-macro.lisp")
-(env-load "transpiler/targets/shared/transpiler-macros/labels.lisp")
-(env-load "transpiler/targets/shared/transpiler-macros/slot-value.lisp")
+(env-load "transpiler/targets/shared/shared-defun.lisp")
+(env-load "transpiler/targets/shared/transpiler-macros.lisp")
 (env-load "transpiler/targets/shared/class.lisp")
