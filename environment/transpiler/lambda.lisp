@@ -29,7 +29,8 @@
 
 (defmacro with-lambda-funinfo (x &body body)
   `(with-temporary *funinfo* (lambda-funinfo ,x)
-     ,@body))
+     (with-temporary *body* (lambda-body ,x)
+       ,@body)))
 
 (defmacro with-binding-lambda ((args vals body x) &body exec-body)
   (with-gensym (tmp fun)
