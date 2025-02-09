@@ -13,9 +13,10 @@
 
 
 (fn make-%= (p v)
-  (assignment-filter `(%= ,p ,(? (atom v)
-                                 (argument-filter v)
-                                 v))))
+  (assignment-filter
+      `(%= ,p ,(? (atom v)
+                  (argument-filter v)
+                  v))))
 
 (def-gensym expex-sym e)
 
@@ -59,15 +60,6 @@
           (%var? x)
           (%comment? x))))
 
-(fn expex-move-std (x)
-  (with (s  (expex-make-var)
-         !  (expex-expr x))
-    (. (+ !.
-          (? (has-return-value? .!.)
-             (make-%= s .!.)
-             .!))
-       s)))
-
 (fn unexpex-able? (x)
   (| (atom x)
      (sharp-quote-symbol? x)
@@ -79,7 +71,13 @@
     inline?       (expex-move-args x)
     %block?       (!= (expex-make-var)
                     (. (expex-body .x !) !))
-    (expex-move-std x)))
+    (with (s (expex-make-var)
+           ! (expex-expr x))
+      (. (+ !.
+            (? (has-return-value? .!.)
+               (make-%= s .!.)
+               .!))
+         s))))
 
 (fn expex-move-args (x)
   (!= (@ #'expex-move-arg (argument-filter x))
