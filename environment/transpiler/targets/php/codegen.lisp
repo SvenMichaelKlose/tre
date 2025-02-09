@@ -29,7 +29,7 @@
 ;;;; LITERAL SYMBOLS
 
 (def-php-codegen quote (x)
-  (php-compiled-symbol x))
+  (php-dollarize (php-compiled-symbol x)))
 
 
 ;;;; CONTROL FLOW
