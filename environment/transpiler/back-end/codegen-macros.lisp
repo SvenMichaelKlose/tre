@@ -1,6 +1,5 @@
 (fn make-transpiler-codegen-expander (tr)
-  (!= ($ (transpiler-name tr) '-codegen)
-    (= (transpiler-codegen-expander tr) (define-expander !))))
+  (define-expander ($ (transpiler-name tr) '-codegen)))
 
 (defmacro define-codegen-macro (tr name &rest x)
   (print-definition `(define-codegen-macro ,tr ,name ,x.))

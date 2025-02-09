@@ -402,7 +402,7 @@
   (aprog1 (*> #'make-transpiler args)
     (= (transpiler-assert? !) *assert?*)
     (= (transpiler-transpiler-macro-expander !) (make-transpiler-macro-expander !))
-    (make-transpiler-codegen-expander !)
+    (= (transpiler-codegen-expander !) (make-transpiler-codegen-expander !))
     (= (transpiler-global-funinfo !)
        (create-funinfo :name        '%%global
                        :transpiler  !))
