@@ -317,13 +317,6 @@
 (fn add-toplevel-expression (x)
   (push x (toplevel-expressions)))
 
-(fn make-global-funinfo (tr)
-  (= (transpiler-global-funinfo tr)
-     (create-funinfo :name        'global-scope
-                     :parent      nil
-                     :args        nil
-                     :transpiler  tr)))
-
 (fn transpiler-add-functional (tr x)
   (= (href (transpiler-functionals tr) x) t))
 
@@ -410,8 +403,10 @@
     (= (transpiler-assert? !) *assert?*)
     (= (transpiler-transpiler-macro-expander !) (make-transpiler-macro-expander !))
     (make-transpiler-codegen-expander !)
-    (make-global-funinfo !)
-    ; TODO: Being functional should be implicit. (pixel)
+    (= (transpiler-global-funinfo !)
+       (create-funinfo :name        '%%global
+                       :transpiler  !))
+    ; TODO: Move to backend. (pixel)
     (@ [transpiler-add-functional ! _]
        '(%+ %string+ %- %/ %* %mod
          %== %!= %< %> %<= %>=

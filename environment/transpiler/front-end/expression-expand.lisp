@@ -55,15 +55,15 @@
 
 ;;;;; MOVING ARGUMENTS
 
-(fn has-return-value? (x)
-  (not (| (some-%go? x)
-          (%var? x)
-          (%comment? x))))
-
 (fn unexpex-able? (x)
   (| (atom x)
      (sharp-quote-symbol? x)
      (in? x. '%go '%go-nil '%native '%string 'quote '%comment)))
+
+(fn has-return-value? (x)
+  (not (| (some-%go? x)
+          (%var? x)
+          (%comment? x))))
 
 (fn expex-move-arg (x)
   (pcase x

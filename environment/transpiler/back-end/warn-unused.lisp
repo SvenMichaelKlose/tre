@@ -4,7 +4,6 @@
       (| (funinfo-used-var? fi i)
          (warn "Unused symbol ~A in ~A"
                (symbol-name i)
-               (human-readable-funinfo-names fi)
                (!? (butlast (funinfo-names fi))
                    (format nil "scope of ~A " (reverse !) nil)
                    "toplevel"))))))

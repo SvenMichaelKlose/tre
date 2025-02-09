@@ -10,7 +10,7 @@
 
 (fn opt-tailcall-make-restart (l body front-tag)
   (optimizer-message "Resolved tail call in ~A.~%"
-                     (!= (human-readable-funinfo-names *funinfo*)
+                     (!= (reverse (funinfo-names *funinfo*))
                        (? .! ! !.)))
   (+ (+@ #'((arg val)
              `((%= ,arg ,val)))

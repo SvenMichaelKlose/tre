@@ -34,7 +34,7 @@
        (pop (funinfo-args fi))
        (pop (funinfo-argdef fi))
        (optimizer-message "Made ~A a regular function.~%"
-                          (human-readable-funinfo-names fi)))))
+                          (reverse (funinfo-names fi))))))
 
 (fn remove-scoped-vars (fi)
   (when (& (sole? (funinfo-scoped-vars fi))
@@ -42,7 +42,7 @@
     (optimizer-message "Unscoping ~A in ~A.~%"
                        (!= (funinfo-scoped-vars fi)
                          (? .! ! !.))
-                       (human-readable-funinfo-names fi))
+                       (reverse (funinfo-names fi)))
     (= (funinfo-scoped-vars fi) nil
        (funinfo-scope fi)       nil)))
 
@@ -54,7 +54,7 @@
      (!= (car (funinfo-free-vars fi))
        (optimizer-message
            "Removing array allocation for sole scoped ~A in ~A.~%"
-           ! (human-readable-funinfo-names fi))
+           ! (reverse (funinfo-names fi)))
        (= (funinfo-free-vars fi)    nil
           (funinfo-scope-arg fi)    !
           (funinfo-argdef fi)       (. ! (cdr (funinfo-argdef fi)))
@@ -72,7 +72,7 @@
   (@ (i (funinfo-args fi))
     (| (funinfo-used-var? fi i)
        (warn "Unused argument ~A of function ~A."
-             i (human-readable-funinfo-names fi)))))
+             i (reverse (funinfo-names fi))))))
 
 (fn correct-funinfo (fi)
   (when (lambda-export?)
