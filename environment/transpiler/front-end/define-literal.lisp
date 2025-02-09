@@ -4,17 +4,16 @@
          "")
      x))
 
-(defmacro define-literal (name (x table)
+(defmacro define-literal (name tr-slot (x)
                           &key maker
                                initializer
                                (declaration nil))
-  (let transpiler-slot `(,($ 'compiled- table 's))
-    `(fn ,name (,x)
-       (cache (href ,transpiler-slot ,x)
-              (aprog1 ,maker
-                (funinfo-add-var (global-funinfo) !)
-                ,@(when declaration
-                    `((push (~> ,declaration !)
-                            (global-decls))))
-                (push `(= ,,! ,(… 'quasiquote initializer))
-                      (global-inits)))))))
+  `(fn ,name (,x)
+     (cache (href (,tr-slot) ,x)
+            (aprog1 ,maker
+              (funinfo-add-var (global-funinfo) !)
+              ,@(when declaration
+                  `((push (~> ,declaration !)
+                          (global-decls))))
+              (push `(= ,,! ,(… 'quasiquote initializer))
+                    (global-inits))))))
