@@ -35,7 +35,6 @@
         :gen-string             [literal-string _ :quote-char #\"]
         :identifier-char?       #'php-identifier-char?
         :inline?                #'%slot-value?
-        :argument-filter        #'php-argument-filter
         :assignment-filter      #'expex-compile-funcall
         :configurations         '((:exclude-core?     . nil)
                                   (:keep-source?      . nil)

@@ -63,7 +63,6 @@
             :enabled-passes          '(:count-tags)
             :identifier-char?        #'c-identifier-char?
             :inline?                 #'%slot-value?
-            :argument-filter         #'js-argument-filter
             :configurations          '((:platform             . :browser)
                                        (:nodejs-requirements  . nil)
                                        (:exclude-core?        . nil)

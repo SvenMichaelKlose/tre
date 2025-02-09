@@ -13,10 +13,7 @@
 
 
 (fn make-%= (p v)
-  (assignment-filter
-      `(%= ,p ,(? (atom v)
-                  (argument-filter v)
-                  (. v. (@ #'argument-filter .v))))))
+  (assignment-filter `(%= ,p ,v)))
 
 (def-gensym expex-sym e)
 

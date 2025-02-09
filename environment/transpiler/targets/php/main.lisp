@@ -1,5 +1,4 @@
 (env-load "transpiler/targets/php/core.lisp")
-(env-load "transpiler/targets/php/expression-expand.lisp")
 (env-load "transpiler/targets/php/literals.lisp")
 (env-load "transpiler/targets/php/toplevel.lisp")
 (env-load "transpiler/targets/php/transpiler-macros.lisp")

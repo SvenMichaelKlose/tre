@@ -84,7 +84,6 @@
   codegen-expander
 
   ;; Initialising EXPEX in TRANSPILER-EXPEX.
-  (argument-filter          #'identity :not-global)
   (assignment-filter        #'list     :not-global)
   (inline?                  []         :not-global)
 
@@ -208,7 +207,6 @@
         :sections-before-import   sections-before-import
         :sections-after-import    sections-after-import
         :codegen-expander         codegen-expander
-        :argument-filter          argument-filter
         :assignment-filter        assignment-filter
         :inline?                  inline?
         :lambda-export?           lambda-export?
@@ -322,9 +320,6 @@
 
 (fn transpiler-functional? (tr x)
   (href (transpiler-functionals tr) x))
-
-(fn argument-filter (x)
-  (~> (transpiler-argument-filter *transpiler*) x))
 
 (fn assignment-filter (x)
   (~> (transpiler-assignment-filter *transpiler*) x))
