@@ -3,23 +3,23 @@
 
 (fn print-funinfo (fi &optional (str nil))
   (with-default-stream s str
-    (with (names [& _
-                    (+ (*> #'+ (pad (@ #'symbol-name (ensure-list _)) " "))
-                       *terpri*)])
-      (@ [awhen ._.
-           (format s "  ~A~A" _. !)]
-         `(("Scope:          " ,(names (human-readable-funinfo-names fi)))
-           ("Argument def:   " ,(funinfo-argdef fi))
-           ("Args:           " ,(names (funinfo-args fi)))
-           ("Scope arg:      " ,(names (funinfo-scope-arg fi)))
-           ("Local vars:     " ,(names (funinfo-vars fi)))
-           ("Used vars:      " ,(names (funinfo-used-vars fi)))
-           ("Free vars:      " ,(names (funinfo-free-vars fi)))
-           ("Places:         " ,(names (funinfo-places fi)))
-           ("Globals:        " ,(names (funinfo-globals fi)))
-           ("Local fun args: " ,(names (funinfo-local-function-args fi)))
-           ("Local scope:    " ,(names (funinfo-scope fi)))
-           ("Scoped vars:    " ,(names (funinfo-scoped-vars fi))))))))
+    (with (item
+             #'((title x)
+                 (when x
+                   (format s "  ~A" title)
+                   (late-print x s))))
+      (item "Scope:          " (human-readable-funinfo-names fi))
+      (item "Argument def:   " (funinfo-argdef fi))
+      (item "Args:           " (funinfo-args fi))
+      (item "Scope arg:      " (funinfo-scope-arg fi))
+      (item "Local vars:     " (funinfo-vars fi))
+      (item "Used vars:      " (funinfo-used-vars fi))
+      (item "Free vars:      " (funinfo-free-vars fi))
+      (item "Places:         " (funinfo-places fi))
+      (item "Globals:        " (funinfo-globals fi))
+      (item "Local fun args: " (funinfo-local-function-args fi))
+      (item "Local scope:    " (funinfo-scope fi))
+      (item "Scoped vars:    " (funinfo-scoped-vars fi)))))
 
 (fn print-funinfo-stack (fi &key (include-global? nil))
   (when fi
