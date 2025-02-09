@@ -80,7 +80,7 @@
          s))))
 
 (fn expex-move-args (x)
-  (!= (@ #'expex-move-arg (argument-filter x))
+  (!= (@ #'expex-move-arg x)
     (. (*> #'+ (carlist !))
        (cdrlist !))))
 
