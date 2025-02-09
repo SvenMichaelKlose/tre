@@ -134,7 +134,6 @@
 ;;;; GLOBAL VARIABLES
 
 (fn funinfo-add-global (fi x)
-  (funinfo-add-var fi x)
   (adjoin! x (funinfo-globals fi)))
 
 (fn funinfo-global-var? (fi x)
