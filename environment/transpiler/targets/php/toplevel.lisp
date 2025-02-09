@@ -32,7 +32,7 @@
         :sections-before-import #'php-sections-before-import
         :sections-after-import  #'php-sections-after-import
         :lambda-export?         t
-        :gen-string             [literal-string _ :quote-char #\']
+        :gen-string             [literal-string _ :quote-char #\"]
         :identifier-char?       #'php-identifier-char?
         :inline?                #'%slot-value?
         :argument-filter        #'php-argument-filter
