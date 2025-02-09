@@ -16,7 +16,7 @@
   (assignment-filter
       `(%= ,p ,(? (atom v)
                   (argument-filter v)
-                  v))))
+                  (. v. (@ #'argument-filter .v))))))
 
 (def-gensym expex-sym e)
 
