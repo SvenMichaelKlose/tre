@@ -28,7 +28,7 @@
     `(,@(& new? '(%new))
       ,@(!? fun (… !))
       ,@(? (defined-function fun)
-           (compiled-expanded-arguments fun (call-expand-argdef (print fun)) args)
+           (compiled-expanded-arguments fun (call-expand-argdef fun) args)
            args))))
 
 (fn call-expand-expr (x)
