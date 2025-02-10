@@ -1,5 +1,6 @@
 (env-load "transpiler/front-end/wrap-atoms.lisp")
 (env-load "transpiler/front-end/gather-imports.lisp")
+(env-load "transpiler/front-end/call-expand.lisp")
 (env-load "transpiler/front-end/expression-expand.lisp")
 (env-load "transpiler/front-end/lambda-expand.lisp")
 (env-load "transpiler/front-end/thisify.lisp")

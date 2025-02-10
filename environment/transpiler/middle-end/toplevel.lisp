@@ -1,6 +1,7 @@
 (define-transpiler-end :middleend
     :middleend-input          #'identity
     :remove-empty-statements  [remove-if #'not _]
+    :call-expand              #'call-expand
     :expression-expand        #'expression-expand
     :validate-metacode        #'validate-metacode
     :unassign-named-functions #'unassign-named-functions

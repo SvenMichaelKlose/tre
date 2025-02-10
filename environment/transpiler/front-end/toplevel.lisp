@@ -9,5 +9,6 @@
     :thisify                    #'thisify
     :rename-arguments           #'rename-arguments
     :lambda-expand              #'lambda-expand
+    :call-expand                #'call-expand
     :expression-expand          #'expression-expand
     :gather-imports             #'gather-imports)

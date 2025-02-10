@@ -111,7 +111,7 @@
                         (? .._
                            (cdr (expex-lambda .._))))]
                   ..x))))
-    (!= (expex-move-args (expex-argexpand x))
+    (!= (expex-move-args x) ;(expex-argexpand x))
       (. !. (… .!)))))
 
 
