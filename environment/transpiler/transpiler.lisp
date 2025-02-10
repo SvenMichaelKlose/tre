@@ -39,10 +39,6 @@
   ;; Dump FUNINFOs in comments before their functions.
   (funinfo-comments?        *development?*)
 
-  ;; Used for incremental compilations.  If set only this list of sections
-  ;; is compiled and the rest is taken from the cache.
-  (sections-to-update       nil)
-
   ;; Include assertions.
   (assert?                  *assert?*)
 
@@ -189,7 +185,6 @@
         :import-variables?        import-variables?
         :dump-passes?             dump-passes?
         :funinfo-comments?        funinfo-comments?
-        :sections-to-update       (copy-list sections-to-update)
         :configurations           (copy-alist configurations)
 
         :disabled-ends            (copy-list (ensure-list disabled-ends))
