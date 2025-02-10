@@ -29,25 +29,17 @@
 
 (fn dump-pass-head (end pass x)
   (when (dump-pass-or-end? end pass x)
+    (fresh-line)
     (format t "; >>>> Dump of ~A/~A:~%"
             (symbol-name end)
-            (symbol-name pass))
-    (cl:in-package :tre)
-    (print x)))
+            (symbol-name pass))))
 
 (fn dump-pass-tail (end pass x)
   (when (dump-pass-or-end? end pass x)
     (cl:in-package :tre)
     (? (equal x (last-pass-result))
        (format t "; Nothing changed.~%" pass)
-       (progn
-         (fresh-line)
-         (format t "; Out:~%")
-         (print x)))
-    (fresh-line)
-    (format t "~F; <<<< End of ~A/~A.~%"
-            (symbol-name end)
-            (symbol-name pass))))
+       (print x))))
 
 (fn transpiler-pass (pass-fun x)
   (with-temporaries (*funinfo* (global-funinfo)
