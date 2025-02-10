@@ -2,17 +2,42 @@
   (backend (middleend (frontend x))))
 
 (fn map-sections (fun sections)
-  (@ [. _. (~> fun _. ._)] sections))
+  (@ [. _. (~> fun _. ._)]
+     (? *development?*
+        (+@ #'((x)
+                (with (section  x.
+                       exprs    .x)
+                  (@ [… section (… _)] exprs)))
+            sections)
+        sections)))
 
 (fn codegen-section (section data)
-  (developer-note "Compiling ~A…~%" section)
   (backend (middleend data)))
 
 (fn codegen-sections (sections)
   (*> #'+ (cdrlist (map-sections #'codegen-section sections))))
 
+(fn frontend-section (section x)
+  (+@ [frontend (… _)]
+      (+ `((%comment "Section " ,(? (symbol? section)
+                                    (symbol-name section)
+                                    section)))
+         (pcase section
+           symbol?
+             (? (function? x)
+                (~> x)
+                x)
+           string?
+             (with-temporary *load* section
+               (format t "; Loading \"~A\"…~%" section)
+               (read-file section))
+           (error "Alien section")))))
+
+(fn frontend-sections (sections)
+  (map-sections #'frontend-section sections))
+
 (fn full-compile-section (section x)
-  (codegen-sections (frontend-sections (… (. section x)))))
+  (codegen-sections (frontend-section section x)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -53,25 +78,6 @@
            imports-and-rest
            (… (~> (epilogue)))))))
 
-(fn frontend-section (section x)
-  (developer-note "Frontend ~A~%" section)
-  (+@ [frontend (… _)]
-      (+ `((%comment "Section " ,(? (symbol? section)
-                                    (symbol-name section)
-                                    section)))
-         (pcase section
-           symbol?
-             (? (function? x)
-                (~> x)
-                x)
-           string?
-             (with-temporary *load* section
-               (format t "; Loading \"~A\"…~%" section)
-               (read-file section))
-           (error "Alien section")))))
-
-(fn frontend-sections (sections)
-  (map-sections #'frontend-section sections))
 
 ;;;;;;;;;;;;;;;
 ;;; TOPLEVEL;;;
