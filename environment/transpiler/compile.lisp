@@ -22,15 +22,10 @@
 (fn compile-toplevel-expressions ()
   (awhen (& (enabled-pass? :accumulate-toplevel)
             (toplevel-expressions))
-    (with-temporaries ((sections-to-update)
-                         '(:accumulated-toplevel)
-                       (disabled-passes)
-                         (. :accumulate-toplevel (disabled-passes)))
-      (full-compile-section :accumulated-toplevel (reverse !)))))
+    (full-compile-section :accumulated-toplevel (reverse !))))
 
 (fn compile-delayed-exprs ()
-  (with-temporary (sections-to-update) '(:delayed-exprs)
-    (full-compile-section :delayed-exprs (delayed-exprs))))
+  (full-compile-section :delayed-exprs (delayed-exprs)))
 
 (fn compile-inits ()
   (full-compile-section :global-inits (reverse (global-inits))))
