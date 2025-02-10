@@ -47,13 +47,13 @@
 (fn compile-toplevel-expressions ()
   (awhen (& (enabled-pass? :accumulate-toplevel)
             (toplevel-expressions))
-    (full-compile-section :accumulated-toplevel (reverse !))))
+    (full-compile-section 'accumulated-toplevel (reverse !))))
 
 (fn compile-delayed-exprs ()
-  (full-compile-section :delayed-exprs (delayed-exprs)))
+  (full-compile-section 'delayed-exprs (delayed-exprs)))
 
 (fn compile-inits ()
-  (full-compile-section :global-inits (reverse (global-inits))))
+  (full-compile-section 'global-inits (reverse (global-inits))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -67,7 +67,7 @@
   (with (before-imports
            (codegen-sections before-import)
          imports-and-rest
-           (+ (codegen-section :imports imports)
+           (+ (codegen-section 'imports imports)
               (compile-delayed-exprs)
               (codegen-sections after-import)
               (compile-toplevel-expressions)))
@@ -96,14 +96,13 @@
       (= (host-variables) (make-host-variables))
       (~> (frontend-init))
       (generic-codegen
-           :before-import
-             (frontend-sections (~> (sections-before-import)))
-           :after-import
-             (+ (frontend-sections (~> (sections-after-import)))
-                (frontend-sections (expand-sections sections)))
-           :imports
-             (+ (… "Section imports")
-                (import-from-host)))))
+          :before-import
+            (frontend-sections (~> (sections-before-import)))
+          :after-import
+            (+ (frontend-sections (~> (sections-after-import)))
+               (frontend-sections (expand-sections sections)))
+          :imports
+            (frontend-section 'imports (import-from-host)))))
 
 (fn compile (expression &key (transpiler *default-transpiler*))
   (compile-sections :sections   `((:compile ,expression))
