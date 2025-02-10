@@ -1,8 +1,8 @@
-(fn cl-symbol (x)
-  (make-symbol (symbol-name x) "CL"))
-
 (fn cl-frontend-init ()
   (= *cl-builtins* nil))
+
+(fn cl-symbol (x)
+  (make-symbol (symbol-name x) "CL"))
 
 (fn cl-sections-before-import ()
   (unless (configuration :exclude-core?)
@@ -18,11 +18,8 @@
       :disabled-ends           '(:middleend :backend)
       :disabled-passes         '(:expand-literal-characters)
       :output-passes           '((:frontend . :transpiler-macroexpand))
-      :import-variables?       t
-      :lambda-export?          nil
-      :stack-locals?           nil
-      :sections-before-import  #'cl-sections-before-import
       :frontend-init           #'cl-frontend-init
+      :sections-before-import  #'cl-sections-before-import
       :postprocessor           #'make-lambdas
       :configurations          '((:keep-source?)
                                  (:keep-argdef-only?)
