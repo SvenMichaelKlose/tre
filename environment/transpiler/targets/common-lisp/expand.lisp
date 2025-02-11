@@ -8,7 +8,7 @@
 (def-cl-transpiler-macro defun (name args &body body)
   (print-definition `(fn ,name ,args))
   (add-defined-function name args body)
-  `(%fn ,name ,args ,@body))
+  (make-lambda :name name :args args :body body))
 
 (def-cl-transpiler-macro defvar (name &optional (init nil))
   (print-definition `(var ,name))
