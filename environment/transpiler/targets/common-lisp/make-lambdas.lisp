@@ -25,3 +25,13 @@
     (sharp-quote-w/o-lambda? x)
       (make-anonymous-function x)
     (@ #'make-lambdas x)))
+
+(define-tree-filter convert-toplevel-lambdas (x)
+  (named-lambda? x)
+    `(CL:DEFUN ,(lambda-name x) ,(lambda-args x)
+       ,@(lambda-body x))
+  (%var? x)
+    `(CL:DEFVAR ,(cadr x)))
+
+(fn cl-postprocess (x)
+  (make-lambdas (print (convert-toplevel-lambdas (print x)))))

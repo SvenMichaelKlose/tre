@@ -17,10 +17,10 @@
       :file-postfix            "lisp"
       :disabled-ends           '(:middleend :backend)
       :disabled-passes         '(:expand-literal-characters)
-      :output-passes           '((:frontend . :transpiler-macroexpand))
+      :output-passes           '((:frontend . :gather-imports))
       :frontend-init           #'cl-frontend-init
       :sections-before-import  #'cl-sections-before-import
-      :postprocessor           #'make-lambdas
+      :postprocessor           #'cl-postprocess
       :configurations          '((:keep-source?)
                                  (:keep-argdef-only?)
                                  (:exclude-core?)
