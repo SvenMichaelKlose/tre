@@ -44,8 +44,7 @@ tré needs packages 'sbcl' and 'git', available on every modern unixoid.
 To build and install just do:
 
 ~~~sh
-./make.sh boot
-./make.sh install
+./make.sh reset image install
 ~~~
 
 This will build and install executable "tre" to /usr/local/bin/ and all other
