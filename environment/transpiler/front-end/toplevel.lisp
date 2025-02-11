@@ -3,11 +3,11 @@
     :dot-expand                 #'dot-expand
     :quasiquote-expand          #'quasiquote-expand
     :transpiler-macroexpand     #'transpiler-macroexpand
+    :gather-imports             #'gather-imports
     :compiler-macroexpand       #'compiler-macroexpand
     :quote-expand               #'quote-expand
     :expand-literal-characters  #'expand-literal-characters
     :thisify                    #'thisify
     :rename-arguments           #'rename-arguments
     :lambda-expand              #'lambda-expand
-    :expression-expand          #'expression-expand
-    :gather-imports             #'gather-imports)
+    :expression-expand          #'expression-expand)
