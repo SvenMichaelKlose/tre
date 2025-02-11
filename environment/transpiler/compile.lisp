@@ -2,12 +2,13 @@
   (backend (middleend (frontend x))))
 
 (fn map-sections (fun sections)
+  "Filter tails of SECTIONS through FUN."
   (@ [. _. (~> fun _. ._)]
      (? *development?*
         (+@ #'((x)
                 (with (section  x.
                        exprs    .x)
-                  (@ [… section (… _)] exprs)))
+                  (@ [… section _] exprs)))
             sections)
         sections)))
 
@@ -37,7 +38,7 @@
   (map-sections #'frontend-section sections))
 
 (fn full-compile-section (section x)
-  (codegen-sections (frontend-section section x)))
+  (codegen-section section (frontend-section section x)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
