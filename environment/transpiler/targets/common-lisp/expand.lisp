@@ -8,13 +8,13 @@
 (def-cl-transpiler-macro defun (name args &body body)
   (print-definition `(fn ,name ,args))
   (add-defined-function name args body)
-  `(CL:DEFUN ,name ,args ,@body))
+  `(%fn ,name ,args ,@body))
 
 (def-cl-transpiler-macro defvar (name &optional (init nil))
   (print-definition `(var ,name))
   (add-defined-variable name)
   (+! (delayed-exprs) (frontend `((CL:SETQ ,name ,init))))
-  `(CL:DEFVAR ,name))
+  `(%var ,name))
 
 (def-cl-transpiler-macro defconstant (name &optional (init nil))
   (print-definition `(const ,name))
@@ -43,7 +43,8 @@
     `(CL:COND
        ,@(? .end
             tests
-            (+ (butlast tests) (… (. t end)))))))
+            (+ (butlast tests)
+               (… (. t end)))))))
 
 (def-cl-transpiler-macro ? (&body body)
   (make-? body))
