@@ -12,7 +12,7 @@ mkdir -p compiled
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
 SBCL="sbcl --noinform"
-TRE="./tre"
+TRE="sbcl --noinform --core `pwd`/image"
 BINDIR="/usr/local/bin/"
 
 SHCONFIG=`eval echo ~/.tre.sh`
@@ -51,6 +51,13 @@ install_it ()
     echo "Installing 'tre' to '$BINDIR'…"
 	sudo cp tre $BINDIR
 }
+
+# Handle multiple arguments separately.
+if [ $# -gt 1 ]; then
+    for arg in "$@"; do
+        "$0" "$arg"
+    done
+fi
 
 case $1 in
 image)
@@ -162,15 +169,13 @@ clean)
 	clean
 	;;
 *)
-	echo "Usage: make.sh [target]"
+	echo "Usage: make.sh [target+]"
     echo ""
 	echo "Targets:"
 	echo "  genboot       Compile 'boot-common.lisp'."
 	echo "  reset         Check out 'boot-common.lisp' from repository."
 	echo "  image         Run 'boot-common.lisp' to create image from environment."
-	echo "  boot          Make 'image', 'genboot' then 'image' again."
-    echo "  install       Install executable and environment image made"
-    echo "                by 'mage' or 'boot',"
+    echo "  install       Install executable and environment image."
     echo "  clean         Remove built files, except 'genboot'."
     echo ""
 	echo "  tests         Run tests defined in the environment."
@@ -186,6 +191,9 @@ clean)
     echo ""
     echo "  release       Pass this before initiating git pull requests."
     echo "  updatetests   Generate new reference files from current test."
+    echo ""
+    echo "Example: (quick boot and install)"
+    echo "  ./make.sh reset image install"
 
     ;;
 esac

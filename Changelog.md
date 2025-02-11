@@ -13,23 +13,26 @@ and this project adheres to
 
 ## [current]
 
-### Added
-
-  * FNs can be nested.
-
 ### Fixed
 
+  * make.sh uses the local image instead of the installed one.
   * Unified SLOT-VALUE handling in JS nad PHP target.
   * COPYING-STREAM: Fix end-of-stream detection.
   * MAKE-PHP-PROJECT: Load php-db-mysql and http-funcall.
   * %PRINT-OBJECT: Same for all targets.
-  * When dumping compiler passes, print headers before calling the passes.
+  * Terse compiler dumps.
 
 ### Changed
 
   * In literal JSON objects, translate keyword symbols to C-style identifiers.
   * JS/PHP: Unified CLASS in frontend.
   * JS: Generates native 'class' statements.
+
+### Added
+
+  * FNs can be nested.
+  * make.sh can handle multiple targets.
+
 
 ## [v0.0.21]
 
