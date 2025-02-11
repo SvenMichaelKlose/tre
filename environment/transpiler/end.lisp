@@ -50,23 +50,15 @@
   (unless (enabled-end? end)
     (return x))
   (when x
-    ; Keep result of dedicated output pass.  More passes may
-    ; follow just for user-friendly, early bug detection.
-    ; If there's no dedicated output pass, the last one gives
-    ; the result.
-    (with (outpass        (cdr (assoc end (output-passes)))
-           outpass-result nil)
-      (@ (pass passes)
+    (with (outpass (cdr (assoc end (output-passes))))
+      (@ (pass passes x)
         (when (enabled-pass? pass.)
           (dump-pass-head end pass. x)
           (= x (transpiler-pass .pass x))
           (dump-pass-tail end pass. x)
           (= (last-pass-result) x)
-          (& (eq pass. outpass)
-             (= outpass-result x))))
-      (? outpass
-         outpass-result
-         x))))
+          (when (eq pass. outpass)
+             (return x)))))))
 
 (defmacro define-transpiler-end (end &rest name-function-pairs)
   (!= (group name-function-pairs 2)
