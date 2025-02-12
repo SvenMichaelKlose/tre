@@ -3,10 +3,10 @@
      (compiled-function-name x)
      x))
 
-(define-tree-filter translate-function-names (x &optional (fi (global-funinfo)))
+(define-tree-filter translate-function-names (x)
   (named-lambda? x)
-    (copy-lambda x :body (translate-function-names (lambda-body x)
-                                                   (lambda-funinfo x)))
+    (do-lambda x
+      :body (translate-function-names (lambda-body x)))
   (| (quote? x)
      (%native? x)
      (%closure? x)
@@ -19,14 +19,9 @@
   (%collection? x)
     `(%collection ,.x.
        ,@(@ [. '%inhibit-macro-expansion
-               (. ._. (translate-function-names .._ fi))]
+               (. ._. (translate-function-names .._))]
             ..x))
   (& (atom x)
-     (| (not (funinfo-parent fi))
-        (not (funinfo-arg-or-var? fi x))))
+     (| (not (funinfo-parent *funinfo*))
+        (not (funinfo-arg-or-var? *funinfo* x))))
     (translate-function-name x))
-
-; TODO: This one is messing up %CLOSUREs.
-;(metacode-walker translate-function-names (x)
-;  :if-cons
-;      (list (translate-function-names-in-tree x.)))
