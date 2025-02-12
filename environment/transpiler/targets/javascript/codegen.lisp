@@ -34,11 +34,9 @@
          (developer-note "#'~A~%" name)
          `(,*terpri*
            ,(funinfo-comment (= *funinfo* (get-funinfo name)))
-           ,(? (defined-function name)
-               (compiled-function-name-string name)
-               name)
+           ,name
            " = function "
-               ,@(c-list (argument-expand-names name (lambda-args !)))
+               (%native ,@(c-list (argument-expand-names name (lambda-args !))))
                ,*terpri*
            "{" ,*terpri*
                ,@(lambda-body !)
@@ -161,11 +159,8 @@
 
 (def-js-codegen %new (&rest x)
   (? x
-     `("new " ,(? (defined-function x.)
-                  (compiled-function-name-string x.)
-                  x.)
-              ,@(c-list .x))
-     `"{}"))
+     `("new " ,x. (%native ,@(c-list .x)))
+     "{}"))
 
 (def-js-codegen delete-object (x)
   `("delete " ,x))
@@ -177,10 +172,10 @@
   (js-compiled-symbol x))
 
 (def-js-codegen %slot-value (x y)
-  `(,x "." ,(compiled-slot-name y)))
+  `(,x "." (%native ,(compiled-slot-name y))))
 
 (def-js-codegen %=-slot-value (v x y)
-  `(,x "." ,(compiled-slot-name y) " = " ,v))
+  `(,x "." (%native ,(compiled-slot-name y)) " = " ,v))
 
 (def-js-codegen %try () ; TODO: Check if stale.
   '("try {"))
