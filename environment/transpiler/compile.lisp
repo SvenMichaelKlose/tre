@@ -14,7 +14,7 @@
   "Filter tails of SECTIONS through FUN."
   (!= (expand-sections sections)
     (@ [. _. (~> fun _. ._)]
-       (? nil; *development?*
+       (? *development?*
           (+@ #'((x)
                   (with (section  x.
                          exprs    .x)
