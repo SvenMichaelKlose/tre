@@ -47,7 +47,7 @@
   (late-print '(cl:in-package :tre-core) o :print-info print-info))
 
 (!= (copy-transpiler *cl-transpiler*)
-  (= (transpiler-dump-passes? !) t)
+  (= (transpiler-dump-passes? !) nil)
   (transpiler-add-defined-variable ! '*macros*)
   (with (c          (compile-sections :sections   (… (. 'dummy nil))
                                       :transpiler !)
