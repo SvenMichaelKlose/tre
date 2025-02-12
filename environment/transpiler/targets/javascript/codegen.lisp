@@ -15,14 +15,14 @@
 
 (def-js-codegen %go-nil (tag val)
   `(,*js-indent* "if " ,(js-nil? val)
-                 " { _I_= " ,tag "; continue; }" ,*terpri*))
+                 " { _I_= " (%native ,tag) "; continue; }" ,*terpri*))
 
 (def-js-codegen %go-not-nil (tag val)
   `(,*js-indent* "if (!" ,(js-nil? val) ")"
-                 " { _I_=" ,tag "; continue; }" ,*terpri*))
+                 " { _I_=" (%native ,tag) "; continue; }" ,*terpri*))
 
 (def-js-codegen %set-local-fun (plc val)
-  `(%native ,*js-indent* ,plc " = " ,val ,*js-separator*))
+  `(,*js-indent* ,plc " = " ,val ,*js-separator*))
 
 
 ;;;; FUNCTIONS
@@ -69,21 +69,21 @@
 
 (def-js-codegen %= (dest val)
   (? (& (not dest) (atom val))
-     '(%native "")
+     '""
      `(,*js-indent*
        ,@(? dest
-            `((%native ,dest " = ")))
-       ,(? (| (atom val)
+            `(,dest " = "))
+       ,@(? (| (atom val)
               (codegen-expr? val))
-           val
-           `(,val. " " ,@(c-list .val)))
+            (… val)
+            `(,val. " " ,@(c-list .val)))
       ,*js-separator*)))
 
 
 ;;;; VARIABLE DECLARATIONS
 
 (def-js-codegen %var (&rest names)
-  `(%native ,*js-indent* "var " ,(c-list names :parens-type nil) ,*js-separator*))
+  `(,*js-indent* "var " ,(c-list names :parens-type nil) ,*js-separator*))
 
 
 ;;;; TYPE PREDICATES
@@ -132,19 +132,19 @@
 ;;;; ARRAYS
 
 (def-js-codegen %make-array (&rest elements)
-  `(%native ,@(c-list elements :parens-type :brackets)))
+  (c-list elements :parens-type :brackets))
 
 (def-js-codegen %aref (arr &rest idx)
-  `(%native ,arr ,@(@ [`("[" ,_ "]")] idx)))
+  `(,arr ,@(@ [`("[" ,_ "]")] idx)))
 
 (def-js-codegen =-%aref (val &rest x)
-  `(%native (%aref ,@x) " = " ,val))
+  `((%aref ,@x) " = " ,val))
 
 
 ;;;; HASH TABLES
 
 (def-js-codegen hremove (h key)
-  `(%native "delete " ,h "[" ,key "]"))
+  `("delete " ,h "[" ,key "]"))
 
 
 ;;;; (JSON) OBJECTS
@@ -161,14 +161,14 @@
 
 (def-js-codegen %new (&rest x)
   (? x
-     `(%native "new " ,(? (defined-function x.)
-                           (compiled-function-name-string x.)
-                           x.)
-                       ,@(c-list .x))
-     `(%native "{}")))
+     `("new " ,(? (defined-function x.)
+                  (compiled-function-name-string x.)
+                  x.)
+              ,@(c-list .x))
+     `"{}"))
 
 (def-js-codegen delete-object (x)
-  `(%native "delete " ,x))
+  `("delete " ,x))
 
 
 ;;;; METACODES
@@ -177,37 +177,37 @@
   (js-compiled-symbol x))
 
 (def-js-codegen %slot-value (x y)
-  `(%native ,x "." ,(compiled-slot-name y)))
+  `(,x "." ,(compiled-slot-name y)))
 
 (def-js-codegen %=-slot-value (v x y)
-  `(%native ,x "." ,(compiled-slot-name y) " = " ,v))
+  `(,x "." ,(compiled-slot-name y) " = " ,v))
 
 (def-js-codegen %try () ; TODO: Check if stale.
-  '(%native "try {"))
+  '("try {"))
 
 (def-js-codegen %closing-bracket () ; TODO: Check if stale.
-  '(%native "}"))
+  '("}"))
 
 (def-js-codegen %catch (x)  ; TODO: Check if stale.
-  `(%native "catch (" ,x ") {"))
+  `("catch (" ,x ") {"))
 
 
 ;;;; BACKEND METACODES
 
 (def-js-codegen %vec (v i)
-  `(%native ,v "[" ,i "]"))
+  `(,v "[" ,i "]"))
 
 (def-js-codegen %=-vec (v i x)
-  `(%native (%aref ,v ,i) "=" ,x ,*js-separator*))
+  `((%aref ,v ,i) "=" ,x ,*js-separator*))
 
 (def-js-codegen %js-typeof (x)
-  `(%native "typeof " ,x))
+  `("typeof " ,x))
 
 (def-js-codegen %invoke-debugger ()
-  '(%native "null; debugger"))
+  '("null; debugger"))
 
 (def-js-codegen %eval (x)
-  `(%native "window.eval (" ,x ")"))
+  `("window.eval (" ,x ")"))
 
 ;;; TODO: Looking like a PHP target stub. (pixel)
 (def-js-codegen %global (x)
@@ -216,14 +216,13 @@
 ;;;; CLASSES
 
 (def-js-codegen %js-class-head (cls)
-  `(%native
-     "class " ,(class-name cls)
+  `("class " ,(class-name cls)
      ,@(!? (class-base cls)
            `(" extends " ,!))
      "{"))
 
 (def-js-codegen %js-class-tail ()
-  `(%native "}" ""))
+  `("}"))
 
 (fn js-class-slot-flags (slot)
   (pad (@ [?
@@ -270,4 +269,4 @@
 ;;;; MISCELLANEOUS
 
 (def-js-codegen %comment (&rest x)
-  `(%native "/* " ,@x " */" ,*terpri*))
+  `("/* " ,@x " */" ,*terpri*))
