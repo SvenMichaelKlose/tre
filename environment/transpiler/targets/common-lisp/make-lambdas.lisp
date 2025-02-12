@@ -34,4 +34,4 @@
     `(CL:DEFVAR ,(cadr x)))
 
 (fn cl-postprocess (x)
-  (make-lambdas (print (convert-toplevel-lambdas (print x)))))
+  (make-lambdas (convert-toplevel-lambdas x)))
