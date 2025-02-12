@@ -1,16 +1,26 @@
 (fn full-compile (x)
   (backend (middleend (frontend x))))
 
+(define-filter expand-sections (section)
+  (?
+    (string? section)
+      (… section)
+    (& (cons? section)
+       (function? .section))
+      (. section. (~> .section))
+    section))
+
 (fn map-sections (fun sections)
   "Filter tails of SECTIONS through FUN."
-  (@ [. _. (~> fun _. ._)]
-     (? *development?*
-        (+@ #'((x)
-                (with (section  x.
-                       exprs    .x)
-                  (@ [… section _] exprs)))
-            sections)
-        sections)))
+  (!= (expand-sections sections)
+    (@ [. _. (~> fun _. ._)]
+       (? nil; *development?*
+          (+@ #'((x)
+                  (with (section  x.
+                         exprs    .x)
+                    (@ [… section _] exprs)))
+              !)
+          !))))
 
 (fn codegen-section (section data)
   (backend (middleend data)))
@@ -84,11 +94,6 @@
 ;;; TOPLEVEL;;;
 ;;;;;;;;;;;;;;;
 
-(define-filter expand-sections (section)
-  (? (string? section)
-     (… section)
-     section))
-
 (fn compile-sections (&key sections (transpiler *default-transpiler*))
     (= *warnings* nil)
     (with-temporaries (*transpiler* transpiler
@@ -101,7 +106,7 @@
             (frontend-sections (~> (sections-before-import)))
           :after-import
             (+ (frontend-sections (~> (sections-after-import)))
-               (frontend-sections (expand-sections sections)))
+               (frontend-sections sections))
           :imports
             (frontend-section 'imports (import-from-host)))))
 
