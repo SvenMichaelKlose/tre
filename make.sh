@@ -12,7 +12,7 @@ mkdir -p compiled
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
 SBCL="sbcl --noinform"
-TRE="sbcl --noinform --core `pwd`/image"
+TRE="sbcl --noinform --control-stack-size 32 --core `pwd`/image"
 BINDIR="/usr/local/bin/"
 
 SHCONFIG=`eval echo ~/.tre.sh`
