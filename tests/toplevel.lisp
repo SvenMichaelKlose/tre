@@ -10,10 +10,7 @@
                           (transpiler-file-postfix !))
                   _]
       :sections
-           ; TODO: Let me guess: this has something to do with the
-           ; upcoming type system.  Remove. (pixel)
-        (… "environment/stage3/type.lisp"
-           (. 'tests     (make-environment-tests))
+        (… (. 'tests     (make-environment-tests))
            (. 'toplevel  '((environment-tests)))))))
 
 (fn compile-unit-tests (tr lst)
