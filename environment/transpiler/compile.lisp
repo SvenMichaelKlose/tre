@@ -84,9 +84,9 @@
               (compile-toplevel-expressions)))
     (~> (postprocessor)
         (+ (… (~> (prologue)))
-           before-imports
-           (compile-inits)
-           imports-and-rest
+           (ensure-list before-imports)
+           (ensure-list (compile-inits))
+           (ensure-list imports-and-rest)
            (… (~> (epilogue)))))))
 
 
