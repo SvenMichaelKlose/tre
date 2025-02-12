@@ -7,7 +7,8 @@
      (format nil "'use strict';~%")
      (nodejs-prologue)
      (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
-     (flatten (backend `((%var ,@(funinfo-vars (global-funinfo))))))))
+     (flatten (@ [backend `((%var ,@_))]
+                 (group (funinfo-vars (global-funinfo)) 16)))))
 
 (fn js-epilogue ()
   (format nil "}break;}~%"))
