@@ -57,6 +57,7 @@ if [ $# -gt 1 ]; then
     for arg in "$@"; do
         "$0" "$arg"
     done
+    exit
 fi
 
 case $1 in
