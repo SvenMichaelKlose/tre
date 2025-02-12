@@ -1,3 +1,5 @@
+(def-head-predicate %fname)
+
 (fn make-scope-place-expr (fi x)
   (funinfo-add-free-var fi x)
   `(%vec ,(funinfo-scope-arg fi)
@@ -46,12 +48,20 @@
       x
     (funinfo-global-var? fi x)
       `(%global ,x)
-    (make-scope-place fi x)))
+    (lambda-export?)
+       (make-scope-place fi x)
+    x))
 
 (fn place-expand-fun (x)
   (copy-lambda x :body (place-expand (lambda-body x) (lambda-funinfo x))))
 
 (define-tree-filter place-expand (x &optional (fi (global-funinfo)))
+  (& (%fname? x)
+     (not ..x))
+    `(%fname ,.x. ,(funinfo-name fi))
+  (& (not (funinfo-find fi x))
+     (defined-function x))
+    `(%fname ,x)
   (atom x)
     (place-expand-atom fi x)
   (| (quote? x)

@@ -14,6 +14,7 @@
        (not (simple-argument-list? (lambda-args x))))))
 
 (def-js-transpiler-macro function (&rest x)
+  "Re-create function with expander."
   (!= (. 'function x)
     (? .x
        (? (js-requires-expander? !)
@@ -27,7 +28,7 @@
   (push `(= (%slot-value ,name f) ,(compiled-function-name name))
         *late-symbol-function-assignments*)
   `(progn
-     (%var ,(%fn-name name))
+     (%var ,name)
      ,(shared-defun name args (. 'has-argexp! body) :keep-source? nil)))
 
 (fn js-early-symbol-maker (g sym)

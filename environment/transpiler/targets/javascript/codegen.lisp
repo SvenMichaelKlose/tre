@@ -31,19 +31,26 @@
   (!= (. 'function x)
     (? .x
        (let name (lambda-name !)
+         (= *funinfo* (get-funinfo name))
          (developer-note "#'~A~%" name)
          `(,*terpri*
-           ,(funinfo-comment (= *funinfo* (get-funinfo name)))
-           ,name
+           ,(funinfo-comment *funinfo*)
+           ,(? (& (not (funinfo-find *funinfo* name))
+                  (defined-function name))
+               `(%fname ,name)
+               name)
            " = function "
                (%native ,@(c-list (argument-expand-names name (lambda-args !))))
                ,*terpri*
            "{" ,*terpri*
                ,@(lambda-body !)
            "}" ,*terpri*))
-       (? (symbol? x.)
-          x.
-          !))))
+       (?
+         (%fname? x.)
+           `(%fname ,(cadr x.))
+         (symbol? x.)
+           x.
+         !))))
 
 (def-js-codegen %function-prologue (name)
   `(%native ""
@@ -170,6 +177,13 @@
 
 (def-js-codegen quote (x)
   (js-compiled-symbol x))
+
+(def-js-codegen %fname (x &optional (fname nil))
+  (? (| (not fname)
+        (& (not (funinfo-find (get-funinfo fname) x))
+           (defined-function x)))
+     (compiled-function-name-string x)
+     x))
 
 (def-js-codegen %slot-value (x y)
   `(,x "." (%native ,(compiled-slot-name y))))

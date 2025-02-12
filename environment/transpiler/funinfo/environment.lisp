@@ -101,7 +101,7 @@
             (funinfo-add-used-var-0 (funinfo-parent fi) x))))))
 
 (fn funinfo-add-used-var (fi x)
-  (& (symbol? x)
+  (& x (symbol? x)
      (funinfo-find fi x)
      (funinfo-add-used-var-0 fi x)))
 

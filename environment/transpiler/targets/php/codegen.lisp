@@ -31,6 +31,13 @@
 (def-php-codegen quote (x)
   (php-dollarize (php-compiled-symbol x)))
 
+(def-php-codegen %fname (x &optional (fname nil))
+  (? (| (not fname)
+        (& (not (funinfo-find (get-funinfo fname) x))
+           (defined-function x)))
+     (compiled-function-name-string x)
+     (php-dollarize x)))
+
 
 ;;;; CONTROL FLOW
 

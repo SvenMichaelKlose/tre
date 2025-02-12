@@ -1,7 +1,7 @@
 (fn c-expander-name (x)
   ($ x '_treexp))
 
-(fn make-argument-expander-0 (fun-name adef p)
+(fn make-argument-expander-0 (fname adef p)
   (with ((argdefs key-args) (make-&key-alist adef)
 
          key
@@ -11,7 +11,7 @@
          static
            [`(,@(? (assert?)
                    `((| ,p
-                        (error-argument-missing ',fun-name ,(symbol-name _.)))))
+                        (error-argument-missing ',fname ,(symbol-name _.)))))
               (= ,_. (car ,p))
               (= ,p (cdr ,p))
               ,@(main ._))]
@@ -30,7 +30,7 @@
 
          arest
            [(? (cons? _.)
-               (error-&rest-has-value fun-name))
+               (error-&rest-has-value fname))
             `(,@(key)
               (= ,_. ,p)
               ,@(? (assert?)
@@ -45,7 +45,7 @@
          sub
            [`(,@(key)
               (with-temporary ,p (car ,p)
-                ,@(make-argument-expander-0 fun-name _. p))
+                ,@(make-argument-expander-0 fname _. p))
                 (= ,p (cdr ,p))
                 ,@(main ._))]
 
@@ -75,26 +75,26 @@
                (carlist key-args))))
        (main argdefs))))
 
-(fn make-argument-expander-function-body-0 (fun-name adef p names)
-  `(,@(make-argument-expander-0 fun-name adef p)
+(fn make-argument-expander-function-body-0 (fname adef p names)
+  `(,@(make-argument-expander-0 fname adef p)
     ,@(? (assert?)
          `((? ,p
-              (error-too-many-arguments ,(symbol-name fun-name) ,(shared-defun-source adef) ,p))))
-    ((%native ,(compiled-function-name fun-name)) ,@names)))
+              (error-too-many-arguments ,(symbol-name fname) ,(shared-defun-source adef) ,p))))
+    ((%fname ,fname) ,@names)))
 
-(fn make-argument-expander-function-body (fun-name adef p)
+(fn make-argument-expander-function-body (fname adef p)
   (. 'has-argexp!
      (!? (argument-expand-names 'make-argument-expander adef)
          `((#'(,!
-               ,@(make-argument-expander-function-body-0 fun-name adef p !))
+               ,@(make-argument-expander-function-body-0 fname adef p !))
              ,@(@ [`',_] !)))
-         (make-argument-expander-function-body-0 fun-name adef p !))))
+         (make-argument-expander-function-body-0 fname adef p !))))
 
-(fn make-argument-expander-function (this-name fun-name adef)
+(fn make-argument-expander-function (this-name fname adef)
   (with-gensym p
     `(function ,this-name
                ((,p)
-                  ,@(make-argument-expander-function-body fun-name adef p)))))
+                  ,@(make-argument-expander-function-body fname adef p)))))
 
-(fn make-argument-expander (this-name fun-name adef)
-  (make-argument-expander-function this-name fun-name adef))
+(fn make-argument-expander (this-name fname adef)
+  (make-argument-expander-function this-name fname adef))
