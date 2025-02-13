@@ -1,14 +1,11 @@
-(fn gather-imports-list (x)
-  (@ (i x)
-    (? (cons? i)
-       (gather-imports-list i)
-       (when (symbol? i)
-         (add-wanted-function i)
-         (add-wanted-variable i)))))
+(define-tree-filter gather-imports-0 (x)
+  (atom x) x
+  (symbol? x.)
+    (progn
+      (add-wanted-function x.)
+      (add-wanted-variable x.)
+      (gather-imports-0 .x)))
 
-(metacode-walker gather-imports (x)
-  :if-%=
-    (with-%= place value x.
-      (add-wanted-variable place)
-      (gather-imports-list (ensure-list value))
-      (list x.)))
+(fn gather-imports (x)
+  (gather-imports-0 x)
+  x)

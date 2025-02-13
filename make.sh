@@ -12,7 +12,7 @@ mkdir -p compiled
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
 SBCL="sbcl --noinform"
-TRE="sbcl --noinform --core `pwd`/image"
+TRE="sbcl --noinform --control-stack-size 32 --core `pwd`/image"
 BINDIR="/usr/local/bin/"
 
 SHCONFIG=`eval echo ~/.tre.sh`
@@ -23,9 +23,9 @@ fi
 clean_example_projects ()
 {
 	echo "Cleaning examples (requires root privileges to remove docker containers)…"
-	sudo rm -rvf examples/project-js/compiled
-	sudo rm -rvf examples/project-php/compiled
-	sudo rm -rvf examples/project-js-php/compiled
+	rm -rvf examples/project-js/compiled
+	rm -rvf examples/project-php/compiled
+	rm -rvf examples/project-js-php/compiled
 }
 
 clean ()
@@ -43,13 +43,13 @@ clean ()
 
 install_it ()
 {
-    sudo mkdir -p /usr/local/lib/tre
+    mkdir -p /usr/local/lib/tre
     echo "Installing SBCL image to '/usr/local/lib/tre/image'…"
-    sudo cp -v image /usr/local/lib/tre/
+    cp -v image /usr/local/lib/tre/
     echo "Installing environment to '/usr/local/lib/tre/environment/'…"
-    sudo cp -rv environment modules /usr/local/lib/tre/
+    cp -rv environment modules /usr/local/lib/tre/
     echo "Installing 'tre' to '$BINDIR'…"
-	sudo cp tre $BINDIR
+	cp tre $BINDIR
 }
 
 # Handle multiple arguments separately.
@@ -57,6 +57,7 @@ if [ $# -gt 1 ]; then
     for arg in "$@"; do
         "$0" "$arg"
     done
+    exit
 fi
 
 case $1 in
@@ -139,7 +140,6 @@ examples)
 all)
     echo "Making 'all'…"
     ./make.sh boot
-    ./make.sh install
     ./make.sh tests
     ./make.sh examples
     echo

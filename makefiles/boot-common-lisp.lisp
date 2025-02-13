@@ -41,36 +41,18 @@
              (| (getenv "TRE_DEBUG_LEVEL") 2))
      (format o (+ "(declaim #+sbcl(sb-ext:muffle-conditions compiler-note style-warning))~%"
                   "(proclaim '(optimize (speed 3) (space 0) (safety 1) (debug 0)))~%")))
-  (@ (i (cl-packages))
-    (late-print i o :print-info print-info))
+  (@ [late-print _ o :print-info print-info]
+     (cl-packages))
   (late-print '(cl:defpackage "GLOBAL") o)
   (late-print '(cl:in-package :tre-core) o :print-info print-info))
 
-(fn print-env-loader (o)
-  (format o (+ "(cl:in-package :tre)~%"
-               "(cl:format t \"; Loading environment…\\~%\")~%"
-               "(cl:setq *package* \"TRE\")~%"
-               "
-
-(cl:defun %env-path ()
-  (cl:or ;(cl:if (cl:fboundp 'ql:where-is-system)
-         ;       (ql:where-is-system :tre))
-         ;(cl:if (cl:fboundp 'asdf:system-source-directory)
-         ;       (asdf:system-source-directory :tre))
-         (cl:if cl:*load-truename*
-                (cl:make-pathname :defaults cl:*load-truename* :name nil :type nil))
-         cl:*default-pathname-defaults*))
-(uiop:chdir (%env-path))
-(cl:defparameter *environment-path* (cl:namestring (%env-path)))
-
-(env-load \"main.lisp\")")))
-
 (!= (copy-transpiler *cl-transpiler*)
+  (= (transpiler-dump-passes? !) nil)
   (transpiler-add-defined-variable ! '*macros*)
-  (with (c           (compile-sections :sections   (… (. 'dummy nil))
-                                       :transpiler !)
-         print-info  (make-print-info :pretty-print? nil))
+  (with (c          (compile-sections :sections   (… (. 'dummy nil))
+                                      :transpiler !)
+         print-info (make-print-info :pretty-print? nil))
     (with-output-file o "boot-common.lisp"
       (print-init-decls o print-info)
       (@ [& _ (late-print _ o :print-info print-info]) c)
-      (print-env-loader o))))
+      (princ (fetch-file "makefiles/env-loader.lisp") o))))

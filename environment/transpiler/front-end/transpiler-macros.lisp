@@ -1,7 +1,7 @@
 (fn make-transpiler-macro-expander (tr)
   (aprog1 (define-expander ($ (transpiler-name tr) '-standard (gensym)))
-    (with (mypred  (expander-pred !)
-           mycall  (expander-call !))
+    (with (mypred (expander-pred !)
+           mycall (expander-call !))
       (= (expander-pred !) [| (~> mypred _)
                               (%%macro? _)]
          (expander-call !) [? (~> mypred _)
@@ -19,8 +19,9 @@
      ,@body))
 
 (fn make-transpiler-macro (name args body)
-  (eval (macroexpand `(define-transpiler-macro *transpiler* ,name ,args
-                        ,@body)))
+  (eval (macroexpand
+            `(define-transpiler-macro *transpiler* ,name ,args
+               ,@body)))
   nil)
 
 (fn transpiler-macroexpand (x)

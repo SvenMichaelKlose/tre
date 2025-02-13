@@ -13,15 +13,13 @@
            (fbound? x)
            (not (builtin? (symbol-function x))
                 (alien-package? x)
-                (defined-or-wanted? x)))
+                (defined-or-wanted? x)
+                (& (eql "JSON-OBJECT?" (symbol-name x))
+                   (eql "TRE-CORE" (package-name (symbol-package x))))))
     (= (href (wanted-functions-hash) x) t)
     (push x (wanted-functions))
     (developer-note "Scheduled #'~A for import.~%" x))
   x)
-
-(fn add-wanted-functions (x)
-  (@ (i x x)
-    (add-wanted-function i)))
 
 (fn can-import-variable? (x)
   (& (import-variables?)

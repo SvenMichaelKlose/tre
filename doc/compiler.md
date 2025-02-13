@@ -189,8 +189,9 @@ be split up into:
   required by the target machine, usually in camel-case.
 * String encapsulation (for codegen): wraps literal strings in a %STRING form
   so the can be told apart from code string during codegen macro expansion.
-* Counting tags for no real reson.
+* Counting tags, so codegen macros for FUNCTION know if tags have to be
+  handled.
 * Wrapping tags: again to identify them during codegen macro expansion.
 * Codegen macro expansion: here al the target code is made by codegen macros.
-* Identifier conversion: converts any symbol left as well as characters and
-  literal strings into target format (e.g. escaped strings in double quotes).
+* Symbol to identifier conversion: converts any symbol as well as
+  characters and %STRINGs to the target format (e.g. double quoted strings).

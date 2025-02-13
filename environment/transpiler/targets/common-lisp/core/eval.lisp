@@ -1,5 +1,5 @@
 (fn tre2cl (x)
-  (make-lambdas (quote-expand (specialexpand (quote-expand x)))))
+  (make-lambdas (convert-toplevel-lambdas (quote-expand (specialexpand (quote-expand x))))))
 
 (var *eval* nil)
 

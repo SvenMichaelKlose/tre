@@ -1,15 +1,26 @@
 (fn full-compile (x)
   (backend (middleend (frontend x))))
 
+(define-filter expand-sections (section)
+  (?
+    (string? section)
+      (… section)
+    (& (cons? section)
+       (function? .section))
+      (. section. (~> .section))
+    section))
+
 (fn map-sections (fun sections)
-  (@ [. _. (~> fun _. ._)]
-     (? *development?*
-        (+@ #'((x)
-                (with (section  x.
-                       exprs    .x)
-                  (@ [… section (… _)] exprs)))
-            sections)
-        sections)))
+  "Filter tails of SECTIONS through FUN."
+  (!= (expand-sections sections)
+    (@ [. _. (~> fun _. ._)]
+       (? *development?*
+          (+@ #'((x)
+                  (with (section  x.
+                         exprs    .x)
+                    (@ [… section _] exprs)))
+              !)
+          !))))
 
 (fn codegen-section (section data)
   (backend (middleend data)))
@@ -37,7 +48,7 @@
   (map-sections #'frontend-section sections))
 
 (fn full-compile-section (section x)
-  (codegen-sections (frontend-section section x)))
+  (codegen-section section (frontend-section section x)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47,13 +58,13 @@
 (fn compile-toplevel-expressions ()
   (awhen (& (enabled-pass? :accumulate-toplevel)
             (toplevel-expressions))
-    (full-compile-section :accumulated-toplevel (reverse !))))
+    (full-compile-section 'accumulated-toplevel (reverse !))))
 
 (fn compile-delayed-exprs ()
-  (full-compile-section :delayed-exprs (delayed-exprs)))
+  (full-compile-section 'delayed-exprs (delayed-exprs)))
 
 (fn compile-inits ()
-  (full-compile-section :global-inits (reverse (global-inits))))
+  (full-compile-section 'global-inits (reverse (global-inits))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -67,26 +78,21 @@
   (with (before-imports
            (codegen-sections before-import)
          imports-and-rest
-           (+ (codegen-section :imports imports)
+           (+ (codegen-section 'imports imports)
               (compile-delayed-exprs)
               (codegen-sections after-import)
               (compile-toplevel-expressions)))
     (~> (postprocessor)
         (+ (… (~> (prologue)))
-           before-imports
-           (compile-inits)
-           imports-and-rest
+           (ensure-list before-imports)
+           (ensure-list (compile-inits))
+           (ensure-list imports-and-rest)
            (… (~> (epilogue)))))))
 
 
 ;;;;;;;;;;;;;;;
 ;;; TOPLEVEL;;;
 ;;;;;;;;;;;;;;;
-
-(define-filter expand-sections (section)
-  (? (string? section)
-     (… section)
-     section))
 
 (fn compile-sections (&key sections (transpiler *default-transpiler*))
     (= *warnings* nil)
@@ -96,14 +102,13 @@
       (= (host-variables) (make-host-variables))
       (~> (frontend-init))
       (generic-codegen
-           :before-import
-             (frontend-sections (~> (sections-before-import)))
-           :after-import
-             (+ (frontend-sections (~> (sections-after-import)))
-                (frontend-sections (expand-sections sections)))
-           :imports
-             (+ (… "Section imports")
-                (import-from-host)))))
+          :before-import
+            (frontend-sections (~> (sections-before-import)))
+          :after-import
+            (+ (frontend-sections (~> (sections-after-import)))
+               (frontend-sections sections))
+          :imports
+            (frontend-section 'imports (import-from-host)))))
 
 (fn compile (expression &key (transpiler *default-transpiler*))
   (compile-sections :sections   `((:compile ,expression))

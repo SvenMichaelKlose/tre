@@ -15,8 +15,9 @@
 
 ;;; The only and only type specifier possible for the beginning.
 (fn argument-type-specifier? (x)
-  (| (string? x)
-     (assoc x *types*)))
+    nil)
+  ;(| (string? x)
+     ;(assoc x *types*)))
 
 (fn typed-argument? (x)
   (& (cons? x)
