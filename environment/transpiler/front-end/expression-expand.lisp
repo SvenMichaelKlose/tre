@@ -21,35 +21,6 @@
   (funinfo-add-var *funinfo* (expex-sym)))
 
 
-;;;; ARGUMENT EXPANSION
-
-(fn compiled-expanded-argument (x)
-  (?
-    (%rest-or-%body? x) (compile-list .x)
-    (%key? x)           .x
-    x))
-
-(fn compiled-expanded-arguments (fun def vals)
-  (@ #'compiled-expanded-argument (cdrlist (argument-expand fun def vals))))
-
-(fn expex-argdef (fun)
-  ; TODO: The variable containing the function gets assigned to another one…
-  (| (!? (funinfo-get-local-function-args *funinfo* fun)
-         (print !)) ; …so this doesn't happen.
-     (transpiler-function-arguments *transpiler* fun)))
-
-(fn expex-argexpand (x)
-  (with (new?   (%new? x)
-         fun    (? new? .x. x.)
-         args   (? new? ..x .x))
-    `(,@(& new? '(%new))
-      ,@(!? fun (… !))
-          ,@(expand-literal-characters
-               (? (defined-function fun)
-                  (compiled-expanded-arguments fun (expex-argdef fun) args)
-                  args)))))
-
-
 ;;;;; MOVING ARGUMENTS
 
 (fn unexpex-able? (x)
@@ -111,7 +82,7 @@
                         (? .._
                            (cdr (expex-lambda .._))))]
                   ..x))))
-    (!= (expex-move-args (expex-argexpand x))
+    (!= (expex-move-args x)
       (. !. (… .!)))))
 
 
