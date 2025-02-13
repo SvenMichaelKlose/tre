@@ -1,4 +1,5 @@
 (def-head-predicate %fname)
+(def-head-predicate %vname)
 
 (fn make-scope-place-expr (fi x)
   (funinfo-add-free-var fi x)
@@ -45,7 +46,7 @@
           (funinfo-arg? fi x)))
       (place-expand-emit-stackplace fi x)
     (funinfo-arg-or-var? fi x)
-      x
+      `(%vname ,x ,(funinfo-name fi))
     (funinfo-global-var? fi x)
       `(%global ,x)
     (lambda-export?)

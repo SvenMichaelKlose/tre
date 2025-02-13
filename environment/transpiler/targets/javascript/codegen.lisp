@@ -185,6 +185,9 @@
      (compiled-function-name-string x)
      x))
 
+(def-js-codegen %vname (x &optional (fname nil))
+  x)
+
 (def-js-codegen %slot-value (x y)
   `(,x "." (%native ,(compiled-slot-name y))))
 

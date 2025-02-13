@@ -1,5 +1,8 @@
 (fn php-prologue ()
-  (format nil "<?php // tré revision ~A~%~A"
+  (format nil "<?php // tré revision ~A~%~A~A"
+              (flatten (… "/*" *terpri*
+                          (funinfo-comment (global-funinfo))
+                          "*/" *terpri*))
               *tre-revision* (+ (configuration :native-code)
                                 *php-core-native*)))
 
