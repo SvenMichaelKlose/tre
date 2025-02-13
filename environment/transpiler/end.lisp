@@ -60,11 +60,11 @@
           (when (eq pass. outpass)
              (return x)))))))
 
+(fn pairs-to-literal-alist (x)
+  `(… ,@(@ [. 'cons _] x)))
+
 (defmacro define-transpiler-end (end &rest name-function-pairs)
   (!= (group name-function-pairs 2)
-    `(fn ,(make-symbol (symbol-name end)) (list-of-exprs)
-       (transpiler-end ,end
-                       (… ,@(@ [`(. ,@_)]
-                               (pairlist (@ #'make-keyword (carlist !))
-                                         (cdrlist !))))
-                       list-of-exprs))))
+    (assert (every #'keyword? (carlist !)))
+    `(fn ,(make-symbol (symbol-name end)) (x)
+       (transpiler-end ,end ,(pairs-to-literal-alist !) x))))
