@@ -1,17 +1,3 @@
-(fn compile-list (x) ; TODO: Look better in a more general section.
-  (? (cons? x)
-     `(. ,x. ,(compile-list .x))
-     x))
-
-(fn expex-compile-funcall (x)
-  (!= ..x.
-    (? (& (cons? !)
-          (| (function-expr? !.)
-             (funinfo-find *funinfo* !.)))
-       (expex-body (*> #'+ (frontend `(((%= ,.x. (*> ,!. ,(compile-list .!))))))))
-       (… x))))
-
-
 (fn make-%= (p v)
   (assignment-filter `(%= ,p ,v)))
 
