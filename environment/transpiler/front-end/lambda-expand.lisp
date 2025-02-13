@@ -1,5 +1,3 @@
-;;;; INLINING
-
 (fn lambda-expand-make-inline-body (stack-places values body)
   `(%block
      ,@(@ #'((stack-place init-value)
@@ -16,9 +14,6 @@
       (funinfo-add-var *funinfo* a)
       (lambda-expand (lambda-expand-make-inline-body a v body)))))
 
-
-;;;; EXPORT
-
 (def-gensym closure-name ~closure-)
 
 (fn lambda-export (x)
@@ -31,9 +26,6 @@
     (funinfo-make-scope-arg new-fi)
     (transpiler-add-closure *transpiler* `((fn ,name ,args ,@body)))
     `(%closure ,name)))
-
-
-;;;; PASSTHROUGH
 
 (fn lambda-expand-lambda (x)
   "Ensure that function expression X has a FUNINFO."
@@ -52,9 +44,6 @@
           (copy-lambda x :name name
                          :args args
                          :body (lambda-expand (lambda-body x)))))))
-
-
-;;;; TOPLEVEL
 
 (fn lambda-expand-collection (x)
   `(%collection ,.x.
