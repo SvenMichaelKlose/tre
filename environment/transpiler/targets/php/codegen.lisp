@@ -11,7 +11,7 @@
     x))
 
 (fn php-argument-list (x)
-  (c-list x))
+  (c-list (@ #'php-dollarize x)))
 
 (defmacro def-php-codegen (name &body body)
   `(define-codegen-macro *php-transpiler* ,name ,@body))
@@ -133,7 +133,7 @@
         (atom val))  ; TODO: remove (pixel)
      ""
      `(,*php-indent*
-       ,@(!? dest `(,! " = "))
+       ,@(!? dest `(,(php-dollarize !) " = "))
        ,@(php-%=-value val)
        ,*php-separator*)))
 
