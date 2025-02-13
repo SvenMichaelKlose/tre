@@ -80,7 +80,7 @@
     ;(remove-scoped-vars fi)   ; TODO: Fix
     (replace-scope-arg fi))
   (funinfo-set-vars fi (intersect (funinfo-vars fi) (funinfo-used-vars fi)))
-  (& (stack-locals?)
+  (& (locals-on-stack?)
      (remove-argument-stackplaces fi)))
 
 (fn remove-unused-vars (x)

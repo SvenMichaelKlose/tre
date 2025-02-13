@@ -94,7 +94,7 @@
 
   ;; Place local variables on the stack.  Makes expressions of the form
   ;; (%STACK stack-index).
-  (stack-locals?            nil)
+  (locals-on-stack?         nil)
 
   ;; Have arguments on GC stack. (Was C target.)
   (arguments-on-stack?      nil)
@@ -207,7 +207,7 @@
         :lambda-export?           lambda-export?
         :function-frames?         function-frames?
         :needs-var-declarations?  needs-var-declarations?
-        :stack-locals?            stack-locals?
+        :locals-on-stack?         locals-on-stack?
         :arguments-on-stack?      arguments-on-stack?
         :copy-arguments-to-stack? copy-arguments-to-stack?
         :function-name-prefix     function-name-prefix

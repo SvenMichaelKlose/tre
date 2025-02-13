@@ -1,5 +1,5 @@
 (fn funinfo-var-declarations (fi)
-  (unless (stack-locals?)
+  (unless (locals-on-stack?)
     (!? (funinfo-vars fi)
         `((%var ,@(remove-if [funinfo-arg? fi _] !))))))
 

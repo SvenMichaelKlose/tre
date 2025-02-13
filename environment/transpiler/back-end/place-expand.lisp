@@ -31,7 +31,7 @@
        (not (funinfo-find fi x)
             (funinfo-global-var? fi x)))
       x
-    (& (stack-locals?)
+    (& (locals-on-stack?)
        (eq x (funinfo-scope fi)))
       (place-expand-emit-stackplace fi x)
     (& (lambda-export?)
@@ -40,7 +40,7 @@
       `(%vec ,(place-expand-atom fi (funinfo-scope fi))
              ,(funinfo-name fi)
              ,x)
-    (| (& (stack-locals?)
+    (| (& (locals-on-stack?)
           (funinfo-var? fi x))
        (& (arguments-on-stack?)
           (funinfo-arg? fi x)))

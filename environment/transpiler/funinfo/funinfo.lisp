@@ -59,7 +59,7 @@
 
 (fn funinfo-framesize (fi)
   (!= (funinfo-transpiler fi)
-    (& (transpiler-stack-locals? !)
+    (& (transpiler-locals-on-stack? !)
        (+ (length (funinfo-vars fi))
           (? (transpiler-arguments-on-stack? !)
              (length (funinfo-args fi))
