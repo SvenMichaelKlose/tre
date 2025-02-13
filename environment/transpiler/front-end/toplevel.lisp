@@ -7,7 +7,7 @@
     :compiler-macroexpand       #'compiler-macroexpand
     :quote-expand               #'quote-expand
     :expand-literal-characters  #'expand-literal-characters
-    :thisify                    #'thisify
+    :thisification              #'thisify
     :rename-arguments           #'rename-arguments
     :lambda-expand              #'lambda-expand
     :call-expand                #'call-expand
