@@ -60,6 +60,7 @@
   (copy-lambda x :body (place-expand (lambda-body x) (lambda-funinfo x))))
 
 (define-tree-filter place-expand (x &optional (fi (global-funinfo)))
+  ; If an %FNAME is already there, it wants another FUNINFO look-up in codegen.
   (& (%fname? x)
      (not ..x))
     `(%fname ,.x. ,(funinfo-name fi))
