@@ -48,9 +48,12 @@
     (funinfo-arg-or-var? fi x)
       `(%vname ,x ,(funinfo-name fi))
     (funinfo-global-var? fi x)
-      `(%global ,x)
+      (progn
+        (funinfo-add-global fi x)
+        (funinfo-add-var (global-funinfo) x)
+        `(%global ,x))
     (lambda-export?)
-       (make-scope-place fi x)
+      (make-scope-place fi x)
     x))
 
 (fn place-expand-fun (x)
