@@ -1,3 +1,5 @@
+; TODO: A DEF-TREE-FILTER should do nicely. (pixel)
+
 (fn thisify-symbol (slots x exclusions)
   (?
     (eq 'this x)
