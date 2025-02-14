@@ -37,7 +37,7 @@
            ,(funinfo-comment *funinfo*)
            ,(? (& (not (funinfo-find *funinfo* name))
                   (defined-function name))
-               (ensure-%fname name)
+               `(%fname ,name)
                name)
            " = function "
                (%native ,@(c-list (argument-expand-names name (lambda-args !))))
