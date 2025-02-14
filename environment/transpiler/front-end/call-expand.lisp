@@ -1,16 +1,16 @@
-(fn compile-list (x) ; TODO: Looks better in a more general section.
+(fn compile-list (x)
   (? (cons? x)
      `(. ,x. ,(compile-list .x))
      x))
 
-(fn compiled-expanded-argument (x)
+(fn compile-expanded-argument (x)
   (?
     (%rest-or-%body? x) (compile-list .x)
     (%key? x)           .x
     x))
 
-(fn compiled-expanded-arguments (fun def vals)
-  (call-expand (@ #'compiled-expanded-argument
+(fn compile-expanded-arguments (fun def vals)
+  (call-expand (@ #'compile-expanded-argument
                   (cdrlist (argument-expand fun def vals)))))
 
 (fn call-expand-argdef (fun)
@@ -26,9 +26,9 @@
          fun  (? new? .x. x.)
          args (? new? ..x .x))
     `(,@(& new? '(%new))
-      ,@(!? fun (… !))
+      ,fun
       ,@(? (defined-function fun)
-           (compiled-expanded-arguments fun (call-expand-argdef fun) args)
+           (compile-expanded-arguments fun (call-expand-argdef fun) args)
            args))))
 
 (fn call-expand-expr (x)
@@ -36,8 +36,8 @@
     atom x
     %=?
       `(%= ,.x. ,(call-expand-expr ..x.))
-    %go-nil?
-      `(%go-nil ,.x. ,(call-expand-expr ..x.))
+    conditional-%go?
+      `(,x. ,.x. ,(call-expand-expr ..x.))
     %var?   ; Move to var collecting pass.
       (progn
         (funinfo-add-var *funinfo* .x.)
