@@ -28,7 +28,7 @@
 ;;;; FUNCTIONS
 
 (def-js-codegen function (&rest x)
-  (!= (. 'function x)
+  (!= `(function ,@x)
     (? .x
        (let name (lambda-name !)
          (= *funinfo* (get-funinfo name))
@@ -37,7 +37,7 @@
            ,(funinfo-comment *funinfo*)
            ,(? (& (not (funinfo-find *funinfo* name))
                   (defined-function name))
-               `(%fname ,name)
+               (ensure-%fname name)
                name)
            " = function "
                (%native ,@(c-list (argument-expand-names name (lambda-args !))))
@@ -47,7 +47,7 @@
            "}" ,*terpri*))
        (?
          (%fname? x.)
-           `(%fname ,(cadr x.))
+           x.
          (symbol? x.)
            x.
          !))))
