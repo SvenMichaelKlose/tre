@@ -18,46 +18,48 @@
 
 (fn lambda-export (x)
   (with (name   (closure-name)
-         args   (lambda-args x)
-         body   (lambda-body x)
-         new-fi (create-funinfo :name   name
-                                :args   args
-                                :parent *funinfo*))
-    (funinfo-make-scope-arg new-fi)
-    (transpiler-add-closure *transpiler* `((fn ,name ,args ,@body)))
+         args   (lambda-args x))
+    (funinfo-make-scope-arg
+        (create-funinfo :name   name
+                        :args   args
+                        :parent *funinfo*))
+    (transpiler-add-closure *transpiler*
+        `((fn ,name ,args
+            ,@(lambda-body x))))
     `(%closure ,name)))
 
 (fn lambda-expand-lambda (x)
   "Ensure that function expression X has a FUNINFO."
   "Creates name for anonymous function."
-  (!? (lambda-funinfo x)
-      (with-temporary *funinfo* !
-        (copy-lambda x :body (lambda-expand (lambda-body x))))
-      (with (name   (| (lambda-name x)
-                       (funinfo-sym))
-             args   (lambda-args x)
-             new-fi (create-funinfo :name   name
-                                    :args   args
-                                    :parent *funinfo*))
-        (funinfo-add-var *funinfo* name)
-        (with-temporary *funinfo* new-fi
-          (copy-lambda x :name name
-                         :args args
-                         :body (lambda-expand (lambda-body x)))))))
+  (with (name (| (lambda-name x)
+                 (funinfo-sym)))
+    (funinfo-add-var *funinfo* name)
+    (create-funinfo :name   name
+                    :args   (lambda-args x)
+                    :parent *funinfo*)
+    (do-lambda x :name name
+       :body (lambda-expand (lambda-body x)))))
 
 (fn lambda-expand-collection (x)
   `(%collection ,.x.
-     ,@(@ [. '%inhibit-macro-expansion (. ._. (lambda-expand-expr .._))] ..x)))
+     ,@(@ [. '%inhibit-macro-expansion
+             (. ._. (lambda-expand-expr .._))]
+          ..x)))
 
 (fn lambda-expand-expr (x)
   (pcase x
-    atom            x
-    binding-lambda? (inline-binding-lambda x)
-    unnamed-lambda? (? (lambda-export?)
-                       (lambda-export x)
-                       (lambda-expand-lambda x))
-    named-lambda?   (lambda-expand-lambda x)
-    %collection?    (lambda-expand-collection x)
+    atom x
+    binding-lambda?
+      (inline-binding-lambda x)
+    unnamed-lambda?
+      (? (lambda-export?)
+         (lambda-export x)
+         (lambda-expand-lambda x))
+    named-lambda?
+      (do-lambda x
+        :body (lambda-expand (lambda-body x)))
+    %collection?
+      (lambda-expand-collection x)
     (lambda-expand x)))
 
 (define-filter lambda-expand #'lambda-expand-expr)
