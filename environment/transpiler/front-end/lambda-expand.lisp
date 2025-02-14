@@ -1,9 +1,8 @@
-(fn lambda-expand-make-inline-body (stack-places values body)
+(fn lambda-expand-make-inline-body (args vals body)
   `(%block
-     ,@(@ #'((stack-place init-value)
-              `(%= ,stack-place ,init-value))
-          stack-places
-          values)
+     ,@(@ #'((a v)
+              `(%= ,a ,v))
+          args vals)
      ,@body))
 
 (fn inline-binding-lambda (binding-lambda)
@@ -17,8 +16,8 @@
 (def-gensym closure-name ~closure-)
 
 (fn lambda-export (x)
-  (with (name   (closure-name)
-         args   (lambda-args x))
+  (with (name (closure-name)
+         args (lambda-args x))
     (funinfo-make-scope-arg
         (create-funinfo :name   name
                         :args   args
