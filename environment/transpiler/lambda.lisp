@@ -30,10 +30,13 @@
        ,@body)))
 
 (defmacro do-lambda (x &key (name nil) (args 'no-args) (body 'no-body))
-  (with-gensym g
-    `(with (,g ,x)
-       (with-lambda-funinfo ,g
-         (copy-lambda ,g :name ,name :args ,args :body ,body)))))
+  (with-gensym (gx gn)
+    `(with (,gx ,x
+            ,gn (| ,name (lambda-name ,gx)))
+       (assert (get-funinfo ,gn) ,gn)
+       (with-temporary *funinfo* (get-funinfo ,gn)
+         (with-temporary *body* (lambda-body ,gx)
+           (copy-lambda ,gx :name ,gn :args ,args :body ,body))))))
 
 (defmacro with-binding-lambda ((args vals body x) &body exec-body)
   (with-gensym (tmp fun)

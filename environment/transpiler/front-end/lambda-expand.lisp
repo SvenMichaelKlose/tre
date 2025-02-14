@@ -1,8 +1,9 @@
-(fn lambda-expand-make-inline-body (args vals body)
+(fn lambda-expand-make-inline-body (stack-places values body)
   `(%block
-     ,@(@ #'((a v)
-              `(%= ,a ,v))
-          args vals)
+     ,@(@ #'((stack-place init-value)
+              `(%= ,stack-place ,init-value))
+          stack-places
+          values)
      ,@body))
 
 (fn inline-binding-lambda (binding-lambda)
@@ -15,9 +16,9 @@
 
 (def-gensym closure-name ~closure-)
 
-(fn lambda-export (x)
-  (with (name (closure-name)
-         args (lambda-args x))
+(fn lift-lambda (x)
+  (with (name   (closure-name)
+         args   (lambda-args x))
     (funinfo-make-scope-arg
         (create-funinfo :name   name
                         :args   args
@@ -27,7 +28,7 @@
             ,@(lambda-body x))))
     `(%closure ,name)))
 
-(fn lambda-expand-lambda (x)
+(fn annotate-lambda (x)
   "Ensure that function expression X has a FUNINFO."
   "Creates name for anonymous function."
   (with (name (| (lambda-name x)
@@ -50,13 +51,13 @@
     atom x
     binding-lambda?
       (inline-binding-lambda x)
-    unnamed-lambda?
-      (? (lambda-export?)
-         (lambda-export x)
-         (lambda-expand-lambda x))
-    named-lambda?
-      (do-lambda x
-        :body (lambda-expand (lambda-body x)))
+    lambda?
+      (? (get-funinfo (lambda-name x))
+         (do-lambda x
+           :body (lambda-expand (lambda-body x)))
+         (? (lambda-export?)
+            (lift-lambda x)
+            (annotate-lambda x)))
     %collection?
       (lambda-expand-collection x)
     (lambda-expand x)))
