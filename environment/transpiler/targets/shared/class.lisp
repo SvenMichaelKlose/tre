@@ -4,7 +4,7 @@
      (error "Undefined class ~A" ,class-name)))
 
 (def-shared-transpiler-macro (js php) defclass (class-name args &rest body)
-  (print-definition `(defclass ,class-name ,@(!? args (… !))))
+  (print-definition `(defclass ,class-name ,@args))
   (with (cname    (? (cons? class-name) class-name. class-name)
          bases    (& (cons? class-name) .class-name)
          classes  (defined-classes))
@@ -47,11 +47,11 @@
             (print-definition `(defmethod ,class-name ,name ,args))
             (with-defined-class ! class-name
               (assert-slot-undefined ! name)
-              (push (make-%slot :type   :method
-                                :flags  flags
-                                :name   name
-                                :args   args
-                                :body   body)
+              (push (make-%slot :type  :method
+                                :flags flags
+                                :name  name
+                                :args  args
+                                :body  body)
                     (class-slots !))))
         (argument-expand-values 'defmethod
                                 '(class-name name args &body body)
@@ -64,10 +64,10 @@
     (+! (class-slots cls)
         (@ [with ((args flags) (get-method-flags-and-rest (ensure-list _)))
              (assert-slot-undefined cls args.)
-             (make-%slot :type   :member
-                         :flags  flags
-                         :name   args.
-                         :body   .args)]
+             (make-%slot :type  :member
+                         :flags flags
+                         :name  args.
+                         :body  .args)]
            names)))
   nil)
 
@@ -81,9 +81,9 @@
          ,@(@ [. '%inhibit-macroexpansion
                  (. (%slot-name _)
                     (make-lambda
-                        :name  ($ class-name '- (%slot-name _))
-                        :args  (%slot-args _)
-                        :body  `((%method-body ,class-name
-                                   ,@(%slot-body _)))))]
+                        :name ($ class-name '- (%slot-name _))
+                        :args (%slot-args _)
+                        :body `((%method-body ,class-name
+                                  ,@(%slot-body _)))))]
               (class-methods !)))
        (%class-predicate ,class-name))))
