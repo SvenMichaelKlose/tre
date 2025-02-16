@@ -25,7 +25,7 @@
 
   ; Variables used which haven't been defined.  E.g. native target
   ; variables.
-  (free-vars    nil)
+  (lexicals     nil)
 
   ; Variables that are being modified.
   (places       nil)
@@ -78,7 +78,7 @@
       :vars                (copy-list vars)
       :vars-hash           (copy-hash-table vars-hash)
       :used-vars           (copy-list used-vars)
-      :free-vars           (copy-list free-vars)
+      :lexicals            (copy-list lexicals)
       :places              (copy-list places)
       :scoped-vars         (copy-list scoped-vars)
       :scope               scope
@@ -107,6 +107,6 @@
        (funinfo-add-var fi argnames))
     fi))
 
-(fn funinfo-closure-without-free-vars? (fi)
+(fn funinfo-closure-without-lexicals? (fi)
   (& (funinfo-scope-arg fi)
-     (not (funinfo-free-vars fi))))
+     (not (funinfo-lexicals fi))))

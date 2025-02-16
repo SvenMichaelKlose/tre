@@ -1,5 +1,5 @@
 (fn collect-places (x)
-  (@ [?
+  (@ [? ; TODO: PCASE
        (named-lambda? _)
          (with-lambda-funinfo _
            (let fi *funinfo*
@@ -28,7 +28,7 @@
 
 (fn remove-unused-scope-arg (fi)
   (& (not (funinfo-fast-scope? fi))
-     (funinfo-closure-without-free-vars? fi)
+     (funinfo-closure-without-lexicals? fi)
      (progn
        (= (funinfo-scope-arg fi) nil)
        (pop (funinfo-args fi))
@@ -49,17 +49,17 @@
 (fn replace-scope-arg (fi)
   (& (funinfo-scope-arg fi)
      (not (funinfo-fast-scope? fi))
-     (sole? (funinfo-free-vars fi))
+     (sole? (funinfo-lexicals fi))
      (not (funinfo-scoped-vars (funinfo-parent fi)))
-     (!= (car (funinfo-free-vars fi))
+     (!= (car (funinfo-lexicals fi))
        (optimizer-message
            "Removing array allocation for sole scoped ~A in ~A.~%"
            ! (reverse (funinfo-names fi)))
-       (= (funinfo-free-vars fi)    nil
-          (funinfo-scope-arg fi)    !
-          (funinfo-argdef fi)       (. ! (cdr (funinfo-argdef fi)))
-          (funinfo-args fi)         (. ! (cdr (funinfo-args fi)))
-          (funinfo-fast-scope? fi)  t))))
+       (= (funinfo-lexicals fi)    nil
+          (funinfo-scope-arg fi)   !
+          (funinfo-argdef fi)      (. ! (cdr (funinfo-argdef fi)))
+          (funinfo-args fi)        (. ! (cdr (funinfo-args fi)))
+          (funinfo-fast-scope? fi) t))))
 
 (fn remove-argument-stackplaces (fi)
   (funinfo-set-vars fi (remove-if [& (funinfo-arg? fi _)

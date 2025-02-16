@@ -108,12 +108,12 @@
 
 ;;;; FREE VARIABLES
 
-(fn funinfo-free-var? (fi x)
-  (member x (funinfo-free-vars fi) :test #'eq))
+(fn funinfo-lexical? (fi x)
+  (member x (funinfo-lexicals fi) :test #'eq))
 
-(fn funinfo-add-free-var (fi x)
-  (| (funinfo-free-var? fi x)
-     (push x (funinfo-free-vars fi))))
+(fn funinfo-add-lexical (fi x)
+  (| (funinfo-lexical? fi x)
+     (push x (funinfo-lexicals fi))))
 
 
 ;;;; PLACES

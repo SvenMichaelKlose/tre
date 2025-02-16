@@ -12,7 +12,7 @@
       (item "Scope arg:      " (funinfo-scope-arg fi))
       (item "Local vars:     " (funinfo-vars fi))
       (item "Used vars:      " (funinfo-used-vars fi))
-      (item "Free vars:      " (funinfo-free-vars fi))
+      (item "Lexicals        " (funinfo-lexicals fi))
       (item "Places:         " (funinfo-places fi))
       (item "Globals:        " (funinfo-globals fi))
       (item "Local fun args: " (funinfo-local-function-args fi))

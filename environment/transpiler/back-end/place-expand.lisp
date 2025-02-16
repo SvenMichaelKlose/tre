@@ -2,7 +2,7 @@
 (def-head-predicate %vname)
 
 (fn make-scope-place-expr (fi x)
-  (funinfo-add-free-var fi x)
+  (funinfo-add-lexical fi x)
   `(%vec ,(funinfo-scope-arg fi)
          ,(funinfo-name (funinfo-parent fi))
          ,x))
