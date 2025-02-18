@@ -13,6 +13,8 @@
 (env-load "stage2/sequence.lisp")
 (env-load "stage2/dot-expand.lisp")
 (env-load "stage2/assoc.lisp")
+(env-load "stage2/getf.lisp")
+(env-load "stage2/remf.lisp")
 (env-load "stage2/!aadjoin!.lisp")
 (env-load "stage2/in.lisp")
 (env-load "stage2/struct.lisp")

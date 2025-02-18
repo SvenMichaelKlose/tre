@@ -32,6 +32,7 @@ and this project adheres to
 
   * FNs can be nested.
   * make.sh can handle multiple targets.
+  * GETF/REMF: Get/remove from plists.
 
 
 ## [v0.0.21]
