@@ -60,6 +60,7 @@
          (cl:if cl:*load-truename*
                 (cl:make-pathname :defaults cl:*load-truename* :name nil :type nil))
          cl:*default-pathname-defaults*))
+(cl:require :asdf)
 (uiop:chdir (%env-path))
 (cl:defparameter *environment-path* (cl:namestring (%env-path)))
 
