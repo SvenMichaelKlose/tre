@@ -1,10 +1,10 @@
 [@] !!! Unified CLASS handling for JS and PHP target
 [@] !!! Public/protected/private methods and members
-[@] !!! Array access for objects
+[@] !!! Array access interface for objects
 [ ] !!! Generic functions
 [ ] !!. TUNIX Lisp style objects for CL target
-    Using DEFSTRUCT was a mistake.  The simple ALIST-based approach combined with dot notation
-    of SLOT-VALUEs will clean things up well.
+    Using DEFSTRUCT was a mistake.  The simple ALIST-based approach combined
+    with dot notation of SLOT-VALUEs will clean things up well.
 [ ] !.. Use METACODE-WALKER in TRANSLATE-FUNCTION-NAMES
 [ ] !.. Make METACODE-WALKER a single expression thing
 [ ] !.. [args) body…] notation for anonymous functions
@@ -12,7 +12,7 @@
 [ ] ... Packages
 [ ] ... Sub-level FN and VAR forms as an alternative to WITH
 [ ] ... Case-sensitive symbols with no case conversion
-[ ] ... Argument definitions: . as alternative of &REST
+[ ] ... Argument definitions: . as alternative for &REST
 
 [?] ... Native PHP closures (lexicals).
 
