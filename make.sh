@@ -12,13 +12,11 @@ mkdir -p compiled
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
 SBCL="sbcl --noinform"
-TRE="./tre"
+TRE="sbcl --core $PWD/image"
 BINDIR="/usr/local/bin/"
 
 SHCONFIG=`eval echo ~/.tre.sh`
-if [ -e $SHCONFIG ]; then
-    . $SHCONFIG
-fi
+[ -e $SHCONFIG ] && . $SHCONFIG
 
 clean_example_projects ()
 {
@@ -49,7 +47,7 @@ install_it ()
     echo "Installing environment to '/usr/local/lib/tre/environment/'…"
     sudo cp -rv environment modules /usr/local/lib/tre/
     echo "Installing 'tre' to '$BINDIR'…"
-	sudo cp tre $BINDIR
+	sudo cp -v tre $BINDIR
 }
 
 case $1 in
