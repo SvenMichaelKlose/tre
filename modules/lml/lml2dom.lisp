@@ -1,5 +1,5 @@
 (fn lml2dom-element (x doc)
-  (element-extend (doc.create-element (downcase (string x.)))))
+  (element-extend (doc.create-element (camel-notation (string x.)))))
 
 (fn lml2dom-atom (parent x doc)
   (when x
@@ -41,8 +41,8 @@
      (lml2dom-body e x doc)))
 
 (fn lml2dom-exec (parent x doc)
-  (when ...x
-    (error "%EXEC expects a single child only."))
+  (& ...x
+     (error "%EXEC expects a single child only."))
   (aprog1 (lml2dom ..x. :doc doc :parent parent)
     (~> (lml2dom-exec-function x) parent !)))
 
@@ -53,7 +53,7 @@
                (? (lml-attr? _)
                   (progn
                     (=-%aref (? (keyword? ._.)
-                                (list-string (camel-notation (string-list (symbol-name ._.))))
+                                (camel-notation (symbol-name ._.))
                                 ._.)
                              attrs (lml-attr-string _.))
                     (f .._))
@@ -61,24 +61,22 @@
     (f .x)
     (=-%aref children attrs "children")
     (aprog1 (make-lml-component x. attrs)
-      (when parent
-        (parent.add !)))))
+      (& parent
+         (parent.add !)))))
 
 (fn lml2dom-expr (parent x doc)
   (?
-    (cons? x.)
+    (not (atom x.))
       (lml2xml-error-tagname x)
     (%exec? x)
       (lml2dom-exec parent x doc)
-    (progn
-      (? (& (function? (symbol-function 'lml-component))
-            (lml-component-name? x.))
-         (awhen (lml2dom-expr-component parent x doc)
-           (return-from lml2dom-expr !)))
-      (aprog1 (lml2dom-element x doc)
-        (when parent
-          (parent.add !))
-        (lml2dom-attr-or-body ! .x doc)))))
+    (& (function? (symbol-function 'lml-component))
+       (lml-component-name? x.))
+      (lml2dom-expr-component parent x doc)
+    (aprog1 (lml2dom-element x doc)
+      (& parent
+         (parent.add !))
+      (lml2dom-attr-or-body ! .x doc))))
 
 (fn lml2dom (x &key (parent nil) (doc document))
   (? (cons? x)

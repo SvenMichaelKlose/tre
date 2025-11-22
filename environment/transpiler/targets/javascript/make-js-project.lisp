@@ -73,7 +73,8 @@
                              "lml2dom.lisp"
                            "expand.lisp"
                            ,@(unless nodejs?
-                               '("event.lisp"))
+                               '("make-listener-methods.lisp"
+                                 "event.lisp"))
                            ,@(list+ "store/"
                                     `("store.lisp"
                                       "attribute.lisp"))

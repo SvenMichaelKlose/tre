@@ -172,24 +172,21 @@
      (ancestor-or-self (subseq css-selector 1))
      (query-selector css-selector)))
 
-(defmethod tre-element $* (css-selector)
-  (new nodelist (get-list css-selector)))
-
 (defmethod tre-element get-list (css-selector)
   (array-list (query-selector-all css-selector)))
 
-(defmethod tre-element set-inner-h-t-m-l (html)
-  (this.remove-children)
-  (& html (= inner-h-t-m-l html))
-  (dom-tree-extend this))
+(defmethod tre-element $* (css-selector)
+  (new nodelist (get-list css-selector)))
 
-(defmethod tre-element get-child-at (idx)
-  (assert (integer<= 0 idx) (+ "tre-element get-child-at " idx " is not a positive integer"))
-  (let x first-child
-    (while (< 0 idx)
-           x
-      (--! idx)
-      (= x x.next-sibling))))
+(defmethod tre-element closest (css-selector &key (which 'next-node))
+  (let walker (document.create-tree-walker
+                  document.body
+                  *node-filter.*SHOW_ELEMENT*
+                  [? (_.class-list.matches css-selector)
+                     *node-filter.*FILTER_ACCEPT*
+                     *node-filter.*FILTER_SKIP*])
+    (= walker.current-node this)
+    ((slot-value walker which))))
 
 (defmethod tre-element blank? ()
   (& (empty-string? text-content)

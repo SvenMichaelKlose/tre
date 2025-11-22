@@ -21,7 +21,7 @@
                                ,@(!? copyright-href
                                      `(:href  ,(escape-string !))))))
                   ,@(!? external-stylesheets
-                        (+@ [`(link :rel "stylesheet" :type "text/css"
+                        (@ [`(link :rel "stylesheet" :type "text/css"
                                     :href ,_)]
                             (ensure-list !)))
                   ,@(!? internal-stylesheet

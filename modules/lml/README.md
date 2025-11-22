@@ -158,8 +158,13 @@ re-create its DOM tree via its RENDER method.
 (declare-lml-component my-image)
 ```
 
+<<<<<<< Updated upstream
 At this moment LML-COMPONENT does not check if an element has to be re-rendered
 at all.  (Optimizations will come last.)
+=======
+At this moment LML-COMPONENT does not check if an element
+has to be re-rendered at all.  (Optimizations come last.)
+>>>>>>> Stashed changes
 
 
 # Storage
