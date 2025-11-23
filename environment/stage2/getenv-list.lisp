@@ -1,0 +1,5 @@
+(fn getenv-list (varname)
+  (awhen (getenv varname)
+    (unless (string== ! "0")
+      (| (string== ! "1")
+         (split #\ !)))))

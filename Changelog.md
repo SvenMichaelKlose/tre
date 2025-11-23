@@ -28,6 +28,10 @@ and this project adheres to
   * JS/PHP: Unified class handling in the frontend.
   * JS: Generates native 'class' statements.
 
+### Added
+
+  * GETENV-LIST
+
 ## [v0.0.21]
 
 ### Fixed
