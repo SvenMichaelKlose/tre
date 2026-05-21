@@ -11,8 +11,6 @@
        (eql (elt x (-- !)) #\*))))
 
 (fn camel-notation (x &optional (pos 0))
-  (when (string? x)
-    (return (list-string (camel-notation (string-list x)))))
   (with (bump? [& ._
                   (| (& (eql #\- _.)
                         (alpha-char? ._.))
