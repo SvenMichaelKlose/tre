@@ -69,10 +69,10 @@
   (!= (href (defined-classes) class-name)
     `(%thisify ,class-name
        (macrolet ((super (&rest args)
-                   `((slot-value ,(car (class-base !)) 'call) this ,,@args)))
+                   `((slot-value ,(class-base !) 'call) this ,,@args)))
          ,@body))))
 
-(def-js-transpiler-macro %constructor-body (class-name base args body)
+(def-js-transpiler-macro %constructor-body (class-name &rest body)
   `(%block
      ,@body
      this))

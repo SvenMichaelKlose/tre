@@ -15,6 +15,13 @@
             ,body (lambda-body ,g))
        ,@macro-body)))
 
+(fn make-lambda (&key (name nil) args body)
+  `(function
+     ,@(!? name
+           (list !))
+     (,args
+      ,@body)))
+
 (fn copy-lambda (x &key (name nil) (args 'no-args) (body 'no-body))
   `(function
      ,@(!? (| name (lambda-name x))

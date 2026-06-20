@@ -232,6 +232,62 @@
   x)
 
 
+;;;; CLASSES
+
+(def-js-codegen %js-class-head (cls)
+  `(%native
+     "class " ,(class-name cls)
+     ,@(!? (class-base cls)
+           `(" extends " ,!))
+     "{"))
+
+(def-js-codegen %js-class-tail ()
+  `(%native "}" ""))
+
+(fn js-class-slot-flags (slot)
+  (pad (@ [?
+            (in? _ :protected :public)
+              ""
+            (eq _ :private)
+              (+ "#" (downcase (symbol-name _)))
+            (downcase (symbol-name _))]
+          (%slot-flags slot))
+       " "))
+
+(fn js-class-member (cls slot)
+  (… (| (js-class-slot-flags slot) "") " "
+     (%slot-name slot)
+     *js-separator*))
+
+(fn js-class-method (cls slot x)
+  (with-temporary *funinfo* (lambda-funinfo .x.)
+    `(,@(js-class-slot-flags slot) " "
+      ,(funinfo-comment *funinfo*)
+      ,(case x.
+         '__constructor  'constructor
+         x.)
+      ,@(c-list (argument-expand-names (lambda-name .x.)
+                                       (lambda-args .x.))) ,*terpri*
+      "{" ,*terpri*
+          ,@(& (eq '__constructor x.)
+               (class-base cls)
+               `("super()" ,*js-separator*))
+          ,@(lambda-body .x.)
+      "}" ,*terpri*)))
+
+(fn js-class-slot (cls x)
+  (let slot (class-slot-by-name cls x.)
+    (? (eq :member (%slot-type slot))
+       (js-class-member cls slot)
+       (js-class-method cls slot x))))
+
+(def-js-codegen %collection (class-name &rest pairs)
+  (!= (href (defined-classes) class-name)
+    `((%js-class-head ,!)
+      ,@(+@ [js-class-slot ! ._] pairs)
+      (%js-class-tail))))
+
+
 ;;;; MISCELLANEOUS
 
 (def-js-codegen %comment (&rest x)

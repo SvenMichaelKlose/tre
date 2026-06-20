@@ -1,6 +1,5 @@
 (env-load "transpiler/targets/shared/c-identifier-char-p.lisp")
 (env-load "transpiler/targets/shared/opt-+.lisp")
-(env-load "transpiler/targets/shared/class.lisp")
 (env-load "transpiler/targets/shared/section-from-string.lisp")
 (env-load "transpiler/targets/shared/codegen/literal-string.lisp")
 (env-load "transpiler/targets/shared/codegen/c-list.lisp")

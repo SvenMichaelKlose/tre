@@ -10,7 +10,7 @@
 (make-project "PHP test unit 1"
     `("tests/unit-1.lisp")
     :transpiler  (aprog1 (copy-transpiler *php-transpiler*)
-                   (= (transpiler-dump-passes? !) t))
+                   (= (transpiler-dump-passes? !) nil))
     :emitter     [put-file "compiled/unit-1.php" _])
 
 ;(make-project "PHP test unit 2"

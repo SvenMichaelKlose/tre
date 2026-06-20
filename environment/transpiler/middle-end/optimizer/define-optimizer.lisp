@@ -8,8 +8,11 @@
                                        (,name *body*))))
               (,name d))
          (%collection? a)
-           `(%collection ,,.a.
-              ,,@(@+ [. _. (,name (… ._))] ,,..a))
+           (. (append (list '%collection .a.)
+                      (@ [. '%inhibit-macro-expansion
+                            (. ._. (car (,name (list .._))))]
+                         ..a))
+              (,name d))
          ,@body
          (. a (,name d))))))
 

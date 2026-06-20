@@ -287,28 +287,32 @@
 (def-php-codegen %php-class-tail ()
   `(%native "}" ""))
 
-(fn php-class-slot-flags (x)
-  (pad (@ [downcase (symbol-name _)] (%slot-flags x))))
+(fn php-class-slot-flags (slot)
+  (pad (@ [downcase (symbol-name _)]
+          (%slot-flags slot))
+       " "))
 
-(fn php-class-slot-member (cls x)
-  (… (| (php-class-slot-flags x)
+(fn php-class-member (cls slot)
+  (… (| (php-class-slot-flags slot)
         "var")
-     " $" (%slot-name x.)))
+     " $" (%slot-name slot)
+     *php-separator*))
 
-(fn php-class-slot-method (cls x)
-  `(,@(php-class-slot-flags x) " "
-    ,@(codegen-php-function-0 (%slot-name x.) (lambda-funinfo .x.)
+(fn php-class-method (cls slot x)
+  `(,@(php-class-slot-flags slot) " "
+    ,@(codegen-php-function-0 x. (lambda-funinfo .x.)
                               (lambda-body .x.))))
 
 (fn php-class-slot (cls x)
-  (? (eq (%slot-type x.) :member)
-     (php-class-member cls x)
-     (php-class-method cls x)))
+  (let slot (class-slot-by-name cls x.)
+    (? (eq :member (%slot-type slot))
+       (php-class-member cls slot)
+       (php-class-method cls slot x))))
 
 (def-php-codegen %collection (which &rest items)
-  (!= (href (defined-classes) .which.)
-    `((%php-class-head ,.which.)
-      ,@(+@ [php-class-slot ! _] items)
+  (!= (href (defined-classes) which)
+    `((%php-class-head ,!)
+      ,@(+@ [php-class-slot ! ._] items)
       (%php-class-tail))))
 
 ;;;; GLOBAL VARIABLES

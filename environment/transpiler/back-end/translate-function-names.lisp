@@ -16,6 +16,11 @@
     x
   (%slot-value? x)
     `(%slot-value ,(translate-function-name .x.) ,..x.)
+  (%collection? x)
+    `(%collection ,.x.
+       ,@(@ [. '%inhibit-macro-expansion
+               (. ._. (translate-function-names .._ fi))]
+            ..x))
   (& (atom x)
      (| (not (funinfo-parent fi))
         (not (funinfo-arg-or-var? fi x))))

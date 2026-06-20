@@ -19,8 +19,8 @@
                                         :base   bases.
                                         :parent (& bases
                                                    (href classes bases.))))
-    `(defmethod ,class-name __constructor ,args
-       (%constructor-body ,@body))))
+    `(defmethod ,cname __constructor ,args
+       (%constructor-body ,cname ,@body))))
 
 (fn access-type? (x)
   (in? x :static :protected :private))
@@ -66,11 +66,16 @@
   (!= (href (defined-classes) class-name)
     `(%block
        (%collection ,class-name
-         ,@(@ [… (%slot-name _) (%slot-body _)]
+         ,@(@ [. '%inhibit-macro-expansion
+                 (. (%slot-name _)
+                    nil)]
               (class-members !))
-         ,@(@ [_ (%slot-name _)
-                 `#'(,($ class-name '- (%slot-name _))
-                     (,(%slot-args_)
-                       (%method-body ,@(%slot-body _))))]
+         ,@(@ [. '%inhibit-macro-expansion
+                 (. (%slot-name _)
+                    (make-lambda
+                        :name  ($ class-name '- (%slot-name _))
+                        :args  (%slot-args _)
+                        :body  `((%method-body ,class-name
+                                   ,@(%slot-body _)))))]
               (class-methods !)))
        (%class-predicate ,class-name))))

@@ -26,8 +26,10 @@
                                :body ,(| if-named-function
                                          `(,name (lambda-body ,v) ,@r))))))
                   (%collection? ,v)
-                    `((%collection (cadr ,v)
-                        ,,@(@ [. _. (,name ._)] (cddr ,v))))
+                    (list (append (list '%collection (cadr ,v))
+                                  (@ [. '%inhibit-macro-expansion
+                                        (. ._. (,name .._))]
+                                     (cddr ,v))))
                   (not (metacode-statement? ,v))
                     (funinfo-error "METACODE-STATEMENT? is NIL for ~A." ,v)
                   ,(| if-cons `(… ,v)))
